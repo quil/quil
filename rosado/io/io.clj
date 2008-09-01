@@ -1,16 +1,14 @@
 ;; simple io abstraction layer for clojure
 ;; Roland Sadowski [szabla gmail com]
 
-(in-ns 'io)
-(clojure/refer 'clojure)
-
-(import '(java.io File FileReader FileWriter BufferedReader BufferedWriter
-				  FileInputStream FileOutputStream FileOutputStream
-				  BufferedInputStream BufferedOutputStream))
+(clojure/ns rosado.io
+			(:import (java.io File FileReader FileWriter BufferedReader BufferedWriter
+							   FileInputStream FileOutputStream FileOutputStream
+							   BufferedInputStream BufferedOutputStream)))
 
 (defn reader 
   "Returns a reader or input stream (buffered).
-  optional keywords: :unbuff [:ub] - for unbuffered input. 
+  Optional keywords: :unbuff [:ub] - for unbuffered input. 
   :bytes - for an InputStream instead of a Reader."
   [#^String file-name & modes]
   (cond
@@ -30,7 +28,7 @@
 
 (defn writer
   "Returns a writer or output stream (buffered).
-  optional keywords: :unbuff [:ub] - for unbuffered output. 
+  Optional keywords: :unbuff [:ub] - for unbuffered output. 
   :bytes - for an OutputStream instead of a Writer."
   [#^String file-name & modes]
   (cond
