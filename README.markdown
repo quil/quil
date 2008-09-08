@@ -16,6 +16,10 @@ CLASSPATH (you can do it in Clojure with `add-classpath`).
 Then, create a JAR by running `ant` and also add the resulting file to
 your CLASSPATH.
 
+## Examples ##
+
+The `examples` directory contains a simple script to get you going.
+
 ## TODO ##
 
 * docstrings
