@@ -1,11 +1,11 @@
-<project name="clojure-contrib" default="jar">
+<project name="clojure-processing" default="jar">
 
   <description>
-    Pack all clojure-contrib sources into a JAR.
+    Pack all rosado.processing sources into a JAR.
   </description>
 
   <!-- The JAR file to create. -->
-  <property name="jarfile" location="rosado.jar"/>
+  <property name="jarfile" location="rosado.processing.jar"/>
 
   <target name="clean"
           description="Remove generated files and directories.">
