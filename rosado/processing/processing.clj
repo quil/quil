@@ -2,7 +2,7 @@
 ;; Roland Sadowski [szabla gmail com]
 
 (clojure/ns rosado.processing
-			(:import (processing.core PApplet PImage)))
+			(:import (processing.core PApplet PImage PGraphics PFont)))
 
 ;; used by functions in this lib. Use binding to set it 
 ;; to an instance of processing.core.PApplet
@@ -36,20 +36,20 @@
 
 (defn apply-matrix
   ([n00 n01 n02 n10 n11 n12]
-	 (.applyMatrix (float n00) (float n01) (float n02)
+	 (.applyMatrix *applet* (float n00) (float n01) (float n02)
 				   (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
 	n10 n11 n12 n13
 	n20 n21 n22 n23
 	n30 n31 n32 n33]
-	 (.applyMatrix (float n00) (float n01) (float n02) (float 03)
+	 (.applyMatrix *applet* (float n00) (float n01) (float n02) (float 03)
 				   (float n10) (float n11) (float n12) (float 13)
 				   (float n20) (float n21) (float n22) (float 23)
 				   (float n30) (float n31) (float n32) (float 33))))
 
 (defn arc
   [a b c d start stop]
-  (.arc *applet* (float a)(float b) (float c) (float d) (float start) (float end)))
+  (.arc *applet* (float a)(float b) (float c) (float d) (float start) (float stop)))
 
 ;; $$arraycopy
 
@@ -57,7 +57,7 @@
 
 (defn atan [val] (PApplet/atan (float val)))
 
-(defn atan2 [val] (PApplet/atan2 (float val)))
+(defn atan2 [a b] (PApplet/atan2 (float a) (float b)))
 
 (defn background-float
   ([gray] (.background *applet* (float gray)))
@@ -149,7 +149,7 @@
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
 	 (.camera *applet* (float eyeX) (float eyeY) (float eyeZ) (float centerX) (float centerY) (float centerZ) (float upX) (float upY) (float upZ))))
 
-(def can-draw? [] (.canDraw *applet*))
+(defn can-draw? [] (.canDraw *applet*))
 
 (defn ceil [n] (PApplet/ceil (float n)))
 
@@ -216,9 +216,7 @@
 
 (defn cursor
   ([] (.cursor *applet*))
-  ([cur-type] (.cursor *applet* (int cur-type)))
-  ([#^PImage img] (.cursor *applet* img))
-  ([#^PImage img hx hy] (.cursor *applet* (int hx) (int hy))))
+  ([cur-type] (.cursor *applet* (int cur-type))))
 
 (defn cursor-image
   ([#^PImage img] (.cursor *applet* img))
@@ -236,7 +234,7 @@
 			  (float x1) (float y1) (float z1) 
 			  (float x2) (float y2) (float z2)
 			  (float x3) (float y3) (float z3)
-			  (float x4) (float y4) (float z4)))
+			  (float x4) (float y4) (float z4))))
 
 (defn curve-detail [detail] (.curveDetail *applet* (int detail)))
 
@@ -262,7 +260,7 @@
 
 (defn degrees [radians] (PApplet/degrees (float radians)))
 
-(defn delay [nap-time] (.delay *applet* (int nap-time)))
+(defn delay-frame [nap-time] (.delay *applet* (int nap-time)))
 
 (defn destroy [] (.destroy *applet*))
 
@@ -307,7 +305,7 @@
 
 (defn exit [] (.exit *applet*))
 
-(def exp [a] (PApplet/exp (float a)))
+(defn exp [a] (PApplet/exp (float a)))
 
 ;; $$expand
 
@@ -323,9 +321,9 @@
 
 (defn fill
   ([rgb] (fill-int rgb))
-  ([gra alpha] (fill-int rgb alpha)))
+  ([rgb alpha] (fill-int rgb alpha)))
 
-(defn filter
+(defn filter-kind
   ([kind] (.filter *applet* (int kind)))
   ([kind param] (.filter *applet* (int kind) (float param))))
 
@@ -338,7 +336,7 @@
   [l r b t near far]
   (.frustum *applet* (float l) (float r) (float b) (float t) (float near) (float far)))
 
-(defn get
+(defn get-pixel
   ([] (.get *applet*))
   ([x y] (.get *applet* (int x) (int y)))
   ([x y w h] (.get *applet* (int x) (int y) (int w) (int h))))
@@ -354,10 +352,10 @@
 
 (defn hue [what] (.hue *applet* (int what)))
 
-(defn image
+(defn images
   ([#^PImage img x y] (.image *applet* img (float x) (float y)))
   ([#^PImage img x y c d] (.image *applet* img (float x) (float y) (float c) (float d)))
-  ([#^PImage img x y c d u1 v1 u2 v2] (.image *applet* imx (float x) (float y) (float c) (float d) (float u1) (float v1) (float u2) (float v2))))
+  ([#^PImage img x y c d u1 v1 u2 v2] (.image *applet* img (float x) (float y) (float c) (float d) (float u1) (float v1) (float u2) (float v2))))
 
 (defn image-mode [mode] (.imageMode *applet* (int mode)))
 
@@ -389,12 +387,12 @@
 
 (defn load-matrix [] (.loadMatrix *applet*))
 
-;; (defn load-pixels [] (.loadPixels *applet*))
+(defn load-pixels [] (.loadPixels *applet*))
 
 ;; $$loadStrings
 ;; $$log
 
-(defn loop [] (.loop *applet*))
+(defn start-loop [] (.loop *applet*))
 
 ;; $$mag
 ;; $$main
@@ -441,13 +439,13 @@
 (defn noise
   ([x] (.noise *applet* (float x)))
   ([x y] (.noise *applet* (float x) (float y)))
-  ([x y z]) (.noise *applet* (float x) (float y) (float z)))
+  ([x y z] (.noise *applet* (float x) (float y) (float z))))
 
 (defn noise-detail
   ([int detail] (.noiseDetail *applet* (int detail)))
   ([int detail falloff] (.noiseDetail *applet* (int detail) (float falloff))))
 
-(defn noise-seed [what] (.noiseSeed *applet* (int that)))
+(defn noise-seed [what] (.noiseSeed *applet* (int what)))
 
 (defn no-lights [] (.noLights *applet*))
 
@@ -486,7 +484,7 @@
 
 (defn point
   ([x y] (.point *applet* (float x)(float y)))
-  ([x y z]) (.point *applet* (float x) (float y) (float z)))
+  ([x y z] (.point *applet* (float x) (float y) (float z))))
 
 (defn point-light
   [r g b x y z]
@@ -570,7 +568,7 @@
 
 (defn scale
   ([s] (.scale *applet* (float s)))
-  ([sx sy] (.scale *applet* (float xs) (float sy))))
+  ([sx sy] (.scale *applet* (float sx) (float sy))))
 
 (defn screen-x
   ([x y] (.screenX *applet* (float x) (float y)))
@@ -583,17 +581,20 @@
 (defn screen-z
   [x y z] (.screenX *applet* (float x) (float y) (float z)))
 
-(defn second [] (PApplet/second))
+(defn seconds [] (PApplet/second))
 
 ;; $$selectFolder
 ;; $$selectInput
 ;; $$selectOutput
 
 (defn set-pixel
-  ([x y c] (.set *applet* (int x) (int y) (int c)))
-  ([dx dy #^PImage src] (.set *applet* (int dx) (int dy) src)))
+  [x y c] (.set *applet* (int x) (int y) (int c)))
+
+(defn set-image-at
+  [dx dy #^PImage src] (.set *applet* (int dx) (int dy) src))
 
 ;; $$setup
+
 ;; $$setupExternalMessages
 ;; $$setupFrameListener
 
@@ -658,7 +659,7 @@
 
 (defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
 
-(defn stroke-join [jn] (.strokeJoin *applet* (int join)))
+(defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
 
 (defn stroke-weight [weight] (.strokeJoin *applet* (float weight)))
 
@@ -666,18 +667,24 @@
 
 (defn tan [angle] (PApplet/tan (float angle)))
 
-(defn text
+(defn char->text
   ([c] (.text *applet* (char c)))
   ([c x y] (.text *applet* (char c) (float x) (float y)))
-  ([c x y z] (.text *applet* (char c) (float x) (float y) (float z)))
+  ([c x y z] (.text *applet* (char c) (float x) (float y) (float z))))
+
+(defn num->text
   ([num x y] (.text *applet* (float num) (float x) (float y)))
-  ([num x y z] (.text *applet* (float num) (float x) (float y) (float z)))
+  ([num x y z] (.text *applet* (float num) (float x) (float y) (float z))))
+
+(defn string->text
   ([#^java.lang.String s] (.text *applet* s))
   ([#^java.lang.String s x y] (.text *applet* s (float x) (float y)))
-  ([#^java.lang.String s x y z] (.text *applet* s (float x) (float y) (float z)))
-  ([#^java.lang.String x1 y1 x2 y2]
+  ([#^java.lang.String s x y z] (.text *applet* s (float x) (float y) (float z))))
+
+(defn string->text-in
+  ([#^java.lang.String s x1 y1 x2 y2]
 	 (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
-  ([#^java.lang.String x1 y1 x2 y2 z]
+  ([#^java.lang.String s x1 y1 x2 y2 z]
 	 (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (defn text-align
@@ -751,7 +758,3 @@
 	 (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
 
 (defn year [] (PApplet/year))
-
-
-
-
