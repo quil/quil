@@ -531,7 +531,8 @@
 
 (defn red [what] (.red *applet* (int what)))
 
-;; $$redraw
+(defn redraw [] (.redraw *applet*))
+
 ;; $$registerDispose
 ;; $$registerDraw
 ;; $$reqisterKeyEvent
