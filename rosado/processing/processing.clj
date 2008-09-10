@@ -441,6 +441,10 @@
 ;; $$nfp
 ;; $$nfs
 
+(defn mouse-x [] (.mouseX *applet*))
+
+(defn mouse-y [] (.mouseY *applet*))
+
 (defn no-cursor [] (.noCursor *applet*))
 
 (defn no-fill [] (.no-fill *applet*))
