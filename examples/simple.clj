@@ -1,6 +1,4 @@
 ;; processing test
-;; http://groups.google.com/group/clojure/browse_thread/thread/84eefbde46bffec8
-
 
 ;; you can add processing's JAR via add-classpath
 (add-classpath "file:///h:/bin/dev/processing/lib/core.jar")
@@ -16,16 +14,17 @@
 ;; interactively, you can redefine it while the applet is running and
 ;; see effects immediately
 
-(defn fancy-draw [dst]
+(defn fancy-draw
   "An example of a function which does *something*."
-  (background-float (rand-int 256) (rand-int 256) (rand-int 256))
-  (fill-float (rand-int 125) (rand-int 125) (rand-int 125))
-  (ellipse 100 100 (rand-int 90) (rand-int 90))
-  (stroke-float 10)
-  (line 10 10 (rand-int 150) (rand-int 150))
-  (no-stroke)
-  (filter-kind INVERT)
-  (framerate 10))
+  [dst]
+   (background-float (rand-int 256) (rand-int 256) (rand-int 256))
+   (fill-float (rand-int 125) (rand-int 125) (rand-int 125))
+   (ellipse 100 100 (rand-int 90) (rand-int 90))
+   (stroke-float 10)
+   (line 10 10 (rand-int 150) (rand-int 150))
+   (no-stroke)
+   (filter-kind INVERT)
+   (framerate 10))
 
 ;; below, we create an PApplet proxy and override setup() and draw()
 ;; methods. Then we put the applet into a window and display it.
