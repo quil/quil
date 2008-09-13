@@ -1,8 +1,5 @@
 ;; processing test
 
-;; you can add processing's JAR via add-classpath
-(add-classpath "file:///h:/bin/dev/processing/lib/core.jar")
-
 (clojure/ns p5-example
 			(:use rosado.processing)
 			(:import (javax.swing JFrame JLabel JTextField JButton))
