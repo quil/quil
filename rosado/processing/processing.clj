@@ -11,7 +11,7 @@
 
 (clojure/ns rosado.processing
 			(:import (processing.core PApplet PImage PGraphics PFont))
-			(:load-resources "constants.clj"))
+			(:load "constants.clj"))
 
 ;; used by functions in this lib. Use binding to set it 
 ;; to an instance of processing.core.PApplet
