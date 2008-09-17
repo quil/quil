@@ -17,9 +17,9 @@
 ;; to an instance of processing.core.PApplet
 (def #^PApplet *applet*)
 
-(defn abs-int [n] (PApplet/abs n))
+(defn abs-int [n] (PApplet/abs (int n)))
 
-(defn abs-float [n] (PApplet/abs n))
+(defn abs-float [n] (PApplet/abs (float n)))
 
 (defn acos [n] (PApplet/acos n))
 
@@ -29,11 +29,11 @@
   [what] (.alpha *applet* (int what)))
 
 (defn ambient
-  ([gray] (.ambient (float gray)))
-  ([x y z] (.ambient (float x) (float y) (float z))))
+  ([gray] (.ambient *applet* (float gray)))
+  ([x y z] (.ambient *applet* (float x) (float y) (float z))))
 
 (defn ambient-int
-  [rgb] (.ambient (int rgb)))
+  [rgb] (.ambient *applet* (int rgb)))
 
 (defn ambient-light
   ([red green blue]
@@ -76,7 +76,7 @@
 
 (defn background-int
   ([rgb] (.background *applet* (int rgb)))
-  ([rgb alpha] (.background *applet* (int rgb) (int alpha))))
+  ([rgb alpha] (.background *applet* (int rgb) (float alpha))))
 
 (defn background-image
   [#^PImage img] (.background *applet* img))
@@ -119,15 +119,13 @@
   [a b c d t] (.bezierTangent *applet* (float a) (float b) (float c) (float d) (float t)))
 
 (defn bezier-vertex
-  ([x1 y1 x2 y2 x3 y3 x4 y4]
+  ([x2 y2 x3 y3 x4 y4]
 	 (.bezierVertex *applet* 
-			  (float x1) (float y1) 
 			  (float x2) (float y2) 
 			  (float x3) (float y3) 
 			  (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
 	 (.bezierVertex *applet*
-			  (float x1) (float y1) (float z1) 
 			  (float x2) (float y2) (float z2)
 			  (float x3) (float y3) (float z3)
 			  (float x4) (float y4) (float z4))))
@@ -149,8 +147,6 @@
   ([size] (.box *applet* (int size)))
   ([w h d] (.box *applet* (float w) (float h) (float d))))
 
-(defn brake-shape [] (.brakeShape *applet*))
-
 (defn brightness [what] (.brightness *applet* (int what)))
 
 (defn camera
@@ -170,7 +166,7 @@
 
 (defn color-int
   ([gray] (.background *applet* (int gray)))
-  ([gray alpha] (.background *applet* (int gray) (int alpha)))
+  ([gray alpha] (.background *applet* (int gray) (float alpha)))
   ([r g b] (.background *applet* (int r) (int g) (int b)))
   ([r g b a] (.background *applet* (int r) (int g) (int b) (int a))))
 
@@ -326,7 +322,7 @@
 
 (defn fill-int
   ([rgb] (.fill *applet* (int rgb)))
-  ([rgb alpha] (.fill *applet* (int rgb) (int alpha))))
+  ([rgb alpha] (.fill *applet* (int rgb) (float alpha))))
 
 (defn fill
   ([rgb] (fill-int rgb))
@@ -357,7 +353,7 @@
 
 (defn hint [which] (.hint *applet* (int which)))
 
-(defn hour [] (.hour *applet*))
+(defn hour [] (PApplet/hour))
 
 (defn hue [what] (.hue *applet* (int what)))
 
@@ -380,9 +376,9 @@
 
 (defn lights [] (.lights *applet*))
 
-(defn lights-specular
+(defn light-specular
   [x y z]
-  (.lights *applet* (float x) (float y) (float z)))
+  (.lightSpecular *applet* (float x) (float y) (float z)))
 
 (defn line
   ([x1 y1 x2 y2] (.line *applet* (float x1) (float y1) (float x2) (float y2)))
@@ -407,10 +403,10 @@
 ;; $$main
 
 (defn map-to [val istart istop ostart ostop]
-  (.map *applet* val istart istop ostart ostop))
+  (PApplet/map val istart istop ostart ostop))
 
 (defn mask
-  ([#^ints alpha-array] (.mask alpha-array)))
+  ([#^ints alpha-array] (.mask *applet* alpha-array)))
 
 (defn mask-image [#^PImage img] (.mask *applet* img))
 
@@ -447,7 +443,7 @@
 
 (defn no-cursor [] (.noCursor *applet*))
 
-(defn no-fill [] (.no-fill *applet*))
+(defn no-fill [] (.noFill *applet*))
 
 (defn noise
   ([x] (.noise *applet* (float x)))
@@ -474,7 +470,7 @@
 
 (defn no-tint [] (.noTint *applet*))
 
-(defn open [filename] (PApplet/open filename))
+(defn open [#^java.lang.String filename] (PApplet/open filename))
 
 ;; $$open -- overload
 
@@ -531,7 +527,7 @@
 (defn rect [x1 y1 x2 y2]
   (.rect *applet* (float x1) (float y1) (float x2) (float y2)))
 
-(defn rect-mode [mode] (.rectMode (int mode)))
+(defn rect-mode [mode] (.rectMode *applet* (int mode)))
 
 (defn red [what] (.red *applet* (int what)))
 
@@ -553,7 +549,7 @@
 
 (defn rotate
   ([angle] (.rotate *applet* (float angle)))
-  ([angle vx vy vz] (.roate *applet* (float angle) (float vx) (float vy) (float vz))))
+  ([angle vx vy vz] (.rotate *applet* (float angle) (float vx) (float vy) (float vz))))
 
 (defn rotate-x [angle] (.rotateX *applet* (float angle)))
 
@@ -669,7 +665,7 @@
 
 (defn stroke-int
   ([rgb] (.stroke *applet* (int rgb)))
-  ([rgb alpha] (.stroke *applet* (int rgb) (int alpha))))
+  ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
 (defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
 
@@ -705,9 +701,9 @@
   ([align] (.textAlign *applet* (int align)))
   ([align-x align-y] (.textAlign *applet* (int align-x) (int align-y))))
 
-(defn text-ascent [] (.textAscend *applet*))
+(defn text-ascent [] (.textAscent *applet*))
 
-(defn text-descend [] (.textDescend *applet*))
+(defn text-descend [] (.textDescent *applet*))
 
 (defn text-font
   ([#^PFont which] (.textFont *applet* which))
@@ -739,7 +735,7 @@
 
 (defn tint-int
   ([rgb] (.tint *applet* (int rgb)))
-  ([rgb alpha] (.tint *applet* (int rgb) (int alpha))))
+  ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
 (defn translate
   ([tx ty] (.translate *applet* (float tx) (float ty)))
