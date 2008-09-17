@@ -521,8 +521,12 @@
 
 (defn radians [deg] (PApplet/radians (float deg)))
 
-;; $$random
-;; $$randomSeed
+(defn random
+  ([max] (.random *applet* (float max)))
+  ([min max] (.random *applet* (float min) (float max))))
+
+
+(defn random-seed [w] (.randomSeed *applet* (float w)))
 
 (defn rect [x1 y1 x2 y2]
   (.rect *applet* (float x1) (float y1) (float x2) (float y2)))
