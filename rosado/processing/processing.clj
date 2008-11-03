@@ -679,7 +679,7 @@
 
 (defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
 
-(defn stroke-weight [weight] (.strokeJoin *applet* (float weight)))
+(defn stroke-weight [weight] (.strokeWeight *applet* (float weight)))
 
 ;; $$subset
 
