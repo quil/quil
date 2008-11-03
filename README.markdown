@@ -1,7 +1,6 @@
 # Processing for Clojure #
 
-This lib is a wrapper for the [Processing][] project. Mixture Clojure
-and Processing enables you to do live-coding and experiment easily.
+This lib is a wrapper for the [Processing][] project. Mixture of Clojure and Processing enables you to do live-coding and experiment easily.
 
 Most of the function are covered; some have a slightly different name
 than in Java (partly because Clojure is confused by methods of the
