@@ -9,9 +9,9 @@
 ;; agreeing to be bound by the terms of this license.  You must not
 ;; remove this notice, or any other, from this software. 
 
-(clojure/ns rosado.processing
-			(:import (processing.core PApplet PImage PGraphics PFont))
-			(:load "constants.clj"))
+(ns rosado.processing
+  (:import (processing.core PApplet PImage PGraphics PFont))
+  (:load "constants"))
 
 ;; used by functions in this lib. Use binding to set it 
 ;; to an instance of processing.core.PApplet
