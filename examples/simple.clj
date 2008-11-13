@@ -1,9 +1,9 @@
 ;; processing test
 
-(clojure/ns p5-example
-			(:use rosado.processing)
-			(:import (javax.swing JFrame JLabel JTextField JButton))
-			(:import (processing.core PApplet)))
+(ns p5-example
+  (:use rosado.processing)
+  (:import (javax.swing JFrame JLabel JTextField JButton))
+  (:import (processing.core PApplet)))
 
 
 ;; here's a function which will be called by Processing's (PApplet)
