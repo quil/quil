@@ -357,7 +357,7 @@
 
 (defn hue [what] (.hue *applet* (int what)))
 
-(defn images
+(defn image
   ([#^PImage img x y] (.image *applet* img (float x) (float y)))
   ([#^PImage img x y c d] (.image *applet* img (float x) (float y) (float c) (float d)))
   ([#^PImage img x y c d u1 v1 u2 v2] (.image *applet* img (float x) (float y) (float c) (float d) (float u1) (float v1) (float u2) (float v2))))
