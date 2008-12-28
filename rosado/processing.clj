@@ -772,6 +772,7 @@
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
 (defn translate
+	([v] (apply translate v))
   ([tx ty] (.translate *applet* (float tx) (float ty)))
   ([tx ty tz] (.translate *applet* (float tx) (float ty) (float tz))))
 
@@ -802,3 +803,28 @@
 	 (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
 
 (defn year [] (PApplet/year))
+
+;; utility functions. clj-processing specific
+
+(defmacro with-translation
+	"Berforms body with translation, restores current transformation on exit."
+	[translation-vector & body]
+	`(let [tr# ~translation-vector]
+		 (push-matrix)
+		 (translate tr#)
+		 ~@body
+		 (pop-matrix)))
+
+(defmacro with-rotation 
+	"Berforms body with rotation, restores current transformation on exit.
+  Accepts a vector [angle] or [angle x-axis y-axis z-axis].
+
+  Example: 
+    (with-rotation [angle] 
+      (vertex 1 2))"
+	[rotation & body]
+	`(let [tr# ~rotation]
+		 (push-matrix)
+		 (apply rotate tr#)
+		 ~@body
+		 (pop-matrix)))
