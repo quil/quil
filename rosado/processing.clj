@@ -210,14 +210,22 @@
 
 (defn create-image [w h format] (.createImage *applet* (int w) (int h) (int format)))
 
-;; $$createInput
-;; $$createInputRaw
-;; $$createOutput
+(defn create-input [filename]
+	(PApplet/createInput (java.io.File. filename)))
+
+(defn create-input-raw
+	"Call openStream() without automatic gzip decompression."
+	[filename]
+	(.createInputRaw *applet* filename))
+
+(defn create-output [filename]
+	(PApplet/createOutput (java.io.File. filename)))
 
 (defn create-path [filename] (PApplet/createPath filename))
 
-;; $$createReader
-;; $$createWriter
+(defn create-reader [filename] (.createReader *applet* filename))
+
+(defn create-writer [filename] (.createWriter *applet* filename))
 
 (defn cursor
   ([] (.cursor *applet*))
@@ -386,8 +394,10 @@
   ([x1 y1 z1 x2 y2 z2] (.line *applet* (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))))
 
 ;; $$link
-;; $$loadBytes
-;; $$loadFont
+
+(defn load-bytes [filename] (PApplet/loadBytes filename))
+
+(defn load-font [filename] (.loadFont *applet* filename))
 
 (defn load-image [filename] (.loadImage *applet* filename))
 
@@ -395,7 +405,16 @@
 
 (defn load-pixels [] (.loadPixels *applet*))
 
-;; $$loadStrings
+(defn load-shape
+	"Load a geometry from a file as a PShape."
+	[filename]
+	(.loadShape *applet* filename))
+
+(defn load-strings 
+	"Load data from a file and shove it into a String array."
+	[filename]
+	(.loadStrings *applet* filename))
+
 ;; $$log
 
 (defn start-loop [] (.loop *applet*))
@@ -461,7 +480,10 @@
 
 (defn no-loop [] (.noLoop *applet*))
 
-(defn norm [val start stop] (PApplet/norm (float val) (float start) (float stop)))
+(defn norm
+	"Normalize a value to exist between 0 and 1 (inclusive)."
+	[val start stop]
+	(PApplet/norm (float val) (float start) (float stop)))
 
 (defn normal [nx ny nz] (.normal *applet* (float nx) (float ny) (float nz)))
 
@@ -550,11 +572,14 @@
 ;; $$registerPre
 ;; $$registerSize
 ;; $$registerSize
-;; $$requestImage
+
+(defn request-image
+	([filename] (.requestImage *applet* filename))
+	([filename extension] (.requestImage *applet* filename extension)))
 
 (defn reset-matrix [] (.resetMatrix *applet*))
 
-;; $$reverse
+(defn reverse-array [arr] (PApplet/reverse arr))
 
 (defn rotate
   ([angle] (.rotate *applet* (float angle)))
