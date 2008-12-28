@@ -43,7 +43,7 @@
 
 (def swing-frame (JFrame. "Processing with Clojure"))
 (doto swing-frame
-	(.setDefaultCloseOperation (JFrame/EXIT_ON_CLOSE))
+	(.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
 	(.setSize 200 200)
 	(.add p5-applet)
 	(.pack)
