@@ -11,21 +11,27 @@
 
 ;; renderers known to processing.core
 
-(def P2D "processing.core.PGraphics2D")
-(def P3D "processing.core.PGraphics3D")
-(def JAVA2D "processing.core.PGraphicsJava2D")
-(def OPENGL "processing.opengl.PGraphicsOpenGL")
-(def PDF "processing.pdf.PGraphicsPDF")
-(def DXF "processing.dxf.RawDXF")
-;; (def SVG "processing.svg.PGraphicsSVG")
+(def P2D PApplet/P2D)
+(def P3D PApplet/P3D)
+(def JAVA2D PApplet/JAVA2D)
+(def OPENGL PApplet/OPENGL)
+(def PDF PApplet/PDF)
+(def DXF PApplet/DXF)
 
 ;; platform IDs for PApplet.platform
-(def WINDOWS 1)
-(def MACOSX 3)
-(def LINUX 4)
-(def OTHER 0)
+(def WINDOWS PApplet/WINDOWS)
+(def MACOSX PApplet/MACOSX)
+(def LINUX PApplet/LINUX)
+(def OTHER PApplet/OTHER)
 
-(def EPSILON (float 0.0001))
+;(def EPSILON (PApllet 0.0001))
+(def EPSILON PApplet/EPSILON)
+
+(def MAX_FLOAT PApplet/MAX_FLOAT)
+(def MIN_FLOAT PApplet/MIN_FLOAT)
+
+(def MAX_INT PApplet/MAX_FLOAT)
+(def MIN_INT PApplet/MIN_FLOAT)
 
 (def PI  (float Math/PI))
 (def HALF_PI    (/ PI (float 2.0)))
@@ -58,64 +64,129 @@
 ;; blend mode keyword definitions
 ;; see processing.core.PImage#blendColor(int,int,int)
 
-(def REPLACE     0)
-(def BLEND       (bit-shift-left 1 0))
-(def ADD         (bit-shift-left 1 1))
-(def SUBTRACT    (bit-shift-left 1 2))
-(def LIGHTEST    (bit-shift-left 1 3))
-(def DARKEST     (bit-shift-left 1 4))
-(def DIFFERENCE  (bit-shift-left 1 5))
-(def EXCLUSION   (bit-shift-left 1 6))
-(def MULTIPLY    (bit-shift-left 1 7))
-(def SCREEN      (bit-shift-left 1 8))
-(def OVERLAY     (bit-shift-left 1 9))
-(def HARD_LIGHT  (bit-shift-left 1 10))
-(def SOFT_LIGHT  (bit-shift-left 1 11))
-(def DODGE       (bit-shift-left 1 12))
-(def BURN        (bit-shift-left 1 13))
+(def REPLACE     PApplet/REPLACE)
+(def BLEND       PApplet/BLEND)
+(def ADD         PApplet/ADD)
+(def SUBTRACT    PApplet/SUBTRACT)
+(def LIGHTEST    PApplet/LIGHTEST)
+(def DARKEST     PApplet/DARKEST)
+(def DIFFERENCE  PApplet/DIFFERENCE)
+(def EXCLUSION   PApplet/EXCLUSION)
+(def MULTIPLY    PApplet/MULTIPLY)
+(def SCREEN      PApplet/SCREEN)
+(def OVERLAY     PApplet/OVERLAY)
+(def HARD_LIGHT  PApplet/HARD_LIGHT)
+(def SOFT_LIGHT  PApplet/SOFT_LIGHT)
+(def DODGE       PApplet/DODGE)
+(def BURN        PApplet/BURN)
 
 ;; colour component bitmasks
 
-(def ALPHA_MASK  0xff000000)
-(def RED_MASK    0x00ff0000)
-(def GREEN_MASK  0x0000ff00)
-(def BLUE_MASK   0x000000ff)
+(def ALPHA_MASK  PApplet/ALPHA_MASK)
+(def RED_MASK    PApplet/RED_MASK)
+(def GREEN_MASK  PApplet/GREEN_MASK)
+(def BLUE_MASK   PApplet/BLUE_MASK)
 
 ;; for messages
 
-(def CHATTER    0)
-(def COMPLAINT  1)
-(def PROBLEM    2)
+(def CHATTER    PApplet/CHATTER)
+(def COMPLAINT  PApplet/COMPLAINT)
+(def PROBLEM    PApplet/PROBLEM)
 
 ;; types of projection matrices
 
-(def CUSTOM        0)  ;; user-specified fanciness
-(def ORTHOGRAPHIC  2)  ;; 2D isometric projection
-(def PERSPECTIVE   3 ) ;; perspective matrix
+(def CUSTOM        PApplet/CUSTOM)        ;; user-specified fanciness
+(def ORTHOGRAPHIC  PApplet/ORTHOGRAPHIC)  ;; 2D isometric projection
+(def PERSPECTIVE   PApplet/PERSPECTIVE)   ;; perspective matrix
 
 ;; shapes
 
 ;; the low four bits set the variety,
 ;; higher bits set the specific shape type
 
-(def GROUP            (bit-shift-left 1 2))
+; (def GROUP            PApplet/GROUP)
 
-(def POINTS           (bit-shift-left 1 4))
+(def POINT            PApplet/POINT) ;shared with light
+(def POINTS           PApplet/POINTS)
 
-(def LINES            (bit-shift-left 1 5))
-(def LINE_STRIP       (bit-or (bit-shift-left 1 5) 1))
-(def LINE_LOOP        (bit-or (bit-shift-left 1 5) 2))
+(def LINE             PApplet/LINE)
+(def LINES            PApplet/LINES)
 
-(def TRIANGLES        (bit-or (bit-shift-left 1 6) 0))
-(def TRIANGLE_STRIP   (bit-or (bit-shift-left 1 6) 1))
-(def TRIANGLE_FAN     (bit-or (bit-shift-left 1 6) 2))
+(def TRIANGLE         PApplet/TRIANGLE)
+(def TRIANGLES        PApplet/TRIANGLES)
+(def TRIANGLE_STRIP   PApplet/TRIANGLE_STRIP)
+(def TRIANGLE_FAN     PApplet/TRIANGLE_FAN)
 
-(def QUADS            (bit-or (bit-shift-left 1 7) 0))
-(def QUAD_STRIP       (bit-or (bit-shift-left 1 7) 1))
-(def POLYGON          (bit-or (bit-shift-left 1 8) 0))
+(def QUAD             PApplet/QUAD)
+(def QUADS            PApplet/QUADS)
+(def QUAD_STRIP       PApplet/QUAD_STRIP)
+
+(def POLYGON          PApplet/POLYGON)
+(def PATH             PApplet/PATH)
+
+(def RECT             PApplet/RECT)
+(def ELLIPSE          PApplet/ELLIPSE)
+(def ARC              PApplet/ARC)
+
+(def SPHERE           PApplet/SPHERE)
+(def BOX              PApplet/BOX)
+
+(def OPEN             PApplet/OPEN)
+(def CLOSE            PApplet/CLOSE)
+
 (def CONCAVE_POLYGON  (bit-or (bit-shift-left 1 8) 1))
 (def CONVEX_POLYGON   (bit-or (bit-shift-left 1 8) 2))
-(def OPEN  1)
-(def CLOSE  2)
+
+(def CORNER PApplet/CORNER)
+(def CORNERS PApplet/CORNERS)
+(def RADIUS PApplet/RADIUS)
+(def CENTER PApplet/CENTER)
+(def DIAMETER PApplet/DIAMETER)
+
+;; vertical alignment for text placement
+
+(def BASELINE PApplet/BASELINE)
+(def TOP PApplet/TOP)
+(def BOTTOM PApplet/BOTTOM)
+
+;; uv texture orientation modes
+
+(def NORMAL PApplet/NORMAL)
+(def NORMALIZED PApplet/NORMALIZED)
+(def IMAGE PApplet/IMAGE)
+
+;; stroke modes
+
+(def SQUARE PApplet/SQUARE)
+(def ROUND PApplet/ROUND)
+(def PROJECT PApplet/PROJECT)
+(def MODEL PApplet/MODEL)
+
+;; LIGHTING
+
+(def AMBIENT PApplet/AMBIENT)
+(def DIRECTIONAL PApplet/DIRECTIONAL)
+;; (def POINT PApplet/POINT) ; shared with shape feature
+(def SPOT PApplet/SPOT)
+
+;; keys 
+
+(def BACKSPACE PApplet/BACKSPACE)
+(def TAB PApplet/TAB)
+(def ENTER PApplet/ENTER)
+(def RETURN PApplet/RETURN)
+(def ESC PApplet/ESC)
+(def DELETE PApplet/DELETE)
+
+(def UP PApplet/UP)
+(def DOWN PApplet/DOWN)
+(def LEFT PApplet/LEFT)
+(def RIGHT PApplet/RIGHT)
+
+(def ALT PApplet/ALT)
+(def CONTROL PApplet/CONTROL)
+(def SHIFT PApplet/SHIFT)
+
+
 
 
