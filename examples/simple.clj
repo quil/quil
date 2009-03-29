@@ -2,7 +2,7 @@
 
 (ns p5-example
   (:use rosado.processing)
-  (:import (javax.swing JFrame JLabel JTextField JButton))
+  (:import (javax.swing JFrame))
   (:import (processing.core PApplet)))
 
 
