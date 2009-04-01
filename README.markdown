@@ -19,9 +19,17 @@ your CLASSPATH.
 
 The `examples` directory contains a simple script to get you going.
 
+## COMMON ISSUES ##
+
+clj-procesing may not work if you're using `add-classpath` to put the
+Processing jars into your CLASSPATH. Please, use a "proper" way to set
+up your CLASSPATH (eg. with a special script like the [clj][cljscript]
+on Clojure Wiki)
+
 ## TODO ##
 
 * docstrings
 * include remaining constants
 
 [processing]:http://processing.org/
+[cljscript]:http://en.wikibooks.org/wiki/Clojure_Programming/Getting_Started#Create_clj_Script
