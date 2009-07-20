@@ -16,7 +16,7 @@
           description="Create jar file.">
     <jar jarfile="${jarfile}">
       <fileset dir="." includes="CPL.TXT"/>
-      <fileset dir="." includes="rosado/**/*.clj"/>
+      <fileset dir="src" includes="rosado/**/*.clj"/>
     </jar>
   </target>
 
