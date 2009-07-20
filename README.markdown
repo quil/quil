@@ -15,7 +15,11 @@ CLASSPATH.
 To use the OpenGL features, you also have to add `gluegen-rt.jar`,
 `jogl.jar` and `opengl.jar` from the
 `$PROCESSING_DIR/libraries/opengl/library`. You also need to pass the
-argument `-Djava.library.path=`$PROCESSING_DIR/libraries/opengl/library` to the JVM.
+argument:
+
+         -Djava.library.path=`$PROCESSING_DIR/libraries/opengl/library
+
+to the JVM.
 
 Then, create a JAR by running `ant` and also add the resulting file to
 your CLASSPATH.
