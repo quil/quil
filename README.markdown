@@ -35,6 +35,12 @@ Processing jars into your CLASSPATH. Please, use a "proper" way to set
 up your CLASSPATH (eg. with a special script like the [clj][cljscript]
 on Clojure Wiki)
 
+If your're using Clojure's `proxy` macro, you'll have to define the
+mouse handling methods to take one argument (which is just an instance
+of java.awt.event.MouseEvent class) and get all needed information
+(like mouse position etc) from that object. Also, accessing instance
+fields of the PApplet class from within proxy doesn't work.
+
 ## TODO ##
 
 * docstrings

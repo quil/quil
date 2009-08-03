@@ -457,10 +457,6 @@
 ;; $$nfp
 ;; $$nfs
 
-(defn mouse-x [] (.mouseX *applet*))
-
-(defn mouse-y [] (.mouseY *applet*))
-
 (defn no-cursor [] (.noCursor *applet*))
 
 (defn no-fill [] (.noFill *applet*))
@@ -513,10 +509,6 @@
   ([] (.perspective *applet*))
   ([fovy aspect z-near z-far]
 	 (.perspective *applet* (float fovy) (float aspect) (float z-near) (float z-far))))
-
-(defn pmouse-x [] (.pmouseX *applet*))
-
-(defn pmouse-y [] (.pmouseY *applet*))
 
 (defn point
   ([x y] (.point *applet* (float x)(float y)))
