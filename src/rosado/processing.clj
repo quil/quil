@@ -785,7 +785,8 @@
 ;; $$unregisterPre
 ;; $$unregisterSize
 ;; $$update
-;; $$updatePixels
+
+(defn update-pixels [] (.updatePixels *applet*))
 
 (defn vertex
   ([x y] (.vertex *applet* (float x) (float y)))
