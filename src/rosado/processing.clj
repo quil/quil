@@ -7,13 +7,13 @@
 ;; which can be found in the file CPL.TXT at the root of this
 ;; distribution.  By using this software in any fashion, you are
 ;; agreeing to be bound by the terms of this license.  You must not
-;; remove this notice, or any other, from this software. 
+;; remove this notice, or any other, from this software.
 
 (ns rosado.processing
   (:import (processing.core PApplet PImage PGraphics PFont))
   (:load "constants"))
 
-;; used by functions in this lib. Use binding to set it 
+;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
 (def #^PApplet *applet*)
 
@@ -37,28 +37,30 @@
 
 (defn ambient-light
   ([red green blue]
-	 (.ambientLight *applet* (float red) (float green) (float blue)))
+     (.ambientLight *applet* (float red) (float green) (float blue)))
   ([red green blue x y z]
-	 (.ambientLight *applet* (float red) (float green) (float blue) (float x) (float y) (float z))))
+     (.ambientLight *applet* (float red) (float green) (float blue)
+                    (float x) (float y) (float z))))
 
 ;; $$append
 
 (defn apply-matrix
   ([n00 n01 n02 n10 n11 n12]
-	 (.applyMatrix *applet* (float n00) (float n01) (float n02)
-				   (float n10) (float n11) (float n12)))
+     (.applyMatrix *applet* (float n00) (float n01) (float n02)
+                   (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
-	n10 n11 n12 n13
-	n20 n21 n22 n23
-	n30 n31 n32 n33]
-	 (.applyMatrix *applet* (float n00) (float n01) (float n02) (float 03)
-				   (float n10) (float n11) (float n12) (float 13)
-				   (float n20) (float n21) (float n22) (float 23)
-				   (float n30) (float n31) (float n32) (float 33))))
+    n10 n11 n12 n13
+    n20 n21 n22 n23
+    n30 n31 n32 n33]
+     (.applyMatrix *applet* (float n00) (float n01) (float n02) (float 03)
+                   (float n10) (float n11) (float n12) (float 13)
+                   (float n20) (float n21) (float n22) (float 23)
+                   (float n30) (float n31) (float n32) (float 33))))
 
 (defn arc
   [a b c d start stop]
-  (.arc *applet* (float a)(float b) (float c) (float d) (float start) (float stop)))
+  (.arc *applet* (float a)(float b) (float c) (float d)
+        (float start) (float stop)))
 
 ;; $$arraycopy
 
@@ -86,8 +88,8 @@
 
 (defn begin-raw
   ([#^PGraphics rawGfx] (.beginRaw *applet* rawGfx))
-  ([#^java.lang.String renderer #^java.lang.String filename] 
-	 (.beginRaw *applet* renderer filename)))
+  ([#^java.lang.String renderer #^java.lang.String filename]
+     (.beginRaw *applet* renderer filename)))
 
 ;; $$beginRecord
 
@@ -97,46 +99,50 @@
 
 (defn bezier
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-	 (.bezier *applet* 
-			  (float x1) (float y1) 
-			  (float x2) (float y2) 
-			  (float x3) (float y3) 
-			  (float x4) (float y4)))
+     (.bezier *applet*
+              (float x1) (float y1)
+              (float x2) (float y2)
+              (float x3) (float y3)
+              (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-	 (.bezier *applet*
-			  (float x1) (float y1) (float z1) 
-			  (float x2) (float y2) (float z2)
-			  (float x3) (float y3) (float z3)
-			  (float x4) (float y4) (float z4))))
+     (.bezier *applet*
+              (float x1) (float y1) (float z1)
+              (float x2) (float y2) (float z2)
+              (float x3) (float y3) (float z3)
+              (float x4) (float y4) (float z4))))
 
 (defn bezier-detail
   [detail] (.bezierDetail *applet* (int detail)))
 
 (defn bezier-point
-  [a b c d t] (.bezierPoint *applet* (float a) (float b) (float c) (float d) (float t)))
+  [a b c d t] (.bezierPoint *applet* (float a) (float b) (float c)
+                            (float d) (float t)))
 
 (defn bezier-tangent
-  [a b c d t] (.bezierTangent *applet* (float a) (float b) (float c) (float d) (float t)))
+  [a b c d t] (.bezierTangent *applet* (float a) (float b) (float c)
+                              (float d) (float t)))
 
 (defn bezier-vertex
   ([x2 y2 x3 y3 x4 y4]
-	 (.bezierVertex *applet* 
-			  (float x2) (float y2) 
-			  (float x3) (float y3) 
-			  (float x4) (float y4)))
+     (.bezierVertex *applet*
+                    (float x2) (float y2)
+                    (float x3) (float y3)
+                    (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-	 (.bezierVertex *applet*
-			  (float x2) (float y2) (float z2)
-			  (float x3) (float y3) (float z3)
-			  (float x4) (float y4) (float z4))))
+     (.bezierVertex *applet*
+                    (float x2) (float y2) (float z2)
+                    (float x3) (float y3) (float z3)
+                    (float x4) (float y4) (float z4))))
 
 ;; $$binary
 
 (defn blend
   ([sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
-	 (.blend *applet* (int sx1) (int sy1) (int sx2) (int sy2) (int dx1) (int dy1) (int dx2) (int dy2) (int mode)))
+     (.blend *applet* (int sx1) (int sy1) (int sx2) (int sy2)
+             (int dx1) (int dy1) (int dx2) (int dy2) (int mode)))
   ([#^PImage src sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
-	 (.blend *applet* src (int sx1) (int sy1) (int sx2) (int sy2) (int dx1) (int dy1) (int dx2) (int dy2) (int mode))))
+     (.blend *applet* src (int sx1) (int sy1) (int sx2) (int sy2)
+             (int dx1) (int dy1) (int dx2) (int dy2) (int mode))))
 
 (defn blend-color
   [c1 c2 mode] (PApplet/blendColor (int c1) (int c2) (int mode)))
@@ -152,7 +158,9 @@
 (defn camera
   ([] (.camera *applet*))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
-	 (.camera *applet* (float eyeX) (float eyeY) (float eyeZ) (float centerX) (float centerY) (float centerZ) (float upX) (float upY) (float upZ))))
+     (.camera *applet* (float eyeX) (float eyeY) (float eyeZ)
+              (float centerX) (float centerY) (float centerZ)
+              (float upX) (float upY) (float upZ))))
 
 (defn can-draw? [] (.canDraw *applet*))
 
@@ -173,8 +181,11 @@
 (defn color-mode
   ([mode] (.colorMode *applet* (int mode)))
   ([mode max] (.colorMode *applet* (int mode) (float max)))
-  ([mode max-x max-y max-z] (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z)))
-  ([mode max-x max-y max-z max-a] (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z) (float max-a))))
+  ([mode max-x max-y max-z]
+     (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z)))
+  ([mode max-x max-y max-z max-a]
+     (.colorMode *applet* (int mode)
+                 (float max-x) (float max-y) (float max-z) (float max-a))))
 
 ;; $$concat
 
@@ -188,11 +199,11 @@
 
 (defn copy
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-	 (.copy *applet* (int sx1) (int sy1) (int sx2) (int sy2)
-			(int dx1) (int dy1) (int dx2) (int dy2)))
+     (.copy *applet* (int sx1) (int sy1) (int sx2) (int sy2)
+            (int dx1) (int dy1) (int dx2) (int dy2)))
   ([#^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-	 (.copy *applet* img (int sx1) (int sy1) (int sx2) (int sy2)
-			(int dx1) (int dy1) (int dx2) (int dy2))))
+     (.copy *applet* img (int sx1) (int sy1) (int sx2) (int sy2)
+            (int dx1) (int dy1) (int dx2) (int dy2))))
 
 (defn cos [angle] (PApplet/cos (float angle)))
 
@@ -200,26 +211,27 @@
   ([name size] (.createFont *applet* name (float size)))
   ([name size smooth] (.createFont *applet* name (float size) smooth))
   ([name size smooth #^chars charset]
-	 (.createFont *applet* name (float size) smooth charset)))
+     (.createFont *applet* name (float size) smooth charset)))
 
 (defn create-graphics
   ([w h renderer]
-	 (.createGraphics *applet* (int w) (int h) renderer))
+     (.createGraphics *applet* (int w) (int h) renderer))
   ([w h renderer path]
-	 (.createGraphics *applet* (int w) (int h) renderer path)))
+     (.createGraphics *applet* (int w) (int h) renderer path)))
 
-(defn create-image [w h format] (.createImage *applet* (int w) (int h) (int format)))
+(defn create-image [w h format]
+  (.createImage *applet* (int w) (int h) (int format)))
 
 (defn create-input [filename]
-	(PApplet/createInput (java.io.File. filename)))
+  (PApplet/createInput (java.io.File. filename)))
 
 (defn create-input-raw
-	"Call openStream() without automatic gzip decompression."
-	[filename]
-	(.createInputRaw *applet* filename))
+  "Call openStream() without automatic gzip decompression."
+  [filename]
+  (.createInputRaw *applet* filename))
 
 (defn create-output [filename]
-	(PApplet/createOutput (java.io.File. filename)))
+  (PApplet/createOutput (java.io.File. filename)))
 
 (defn create-path [filename] (PApplet/createPath filename))
 
@@ -237,27 +249,30 @@
 
 (defn curve
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-	 (.curve *applet* 
-			  (float x1) (float y1) 
-			  (float x2) (float y2) 
-			  (float x3) (float y3) 
-			  (float x4) (float y4)))
+     (.curve *applet*
+             (float x1) (float y1)
+             (float x2) (float y2)
+             (float x3) (float y3)
+             (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-	 (.curve *applet*
-			  (float x1) (float y1) (float z1) 
-			  (float x2) (float y2) (float z2)
-			  (float x3) (float y3) (float z3)
-			  (float x4) (float y4) (float z4))))
+     (.curve *applet*
+             (float x1) (float y1) (float z1)
+             (float x2) (float y2) (float z2)
+             (float x3) (float y3) (float z3)
+             (float x4) (float y4) (float z4))))
 
 (defn curve-detail [detail] (.curveDetail *applet* (int detail)))
 
 (defn curve-point
-  [a b c d t] (.bezierPoint *applet* (float a) (float b) (float c) (float d) (float t)))
+  [a b c d t]
+  (.bezierPoint *applet* (float a) (float b) (float c) (float d) (float t)))
 
 (defn curve-tangent
-  [a b c d t] (.curveTangent *applet* (float a) (float b) (float c) (float d) (float t)))
+  [a b c d t]
+  (.curveTangent *applet* (float a) (float b) (float c) (float d) (float t)))
 
-(defn curve-tightness [ti] (.curveTightness *applet* (float ti)))
+(defn curve-tightness [ti]
+  (.curveTightness *applet* (float ti)))
 
 (defn curve-vertex
   ([x y] (.curveVertex *applet* (float x) (float y)))
@@ -281,13 +296,15 @@
 
 (defn directional-light
   [r g b nx ny nz]
-  (.directionalLight *applet* (float r) (float g) (float b) (float nx) (float ny) (float nz)))
+  (.directionalLight *applet* (float r) (float g) (float b)
+                     (float nx) (float ny) (float nz)))
 
 (defn displayable? [] (.displayable *applet*))
 
 (defn dist
   ([a b x y] (PApplet/dist (float a) (float b) (float x) (float y)))
-  ([a b c x y z] (PApplet/dist (float a) (float b) (float c) (float x) (float y) (float z))))
+  ([a b c x y z] (PApplet/dist (float a) (float b) (float c)
+                               (float x) (float y) (float z))))
 
 ;; $$draw
 
@@ -347,7 +364,8 @@
 
 (defn frustum
   [l r b t near far]
-  (.frustum *applet* (float l) (float r) (float b) (float t) (float near) (float far)))
+  (.frustum *applet* (float l) (float r) (float b) (float t)
+            (float near) (float far)))
 
 (defn get-pixel
   ([] (.get *applet*))
@@ -367,8 +385,11 @@
 
 (defn image
   ([#^PImage img x y] (.image *applet* img (float x) (float y)))
-  ([#^PImage img x y c d] (.image *applet* img (float x) (float y) (float c) (float d)))
-  ([#^PImage img x y c d u1 v1 u2 v2] (.image *applet* img (float x) (float y) (float c) (float d) (float u1) (float v1) (float u2) (float v2))))
+  ([#^PImage img x y c d] (.image *applet* img (float x) (float y)
+                                  (float c) (float d)))
+  ([#^PImage img x y c d u1 v1 u2 v2]
+     (.image *applet* img (float x) (float y) (float c) (float d)
+             (float u1) (float v1) (float u2) (float v2))))
 
 (defn image-mode [mode] (.imageMode *applet* (int mode)))
 
@@ -391,7 +412,9 @@
 (defn line
   ([p1 p2] (apply line (concat p1 p2)))
   ([x1 y1 x2 y2] (.line *applet* (float x1) (float y1) (float x2) (float y2)))
-  ([x1 y1 z1 x2 y2 z2] (.line *applet* (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))))
+  ([x1 y1 z1 x2 y2 z2]
+     (.line *applet* (float x1) (float y1) (float z1)
+            (float x2) (float y2) (float z2))))
 
 ;; $$link
 
@@ -406,14 +429,14 @@
 (defn load-pixels [] (.loadPixels *applet*))
 
 (defn load-shape
-	"Load a geometry from a file as a PShape."
-	[filename]
-	(.loadShape *applet* filename))
+  "Load a geometry from a file as a PShape."
+  [filename]
+  (.loadShape *applet* filename))
 
-(defn load-strings 
-	"Load data from a file and shove it into a String array."
-	[filename]
-	(.loadStrings *applet* filename))
+(defn load-strings
+  "Load data from a file and shove it into a String array."
+  [filename]
+  (.loadStrings *applet* filename))
 
 ;; $$log
 
@@ -477,9 +500,9 @@
 (defn no-loop [] (.noLoop *applet*))
 
 (defn norm
-	"Normalize a value to exist between 0 and 1 (inclusive)."
-	[val start stop]
-	(PApplet/norm (float val) (float start) (float stop)))
+  "Normalize a value to exist between 0 and 1 (inclusive)."
+  [val start stop]
+  (PApplet/norm (float val) (float start) (float stop)))
 
 (defn normal [nx ny nz] (.normal *applet* (float nx) (float ny) (float nz)))
 
@@ -493,9 +516,10 @@
 
 ;; $$open -- overload
 
-(defn ortho 
+(defn ortho
   ([] (.ortho *applet*))
-  ([l r b t near far] (.ortho *applet* (float l) (float r) (float b) (float t) (float near) (float far))))
+  ([l r b t near far] (.ortho *applet* (float l) (float r) (float b)
+                              (float t) (float near) (float far))))
 
 ;; $$paint
 ;; $$param
@@ -508,7 +532,8 @@
 (defn perspective
   ([] (.perspective *applet*))
   ([fovy aspect z-near z-far]
-	 (.perspective *applet* (float fovy) (float aspect) (float z-near) (float z-far))))
+     (.perspective *applet* (float fovy) (float aspect)
+                   (float z-near) (float z-far))))
 
 (defn point
   ([x y] (.point *applet* (float x)(float y)))
@@ -566,8 +591,8 @@
 ;; $$registerSize
 
 (defn request-image
-	([filename] (.requestImage *applet* filename))
-	([filename extension] (.requestImage *applet* filename extension)))
+  ([filename] (.requestImage *applet* filename))
+  ([filename extension] (.requestImage *applet* filename extension)))
 
 (defn reset-matrix [] (.resetMatrix *applet*))
 
@@ -575,7 +600,8 @@
 
 (defn rotate
   ([angle] (.rotate *applet* (float angle)))
-  ([angle vx vy vz] (.rotate *applet* (float angle) (float vx) (float vy) (float vz))))
+  ([angle vx vy vz] (.rotate *applet* (float angle)
+                             (float vx) (float vy) (float vz))))
 
 (defn rotate-x [angle] (.rotateX *applet* (float angle)))
 
@@ -670,9 +696,9 @@
 
 (defn spotlight
   ([r g b x y z nx ny nz angle concentration]
-	 (.spotLight *applet* r g b x y z nx ny nz angle concentration))
+     (.spotLight *applet* r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
-	 (.spotLight *applet* r g b x y z nx ny nz angle concentration)))
+     (.spotLight *applet* r g b x y z nx ny nz angle concentration)))
 
 (defn sq [a] (PApplet/sq (float a)))
 
@@ -719,9 +745,9 @@
 
 (defn string->text-in
   ([#^java.lang.String s x1 y1 x2 y2]
-	 (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
+     (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
   ([#^java.lang.String s x1 y1 x2 y2 z]
-	 (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
+     (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (defn text-align
   ([align] (.textAlign *applet* (int align)))
@@ -764,13 +790,14 @@
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
 (defn translate
-	([v] (apply translate v))
+  ([v] (apply translate v))
   ([tx ty] (.translate *applet* (float tx) (float ty)))
   ([tx ty tz] (.translate *applet* (float tx) (float ty) (float tz))))
 
 (defn triangle
   [x1 y1 x2 y2 x3 y3]
-  (.triangle *applet* (float x1) (float y1) (float x2) (float y2) (float x3) (float y3)))
+  (.triangle *applet* (float x1) (float y1)
+             (float x2) (float y2) (float x3) (float y3)))
 
 ;; $$trim
 ;; $$unbinary
@@ -793,31 +820,31 @@
   ([x y z] (.vertex *applet* (float x) (float y) (float z)))
   ([x y u v] (.vertex *applet* (float x) (float y) (float u) (float v)))
   ([x y z u v]
-	 (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
+     (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
 
 (defn year [] (PApplet/year))
 
 ;; utility functions. clj-processing specific
 
 (defmacro with-translation
-	"Berforms body with translation, restores current transformation on exit."
-	[translation-vector & body]
-	`(let [tr# ~translation-vector]
-		 (push-matrix)
-		 (translate tr#)
-		 ~@body
-		 (pop-matrix)))
+  "Berforms body with translation, restores current transformation on exit."
+  [translation-vector & body]
+  `(let [tr# ~translation-vector]
+     (push-matrix)
+     (translate tr#)
+     ~@body
+     (pop-matrix)))
 
-(defmacro with-rotation 
-	"Berforms body with rotation, restores current transformation on exit.
+(defmacro with-rotation
+  "Berforms body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
 
-  Example: 
-    (with-rotation [angle] 
+  Example:
+    (with-rotation [angle]
       (vertex 1 2))"
-	[rotation & body]
-	`(let [tr# ~rotation]
-		 (push-matrix)
-		 (apply rotate tr#)
-		 ~@body
-		 (pop-matrix)))
+  [rotation & body]
+  `(let [tr# ~rotation]
+     (push-matrix)
+     (apply rotate tr#)
+     ~@body
+     (pop-matrix)))
