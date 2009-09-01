@@ -360,7 +360,11 @@
 ;; $$focusGained
 ;; $$focusLost
 
+(defn frame-count [] (.frameCount *applet*))
+
 (defn framerate [new-rate] (.frameRate *applet* (float new-rate)))
+
+(def frame-rate frame-rate)
 
 (defn frustum
   [l r b t near far]
@@ -376,6 +380,8 @@
 
 ;; $$handleDraw
 ;; $$hex
+
+(defn height [] (.getHeight *applet*))
 
 (defn hint [which] (.hint *applet* (int which)))
 
@@ -825,6 +831,8 @@
 (defn year [] (PApplet/year))
 
 ;; utility functions. clj-processing specific
+
+(defn width [] (.getWidth *applet*))
 
 (defmacro with-translation
   "Berforms body with translation, restores current transformation on exit."
