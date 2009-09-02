@@ -23,8 +23,7 @@
       (vertex  50 -50)
       (vertex -50 -50)
       (end-shape CLOSE)))
-  (filter-kind INVERT)
-  (framerate 10))
+  (filter-kind INVERT))
 
 (defn setup []
   "Runs once."
@@ -35,9 +34,9 @@
 
 ;; Now we just need to define an applet:
 
-(defapplet example2 "An example."
-  setup draw 200 200)
+(defapplet example2 :title "An example."
+  :setup setup :draw draw :width 200 :height 200)
 
-(run-example2)
+(run example2)
 
-;; (stop-example2)
+;; (stop example2)
