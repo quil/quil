@@ -364,7 +364,7 @@
 
 (defn framerate [new-rate] (.frameRate *applet* (float new-rate)))
 
-(def frame-rate frame-rate)
+(def frame-rate framerate)
 
 (defn frustum
   [l r b t near far]
