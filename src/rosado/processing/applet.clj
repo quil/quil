@@ -3,25 +3,26 @@
         [clojure.contrib.java-utils :only [as-str]])
   (:import (java.awt Frame)))
 
-(defn bind-applet [f]
-  (fn [this & args]
-    (binding [*applet* this] (apply f args))))
+(defn- bind-applets
+  "Turn the method map into something one that update-proxy can use."
+  [methods [method-name f]]
+  (assoc methods (name method-name)
+         (fn [this & args]
+           (binding [*applet* this]
+             (apply f args)))))
 
 (defmacro defapplet
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
-        fns (dissoc options :name :title :height :width)
-        ;; TODO: fix this to automatically bind *applet* in fns
-        ;; methods (zipmap (map name (keys fns))
-        ;;                 (map bind-applet (vals fns)))
-        ]
+        fns (dissoc options :name :title :height :width)]
     `(def ~app-name
           (let [frame# (atom nil)
+                methods# (reduce bind-applets {} ~fns)
                 prx# (proxy [processing.core.PApplet
                              clojure.lang.IMeta] []
                        (meta [] (assoc ~options :frame frame#)))]
-            (update-proxy prx# ~fns)
+            (update-proxy prx# methods#)
             prx#))))
 
 (defn run [applet]
@@ -40,3 +41,10 @@
 (defn stop [applet]
   (.destroy applet)
   (.hide @(:frame ^applet)))
+
+(comment ;; Usage:
+  (defapplet growing-triangle
+    :draw (fn [] (line 10 10 (frame-count) 100)))
+
+  (run growing-triangle)
+  (stop growing-triangle))
