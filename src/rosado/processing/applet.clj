@@ -3,7 +3,7 @@
         [clojure.contrib.java-utils :only [as-str]])
   (:import (java.awt Frame)))
 
-(defn- bind-applets
+(defn bind-applets
   "Turn the method map into something one that update-proxy can use."
   [methods [method-name f]]
   (assoc methods (name method-name)
