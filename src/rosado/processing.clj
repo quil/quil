@@ -105,20 +105,21 @@
 
 ;; $$beginRecord
 
-(def shapes {:points POINTS
-             :lines LINES
-             :triangles TRIANGLES
-             :triangle-strip TRIANGLE_STRIP
-             :triangle-fan TRIANGLE_FAN
-             :quads QUADS
-             :quad-strip QUAD_STRIP})
+(def #^{:private true}
+     shapes-map {:points POINTS
+                 :lines LINES
+                 :triangles TRIANGLES
+                 :triangle-strip TRIANGLE_STRIP
+                 :triangle-fan TRIANGLE_FAN
+                 :quads QUADS
+                 :quad-strip QUAD_STRIP})
 
 (defmacro begin-shape
   "Takes an optional keyword argument:  One  of: :points, :lines, :triangles,
   :triangle-fan, :triangle-strip, :quads, :quad-strip."
   ([] `(.beginShape *applet*))
   ([kind] 
-     (let [kind (shapes kind)]
+     (let [kind (shapes-map kind)]
        `(.beginShape *applet* (int ~kind)))))
 
 (defn bezier
