@@ -26,6 +26,11 @@
 
 (defn abs-float [n] (PApplet/abs (float n)))
 
+(defn abs
+  "Returns a float."
+  [n]
+  (PApplet/abs (float n)))
+
 (defn acos [n] (PApplet/acos n))
 
 ;; $$addListeners
@@ -84,6 +89,8 @@
 (defn background-int
   ([rgb] (.background *applet* (int rgb)))
   ([rgb alpha] (.background *applet* (int rgb) (float alpha))))
+
+(def background background-float)
 
 (defn background-image
   [#^PImage img] (.background *applet* img))
@@ -195,6 +202,8 @@
   ([r g b] (.background *applet* (int r) (int g) (int b)))
   ([r g b a] (.background *applet* (int r) (int g) (int b) (int a))))
 
+(def color color-float)
+
 (defn color-mode
   ([mode] (.colorMode *applet* (int mode)))
   ([mode max] (.colorMode *applet* (int mode) (float max)))
@@ -213,6 +222,8 @@
 (defn constrain-int
   [amt low high]
   (PApplet/constrain (int amt) (int low) (int high)))
+
+(defn constrain constrain-float)
 
 (defn copy
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
@@ -341,7 +352,7 @@
 (defn emissive-int
   [gray] (.emissive *applet* (int gray)))
 
-(defn emissive [x y z] (emissive-float x y z))
+(def emissive emissive-float)
 
 (defn end-camera [] (.endCamera *applet*))
 
@@ -372,9 +383,7 @@
   ([rgb] (.fill *applet* (int rgb)))
   ([rgb alpha] (.fill *applet* (int rgb) (float alpha))))
 
-(defn fill
-  ([rgb] (fill-int rgb))
-  ([rgb alpha] (fill-int rgb alpha)))
+(def fill fill-float)
 
 (defn filter-kind
   ([kind] (.filter *applet* (int kind)))
@@ -748,6 +757,8 @@
   ([rgb] (.stroke *applet* (int rgb)))
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
+(defn stroke stroke-float)
+
 (defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
 
 (defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
@@ -817,6 +828,8 @@
 (defn tint-int
   ([rgb] (.tint *applet* (int rgb)))
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
+
+(defn tint tint-float)
 
 (defn translate
   ([v] (apply translate v))
