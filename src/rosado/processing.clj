@@ -17,6 +17,11 @@
 ;; to an instance of processing.core.PApplet
 (def #^PApplet *applet*)
 
+(def #^{:private true} toupper (memfn toUpperCase))
+
+(defn- tosymb [kw]
+  (-> kw name toupper symbol))
+
 (defn abs-int [n] (PApplet/abs (int n)))
 
 (defn abs-float [n] (PApplet/abs (float n)))
@@ -93,9 +98,21 @@
 
 ;; $$beginRecord
 
-(defn begin-shape
-  ([] (.beginShape *applet*))
-  ([kind] (.beginShape *applet* (int kind))))
+(def shapes {:points POINTS
+             :lines LINES
+             :triangles TRIANGLES
+             :triangle-strip TRIANGLE_STRIP
+             :triangle-fan TRIANGLE_FAN
+             :quads QUADS
+             :quad-strip QUAD_STRIP})
+
+(defmacro begin-shape
+  "Takes an optional keyword argument:  One  of: :points, :lines, :triangles,
+  :triangle-fan, :triangle-strip, :quads, :quad-strip."
+  ([] `(.beginShape *applet*))
+  ([kind] 
+     (let [kind (shapes kind)]
+       `(.beginShape *applet* (int ~kind)))))
 
 (defn bezier
   ([x1 y1 x2 y2 x3 y3 x4 y4]
@@ -327,9 +344,11 @@
 
 (defn end-raw [] (.endRaw *applet*))
 
-(defn end-shape
-  ([] (.endShape *applet*))
-  ([mode] (.endShape *applet* (int mode))))
+(defmacro end-shape
+  ([] `(.endShape *applet*))
+  ([kind]
+     (let [kind (tosymb kind)]
+       `(.endShape *applet* (int ~kind)))))
 
 ;; $$exec
 
@@ -844,7 +863,7 @@
      (pop-matrix)))
 
 (defmacro with-rotation
-  "Berforms body with rotation, restores current transformation on exit.
+  "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
 
   Example:
