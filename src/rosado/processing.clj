@@ -329,7 +329,10 @@
   [a b c d]
   (.ellipse *applet* (float a) (float b) (float c) (float d)))
 
-(defn ellipse-mode [mode] (.ellipseMode *applet* (int mode)))
+(defmacro ellipse-mode [mode]
+  "Takes a keyword argument; :center, :radius, :corner or :corners."
+  (let [mode (tosymb mode)]
+    `(.ellipseMode *applet* (int ~mode))))
 
 (defn emissive-float
   ([gray] (.emissive *applet* (float gray)))
@@ -345,6 +348,7 @@
 (defn end-raw [] (.endRaw *applet*))
 
 (defmacro end-shape
+  "Takes an optinal :close keyword as argument."
   ([] `(.endShape *applet*))
   ([kind]
      (let [kind (tosymb kind)]
