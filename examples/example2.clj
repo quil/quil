@@ -35,7 +35,7 @@
 ;; Now we just need to define an applet:
 
 (defapplet example2 :title "An example."
-  :setup setup :draw draw :width 200 :height 200)
+  :setup setup :draw draw :size [200 200])
 
 (run example2)
 

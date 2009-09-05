@@ -17,9 +17,9 @@
 ;; to an instance of processing.core.PApplet
 (def #^PApplet *applet*)
 
-(def #^{:private true} toupper (memfn toUpperCase))
+(def toupper (memfn toUpperCase))
 
-(defn- tosymb [kw]
+(defn tosymb [kw]
   (-> kw name toupper symbol))
 
 (defn abs-int [n] (PApplet/abs (int n)))

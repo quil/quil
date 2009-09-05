@@ -1,5 +1,5 @@
 (ns rosado.processing.applet
-  (:use [rosado.processing])
+  (:use [rosado.processing :except (size)])
   (:import (javax.swing JFrame)))
 
 (defn- bind-applets
@@ -14,7 +14,7 @@
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
-        fns (dissoc options :name :title :height :width)
+        fns (dissoc options :name :title :size)
         methods (reduce bind-applets {} fns)]
     `(def ~app-name
           (let [frame# (atom nil)
@@ -30,12 +30,14 @@
   [applet & interactive?]
   (.init applet)
   (let [m (.meta applet)
-        width (or (:width m) 200)
-        height (or (:height m) 200)
+        [width height & mode] (or (:size m) [200 200])
+        mode (if-let [kw (first mode)]
+               (tosymb kw)
+               JAVA2D)
         close-op (if (first interactive?)
                    JFrame/DISPOSE_ON_CLOSE
                    JFrame/EXIT_ON_CLOSE)]
-    (.size applet width height)
+    (.size applet width height mode)
     (reset! (:frame m)
             (doto (JFrame. (or (:title m) (:name m)))
               (.setDefaultCloseOperation close-op)
