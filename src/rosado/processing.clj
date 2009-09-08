@@ -224,7 +224,7 @@
   [amt low high]
   (PApplet/constrain (int amt) (int low) (int high)))
 
-(defn constrain constrain-float)
+(def constrain constrain-float)
 
 (defn copy
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
@@ -758,7 +758,7 @@
   ([rgb] (.stroke *applet* (int rgb)))
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
-(defn stroke stroke-float)
+(def stroke stroke-float)
 
 (defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
 
@@ -830,7 +830,7 @@
   ([rgb] (.tint *applet* (int rgb)))
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
-(defn tint tint-float)
+(def tint tint-float)
 
 (defn translate
   ([v] (apply translate v))
