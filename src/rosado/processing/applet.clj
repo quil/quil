@@ -2,7 +2,7 @@
   (:use [rosado.processing :except (size)])
   (:import (javax.swing JFrame)))
 
-(defn- bind-applets
+(defn- with-binding
   "Turn the method map into something one that update-proxy can use."
   [methods [method-name f]]
   (assoc methods (name method-name)
@@ -15,7 +15,7 @@
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
         fns (dissoc options :name :title :size)
-        methods (reduce bind-applets {} fns)]
+        methods (reduce with-binding {} fns)]
     `(def ~app-name
           (let [frame# (atom nil)
                 prx# (proxy [processing.core.PApplet
