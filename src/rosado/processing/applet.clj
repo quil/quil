@@ -10,12 +10,23 @@
             (binding [*applet* this#]
               (apply ~f args#)))))
 
+(defn- fix-mname
+  "Changes :method-name to :methodName."
+  [[mname fun]]
+  (let [mname (name mname)
+        mr (re-matcher #"\-[a-zA-z]" mname)
+        replace-fn (comp #(.replaceFirst mr %) toupper #(.substring % 1))
+        fixed-name (if-let [matched (re-find mr)]
+                     (replace-fn matched)
+                     mname)]
+    [(keyword fixed-name) fun]))
+
 (defmacro defapplet
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
         fns (dissoc options :name :title :size)
-        methods (reduce with-binding {} fns)]
+        methods (reduce with-binding {} (into {} (map fix-mname fns)))]
     `(def ~app-name
           (let [frame# (atom nil)
                 prx# (proxy [processing.core.PApplet
