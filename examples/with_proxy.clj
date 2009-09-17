@@ -27,17 +27,17 @@
 ;; methods. Then we put the applet into a window and display it.
 
 (def p5-applet
-	 (proxy [PApplet] []
-	   (setup []
-			  (binding [*applet* this]
-				(size 200 200)
-				(smooth)
-				(no-stroke)
-				(fill 226)
-				(framerate 10)))
-	   (draw []
-			 (binding [*applet* this]
-			   (fancy-draw this)))))
+     (proxy [PApplet] []
+       (setup []
+              (binding [*applet* this]
+                (size 200 200)
+                (smooth)
+                (no-stroke)
+                (fill 226)
+                (framerate 10)))
+       (draw []
+             (binding [*applet* this]
+               (fancy-draw this)))))
 
 (.init p5-applet)
 
