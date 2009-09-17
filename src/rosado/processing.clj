@@ -485,7 +485,10 @@
 ;; $$main
 
 (defn map-to [val istart istop ostart ostop]
-  (PApplet/map val istart istop ostart ostop))
+  (PApplet/map (float val) (float istart) (float istop) (float ostart) (float ostop)))
+
+(defn map-to-double [val istart istop ostart ostop]
+  (PApplet/map (double val) (double istart) (double istop) (double ostart) (double ostop)))
 
 (defn mask
   ([#^ints alpha-array] (.mask *applet* alpha-array)))
