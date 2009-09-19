@@ -35,6 +35,10 @@
             (update-proxy prx# ~methods)
             prx#))))
 
+(def #^{:private true}
+     modes {:JAVA2D JAVA2D :OPENGL OPENGL
+            :P3D P3D :P2D P2D :PDF PDF})
+
 (defn run
   "Launches the applet. If given the flag :interactive, it won't exit
   on clicking the close button - it will only dispose the window."
@@ -43,7 +47,7 @@
   (let [m (.meta applet)
         [width height & mode] (or (:size m) [200 200])
         mode (if-let [kw (first mode)]
-               (tosymb kw)
+               (modes (-> kw name toupper keyword))
                JAVA2D)
         close-op (if (first interactive?)
                    JFrame/DISPOSE_ON_CLOSE
