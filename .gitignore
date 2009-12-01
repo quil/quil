@@ -1,2 +1,5 @@
 rosado.processing.jar
 lib/*
+classes/
+pom-generated.xml
+pom.xml
