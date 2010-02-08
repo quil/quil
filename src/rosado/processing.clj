@@ -192,16 +192,16 @@
 (defn ceil [n] (PApplet/ceil (float n)))
 
 (defn color-float
-  ([gray] (.background *applet* (float gray)))
-  ([gray alpha] (.background *applet* (float gray) (float alpha)))
-  ([r g b] (.background *applet* (float r) (float g) (float b)))
-  ([r g b a] (.background *applet* (float r) (float g) (float b) (float a))))
+  ([gray] (.color *applet* (float gray)))
+  ([gray alpha] (.color *applet* (float gray) (float alpha)))
+  ([r g b] (.color *applet* (float r) (float g) (float b)))
+  ([r g b a] (.color *applet* (float r) (float g) (float b) (float a))))
 
 (defn color-int
-  ([gray] (.background *applet* (int gray)))
-  ([gray alpha] (.background *applet* (int gray) (float alpha)))
-  ([r g b] (.background *applet* (int r) (int g) (int b)))
-  ([r g b a] (.background *applet* (int r) (int g) (int b) (int a))))
+  ([gray] (.color *applet* (int gray)))
+  ([gray alpha] (.color *applet* (int gray) (float alpha)))
+  ([r g b] (.color *applet* (int r) (int g) (int b)))
+  ([r g b a] (.color *applet* (int r) (int g) (int b) (int a))))
 
 (def color color-float)
 
