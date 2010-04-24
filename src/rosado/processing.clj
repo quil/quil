@@ -896,3 +896,38 @@
      (apply rotate tr#)
      ~@body
      (pop-matrix)))
+
+;;; version number
+
+(let [version-stream (.getResourceAsStream (clojure.lang.RT/baseLoader)
+                                           "rosado/processing/version.properties")
+      properties     (doto (new java.util.Properties) (.load version-stream))
+      prop (fn [k] (.getProperty properties (str "rosado.processing.version." k)))
+      processing-version {:major       (Integer/valueOf #^String (prop "major"))
+                          :minor       (Integer/valueOf #^String (prop "minor"))
+                          :incremental (Integer/valueOf #^String (prop "incremental"))
+                          :qualifier   (prop "qualifier")}]
+  (def *processing-version*
+       (if (not (= (prop "interim") "false"))
+         (clojure.lang.RT/assoc processing-version :interim true)
+         processing-version)))
+
+(alter-meta! (var *processing-version*) assoc :doc
+  "The version info for clj-processing, as a map containing :major :minor
+  :incremental and optional :qualifier keys. This version number
+   corresponds to the official Processing.org version with which
+   clj-processing is compatible.")
+
+(defn
+  processing-version
+  "Returns clj-processing version as a printable string."
+  []
+  (str (:major *processing-version*)
+       "."
+       (:minor *processing-version*)
+       (when-let [i (:incremental *processing-version*)]
+         (str "." i))
+       (when-let [q (:qualifier *processing-version*)]
+         (when (pos? (count q)) (str "-" q)))
+       (when (:interim *processing-version*)
+         "-SNAPSHOT")))
