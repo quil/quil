@@ -61,9 +61,15 @@
               (.pack)
               (.show)))))
 
+
 (defn stop [applet]
-  (.destroy applet)
-  (.hide @(:frame ^applet)))
+  (let [closing-fn (fn []
+                     (let [frame @(:frame (meta applet))]
+                       (.destroy applet)
+                       (doto frame
+                         (.hide)
+                         (.dispose))))]
+    (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
 
 (comment ;; Usage:
   (defapplet growing-triangle
