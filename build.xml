@@ -17,6 +17,7 @@
     <jar jarfile="${jarfile}">
       <fileset dir="." includes="CPL.TXT"/>
       <fileset dir="src" includes="rosado/**/*.clj"/>
+      <fileset dir="src" includes="rosado/**/*.properties"/>
     </jar>
   </target>
 
