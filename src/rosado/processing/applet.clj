@@ -35,7 +35,7 @@
             (update-proxy prx# ~methods)
             prx#))))
 
-(def #^{:private true}
+(def ^{:private true}
      modes {:JAVA2D JAVA2D :OPENGL OPENGL
             :P3D P3D :P2D P2D :PDF PDF})
 

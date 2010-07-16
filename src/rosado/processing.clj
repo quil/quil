@@ -15,7 +15,7 @@
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
-(def #^PApplet *applet*)
+(def ^PApplet *applet*)
 
 (def toupper (memfn toUpperCase))
 
@@ -93,19 +93,19 @@
 (def background background-float)
 
 (defn background-image
-  [#^PImage img] (.background *applet* img))
+  [^PImage img] (.background *applet* img))
 
 (defn begin-camera
   [] (.beginCamera *applet*))
 
 (defn begin-raw
-  ([#^PGraphics rawGfx] (.beginRaw *applet* rawGfx))
-  ([#^java.lang.String renderer #^java.lang.String filename]
+  ([^PGraphics raw-gfx] (.beginRaw *applet* raw-gfx))
+  ([^String renderer ^String filename]
      (.beginRaw *applet* renderer filename)))
 
 ;; $$beginRecord
 
-(def #^{:private true}
+(def ^{:private true}
      shapes-map {:points POINTS
                  :lines LINES
                  :triangles TRIANGLES
@@ -165,7 +165,7 @@
   ([sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
      (.blend *applet* (int sx1) (int sy1) (int sx2) (int sy2)
              (int dx1) (int dy1) (int dx2) (int dy2) (int mode)))
-  ([#^PImage src sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
+  ([^PImage src sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
      (.blend *applet* src (int sx1) (int sy1) (int sx2) (int sy2)
              (int dx1) (int dy1) (int dx2) (int dy2) (int mode))))
 
@@ -230,7 +230,7 @@
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
      (.copy *applet* (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2)))
-  ([#^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
+  ([^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
      (.copy *applet* img (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2))))
 
@@ -239,7 +239,7 @@
 (defn create-font
   ([name size] (.createFont *applet* name (float size)))
   ([name size smooth] (.createFont *applet* name (float size) smooth))
-  ([name size smooth #^chars charset]
+  ([name size smooth ^chars charset]
      (.createFont *applet* name (float size) smooth charset)))
 
 (defn create-graphics
@@ -273,8 +273,8 @@
   ([cur-type] (.cursor *applet* (int cur-type))))
 
 (defn cursor-image
-  ([#^PImage img] (.cursor *applet* img))
-  ([#^PImage img hx hy] (.cursor *applet* img (int hx) (int hy))))
+  ([^PImage img] (.cursor *applet* img))
+  ([^PImage img hx hy] (.cursor *applet* img (int hx) (int hy))))
 
 (defn curve
   ([x1 y1 x2 y2 x3 y3 x4 y4]
@@ -423,10 +423,10 @@
 (defn hue [what] (.hue *applet* (int what)))
 
 (defn image
-  ([#^PImage img x y] (.image *applet* img (float x) (float y)))
-  ([#^PImage img x y c d] (.image *applet* img (float x) (float y)
+  ([^PImage img x y] (.image *applet* img (float x) (float y)))
+  ([^PImage img x y c d] (.image *applet* img (float x) (float y)
                                   (float c) (float d)))
-  ([#^PImage img x y c d u1 v1 u2 v2]
+  ([^PImage img x y c d u1 v1 u2 v2]
      (.image *applet* img (float x) (float y) (float c) (float d)
              (float u1) (float v1) (float u2) (float v2))))
 
@@ -491,9 +491,9 @@
   (PApplet/map (double val) (double istart) (double istop) (double ostart) (double ostop)))
 
 (defn mask
-  ([#^ints alpha-array] (.mask *applet* alpha-array)))
+  ([^ints alpha-array] (.mask *applet* alpha-array)))
 
-(defn mask-image [#^PImage img] (.mask *applet* img))
+(defn mask-image [^PImage img] (.mask *applet* img))
 
 ;; $$match
 ;; $$max
@@ -554,7 +554,7 @@
 
 (defn no-tint [] (.noTint *applet*))
 
-(defn open [#^java.lang.String filename] (PApplet/open filename))
+(defn open [^String filename] (PApplet/open filename))
 
 ;; $$open -- overload
 
@@ -695,7 +695,7 @@
   [x y c] (.set *applet* (int x) (int y) (int c)))
 
 (defn set-image-at
-  [dx dy #^PImage src] (.set *applet* (int dx) (int dy) src))
+  [dx dy ^PImage src] (.set *applet* (int dx) (int dy) src))
 
 ;; $$setup
 
@@ -710,7 +710,7 @@
 
 (defn size
   ([w h] (.size *applet* (int w) (int h)))
-  ([w h #^java.lang.String renderer] (.size *applet* (int w) (int h) renderer)))
+  ([w h ^String renderer] (.size *applet* (int w) (int h) renderer)))
 
 ;; $$sketchFile
 ;; $$sketchPath
@@ -783,14 +783,14 @@
   ([num x y z] (.text *applet* (float num) (float x) (float y) (float z))))
 
 (defn string->text
-  ([#^java.lang.String s] (.text *applet* s))
-  ([#^java.lang.String s x y] (.text *applet* s (float x) (float y)))
-  ([#^java.lang.String s x y z] (.text *applet* s (float x) (float y) (float z))))
+  ([^String s] (.text *applet* s))
+  ([^String s x y] (.text *applet* s (float x) (float y)))
+  ([^String s x y z] (.text *applet* s (float x) (float y) (float z))))
 
 (defn string->text-in
-  ([#^java.lang.String s x1 y1 x2 y2]
+  ([^String s x1 y1 x2 y2]
      (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
-  ([#^java.lang.String s x1 y1 x2 y2 z]
+  ([^String s x1 y1 x2 y2 z]
      (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (defn text-align
@@ -802,8 +802,8 @@
 (defn text-descend [] (.textDescent *applet*))
 
 (defn text-font
-  ([#^PFont which] (.textFont *applet* which))
-  ([#^PFont which size] (.textFont *applet* which (int size))))
+  ([^PFont which] (.textFont *applet* which))
+  ([^PFont which size] (.textFont *applet* which (int size))))
 
 (defn text-leading [leading] (.textLeading *applet* (float leading)))
 
@@ -811,7 +811,7 @@
 
 (defn text-size [size] (.textSize *applet* (float size)))
 
-(defn texture [#^PImage img] (.texture *applet* img))
+(defn texture [^PImage img] (.texture *applet* img))
 
 (defn texture-mode [mode] (.textureMode *applet* (int mode)))
 
@@ -821,7 +821,7 @@
   [c] (.textWidth *applet* (char c)))
 
 (defmethod text-width false
-  [#^java.lang.String s] (.textWidth *applet* s))
+  [^String s] (.textWidth *applet* s))
 
 (defn tint-float
   ([gray] (.tint *applet* (float gray)))
@@ -903,9 +903,9 @@
                                            "rosado/processing/version.properties")
       properties     (doto (new java.util.Properties) (.load version-stream))
       prop (fn [k] (.getProperty properties (str "rosado.processing.version." k)))
-      processing-version {:major       (Integer/valueOf #^String (prop "major"))
-                          :minor       (Integer/valueOf #^String (prop "minor"))
-                          :incremental (Integer/valueOf #^String (prop "incremental"))
+      processing-version {:major       (Integer/valueOf ^String (prop "major"))
+                          :minor       (Integer/valueOf ^String (prop "minor"))
+                          :incremental (Integer/valueOf ^String (prop "incremental"))
                           :qualifier   (prop "qualifier")}]
   (def *processing-version*
        (if (not (= (prop "interim") "false"))
