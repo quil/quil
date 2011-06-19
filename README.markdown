@@ -9,7 +9,12 @@ accessible.
 
 ## How To Use It? ##
 
-Add your `core.jar` file from the Processing installation to your
+If you're using Leiningen, just add the following line to your
+dependencies list:
+
+   [org.clojars.automata/rosado.processing "1.1.0"]
+
+Otherwise, add your `core.jar` file from the Processing installation to your
 CLASSPATH.
 
 To use the OpenGL features, you also have to add `gluegen-rt.jar`,

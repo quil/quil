@@ -1,4 +1,4 @@
-rosado.processing.jar
+*.jar
 lib/*
 classes/
 pom-generated.xml
