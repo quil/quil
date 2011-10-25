@@ -15,7 +15,7 @@
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
-(def ^:dynamic *applet*)
+(def ^{:dynamic true} *applet*)
 
 (def toupper (memfn toUpperCase))
 
