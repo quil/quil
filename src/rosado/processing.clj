@@ -907,10 +907,11 @@
                           :minor       (Integer/valueOf ^String (prop "minor"))
                           :incremental (Integer/valueOf ^String (prop "incremental"))
                           :qualifier   (prop "qualifier")}]
-  (def *processing-version*
-       (if (not (= (prop "interim") "false"))
-         (clojure.lang.RT/assoc processing-version :interim true)
-         processing-version)))
+  (def ^{:dynamic true}
+    *processing-version*
+    (if (not (= (prop "interim") "false"))
+      (clojure.lang.RT/assoc processing-version :interim true)
+      processing-version)))
 
 (alter-meta! (var *processing-version*) assoc :doc
   "The version info for clj-processing, as a map containing :major :minor
