@@ -15,6 +15,7 @@
     (point x y)))
 
 (defn setup []
+  (size 200 200)
   (smooth)
   (no-stroke))
 

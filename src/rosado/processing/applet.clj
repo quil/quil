@@ -28,16 +28,12 @@
         fns (dissoc options :name :title :size)
         methods (reduce with-binding {} (into {} (map fix-mname fns)))]
     `(def ~app-name
-          (let [frame# (atom nil)
-                prx# (proxy [processing.core.PApplet
-                             clojure.lang.IMeta] []
-                       (meta [] (assoc ~options :frame frame#)))]
-            (update-proxy prx# ~methods)
-            prx#))))
-
-(def ^{:private true}
-     modes {:JAVA2D JAVA2D :OPENGL OPENGL
-            :P3D P3D :P2D P2D :PDF PDF})
+       (let [frame# (atom nil)
+             prx# (proxy [processing.core.PApplet
+                          clojure.lang.IMeta] []
+                    (meta [] (assoc ~options :frame frame#)))]
+         (update-proxy prx# ~methods)
+         prx#))))
 
 (defn run
   "Launches the applet. If given the flag :interactive, it won't exit
@@ -45,14 +41,10 @@
   [applet & interactive?]
   (.init applet)
   (let [m (.meta applet)
-        [width height & mode] (or (:size m) [200 200])
-        mode (if-let [kw (first mode)]
-               (modes (-> kw name toupper keyword))
-               JAVA2D)
+        [width height & _] (or (:size m) [200 200])
         close-op (if (first interactive?)
                    JFrame/DISPOSE_ON_CLOSE
                    JFrame/EXIT_ON_CLOSE)]
-    (.size applet width height mode)
     (reset! (:frame m)
             (doto (JFrame. (or (:title m) (:name m)))
               (.setDefaultCloseOperation close-op)

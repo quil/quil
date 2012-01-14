@@ -27,6 +27,7 @@
 
 (defn setup []
   "Runs once."
+  (size 200 200)
   (smooth)
   (no-stroke)
   (fill 226)
@@ -34,8 +35,11 @@
 
 ;; Now we just need to define an applet:
 
-(defapplet example2 :title "An example."
-  :setup setup :draw draw :size [200 200])
+(defapplet example2
+  :title "An example."
+  :setup setup
+  :draw draw
+  :size [200 200])
 
 (run example2)
 
