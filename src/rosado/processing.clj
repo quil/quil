@@ -22,30 +22,61 @@
 (defn tosymb [kw]
   (-> kw name toupper symbol))
 
-(defn abs-int [n] (PApplet/abs (int n)))
+(defn abs-int
+  "Calculates the absolute value (magnitude) of a number. The absolute value of
+  a number is always positive. Returns an int."
+  [n]
+  (PApplet/abs (int n)))
 
-(defn abs-float [n] (PApplet/abs (float n)))
-
-(defn abs
-  "Returns a float."
+(defn abs-float
+  "Calculates the absolute value (magnitude) of a number. The absolute value of
+  a number is always positive. Returns a float."
   [n]
   (PApplet/abs (float n)))
 
-(defn acos [n] (PApplet/acos n))
+(def abs abs-float)
+
+(defn acos
+  "The inverse of cos, returns the arc cosine of a value. This function expects
+  the values in the range of -1 to 1 and values are returned in the range 0 to
+  Math/PI (3.1415927)."
+  [n]
+  (PApplet/acos n))
 
 ;; $$addListeners
 
 (defn alpha
-  [what] (.alpha *applet* (int what)))
+  "Extracts the alpha value from a color."
+  [color] (.alpha *applet* (int color)))
 
 (defn ambient
+  "Sets the ambient reflectance for shapes drawn to the screen. This is combined
+  with the ambient light component of environment. The color components set
+  through the parameters define the reflectance. For example in the default
+  color mode, setting x=255, y=126, z=0, would cause all the red light to
+  reflect and half of the green light to reflect. Used in combination with
+  emissive, specular, and shininess in setting the material properties of
+  shapes."
   ([gray] (.ambient *applet* (float gray)))
   ([x y z] (.ambient *applet* (float x) (float y) (float z))))
 
 (defn ambient-int
-  [rgb] (.ambient *applet* (int rgb)))
+  "Sets the ambient reflectance for shapes drawn to the screen. This is combined
+  with the ambient light component of environment. The rgb color components set
+  define the reflectance. Used in combination with emissive, specular, and
+  shininess in setting the material properties of shapes."
+  [rgb]
+  (.ambient
+   *applet* (int rgb)))
 
 (defn ambient-light
+  "Adds an ambient light. Ambient light doesn't come from a specific direction,
+   the rays have light have bounced around so much that objects are evenly lit
+   from all sides. Ambient lights are almost always used in combination with
+   other types of lights. Lights need to be included in the draw to remain
+   persistent in a looping program. Placing them in the setup of a looping
+   program will cause them to only have an effect the first time through the
+   loop. The effect of the parameters is determined by the current color mode."
   ([red green blue]
      (.ambientLight *applet* (float red) (float green) (float blue)))
   ([red green blue x y z]
@@ -55,6 +86,10 @@
 ;; $$append
 
 (defn apply-matrix
+  "Multiplies the current matrix by the one specified through the
+  parameters. This is very slow because it will try to calculate the inverse of
+  the transform, so avoid it whenever possible. The equivalent function in
+  OpenGL is glMultMatrix()."
   ([n00 n01 n02 n10 n11 n12]
      (.applyMatrix *applet* (float n00) (float n01) (float n02)
                    (float n10) (float n11) (float n12)))
@@ -68,37 +103,92 @@
                    (float n30) (float n31) (float n32) (float 33))))
 
 (defn arc
-  [a b c d start stop]
-  (.arc *applet* (float a)(float b) (float c) (float d)
+  "Draws an arc in the display window. Arcs are drawn along the outer edge of an
+  ellipse defined by the x, y, width and height parameters. The origin or the
+  arc's ellipse may be changed with the ellipseMode() function. The start and
+  stop parameters specify the angles at which to draw the arc."
+  [x y width height start stop]
+  (.arc *applet* (float x)(float y) (float width) (float height)
         (float start) (float stop)))
 
 ;; $$arraycopy
 
-(defn asin [val] (PApplet/asin (float val)))
+(defn asin
+  "The inverse of sin, returns the arc sine of a value. This function expects
+  the values in the range of -1 to 1 and values are returned in the range -PI/2
+  to PI/2."
+  [n]
+  (PApplet/asin (float n)))
 
-(defn atan [val] (PApplet/atan (float val)))
+(defn atan
+  "The inverse of tan, returns the arc tangent of a value. This function expects
+  the values in the range of -Infinity to Infinity (exclusive) and values are
+  returned in the range -PI/2 to PI/2 ."
+  [n]
+  (PApplet/atan (float n)))
 
-(defn atan2 [a b] (PApplet/atan2 (float a) (float b)))
+(defn atan2
+  "Calculates the angle (in radians) from a specified point to the coordinate
+  origin as measured from the positive x-axis. Values are returned as a float in
+  the range from PI to -PI. The atan2 function is most often used for
+  orienting geometry to the position of the cursor. Note: The y-coordinate of
+  the point is the first parameter and the x-coordinate is the second due the
+  the structure of calculating the tangent."
+  [y x]
+  (PApplet/atan2 (float y) (float x)))
 
 (defn background-float
+  "Sets the color used for the background of the Processing window. The default
+  background is light gray. In the draw function, the background color is used
+  to clear the display window at the beginning of each frame.
+
+  It is not possible to use transparency (alpha) in background colors with the
+  main drawing surface, however they will work properly with create-graphics."
   ([gray] (.background *applet* (float gray)))
   ([gray alpha] (.background *applet* (float gray) (float alpha)))
   ([r g b] (.background *applet* (float r) (float g) (float b)))
   ([r g b a] (.background *applet* (float r) (float g) (float b) (float a))))
 
 (defn background-int
+  "Sets the color used for the background of the Processing window. The default
+  background is light gray. In the draw function, the background color is used
+  to clear the display window at the beginning of each frame.
+
+  It is not possible to use transparency (alpha) in background colors with the
+  main drawing surface, however they will work properly with create-graphics."
   ([rgb] (.background *applet* (int rgb)))
   ([rgb alpha] (.background *applet* (int rgb) (float alpha))))
 
-(def background background-float)
+(def ^{:arglists (:arglists (meta #'background-float))
+       :doc (:doc (meta #'background-float))}
+  background background-float)
+
 
 (defn background-image
-  [^PImage img] (.background *applet* img))
+  "Specify an image to be used as the background for a sketch. Its width and
+  height must be the same size as the sketch window. Images used as background
+  will ignore the current tint setting."
+  [^PImage img]
+  (.background *applet* img))
 
 (defn begin-camera
-  [] (.beginCamera *applet*))
+  "Sets the matrix mode to the camera matrix so calls such as translate, rotate,
+  apply-matrix and reset-matrix affect the camera. begin-camera should always be
+  used with a following end-camera and pairs of begin-camera and end-camera
+  cannot be nested.
+
+  For most situations the camera function will be sufficient."
+  []
+  (.beginCamera *applet*))
 
 (defn begin-raw
+  "Enables the creation of vectors from 3D data. Requires corresponding end-raw
+  command. These commands will grab the shape data just before it is rendered to
+  the screen. At this stage, your entire scene is nothing but a long list of
+  individual lines and triangles. This means that a shape created with sphere
+  method will be made up of hundreds of triangles, rather than a single
+  object. Or that a multi-segment line shape (such as a curve) will be rendered
+  as individual segments."
   ([^PGraphics raw-gfx] (.beginRaw *applet* raw-gfx))
   ([^String renderer ^String filename]
      (.beginRaw *applet* renderer filename)))
@@ -115,59 +205,123 @@
                  :quad-strip QUAD_STRIP})
 
 (defmacro begin-shape
-  "Takes an optional keyword argument:  One  of: :points, :lines, :triangles,
-  :triangle-fan, :triangle-strip, :quads, :quad-strip."
+  "Enables the creation of complex forms. begin-shape begins recording vertices
+  for a shape and end-shape stops recording. Use the mode keyword to specify
+  which shape create from the provided vertices. With no mode specified, the
+  shape can be any irregular polygon.
+
+  The available mode keywords are :points, :lines, :triangles, :triangle-fan,
+                                  :triangle-strip, :quads, :quad-strip.
+
+
+  After calling the begin-shape function, a series of vertex commands must
+  follow. To stop drawing the shape, call end-shape. The vertex function with
+  two parameters specifies a position in 2D and the vertex function with three
+  parameters specifies a position in 3D. Each shape will be outlined with the
+  current stroke color and filled with the fill color.
+
+  Transformations such as translate, rotate, and scale do not work within
+  begin-shape. It is also not possible to use other shapes, such as ellipse
+  or rect within begin-shape."
   ([] `(.beginShape *applet*))
-  ([kind] 
-     (let [kind (shapes-map kind)]
+  ([mode]
+     (let [kind (shapes-map mode)]
        `(.beginShape *applet* (int ~kind)))))
 
 (defn bezier
-  ([x1 y1 x2 y2 x3 y3 x4 y4]
+  "Draws a Bezier curve on the screen. These curves are defined by a series of
+  anchor and control points. The first two parameters specify the first anchor
+  point and the last two parameters specify the other anchor point. The middle
+  parameters specify the control points which define the shape of the curve."
+  ([x1 y1 cx1 cy1 cx2 cy2 x2 y2]
      (.bezier *applet*
               (float x1) (float y1)
-              (float x2) (float y2)
-              (float x3) (float y3)
-              (float x4) (float y4)))
-  ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
+              (float cx1) (float cy1)
+              (float cx2) (float cy2)
+              (float x2) (float y2)))
+  ([x1 y1 z1 cx1 cy1 cz1 cx2 cy2 cz2 x2 y2 z2]
      (.bezier *applet*
               (float x1) (float y1) (float z1)
-              (float x2) (float y2) (float z2)
-              (float x3) (float y3) (float z3)
-              (float x4) (float y4) (float z4))))
+              (float cx1) (float cy1) (float cz1)
+              (float cx2) (float cy2) (float cz2)
+              (float x2) (float y2) (float z2))))
 
 (defn bezier-detail
-  [detail] (.bezierDetail *applet* (int detail)))
+  "Sets the resolution at which Beziers display. The default value is 20. This
+  function is only useful when using the P3D or OPENGL renderer as the
+  default (JAVA2D) renderer does not use this information."
+  [detail]
+  (.bezierDetail *applet* (int detail)))
 
 (defn bezier-point
-  [a b c d t] (.bezierPoint *applet* (float a) (float b) (float c)
-                            (float d) (float t)))
+  "Evaluates the Bezier at point t for points a, b, c, d. The parameter t varies
+  between 0 and 1, a and d are points on the curve, and b and c are the control
+  points. This can be done once with the x coordinates and a second time with
+  the y coordinates to get the location of a bezier curve at t."
+  [a b c d t]
+  (.bezierPoint *applet* (float a) (float b) (float c)
+                (float d) (float t)))
 
 (defn bezier-tangent
-  [a b c d t] (.bezierTangent *applet* (float a) (float b) (float c)
-                              (float d) (float t)))
+  "Calculates the tangent of a point on a Bezier curve.
+  (See http://en.wikipedia.org/wiki/Tangent)"
+  [a b c d t]
+  (.bezierTangent *applet* (float a) (float b) (float c)
+                  (float d) (float t)))
 
 (defn bezier-vertex
-  ([x2 y2 x3 y3 x4 y4]
+  "Specifies vertex coordinates for Bezier curves. Each call to bezier-vertex
+  defines the position of two control points and one anchor point of a Bezier
+  curve, adding a new segment to a line or shape. The first time bezier-vertex
+  is used within a begin-shape call, it must be prefaced with a call to
+  vertex to set the first anchor point. This function must be used between
+  begin-shape and end-shape and only when there is no parameter specified
+  to begin-shape."
+  ([cx1 cy1 cx2 cy2 x y]
      (.bezierVertex *applet*
-                    (float x2) (float y2)
-                    (float x3) (float y3)
-                    (float x4) (float y4)))
-  ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
+                    (float cx1) (float cx1)
+                    (float cx2) (float cy2)
+                    (float x) (float y)))
+  ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
      (.bezierVertex *applet*
-                    (float x2) (float y2) (float z2)
-                    (float x3) (float y3) (float z3)
-                    (float x4) (float y4) (float z4))))
+                    (float cx1) (float cy1) (float cz1)
+                    (float cx2) (float cy2) (float cz2)
+                    (float x) (float y) (float z))))
 
 ;; $$binary
 
-(defn blend
-  ([sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
-     (.blend *applet* (int sx1) (int sy1) (int sx2) (int sy2)
-             (int dx1) (int dy1) (int dx2) (int dy2) (int mode)))
-  ([^PImage src sx1 sy1 sx2 sy2 dx1 dy1 dx2 dy2 mode]
-     (.blend *applet* src (int sx1) (int sy1) (int sx2) (int sy2)
-             (int dx1) (int dy1) (int dx2) (int dy2) (int mode))))
+(def ^{:private true}
+  blend-map {:blend BLEND
+             :add ADD
+             :subtract SUBTRACT
+             :darkest DARKEST
+             :lightest LIGHTEST
+             :difference DIFFERENCE
+             :exclusion EXCLUSION
+             :multiply MULTIPLY
+             :screen SCREEN
+             :overlay OVERLAY
+             :hard-light HARD_LIGHT
+             :soft-light SOFT_LIGHT
+             :dodge DODGE
+             :burn BURN})
+
+(defn- resolve-mode
+  [mode]
+  (if (keyword? mode)
+    (get blend-map mode)
+    mode))
+
+(defmacro blend
+  "Blends a region of pixels from one image into another (or in itself again) with full alpha channel support."
+  ([x y width height dx dy dwidth dheight mode]
+     (let [mode (resolve-mode mode)]
+       `(.blend *applet* (int x) (int y) (int width) (int height)
+                (int dx) (int dy) (int dwidth) (int dheight) (int ~mode))))
+  ([^PImage src x y width height dx dy dwidth dheight mode]
+     (let [mode (resolve-mode mode)]
+       `(.blend *applet* src (int x) (int y) (int width) (int height)
+                (int dx) (int dy) (int dwidth) (int dheight) (int ~mode)))))
 
 (defn blend-color
   [c1 c2 mode] (PApplet/blendColor (int c1) (int c2) (int mode)))
@@ -414,7 +568,10 @@
 ;; $$handleDraw
 ;; $$hex
 
-(defn height [] (.getHeight *applet*))
+(defn height
+  "Height of the display window. The value of height is zero until size() is called."
+  []
+  (.getHeight *applet*))
 
 (defn hint [which] (.hint *applet* (int which)))
 
@@ -449,6 +606,13 @@
   (.lightSpecular *applet* (float x) (float y) (float z)))
 
 (defn line
+  "Draws a line (a direct path between two points) to the screen. The version of
+  line with four parameters draws the line in 2D. To color a line, use the
+  stroke function. A line cannot be filled, therefore the fill method will
+  not affect the color of a line. 2D lines are drawn with a width of one pixel
+  by default, but this can be changed with the stroke-weight function. The
+  version with six parameters allows the line to be placed anywhere within XYZ
+  space. "
   ([p1 p2] (apply line (concat p1 p2)))
   ([x1 y1 x2 y2] (.line *applet* (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
@@ -548,7 +712,9 @@
 
 (defn normal [nx ny nz] (.normal *applet* (float nx) (float ny) (float nz)))
 
-(defn no-smooth [] (.noSmooth *applet*))
+(defn no-smooth
+  "Draws all geometry with jagged (aliased) edges."
+  [] (.noSmooth *applet*))
 
 (defn no-stroke [] (.noStroke *applet*))
 
@@ -709,13 +875,20 @@
 (defn sin [angle] (PApplet/sin (float angle)))
 
 (defn size
-  ([w h] (.size *applet* (int w) (int h)))
-  ([w h ^String renderer] (.size *applet* (int w) (int h) renderer)))
+  "Defines the dimension of the display window in units of pixels."
+  ([width height] (.size *applet* (int width) (int height)))
+  ([width height ^String renderer] (.size *applet* (int width) (int height) renderer)))
 
 ;; $$sketchFile
 ;; $$sketchPath
 
-(defn smooth [] (.smooth *applet*))
+(defn smooth
+  "Draws all geometry with smooth (anti-aliased) edges. This will slow down the
+  frame rate of the application, but will enhance the visual refinement.
+
+  Note that smooth will also improve image quality of resized images."
+  []
+  (.smooth *applet*))
 
 ;; $$sort
 
@@ -752,22 +925,30 @@
 ;; $$str
 
 (defn stroke-float
+  "Sets the color used to draw lines and borders around shapes."
   ([gray] (.stroke *applet* (float gray)))
   ([gray alpha] (.stroke *applet* (float gray) (float alpha)))
   ([x y z] (.stroke *applet* (float x) (float y) (float z)))
   ([x y z a] (.stroke *applet* (float x) (float y) (float z) (float a))))
 
 (defn stroke-int
+  "Sets the color used to draw lines and borders around shapes."
   ([rgb] (.stroke *applet* (int rgb)))
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
-(def stroke stroke-float)
+(def ^{:arglists (:arglists (meta #'stroke-float))
+       :doc (:doc (meta #'stroke-float))}
+  stroke stroke-float)
 
 (defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
 
 (defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
 
-(defn stroke-weight [weight] (.strokeWeight *applet* (float weight)))
+(defn stroke-weight
+  "Sets the width of the stroke used for lines, points, and the border around
+  shapes. All widths are set in units of pixels. "
+  [weight]
+  (.strokeWeight *applet* (float weight)))
 
 ;; $$subset
 
@@ -872,7 +1053,11 @@
 
 ;; utility functions. clj-processing specific
 
-(defn width [] (.getWidth *applet*))
+(defn width
+  "Width of the display window. The value of width is zero until size is
+  called."
+  []
+  (.getWidth *applet*))
 
 (defmacro with-translation
   "Berforms body with translation, restores current transformation on exit."
