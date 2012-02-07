@@ -16,6 +16,33 @@
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
 (def ^{:dynamic true} ^PApplet *applet*)
+(def ^{:dynamic true} *state*)
+
+(defn state
+  "Retrieve canvas-specific state by key. Must initially call set-state! to
+  store state.
+
+  (set-state! :foo 1)
+  (state :foo) ;=> 1 "
+  [key]
+  (when-not @*state*
+    (throw (Exception. "State not set - use set-state! before fetching state")))
+
+  (let [state @*state*]
+    (when-not (contains? state key)
+      (throw (Exception. (str "Unable to find state with key: " key))))
+    (get state key)))
+
+(defn set-state!
+  "Set canvas-specific state. May only be called once (ideally in the setup fn).
+  Subsequent calls have no effect.
+
+  Example:
+  (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
+  [& state-vals]
+  (when-not @*state*
+    (let [state-map (apply hash-map state-vals)]
+      (reset! *state* state-map))))
 
 (def toupper (memfn toUpperCase))
 
@@ -24,13 +51,13 @@
 
 (defn abs-int
   "Calculates the absolute value (magnitude) of a number. The absolute value of
-  a number is always positive. Returns an int."
+  a number is always positive. Takes and returns an int."
   [n]
   (PApplet/abs (int n)))
 
 (defn abs-float
   "Calculates the absolute value (magnitude) of a number. The absolute value of
-  a number is always positive. Returns a float."
+  a number is always positive. Takes and returns a float."
   [n]
   (PApplet/abs (float n)))
 
@@ -576,8 +603,11 @@
 ;; $$draw
 
 (defn ellipse
-  [a b c d]
-  (.ellipse *applet* (float a) (float b) (float c) (float d)))
+  "Draws an ellipse (oval) in the display window. An ellipse with an equal width
+  and height is a circle.  The origin may be changed with the ellipse-mode
+  function"
+  [x y width height]
+  (.ellipse *applet* (float x) (float y) (float width) (float height)))
 
 (defmacro ellipse-mode [mode]
   "Takes a keyword argument; :center, :radius, :corner or :corners."
@@ -613,16 +643,21 @@
 ;; $$expand
 
 (defn fill-float
+  "Sets the color used to fill shapes. For example, (fill 204 102 0), will
+  specify that all subsequent shapes will be filled with orange."
   ([gray] (.fill *applet* (float gray)))
   ([gray alpha] (.fill *applet* (float gray) (float alpha)))
   ([x y z] (.fill *applet* (float x) (float y) (float z)))
-  ([x y z a] (.fill *applet* (float x) (float y) (float z) (float a))))
+  ([x y z alpha] (.fill *applet* (float x) (float y) (float z) (float alpha))))
 
 (defn fill-int
+  "Sets the color used to fill shapes."
   ([rgb] (.fill *applet* (int rgb)))
   ([rgb alpha] (.fill *applet* (int rgb) (float alpha))))
 
-(def fill fill-float)
+(def ^{:arglists (:arglists (meta #'fill-float))
+       :doc (:doc (meta #'fill-float))}
+  fill fill-float)
 
 (defn filter-kind
   ([kind] (.filter *applet* (int kind)))
@@ -633,9 +668,20 @@
 
 (defn frame-count [] (.frameCount *applet*))
 
-(defn framerate [new-rate] (.frameRate *applet* (float new-rate)))
+(defn framerate
+  "With no args, returns the current framerate. With one arg specifies a new
+  target framerate (number of frames to be displayed every second). If the
+  processor is not fast enough to maintain the specified rate, it will not be
+  achieved. For example, the function call (frameRate 30) will attempt to
+  refresh 30 times a second. It is recommended to set the frame rate within
+  setup. The default rate is 60 frames per second."
+  ([] (.frameRate *applet*))
+  ([new-rate]
+     (.frameRate *applet* (float new-rate))))
 
-(def frame-rate framerate)
+(def ^{:arglists (:arglists (meta #'framerate))
+       :doc (:doc (meta #'framerate))}
+  frame-rate framerate)
 
 (defn frustum
   [l r b t near far]
@@ -772,7 +818,11 @@
 
 (defn no-cursor [] (.noCursor *applet*))
 
-(defn no-fill [] (.noFill *applet*))
+(defn no-fill
+ "Disables filling geometry. If both no-stroke and no-fill are called, nothing
+  will be drawn to the screen."
+ []
+ (.noFill *applet*))
 
 (defn noise
   ([x] (.noise *applet* (float x)))
@@ -800,7 +850,11 @@
   "Draws all geometry with jagged (aliased) edges."
   [] (.noSmooth *applet*))
 
-(defn no-stroke [] (.noStroke *applet*))
+(defn no-stroke
+  "Disables drawing the stroke (outline). If both no-stroke and no-fill are
+  called, nothing will be drawn to the screen."
+  []
+  (.noStroke *applet*))
 
 (defn no-tint [] (.noTint *applet*))
 
@@ -852,8 +906,17 @@
 (defn push-matrix [] (.pushMatrix *applet*))
 
 (defn quad
+  "A quad is a quadrilateral, a four sided polygon. It is similar to a
+  rectangle, but the angles between its edges are not constrained to be ninety
+  degrees. The first pair of parameters (x1,y1) sets the first vertex and the
+  subsequent pairs should proceed clockwise or counter-clockwise around the
+  defined shape."
   [x1 y1 x2 y2 x3 y3 x4 y4]
-  (.quad *applet* x1 y1 x2 y2 x3 y3 x4 y4))
+  (.quad *applet*
+         (float x1) (float y1)
+         (float x2) (float y2)
+         (float x3) (float y3)
+         (float x4) (float y4)))
 
 (defn radians [deg] (PApplet/radians (float deg)))
 
@@ -864,8 +927,13 @@
 
 (defn random-seed [w] (.randomSeed *applet* (float w)))
 
-(defn rect [x1 y1 x2 y2]
-  (.rect *applet* (float x1) (float y1) (float x2) (float y2)))
+(defn rect
+  "Draws a rectangle to the screen. A rectangle is a four-sided shape with every
+   angle at ninety degrees. By default, the first two parameters set the
+   location of the upper-left corner, the third sets the width, and the fourth
+   sets the height. These parameters may be changed with rect-mode."
+  [x y width height]
+  (.rect *applet* (float x) (float y) (float width) (float height)))
 
 (defn rect-mode [mode] (.rectMode *applet* (int mode)))
 
@@ -956,7 +1024,12 @@
 
 ;; $$shorten
 
-(defn sin [angle] (PApplet/sin (float angle)))
+(defn sin
+  "Calculates the sine of an angle. This function expects the values of the
+  angle parameter to be provided in radians (values from 0 to 6.28). A float
+  within the range -1 to 1 is returned."
+  [angle]
+  (PApplet/sin (float angle)))
 
 (defn size
   "Defines the dimension of the display window in units of pixels."
@@ -1106,9 +1179,14 @@
   ([tx ty tz] (.translate *applet* (float tx) (float ty) (float tz))))
 
 (defn triangle
+  "A triangle is a plane created by connecting three points. The first two
+  arguments specify the first point, the middle two arguments specify the second
+  point, and the last two arguments specify the third point."
   [x1 y1 x2 y2 x3 y3]
-  (.triangle *applet* (float x1) (float y1)
-             (float x2) (float y2) (float x3) (float y3)))
+  (.triangle *applet*
+             (float x1) (float y1)
+             (float x2) (float y2)
+             (float x3) (float y3)))
 
 ;; $$trim
 ;; $$unbinary

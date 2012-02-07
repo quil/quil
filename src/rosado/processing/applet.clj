@@ -3,14 +3,6 @@
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 
-(defn- with-binding
-  "Turn the method map into something one that update-proxy can use."
-  [methods [method-name f]]
-  (assoc methods (name method-name)
-         `(fn [this# & args#]
-            (binding [*applet* this#]
-              (apply ~f args#)))))
-
 (defn- fix-mname
   "Changes :method-name to :methodName."
   [[mname fun]]
@@ -27,13 +19,22 @@
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
         fns (dissoc options :name :title :size)
-        methods (reduce with-binding {} (into {} (map fix-mname fns)))]
+        methods (into {} (map fix-mname fns))]
     `(def ~app-name
        (let [frame# (atom nil)
              prx# (proxy [processing.core.PApplet
                           clojure.lang.IMeta] []
-                    (meta [] (assoc ~options :frame frame#)))]
-         (update-proxy prx# ~methods)
+                    (meta [] (assoc ~options :frame frame#)))
+             state# (atom nil)
+             bound-meths# (reduce (fn [methods# [method-name# f#]]
+                                    (assoc methods# (name method-name#)
+                                           (fn [this# & args#]
+                                             (binding [*applet* this#
+                                                       *state* state#]
+                                               (apply f# args#)))))
+                                  {}
+                                  ~methods)]
+         (update-proxy prx# bound-meths#)
          prx#))))
 
 (defn stop [applet]
