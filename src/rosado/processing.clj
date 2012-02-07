@@ -343,11 +343,11 @@
   :burn       - Darker areas are applied, increasing contrast, ignores lights.
                 Called \"Color Burn\" in Illustrator and Photoshop."
   ([x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-mode mode)]
+     (let [mode (resolve-blend-mode mode)]
        (.blend *applet* (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
   ([^PImage src x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-mode mode)]
+     (let [mode (resolve-blend-mode mode)]
        (.blend *applet* src (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
@@ -376,7 +376,7 @@
   :burn       - Darker areas are applied, increasing contrast, ignores lights.
                 Called \"Color Burn\" in Illustrator and Photoshop."
   [c1 c2 mode]
-  (let [mode (resolve-mode mode)]
+  (let [mode (resolve-blend-mode mode)]
     (PApplet/blendColor (int c1) (int c2) (int mode))))
 
 (defn blue
