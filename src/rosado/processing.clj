@@ -204,7 +204,13 @@
                  :quads QUADS
                  :quad-strip QUAD_STRIP})
 
-(defmacro begin-shape
+(defn- resolve-shape-mode
+  [mode]
+  (if (keyword? mode)
+    (get shapes-map mode)
+    mode))
+
+(defn begin-shape
   "Enables the creation of complex forms. begin-shape begins recording vertices
   for a shape and end-shape stops recording. Use the mode keyword to specify
   which shape create from the provided vertices. With no mode specified, the
@@ -223,10 +229,10 @@
   Transformations such as translate, rotate, and scale do not work within
   begin-shape. It is also not possible to use other shapes, such as ellipse
   or rect within begin-shape."
-  ([] `(.beginShape *applet*))
+  ([] (.beginShape *applet*))
   ([mode]
-     (let [kind (shapes-map mode)]
-       `(.beginShape *applet* (int ~kind)))))
+     (let [mode (resolve-shape-mode  mode)]
+       (.beginShape *applet* (int mode)))))
 
 (defn bezier
   "Draws a Bezier curve on the screen. These curves are defined by a series of
@@ -306,35 +312,109 @@
              :dodge DODGE
              :burn BURN})
 
-(defn- resolve-mode
+(defn- resolve-blend-mode
   [mode]
   (if (keyword? mode)
     (get blend-map mode)
     mode))
 
-(defmacro blend
-  "Blends a region of pixels from one image into another (or in itself again) with full alpha channel support."
+(defn blend
+  "Blends a region of pixels from one image into another (or in itself again)
+  with full alpha channel support.
+
+  Available blend modes are:
+
+  :blend      - linear interpolation of colours: C = A*factor + B
+  :add        - additive blending with white clip: C = min(A*factor + B, 255)
+  :subtract   - subtractive blending with black clip: C = max(B - A*factor, 0)
+  :darkest    - only the darkest colour succeeds: C = min(A*factor, B)
+  :lightest   - only the lightest colour succeeds: C = max(A*factor, B)
+  :difference - subtract colors from underlying image.
+  :exclusion  - similar to :difference, but less extreme.
+  :multiply   - Multiply the colors, result will always be darker.
+  :screen     - Opposite multiply, uses inverse values of the colors.
+  :overlay    - A mix of :multiply and :screen. Multiplies dark values, and
+                screens light values.
+  :hard-light - :screen when greater than 50% gray, :multiply when lower.
+  :soft-light - Mix of :darkest and :lightest. Works like :overlay, but not as
+                harsh.
+  :dodge      - Lightens light tones and increases contrast, ignores darks.
+                Called \"Color Dodge\" in Illustrator and Photoshop.
+  :burn       - Darker areas are applied, increasing contrast, ignores lights.
+                Called \"Color Burn\" in Illustrator and Photoshop."
   ([x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-mode mode)]
-       `(.blend *applet* (int x) (int y) (int width) (int height)
-                (int dx) (int dy) (int dwidth) (int dheight) (int ~mode))))
+       (.blend *applet* (int x) (int y) (int width) (int height)
+               (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
   ([^PImage src x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-mode mode)]
-       `(.blend *applet* src (int x) (int y) (int width) (int height)
-                (int dx) (int dy) (int dwidth) (int dheight) (int ~mode)))))
+       (.blend *applet* src (int x) (int y) (int width) (int height)
+               (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn blend-color
-  [c1 c2 mode] (PApplet/blendColor (int c1) (int c2) (int mode)))
+  "Blends two color values together based on the blending mode given specified
+  with the mode keyword.
 
-(defn blue [what] (.blue *applet* (int what)))
+  Available blend modes are:
+
+  :blend      - linear interpolation of colours: C = A*factor + B
+  :add        - additive blending with white clip: C = min(A*factor + B, 255)
+  :subtract   - subtractive blending with black clip: C = max(B - A*factor, 0)
+  :darkest    - only the darkest colour succeeds: C = min(A*factor, B)
+  :lightest   - only the lightest colour succeeds: C = max(A*factor, B)
+  :difference - subtract colors from underlying image.
+  :exclusion  - similar to :difference, but less extreme.
+  :multiply   - Multiply the colors, result will always be darker.
+  :screen     - Opposite multiply, uses inverse values of the colors.
+  :overlay    - A mix of :multiply and :screen. Multiplies dark values, and
+                screens light values.
+  :hard-light - :screen when greater than 50% gray, :multiply when lower.
+  :soft-light - Mix of :darkest and :lightest. Works like :overlay, but not as
+                harsh.
+  :dodge      - Lightens light tones and increases contrast, ignores darks.
+                Called \"Color Dodge\" in Illustrator and Photoshop.
+  :burn       - Darker areas are applied, increasing contrast, ignores lights.
+                Called \"Color Burn\" in Illustrator and Photoshop."
+  [c1 c2 mode]
+  (let [mode (resolve-mode mode)]
+    (PApplet/blendColor (int c1) (int c2) (int mode))))
+
+(defn blue
+  "Extracts the blue value from a color, scaled to match current color-mode.
+  Returns a float. "
+  [color]
+  (.blue *applet* (int color)))
 
 (defn box
-  ([size] (.box *applet* (int size)))
-  ([w h d] (.box *applet* (float w) (float h) (float d))))
+  "Creates an extruded rectangle."
+  ([size] (.box *applet* (float size)))
+  ([width height depth] (.box *applet* (float width) (float height) (float depth))))
 
-(defn brightness [what] (.brightness *applet* (int what)))
+(defn brightness
+  "Extracts the brightness value from a color. Returns a float."
+  [color]
+  (.brightness *applet* (int color)))
 
 (defn camera
+  "Sets the position of the camera through setting the eye position, the center
+  of the scene, and which axis is facing upward. Moving the eye position and
+  the direction it is pointing (the center of the scene) allows the images to be
+  seen from different angles. The version without any parameters sets the camera
+  to the default position, pointing to the center of the display window with the
+  Y axis as up. The default values are:
+
+  eyeX:     (/ (width) 2.0)
+  eyeY:     (/ (height) 2.0)
+  eyeZ:     (/ (/ (height) 2.0) (tan (/ (* Math/PI 60.0) 360.0)))
+  centerX:  (/ (width) 2.0)
+  centerY:  (/ (height) 2.0)
+  centerZ:  0
+  upX:      0
+  upY:      1
+  upZ:      0
+
+  Similar imilar to gluLookAt() in OpenGL, but it first clears the current
+  camera settings."
   ([] (.camera *applet*))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
      (.camera *applet* (float eyeX) (float eyeY) (float eyeZ)
@@ -343,7 +423,11 @@
 
 (defn can-draw? [] (.canDraw *applet*))
 
-(defn ceil [n] (PApplet/ceil (float n)))
+(defn ceil
+  "Calculates the closest int value that is greater than or equal to the value
+  of the parameter. For example, (ceil 9.03) returns the value 10."
+  [n]
+  (PApplet/ceil (float n)))
 
 (defn color-float
   ([gray] (.color *applet* (float gray)))
