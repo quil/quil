@@ -1,6 +1,7 @@
 (ns rosado.processing.applet
   (:use [rosado.processing :except (size)])
-  (:import (javax.swing JFrame)))
+  (:import (javax.swing JFrame)
+           (java.awt.event WindowListener)))
 
 (defn- with-binding
   "Turn the method map into something one that update-proxy can use."
@@ -35,6 +36,15 @@
          (update-proxy prx# ~methods)
          prx#))))
 
+(defn stop [applet]
+  (let [closing-fn (fn []
+                     (let [frame @(:frame (meta applet))]
+                       (.destroy applet)
+                       (doto frame
+                         (.hide)
+                         (.dispose))))]
+    (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
+
 (defn run
   "Launches the applet. If given the flag :interactive, it won't exit
   on clicking the close button - it will only dispose the window."
@@ -47,6 +57,15 @@
                    JFrame/EXIT_ON_CLOSE)]
     (reset! (:frame m)
             (doto (JFrame. (or (:title m) (:name m)))
+              (.addWindowListener  (reify WindowListener
+                                     (windowActivated [this e])
+                                     (windowClosing [this e]
+                                       (future (stop applet)))
+                                     (windowDeactivated [this e])
+                                     (windowDeiconified [this e])
+                                     (windowIconified [this e])
+                                     (windowOpened [this e])
+                                     (windowClosed [this e])))
               (.setDefaultCloseOperation close-op)
               (.setSize width height)
               (.add applet)
@@ -54,14 +73,7 @@
               (.show)))))
 
 
-(defn stop [applet]
-  (let [closing-fn (fn []
-                     (let [frame @(:frame (meta applet))]
-                       (.destroy applet)
-                       (doto frame
-                         (.hide)
-                         (.dispose))))]
-    (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
+
 
 (comment ;; Usage:
   (defapplet growing-triangle
