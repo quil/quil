@@ -18,15 +18,24 @@
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
-        fns (dissoc options :name :title :size)
+        fns (dissoc options :name :title :size :key-pressed)
         fns (merge {:draw (fn [] nil)} fns)
+        key-pressed-fn (or (:key-pressed options)
+                           (fn [] nil))
         methods (into {} (map fix-mname fns))]
     `(def ~app-name
        (let [frame# (atom nil)
+             state# (atom nil)
              prx# (proxy [processing.core.PApplet
                           clojure.lang.IMeta] []
-                    (meta [] (assoc ~options :frame frame#)))
-             state# (atom nil)
+                    (meta [] (assoc ~options :frame frame#))
+                    (keyPressed
+                      ([] (binding [*applet* ~'this
+                                    *state* state#]
+                            (~key-pressed-fn)))
+                      ([e#]
+                         (proxy-super keyPressed e#))))
+
              bound-meths# (reduce (fn [methods# [method-name# f#]]
                                     (assoc methods# (name method-name#)
                                            (fn [this# & args#]

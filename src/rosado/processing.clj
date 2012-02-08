@@ -729,6 +729,11 @@
 ;; $$lerpColor
 ;; $$lightFallof
 
+(defn key-code
+  "Returns current key's unique code."
+  []
+  (. *applet* :keyCode))
+
 (defn lights [] (.lights *applet*))
 
 (defn light-specular
