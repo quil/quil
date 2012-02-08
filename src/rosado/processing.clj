@@ -981,8 +981,18 @@
 ;; $$saveFile
 
 (defn save-frame
+  "Saves an image identical to the current display window as a file. May be
+  called multple times - each file saved will have a unique name. Name and image
+  formate may be modified by passing a string parameter of the form
+  \"foo-####.ext\" where foo- can be any arbitrary string, #### will be replaced
+  with the current frame id and .ext is one of .tiff, .targa, .png, .jpeg or
+  .jpg
+
+  Examples:
+  (save-frame)
+  (save-frame \"pretty-pic-####.jpg\")"
   ([] (.saveFrame *applet*))
-  ([what] (.saveFrame *applet*)))
+  ([name] (.saveFrame *applet* (str name))))
 
 ;; $$savePath
 ;; $$saveStream
@@ -1081,6 +1091,18 @@
 ;; $$stop
 ;; $$str
 
+(def ^{:private true}
+  stroke-cap-map {:square SQUARE
+                  :round ROUND
+                  :project PROJECT
+                  :model MODEL})
+
+(defn- resolve-stroke-cap-mode
+  [mode]
+  (if (keyword? mode)
+    (get stroke-cap-map mode)
+    mode))
+
 (defn stroke-float
   "Sets the color used to draw lines and borders around shapes."
   ([gray] (.stroke *applet* (float gray)))
@@ -1097,7 +1119,13 @@
        :doc (:doc (meta #'stroke-float))}
   stroke stroke-float)
 
-(defn stroke-cap [cap] (.strokeCap *applet* (int cap)))
+(defn stroke-cap
+  "Sets the style for rendering line endings. These ends are either squared,
+  extended, or rounded and specified with the corresponding parameters :square,
+  :project, and :round. The default cap is :round. "
+  [cap-mode]
+  (let [cap-mode (resolve-stroke-cap-mode cap-mode)]
+    (.strokeCap *applet* (int cap-mode))))
 
 (defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
 
