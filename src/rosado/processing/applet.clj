@@ -19,6 +19,7 @@
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
         fns (dissoc options :name :title :size)
+        fns (merge {:draw (fn [] nil)} fns)
         methods (into {} (map fix-mname fns))]
     `(def ~app-name
        (let [frame# (atom nil)
