@@ -499,7 +499,11 @@
      (.copy *applet* img (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2))))
 
-(defn cos [angle] (PApplet/cos (float angle)))
+(defn cos
+  "Calculates the cosine of an angle. This function expects the values
+  of the angle parameter to be provided in radians (values from 0 to
+  Math/PI*2). Values are returned in the range -1 to 1."
+  [angle] (PApplet/cos (float angle)))
 
 (defn create-font
   ([name size] (.createFont *applet* name (float size)))
@@ -569,6 +573,15 @@
   (.curveTightness *applet* (float ti)))
 
 (defn curve-vertex
+  "Specifies vertex coordinates for curves. This function may only be
+  used between begin-shape and end-shape and only when there is no
+  mode keyword specified to begin-hape. The first and last points in a
+  series of curve-vertex lines will be used to guide the beginning and
+  end of a the curve. A minimum of four points is required to draw a
+  tiny curve between the second and third points. Adding a fifth point
+  with curveVertex will draw the curve between the second, third, and
+  fourth points. The curveVertex function is an implementation of
+  Catmull-Rom splines."
   ([x y] (.curveVertex *applet* (float x) (float y)))
   ([x y z] (.curveVertex *applet* (float x) (float y) (float z))))
 
@@ -580,7 +593,15 @@
   []
   (PApplet/day))
 
-(defn degrees [radians] (PApplet/degrees (float radians)))
+(defn degrees
+  "Converts a radian measurement to its corresponding value in
+  degrees. Radians and degrees are two ways of measuring the same
+  thing. There are 360 degrees in a circle and (* 2 Math/PI) radians
+  in a circle. For example, (= 90° (/ Math/PI 2) 1.5707964). All
+  trigonometric methods in Processing require their parameters to be
+  specified in radians."
+  [radians]
+  (PApplet/degrees (float radians)))
 
 (defn delay-frame [nap-time] (.delay *applet* (int nap-time)))
 
@@ -636,9 +657,18 @@
 
 ;; $$exec
 
-(defn exit [] (.exit *applet*))
+(defn exit
+  "Quits/stops/exits the program.  Rather than terminating
+  immediately, exit will cause the sketch to exit after draw has
+  completed (or after setup completes if called during the setup
+  method). "
+  []
+  (.exit *applet*))
 
-(defn exp [a] (PApplet/exp (float a)))
+(defn exp
+  "Returns Euler's number e (2.71828...) raised to the power of the
+  value parameter."
+  [val] (PApplet/exp (float val)))
 
 ;; $$expand
 
@@ -917,14 +947,35 @@
                    (float z-near) (float z-far))))
 
 (defn point
+  "Draws a point, a coordinate in space at the dimension of one
+  pixel. The first parameter is the horizontal value for the point,
+  the second value is the vertical value for the point, and the
+  optional third value is the depth value. Drawing this shape in 3D
+  using the z parameter requires the P3D or OPENGL parameter in
+  combination with size as shown in the above example."
   ([x y] (.point *applet* (float x)(float y)))
   ([x y z] (.point *applet* (float x) (float y) (float z))))
 
 (defn point-light
+  "Adds a point light. Lights need to be included in the draw() to
+  remain persistent in a looping program. Placing them in the setup()
+  of a looping program will cause them to only have an effect the
+  first time through the loop. The affect of the r, g, and b
+  parameters is determined by the current color mode. The x, y, and z
+  parameters set the position of the light"
   [r g b x y z]
-  (.pointLight *applet* r g b x y z))
+  (.pointLight *applet* (float r) (float g) (float b) (float x) (float y) (float z)))
 
-(defn pop-matrix [] (.popMatrix *applet*))
+(defn pop-matrix
+  "Pops the current transformation matrix off the matrix
+  stack. Understanding pushing and popping requires understanding the
+  concept of a matrix stack. The push-matrix fn saves the current
+  coordinate system to the stack and pop-matrix restores the prior
+  coordinate system. push-matrix and pop-matrix are used in conjuction
+  with the other transformation methods and may be embedded to control
+  the scope of the transformations."
+  []
+  (.popMatrix *applet*))
 
 (defn pow
   "Facilitates exponential expressions. The pow() function is an
@@ -971,6 +1022,15 @@
   (PApplet/radians (float degrees)))
 
 (defn random
+  "Generates random numbers. Each time the random function is called,
+  it returns an unexpected value within the specified range. If one
+  parameter is passed to the function it will return a float between
+  zero and the value of the high parameter. The function call (random
+  5) returns values between 0 and 5 (starting at zero, up to but not
+  including 5). If two parameters are passed, it will return a float
+  with a value between the the parameters. The function call
+  (random -5 10.2) returns values starting at -5 up to (but not
+  including) 10.2."
   ([max] (.random *applet* (float max)))
   ([min max] (.random *applet* (float min) (float max))))
 
@@ -1132,9 +1192,20 @@
   ([[r g b] [x y z] [nx ny nz] angle concentration]
      (.spotLight *applet* r g b x y z nx ny nz angle concentration)))
 
-(defn sq [a] (PApplet/sq (float a)))
+(defn sq
+  "Squares a number (multiplies a number by itself). The result is
+  always a positive number, as multiplying two negative numbers always
+  yields a positive result. For example, -1 * -1 = 1."
+  [a]
+  (PApplet/sq (float a)))
 
-(defn sqrt [a] (PApplet/sqrt (float a)))
+(defn sqrt
+  "Calculates the square root of a number. The square root of a number
+  is always positive, even though there may be a valid negative
+  root. The square root s of number a is such that (= a (* s s)) . It
+  is the opposite of squaring."
+  [a]
+  (PApplet/sqrt (float a)))
 
 ;; $$start
 ;; $$status
