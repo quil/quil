@@ -648,12 +648,16 @@
 
 (defn end-raw [] (.endRaw *applet*))
 
-(defmacro end-shape
-  "Takes an optinal :close keyword as argument."
-  ([] `(.endShape *applet*))
-  ([kind]
-     (let [kind (tosymb kind)]
-       `(.endShape *applet* (int ~kind)))))
+(defn end-shape
+  "May only be called after begin-shape. When end-shape is called,
+  all of image data defined since the previous call to begin-shape is
+  written into the image buffer. The keyword :close may be passed to
+  close the shape (to connect the beginning and the end)."
+  ([] (.endShape *applet*))
+  ([mode]
+     (when-not (= :close mode)
+       (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
+     (.endShape *applet* CLOSE)))
 
 ;; $$exec
 
