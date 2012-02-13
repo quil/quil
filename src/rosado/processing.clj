@@ -226,10 +226,10 @@
      shapes-map {:points POINTS
                  :lines LINES
                  :triangles TRIANGLES
-                 :triangle-strip TRIANGLE_STRIP
-                 :triangle-fan TRIANGLE_FAN
+                 :triangle-strip TRIANGLE-STRIP
+                 :triangle-fan TRIANGLE-FAN
                  :quads QUADS
-                 :quad-strip QUAD_STRIP})
+                 :quad-strip QUAD-STRIP})
 
 (defn- resolve-shape-mode
   [mode]
@@ -334,8 +334,8 @@
              :multiply MULTIPLY
              :screen SCREEN
              :overlay OVERLAY
-             :hard-light HARD_LIGHT
-             :soft-light SOFT_LIGHT
+             :hard-light HARD-LIGHT
+             :soft-light SOFT-LIGHT
              :dodge DODGE
              :burn BURN})
 

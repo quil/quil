@@ -7,7 +7,7 @@
 ;; which can be found in the file CPL.TXT at the root of this
 ;; distribution.  By using this software in any fashion, you are
 ;; agreeing to be bound by the terms of this license.  You must not
-;; remove this notice, or any other, from this software. 
+;; remove this notice, or any other, from this software.
 
 ;; renderers known to processing.core
 
@@ -27,20 +27,20 @@
 ;(def EPSILON (PApllet 0.0001))
 (def EPSILON PApplet/EPSILON)
 
-(def MAX_FLOAT PApplet/MAX_FLOAT)
-(def MIN_FLOAT PApplet/MIN_FLOAT)
+(def MAX-FLOAT PApplet/MAX_FLOAT)
+(def MIN-FLOAT PApplet/MIN_FLOAT)
 
-(def MAX_INT PApplet/MAX_FLOAT)
-(def MIN_INT PApplet/MIN_FLOAT)
+(def MAX-INT PApplet/MAX_FLOAT)
+(def MIN-INT PApplet/MIN_FLOAT)
 
 (def PI  (float Math/PI))
-(def HALF_PI    (/ PI (float 2.0)))
-(def THIRD_PI   (/ PI (float 3.0)))
+(def HALF-PI    (/ PI (float 2.0)))
+(def THIRD-PI   (/ PI (float 3.0)))
 (def QUARTER_PI (/ PI (float 4.0)))
-(def TWO_PI     (* PI (float 2.0)))
+(def TWO-PI     (* PI (float 2.0)))
 
-(def DEG_TO_RAD (/ PI (float 180.0)))
-(def RAD_TO_DEG (/ (float 180.0) PI))
+(def DEG-TO-RAD (/ PI (float 180.0)))
+(def RAD-TO-DEG (/ (float 180.0) PI))
 
 ;; for colors and/or images
 
@@ -75,17 +75,17 @@
 (def MULTIPLY    PApplet/MULTIPLY)
 (def SCREEN      PApplet/SCREEN)
 (def OVERLAY     PApplet/OVERLAY)
-(def HARD_LIGHT  PApplet/HARD_LIGHT)
-(def SOFT_LIGHT  PApplet/SOFT_LIGHT)
+(def HARD-LIGHT  PApplet/HARD_LIGHT)
+(def SOFT-LIGHT  PApplet/SOFT_LIGHT)
 (def DODGE       PApplet/DODGE)
 (def BURN        PApplet/BURN)
 
 ;; colour component bitmasks
 
-(def ALPHA_MASK  PApplet/ALPHA_MASK)
-(def RED_MASK    PApplet/RED_MASK)
-(def GREEN_MASK  PApplet/GREEN_MASK)
-(def BLUE_MASK   PApplet/BLUE_MASK)
+(def ALPHA-MASK  PApplet/ALPHA_MASK)
+(def RED-MASK    PApplet/RED_MASK)
+(def GREEN-MASK  PApplet/GREEN_MASK)
+(def BLUE-MASK   PApplet/BLUE_MASK)
 
 ;; for messages
 
@@ -114,12 +114,12 @@
 
 (def TRIANGLE         PApplet/TRIANGLE)
 (def TRIANGLES        PApplet/TRIANGLES)
-(def TRIANGLE_STRIP   PApplet/TRIANGLE_STRIP)
-(def TRIANGLE_FAN     PApplet/TRIANGLE_FAN)
+(def TRIANGLE-STRIP   PApplet/TRIANGLE_STRIP)
+(def TRIANGLE-FAN     PApplet/TRIANGLE_FAN)
 
 (def QUAD             PApplet/QUAD)
 (def QUADS            PApplet/QUADS)
-(def QUAD_STRIP       PApplet/QUAD_STRIP)
+(def QUAD-STRIP       PApplet/QUAD_STRIP)
 
 (def POLYGON          PApplet/POLYGON)
 (def PATH             PApplet/PATH)
@@ -134,8 +134,8 @@
 (def OPEN             PApplet/OPEN)
 (def CLOSE            PApplet/CLOSE)
 
-(def CONCAVE_POLYGON  (bit-or (bit-shift-left 1 8) 1))
-(def CONVEX_POLYGON   (bit-or (bit-shift-left 1 8) 2))
+(def CONCAVE-POLYGON  (bit-or (bit-shift-left 1 8) 1))
+(def CONVEX-POLYGON   (bit-or (bit-shift-left 1 8) 2))
 
 (def CORNER PApplet/CORNER)
 (def CORNERS PApplet/CORNERS)
@@ -169,7 +169,7 @@
 ;; (def POINT PApplet/POINT) ; shared with shape feature
 (def SPOT PApplet/SPOT)
 
-;; keys 
+;; keys
 
 (def BACKSPACE PApplet/BACKSPACE)
 (def TAB PApplet/TAB)
@@ -186,7 +186,3 @@
 (def ALT PApplet/ALT)
 (def CONTROL PApplet/CONTROL)
 (def SHIFT PApplet/SHIFT)
-
-
-
-
