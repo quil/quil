@@ -877,9 +877,8 @@
   the lifespan of the program). The resulting value will always be
   between 0.0 and 1.0. Processing can compute 1D, 2D and 3D noise,
   depending on the number of coordinates given. The noise value can be
-  animated by moving through the noise space as demonstrated in the
-  example above. The 2nd and 3rd dimension can also be interpreted as
-  time.
+  animated by moving through the noise space and the 2nd and 3rd
+  dimensions can also be interpreted as time.
 
   The actual noise is structured similar to an audio signal, in
   respect to the function's use of frequencies. Similar to the concept
@@ -890,7 +889,7 @@
   scale of the input coordinates. As the function works within an
   infinite space the value of the coordinates doesn't matter as such,
   only the distance between successive coordinates does (eg. when
-  using noise() within a loop). As a general rule the smaller the
+  using noise within a loop). As a general rule the smaller the
   difference between coordinates, the smoother the resulting noise
   sequence will be. Steps of 0.005-0.03 work best for most
   applications, but this will differ depending on use."
@@ -1000,7 +999,17 @@
 
 (defn print-projection [] (.printProjection *applet*))
 
-(defn push-matrix [] (.pushMatrix *applet*))
+(defn push-matrix
+  "Pushes the current transformation matrix onto the matrix
+  stack. Understanding push-matrix and pop-matrix requires
+  understanding the concept of a matrix stack. The push-matrix
+  function saves the current coordinate system to the stack and
+  pop-matrix restores the prior coordinate system. push-matrix and
+  pop-matrix are used in conjuction with the other transformation
+  methods and may be embedded to control the scope of the
+  transformations."
+  []
+  (.pushMatrix *applet*))
 
 (defn quad
   "A quad is a quadrilateral, a four sided polygon. It is similar to a
@@ -1073,15 +1082,69 @@
 (defn reverse-array [arr] (PApplet/reverse arr))
 
 (defn rotate
+  "Rotates a shape the amount specified by the angle parameter. Angles
+  should be specified in radians (values from 0 to TWO-PI) or
+  converted to radians with the radians function.
+
+  Objects are always rotated around their relative position to the
+  origin and positive numbers rotate objects in a clockwise
+  direction. Transformations apply to everything that happens after
+  and subsequent calls to the function accumulates the effect. For
+  example, calling (rotate HALF-PI) and then (rotate HALF-PI) is the
+  same as (rotate PI). All tranformations are reset when draw begins
+  again.
+
+  Technically, rotate multiplies the current transformation matrix by
+  a rotation matrix. This function can be further controlled by the
+  push-matrix and pop-matrix."
   ([angle] (.rotate *applet* (float angle)))
   ([angle vx vy vz] (.rotate *applet* (float angle)
                              (float vx) (float vy) (float vz))))
 
-(defn rotate-x [angle] (.rotateX *applet* (float angle)))
+(defn rotate-x
+  "Rotates a shape around the x-axis the amount specified by the angle
+  parameter. Angles should be specified in radians (values from 0 to
+  (* PI 2)) or converted to radians with the radians function. Objects are
+  always rotated around their relative position to the origin and
+  positive numbers rotate objects in a counterclockwise
+  direction. Transformations apply to everything that happens after
+  and subsequent calls to the function accumulates the effect. For
+  example, calling (rotate-x HALF-PI) and then (rotate-x HALF-PI) is
+  the same as (rotate-x PI). If rotate-x is called within the draw fn,
+  the transformation is reset when the loop begins again. This
+  function requires passing P3D or OPENGL into the size parameter."
+  [angle]
+  (.rotateX *applet* (float angle)))
 
-(defn rotate-y [angle] (.rotateY *applet* (float angle)))
+(defn rotate-y
+  "Rotates a shape around the y-axis the amount specified by the angle
+  parameter. Angles should be specified in radians (values from 0
+  to (* PI 2)) or converted to radians with the radians function.
+  Objects are always rotated around their relative position to the
+  origin and positive numbers rotate objects in a counterclockwise
+  direction. Transformations apply to everything that happens after
+  and subsequent calls to the function accumulates the effect. For
+  example, calling (rotate-y HALF-PI) and then (rotate-y HALF-PI) is
+  the same as (rotate-y PI). If rotate-y is called within the draw fn,
+  the transformation is reset when the loop begins again. This
+  function requires passing P3D or OPENGL into the size parameter."
+  [angle]
+  (.rotateY *applet* (float angle)))
 
-(defn rotate-z [angle] (.rotateZ *applet* (float angle)))
+(defn rotate-z
+  "Rotates a shape around the z-axis the amount specified by the angle
+  parameter. Angles should be specified in radians (values from 0
+  to (* PI 2)) or converted to radians with the radians function.
+  Objects are always rotated around their relative position to the
+  origin and positive numbers rotate objects in a counterclockwise
+  direction. Transformations apply to everything that happens after
+  and subsequent calls to the function accumulates the effect. For
+  example, calling (rotate-z HALF-PI) and then (rotate-z HALF-PI) is
+  the same as (rotate-z PI). If rotate-y is called within the draw fn,
+  the transformation is reset when the loop begins again. This
+  function requires passing P3D or OPENGL into the size parameter."
+  [angle]
+  (.rotateZ *applet* (float angle)))
 
 (defn round [what] (PApplet/round (float what)))
 
@@ -1327,6 +1390,16 @@
 (def tint tint-float)
 
 (defn translate
+  "Specifies an amount to displace objects within the display
+  window. The x parameter specifies left/right translation, the y
+  parameter specifies up/down translation, and the z parameter
+  specifies translations toward/away from the screen.  Transformations
+  apply to everything that happens after and subsequent calls to the
+  function accumulates the effect. For example, calling (translate 50
+  0) and then (translate 20,h 0) is the same as (translate 70, 0). If
+  translate is called within draw, the transformation is reset when
+  the loop begins again. This function can be further controlled by
+  the push-matrix and pop-matrix."
   ([v] (apply translate v))
   ([tx ty] (.translate *applet* (float tx) (float ty)))
   ([tx ty tz] (.translate *applet* (float tx) (float ty) (float tz))))
