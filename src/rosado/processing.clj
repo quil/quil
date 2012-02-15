@@ -693,29 +693,75 @@
        :doc (:doc (meta #'fill-float))}
   fill fill-float)
 
-(defn filter-kind
-  ([kind] (.filter *applet* (int kind)))
-  ([kind param] (.filter *applet* (int kind) (float param))))
+(def ^{:private true}
+  filter-map {:threshold THRESHOLD
+              :gray GRAY
+              :invert INVERT
+              :posterize POSTERIZE
+              :blur BLUR
+              :opaque OPAQUE
+              :erode ERODE
+              :dilate DILATE})
+
+(defn- resolve-filter-mode
+  [mode]
+  (if (keyword? mode)
+    (get filter-map mode)
+    mode))
+
+(defn display-filter
+  "Originally named filter in Processing Language.
+  Filters the display window with the specified mode and level. Level
+  defines the quality of the filter and mode may be one of the
+  following keywords:
+
+  :threshold - converts the image to black and white pixels depending
+               if they are above or below the threshold defined by
+               the level parameter. The level must be between
+               0.0 (black) and 1.0 (white). If no level is specified,
+               0.5 is used.
+  :gray      - converts any colors in the image to grayscale
+               equivalents
+  :invert    - sets each pixel to its inverse value
+  :posterize - limits each channel of the image to the number of
+               colors specified as the level parameter. The level
+               parameter
+  :blur      - executes a Guassian blur with the level parameter
+               specifying the extent of the blurring. If no level
+               parameter is used, the blur is equivalent to Guassian
+               blur of radius 1.
+  :opaque    - sets the alpha channel to entirely opaque.
+  :erode     - reduces the light areas with the amount defined by the
+               level parameter.
+  :dilate    - increases the light areas with the amount defined by
+               the level parameter."
+  ([mode]
+     (let [mode (resolve-filter-mode mode)]
+       (.filter *applet* (int mode))))
+  ([mode level]
+     (let [mode (resolve-filter-mode mode)]
+       (.filter *applet* (int mode) (float level)))))
 
 ;; $$focusGained
 ;; $$focusLost
 
-(defn frame-count [] (.frameCount *applet*))
+(defn frame-count
+  "The system variable frameCount contains the number of frames
+  displayed since the program started. Inside setup() the value is 0
+  and and after the first iteration of draw it is 1, etc."
+  []
+  (.frameCount *applet*))
 
-(defn framerate
+(defn frame-rate
   "With no args, returns the current framerate. With one arg specifies a new
   target framerate (number of frames to be displayed every second). If the
   processor is not fast enough to maintain the specified rate, it will not be
-  achieved. For example, the function call (frameRate 30) will attempt to
+  achieved. For example, the function call (frame-rate 30) will attempt to
   refresh 30 times a second. It is recommended to set the frame rate within
   setup. The default rate is 60 frames per second."
   ([] (.frameRate *applet*))
   ([new-rate]
      (.frameRate *applet* (float new-rate))))
-
-(def ^{:arglists (:arglists (meta #'framerate))
-       :doc (:doc (meta #'framerate))}
-  frame-rate framerate)
 
 (defn frustum
   [l r b t near far]
@@ -1243,9 +1289,22 @@
   ([x y z a] (.specular *applet* (float x) (float y) (float z) (float a))))
 
 (defn sphere
-  [r] (.sphere *applet* (float r)))
+  "Genarates a hollow ball made from tessellated triangles."
+  [radius] (.sphere *applet* (float radius)))
 
 (defn sphere-detail
+  "Controls the detail used to render a sphere by adjusting the number
+  of vertices of the sphere mesh. The default resolution is 30, which
+  creates a fairly detailed sphere definition with vertices every
+  360/30 = 12 degrees. If you're going to render a great number of
+  spheres per frame, it is advised to reduce the level of detail using
+  this function. The setting stays active until sphere-detail is
+  called again with a new parameter and so should not be called prior
+  to every sphere statement, unless you wish to render spheres with
+  different settings, e.g. using less detail for smaller spheres or
+  ones further away from the camera. To controla the detail of the
+  horizontal and vertical resolution independently, use the version of
+  the functions with two parameters."
   ([res] (.sphereDetail *applet* (int res)))
   ([ures vres] (.sphereDetail *applet* (int ures) (int vres))))
 
