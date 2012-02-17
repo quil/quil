@@ -19,13 +19,14 @@
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
         fns (dissoc options :name :title :size :key-pressed :key-released :mouse-pressed :mouse-released)
+        fns (into {} (map (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) fns))
         fns (merge {:draw (fn [] nil)} fns)
         key-pressed-fn (or (:key-pressed options)
                            (fn [] nil))
         key-released-fn (or (:key-released options)
-                           (fn [] nil))
+                            (fn [] nil))
         mouse-pressed-fn (or (:mouse-pressed options)
-                              (fn [] nil))
+                             (fn [] nil))
         mouse-released-fn (or (:mouse-released options)
                               (fn [] nil))
         methods (into {} (map fix-mname fns))]
