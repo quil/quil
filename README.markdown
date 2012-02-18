@@ -1,6 +1,8 @@
 # Processing for Clojure #
 
-This lib is a wrapper for the [Processing][] project. Mixture of Clojure and Processing enables you to do live-coding and experiment easily.
+This lib is a wrapper for the [Processing][] project. Mixture of
+Clojure and Processing enables you to do live-coding and experiment
+easily.
 
 Most of the function are covered; some have a slightly different name
 than in Java (partly because Clojure is confused by methods of the
@@ -9,13 +11,12 @@ accessible.
 
 ## How To Use It? ##
 
-If you're using Leiningen, just add the following line to your
-dependencies list:
+*NOTE*: project is currently going through some cleanups when it comes
+ to lein/maven compatibility. Untill that's finished, you pretty much
+ have to setup your project manually.
 
-   [org.clojars.automata/rosado.processing "1.1.0"]
-
-Otherwise, add your `core.jar` file from the Processing installation to your
-CLASSPATH.
+Add Processing's `core.jar` to your classpath along with
+clj-processing jar and you're ready to go.
 
 To use the OpenGL features, you also have to add `gluegen-rt.jar`,
 `jogl.jar` and `opengl.jar` from the
@@ -28,6 +29,12 @@ to the JVM.
 
 Then, create a JAR by running `ant` and also add the resulting file to
 your CLASSPATH.
+
+## Clojars ##
+
+Clojars provides older versions of clj-processing:
+
+   [org.clojars.automata/rosado.processing "1.1.0"]
 
 ## Examples ##
 
