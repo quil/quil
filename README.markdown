@@ -60,3 +60,12 @@ fields of the PApplet class from within proxy doesn't work.
 
 [processing]:http://processing.org/
 [cljscript]:http://en.wikibooks.org/wiki/Clojure_Programming/Getting_Started#Create_clj_Script
+
+## Contributors ##
+
+* Roland Sadowski
+* Phil Hagelberg
+* Vilson Vieira
+* Marshall T. Vandegrift
+* Ilya Epifanov
+* Sam Aaron

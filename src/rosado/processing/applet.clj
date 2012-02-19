@@ -18,10 +18,17 @@
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
   (let [options (assoc (apply hash-map opts) :name (str app-name))
-        fns (dissoc options :name :title :size :key-pressed)
+        fns (dissoc options :name :title :size :key-pressed :key-released :mouse-pressed :mouse-released)
+        fns (into {} (map (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) fns))
         fns (merge {:draw (fn [] nil)} fns)
         key-pressed-fn (or (:key-pressed options)
                            (fn [] nil))
+        key-released-fn (or (:key-released options)
+                            (fn [] nil))
+        mouse-pressed-fn (or (:mouse-pressed options)
+                             (fn [] nil))
+        mouse-released-fn (or (:mouse-released options)
+                              (fn [] nil))
         methods (into {} (map fix-mname fns))]
     `(def ~app-name
        (let [frame# (atom nil)
@@ -34,7 +41,25 @@
                                     *state* state#]
                             (~key-pressed-fn)))
                       ([e#]
-                         (proxy-super keyPressed e#))))
+                         (proxy-super keyPressed e#)))
+                    (keyReleased
+                      ([] (binding [*applet* ~'this
+                                    *state* state#]
+                            (~key-released-fn)))
+                      ([e#]
+                         (proxy-super keyReleased e#)))
+                    (mousePressed
+                      ([] (binding [*applet* ~'this
+                                    *state* state#]
+                            (~mouse-pressed-fn)))
+                      ([e#]
+                         (proxy-super mousePressed e#)))
+                    (mouseReleased
+                      ([] (binding [*applet* ~'this
+                                    *state* state#]
+                            (~mouse-released-fn)))
+                      ([e#]
+                         (proxy-super mouseReleased e#))))
 
              bound-meths# (reduce (fn [methods# [method-name# f#]]
                                     (assoc methods# (name method-name#)

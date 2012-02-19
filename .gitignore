@@ -3,3 +3,4 @@ lib/*
 classes/
 pom-generated.xml
 pom.xml
+native
