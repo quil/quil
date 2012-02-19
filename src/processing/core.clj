@@ -9,7 +9,7 @@
 ;; agreeing to be bound by the terms of this license.  You must not
 ;; remove this notice, or any other, from this software.
 
-(ns rosado.processing
+(ns processing.core
   (:import (processing.core PApplet PImage PGraphics PFont))
   (:load "constants"))
 
@@ -1532,9 +1532,9 @@
 ;;; version number
 
 (let [version-stream (.getResourceAsStream (clojure.lang.RT/baseLoader)
-                                           "rosado/processing/version.properties")
+                                           "processing/core/version.properties")
       properties     (doto (new java.util.Properties) (.load version-stream))
-      prop (fn [k] (.getProperty properties (str "rosado.processing.version." k)))
+      prop (fn [k] (.getProperty properties (str "processing.core.version." k)))
       processing-version {:major       (Integer/valueOf ^String (prop "major"))
                           :minor       (Integer/valueOf ^String (prop "minor"))
                           :incremental (Integer/valueOf ^String (prop "incremental"))
@@ -1549,7 +1549,7 @@
   "The version info for clj-processing, as a map containing :major :minor
   :incremental and optional :qualifier keys. This version number
    corresponds to the official Processing.org version with which
-   clj-processing is compatible.")
+   processing.core is compatible.")
 
 (defn
   processing-version

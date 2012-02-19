@@ -15,6 +15,13 @@ accessible.
  to lein/maven compatibility. Untill that's finished, you pretty much
  have to setup your project manually.
 
+If you use mave or leiningn, just add the following to your
+`project.clj`:
+
+        [processing-core/processsing.core "0.1.0"]
+
+## Manual Setup
+
 Add Processing's `core.jar` to your classpath along with
 clj-processing jar and you're ready to go.
 
@@ -29,12 +36,6 @@ to the JVM.
 
 Then, create a JAR by running `ant` and also add the resulting file to
 your CLASSPATH.
-
-## Clojars ##
-
-Clojars provides older versions of clj-processing:
-
-   [org.clojars.automata/rosado.processing "1.1.0"]
 
 ## Examples ##
 
@@ -52,6 +53,12 @@ mouse handling methods to take one argument (which is just an instance
 of java.awt.event.MouseEvent class) and get all needed information
 (like mouse position etc) from that object. Also, accessing instance
 fields of the PApplet class from within proxy doesn't work.
+
+## License
+
+`processing.core` is distributed under Common Public License Version
+1.0. The official Processing.org's core.jar is distributed under LGPG
+and its code can be found on http://processing.org/
 
 ## TODO ##
 

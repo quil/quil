@@ -1,8 +1,8 @@
 ;; processing example
 
 (ns example2
-  (:use [rosado.processing]
-        [rosado.processing.applet]))
+  (:use [processing.core]
+        [processing.core.applet]))
 
 ;; here's a function which will be called by Processing's (PApplet)
 ;; draw method every frame. Place your code here. If you eval it
@@ -16,14 +16,14 @@
   (stroke-float 10)
   (fill-float (rand-int 125) (rand-int 125) (rand-int 125))
   (with-translation [(/ 200 2) (/ 200 2)]
-    (with-rotation [QUARTER_PI]
+    (with-rotation [QUARTER-PI]
       (begin-shape)
       (vertex -50  50)
       (vertex  50  50)
       (vertex  50 -50)
       (vertex -50 -50)
-      (end-shape CLOSE)))
-  (filter-kind INVERT))
+      (end-shape :close)))
+  (display-filter :invert))
 
 (defn setup []
   "Runs once."
@@ -31,7 +31,7 @@
   (smooth)
   (no-stroke)
   (fill 226)
-  (framerate 10))
+  (frame-rate 10))
 
 ;; Now we just need to define an applet:
 

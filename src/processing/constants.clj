@@ -9,7 +9,7 @@
 ;; agreeing to be bound by the terms of this license.  You must not
 ;; remove this notice, or any other, from this software.
 
-;; renderers known to processing.core
+;; renderers known to org.processing.core
 
 (def P2D PApplet/P2D)
 (def P3D PApplet/P3D)
@@ -36,7 +36,7 @@
 (def PI  (float Math/PI))
 (def HALF-PI    (/ PI (float 2.0)))
 (def THIRD-PI   (/ PI (float 3.0)))
-(def QUARTER_PI (/ PI (float 4.0)))
+(def QUARTER-PI (/ PI (float 4.0)))
 (def TWO-PI     (* PI (float 2.0)))
 
 (def DEG-TO-RAD (/ PI (float 180.0)))

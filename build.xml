@@ -5,7 +5,7 @@
   </description>
 
   <!-- The JAR file to create. -->
-  <property name="jarfile" location="rosado.processing.jar"/>
+  <property name="jarfile" location="processing.core.jar"/>
 
   <target name="clean"
           description="Remove generated files and directories.">
@@ -16,8 +16,8 @@
           description="Create jar file.">
     <jar jarfile="${jarfile}">
       <fileset dir="." includes="CPL.TXT"/>
-      <fileset dir="src" includes="rosado/**/*.clj"/>
-      <fileset dir="src" includes="rosado/**/*.properties"/>
+      <fileset dir="src" includes="processing/**/*.clj"/>
+      <fileset dir="src" includes="processing/**/*.properties"/>
     </jar>
   </target>
 

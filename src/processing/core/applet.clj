@@ -1,5 +1,5 @@
-(ns rosado.processing.applet
-  (:use [rosado.processing :except (size)])
+(ns processing.core.applet
+  (:use [processing.core :except (size)])
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 

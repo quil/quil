@@ -1,7 +1,7 @@
-(defproject org.clojars.automata/rosado.processing "1.1.0"
+(defproject processing-core/processing.core "0.1.0"
   :description "A wrapper for Processing in Clojure."
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [org.clojars.fyuryu/processing.core "1.1.0"]
+                 [org.clojars.processing-core/org.processing.core "1.5.1"]
                  [processing-jogl "1.5.1"]
                  [processing-opengl "1.5.1"]
                  [processing-gluegen-rt "1.5.1"]])
