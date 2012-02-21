@@ -4,3 +4,4 @@ classes/
 pom-generated.xml
 pom.xml
 native
+.cake
