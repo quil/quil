@@ -1,8 +1,8 @@
 ;; processing example
 
 (ns mouse-example
-  (:use [rosado.processing]
-        [rosado.processing.applet]))
+  (:use [processing.core]
+	[processing.core.applet]))
 
 (def mouse-position (atom [0 0]))
 

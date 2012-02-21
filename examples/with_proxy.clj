@@ -1,7 +1,7 @@
 ;; processing test
 
 (ns p5-example
-  (:use rosado.processing)
+  (:use processing.core)
   (:import (javax.swing JFrame))
   (:import (processing.core PApplet)))
 
@@ -20,8 +20,8 @@
   (stroke-float 10)
   (line 10 10 (rand-int 150) (rand-int 150))
   (no-stroke)
-  (filter-kind INVERT)
-  (framerate 10))
+  (display-filter :invert)
+  (frame-rate 10))
 
 ;; below, we create an PApplet proxy and override setup() and draw()
 ;; methods. Then we put the applet into a window and display it.
@@ -34,7 +34,7 @@
                 (smooth)
                 (no-stroke)
                 (fill 226)
-                (framerate 10)))
+                (frame-rate 10)))
        (draw []
              (binding [*applet* this]
                (fancy-draw this)))))
