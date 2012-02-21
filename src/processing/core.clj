@@ -1265,9 +1265,10 @@
   (PApplet/sin (float angle)))
 
 (defn size
-  "Defines the dimension of the display window in units of pixels."
-  ([width height] (.size *applet* (int width) (int height)))
-  ([width height ^String renderer] (.size *applet* (int width) (int height) renderer)))
+  "Not supported. Use :size key in applet or defapplet"
+  [& args]
+  (println "Deprecated - size should be specified as a :size key to applet or defapplet")
+  nil)
 
 ;; $$sketchFile
 ;; $$sketchPath
