@@ -901,6 +901,16 @@
 ;; $$nfp
 ;; $$nfs
 
+(defn mouse-x
+  "Current horizontal coordinate of the mouse."
+  []
+  (. *applet* :mouseX))
+
+(defn mouse-y
+  "Current vertical coordinate of the mouse."
+  []
+  (. *applet* :mouseY))
+
 (defn no-cursor [] (.noCursor *applet*))
 
 (defn no-fill

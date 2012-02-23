@@ -1,8 +1,6 @@
-;; processing example
-
 (ns mouse-example
   (:use [processing.core]
-	[processing.core.applet]))
+        [processing.core.applet]))
 
 (def mouse-position (atom [0 0]))
 
@@ -15,22 +13,18 @@
     (point x y)))
 
 (defn setup []
-  (size 200 200)
   (smooth)
   (no-stroke))
 
-
-(defn mouse-moved [evt]
-  (let [x (.getX evt) y (.getY evt)]
+(defn mouse-moved []
+  (let [x (mouse-x)  y (mouse-y)]
     (reset! mouse-position [x y])))
 
-;; Now we just need to define an applet:
-
-(defapplet mouse-example :title "Mouse example."
+(defapplet mouse-example
+  :title "Mouse example."
   :size [200 200]
-  :setup setup :draw draw
+  :setup setup
+  :draw draw
   :mouse-moved mouse-moved)
 
-(run mouse-example)
-
-;; (stop mouse-example)
+(applet-start mouse-example)

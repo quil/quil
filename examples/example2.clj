@@ -1,5 +1,3 @@
-;; processing example
-
 (ns example2
   (:use [processing.core]
         [processing.core.applet]))
@@ -27,7 +25,6 @@
 
 (defn setup []
   "Runs once."
-  (size 200 200)
   (smooth)
   (no-stroke)
   (fill 226)
@@ -41,6 +38,4 @@
   :draw draw
   :size [200 200])
 
-(run example2)
-
-;; (stop example2)
+(applet-start example2)
