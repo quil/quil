@@ -1,4 +1,4 @@
-(defproject processing-core/processing.core "0.1.0"
+(defproject processing-core/processing.core "0.1.0-SNAPSHOT"
   :description "A wrapper for Processing in Clojure."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojars.processing-core/org.processing.core "1.5.1"]

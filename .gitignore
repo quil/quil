@@ -5,3 +5,4 @@ pom-generated.xml
 pom.xml
 native
 .cake
+.lein-deps-sum
