@@ -79,7 +79,6 @@
         fns               (dissoc options :name :title :size :key-pressed
                                   :key-released :mouse-pressed :mouse-released
                                   :mouse-moved :mouse-dragged :setup)
-        fns               (into {} (map (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) fns))
         fns               (merge {:draw (fn [] nil)} fns)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
@@ -157,7 +156,8 @@
 (defmacro defapplet
   "Define an applet. Takes an app-name and a map of options."
   [app-name & opts]
-  `(def ~app-name (applet ~@opts)))
+  (let [opts  (mapcat (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) (partition 2 opts))]
+    `(def ~app-name (applet ~@opts))))
 
 (comment ;; Usage:
   (defapplet growing-triangle
