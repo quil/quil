@@ -603,13 +603,32 @@
   [radians]
   (PApplet/degrees (float radians)))
 
-(defn delay-frame [nap-time] (.delay *applet* (int nap-time)))
-
-(defn destroy [] (.destroy *applet*))
+(defn delay-frame
+  "Forces the program to stop running for a specified time. Delay
+  times are specified in thousandths of a second, therefore the
+  function call (delay 3000) will stop the program for three
+  seconds. Because the screen is updated only at the end of draw,
+  the program may appear to 'freeze', because the screen will not
+  update when the delay fn is used. This function has no affect
+  inside setup."
+  [freeze-ms]
+  (.delay *applet* (int freeze-ms)))
 
 ;; $$die
 
 (defn directional-light
+  "Adds a directional light. Directional light comes from one
+  direction and is stronger when hitting a surface squarely and weaker
+  if it hits at a a gentle angle. After hitting a surface, a
+  directional lights scatters in all directions. Lights need to be
+  included in the draw fn to remain persistent in a looping
+  program. Placing them in the setup fn of a looping program will cause
+  them to only have an effect the first time through the loop. The
+  affect of the r, g, and b parameters is determined by the current
+  color mode. The nx, ny, and nz parameters specify the direction the
+  light is facing. For example, setting ny to -1 will cause the
+  geometry to be lit from below (the light is facing directly upward)"
+
   [r g b nx ny nz]
   (.directionalLight *applet* (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
@@ -617,9 +636,10 @@
 (defn displayable? [] (.displayable *applet*))
 
 (defn dist
-  ([a b x y] (PApplet/dist (float a) (float b) (float x) (float y)))
-  ([a b c x y z] (PApplet/dist (float a) (float b) (float c)
-                               (float x) (float y) (float z))))
+  "Calculates the distance between two points"
+  ([x1 y1 x2 y2] (PApplet/dist (float x1) (float y1) (float x2) (float y2)))
+  ([x1 y1 z1 x2 y2 z2] (PApplet/dist (float x1) (float y1) (float z1)
+                               (float x2) (float y2) (float z2))))
 
 ;; $$draw
 
@@ -630,10 +650,33 @@
   [x y width height]
   (.ellipse *applet* (float x) (float y) (float width) (float height)))
 
-(defmacro ellipse-mode [mode]
-  "Takes a keyword argument; :center, :radius, :corner or :corners."
-  (let [mode (tosymb mode)]
-    `(.ellipseMode *applet* (int ~mode))))
+(def ^{:private true}
+     ellipse-map   {:center CENTER
+                    :radius RADIUS
+                    :corner CORNER
+                    :corners CORNERS})
+
+(defn- recolve-ellipse-mode
+  [mode]
+  (if (keyword? mode)
+    (get ellipse-map mode)
+    mode))
+
+(defn ellipse-mode
+  "Modifies the origin of the ellispse according to the specified mode:
+
+  :center  - specifies the location of the ellipse as
+             the center of the shape. (Default).
+  :radius  - similar to center, but the width and height parameters to
+             ellipse specify the radius of the ellipse, rather than the
+             diameter.
+  :corner  - draws the shape from the upper-left corner of its bounding
+             box.
+  :corners - uses the four parameters to ellipse to set two opposing
+             corners of the ellipse's bounding box."
+  [mode]
+  (let [mode (resolve-ellipse-mode mode)]
+    (.ellipseMode *applet* (int mode))))
 
 (defn emissive-float
   ([gray] (.emissive *applet* (float gray)))
@@ -1498,16 +1541,47 @@
 ;; $$unregisterSize
 ;; $$update
 
-(defn update-pixels [] (.updatePixels *applet*))
+(defn update-pixels
+  "Updates the display window with the data in the pixels array. Use
+  in conjunction with load-pixels. If you're only reading pixels from
+  the array, there's no need to call update-pixels unless there are
+  changes.
+
+  Certain renderers may or may not seem to require load-pixels or
+  update-pixels. However, the rule is that any time you want to
+  manipulate the pixels array, you must first call load-pixels, and
+  after changes have been made, call update-pixels. Even if the
+  renderer may not seem to use this function in the current Processing
+  release, this will always be subject to change."
+  []
+  (.updatePixels *applet*))
 
 (defn vertex
+  "All shapes are constructed by connecting a series of
+  vertices. vertex is used to specify the vertex coordinates for
+  points, lines, triangles, quads, and polygons and is used
+  exclusively within the begin-shape and end-shape fns.
+
+  Drawing a vertex in 3D using the z parameter requires the P3D or
+  OPENGL parameter in combination with size as shown in the above
+  example.
+
+  This function is also used to map a texture onto the geometry. The
+  texture fn declares the texture to apply to the geometry and the u
+  and v coordinates set define the mapping of this texture to the
+  form. By default, the coordinates used for u and v are specified in
+  relation to the image's size in pixels, but this relation can be
+  changed with texture-mode."
   ([x y] (.vertex *applet* (float x) (float y)))
   ([x y z] (.vertex *applet* (float x) (float y) (float z)))
   ([x y u v] (.vertex *applet* (float x) (float y) (float u) (float v)))
   ([x y z u v]
      (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
 
-(defn year [] (PApplet/year))
+(defn year
+  "Returns the current year as an integer (2003, 2004, 2005, etc)."
+  []
+  (PApplet/year))
 
 ;; utility functions. clj-processing specific
 
