@@ -1131,7 +1131,10 @@
   []
   (PApplet/hour))
 
-(defn hue [what] (.hue *applet* (int what)))
+(defn hue
+  "Extracts the hue value from a color."
+  [col]
+  (.hue *applet* (int col)))
 
 (defn image
   ([^PImage img x y] (.image *applet* img (float x) (float y)))
@@ -1143,12 +1146,42 @@
 
 (defn image-mode [mode] (.imageMode *applet* (int mode)))
 
-;; $$init
-;; $$insertFrame
-;; $$join
-;; $$lerp
-;; $$lerpColor
-;; $$lightFallof
+(defn light-falloff
+  "Sets the falloff rates for point lights, spot lights, and ambient
+  lights. The parameters are used to determine the falloff with the
+  following equation:
+
+  d = distance from light position to vertex position
+  falloff = 1 / (CONSTANT + d * LINEAR + (d*d) * QUADRATIC)
+
+  Like fill, it affects only the elements which are created after it
+  in the code. The default value is (light-falloff 1.0 0.0 0.0).
+  Thinking about an ambient light with a falloff can be tricky. It is
+  used, for example, if you wanted a region of your scene to be lit
+  ambiently one color and another region to be lit ambiently by
+  another color, you would use an ambient light with location and
+  falloff. You can think of it as a point light that doesn't care
+  which direction a surface is facing."
+  [constant linear quadratic]
+  (.lightFalloff *applet* (float constant) (float linear) (float quadratic)))
+
+(defn lerp-color
+  "Calculates a color or colors between two color at a specific
+  increment. The amt parameter is the amount to interpolate between
+  the two values where 0.0 equal to the first point, 0.1 is very near
+  the first point, 0.5 is half-way in between, etc."
+  [c1 c2 amt]
+  (.lerpColor *applet* (int c1) (int c2) (float amt)))
+
+(defn lerp
+  "Calculates a number between two numbers at a specific
+  increment. The amt parameter is the amount to interpolate between
+  the two values where 0.0 equal to the first point, 0.1 is very near
+  the first point, 0.5 is half-way in between, etc. The lerp function
+  is convenient for creating motion along a straight path and for
+  drawing dotted lines."
+  [start stop amt]
+  (PApplet/lerp (float start) (float stop) (float amt)))
 
 (defn key-code
   "Returns current key's unique code."
