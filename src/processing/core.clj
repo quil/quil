@@ -802,8 +802,6 @@
   [freeze-ms]
   (.delay *applet* (int freeze-ms)))
 
-;; $$die
-
 (defn directional-light
   "Adds a directional light. Directional light comes from one
   direction and is stronger when hitting a surface squarely and weaker
@@ -901,8 +899,6 @@
        (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
      (.endShape *applet* CLOSE)))
 
-;; $$exec
-
 (defn exit
   "Quits/stops/exits the program.  Rather than terminating
   immediately, exit will cause the sketch to exit after draw has
@@ -916,8 +912,6 @@
   value parameter."
   [val]
   (PApplet/exp (float val)))
-
-;; $$expand
 
 (defn fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
@@ -985,9 +979,6 @@
      (let [mode (resolve-filter-mode mode)]
        (.filter *applet* (int mode) (float level)))))
 
-;; $$focusGained
-;; $$focusLost
-
 (defn focused
   "Returns a boolean value representing whether the applet has focus."
   []
@@ -1036,6 +1027,11 @@
   geeky debugging sessions much happier. "
   ([val] (PApplet/hex val))
   ([val num-digits] (PApplet/hex (int val) (int num-digits))))
+
+(defn unhex
+  "Converts a String representation of a hexadecimal number to its
+  equivalent integer value."
+  [hex-str] (PApplet/unhex (str hex-str)))
 
 (defn height
   "Height of the display window. The value of height is zero until
@@ -1150,9 +1146,6 @@
 ;; $$init
 ;; $$insertFrame
 ;; $$join
-;; $$keyPressed
-;; $$keyReleased
-;; $$keyTyped
 ;; $$lerp
 ;; $$lerpColor
 ;; $$lightFallof
@@ -1182,8 +1175,6 @@
      (.line *applet* (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
 
-;; $$link
-
 (defn load-bytes [filename] (PApplet/loadBytes filename))
 
 (defn load-font [filename] (.loadFont *applet* filename))
@@ -1212,8 +1203,14 @@
 
 (defn start-loop [] (.loop *applet*))
 
-;; $$mag
-;; $$main
+(defn mag
+  "Calculates the magnitude (or length) of a vector. A vector is a
+  direction in space commonly used in computer graphics and linear
+  algebra. Because it has no start position, the magnitude of a vector
+  can be thought of as the distance from coordinate (0,0) to its (x,y)
+  value. Therefore, mag is a shortcut for writing (dist 0 0 x y)."
+  ([a b] (PApplet/mag (float a) (float b)))
+  ([a b c] (PApplet/mag (float a) (float b) (float c))))
 
 (defn map-to [val istart istop ostart ostop]
   (PApplet/map (float val) (float istart) (float istop) (float ostart) (float ostop)))
@@ -1226,17 +1223,12 @@
 
 (defn mask-image [^PImage img] (.mask *applet* img))
 
-;; $$match
-;; $$max
-
 (defn millis
   "Returns the number of milliseconds (thousandths of a second) since
   starting an applet. This information is often used for timing
   animation sequences."
   []
   (.millis *applet*))
-
-;; $$min
 
 (defn minute
   "Returns the current minute as a value from 0 - 59"
@@ -1251,11 +1243,6 @@
   "Returns the current month as a value from 1 - 12."
   []
   (PApplet/month))
-
-;; $$nf
-;; $$nfc
-;; $$nfp
-;; $$nfs
 
 (defn mouse-x
   "Current horizontal coordinate of the mouse."
@@ -1345,14 +1332,6 @@
   ([] (.ortho *applet*))
   ([l r b t near far] (.ortho *applet* (float l) (float r) (float b)
                               (float t) (float near) (float far))))
-
-;; $$paint
-;; $$param
-;; $$parseBoolean
-;; $$parseByte
-;; $$parseChar
-;; $$parseFloat
-;; $$parseInt
 
 (defn perspective
   ([] (.perspective *applet*))
@@ -1482,15 +1461,6 @@
 
 (defn redraw [] (.redraw *applet*))
 
-;; $$registerDispose
-;; $$registerDraw
-;; $$reqisterKeyEvent
-;; $$registerMouseEvent
-;; $$registerPost
-;; $$registerPre
-;; $$registerSize
-;; $$registerSize
-
 (defn request-image
   ([filename] (.requestImage *applet* filename))
   ([filename extension] (.requestImage *applet* filename extension)))
@@ -1565,8 +1535,6 @@
   (.rotateZ *applet* (float angle)))
 
 (defn round [what] (PApplet/round (float what)))
-
-;; $$run
 
 (defn saturation [what] (.saturation *applet* (int what)))
 
@@ -1648,14 +1616,7 @@
 (defn set-image-at
   [dx dy ^PImage src] (.set *applet* (int dx) (int dy) src))
 
-;; $$setup
-
-;; $$setupExternalMessages
-;; $$setupFrameListener
-
 (defn shininess [shine] (.shininess *applet* (float shine)))
-
-;; $$shorten
 
 (defn sin
   "Calculates the sine of an angle. This function expects the values
@@ -1681,8 +1642,6 @@
   Note that smooth will also improve image quality of resized images."
   []
   (.smooth *applet*))
-
-;; $$sort
 
 (defn specular
   ([gray] (.specular *applet* (float gray)))
@@ -1710,10 +1669,6 @@
   ([res] (.sphereDetail *applet* (int res)))
   ([ures vres] (.sphereDetail *applet* (int ures) (int vres))))
 
-;; $$splice
-;; $$split
-;; $$splitTokens
-
 (defn spotlight
   ([r g b x y z nx ny nz angle concentration]
      (.spotLight *applet* r g b x y z nx ny nz angle concentration))
@@ -1734,11 +1689,6 @@
   is the opposite of squaring."
   [a]
   (PApplet/sqrt (float a)))
-
-;; $$start
-;; $$status
-;; $$stop
-;; $$str
 
 (def ^{:private true}
   stroke-cap-map {:square SQUARE
@@ -1783,8 +1733,6 @@
   around shapes. All widths are set in units of pixels. "
   [weight]
   (.strokeWeight *applet* (float weight)))
-
-;; $$subset
 
 (defn tan [angle] (PApplet/tan (float angle)))
 
@@ -1876,18 +1824,6 @@
              (float x2) (float y2)
              (float x3) (float y3)))
 
-;; $$trim
-;; $$unhex
-;; $$unint
-;; $$unregisterDispose
-;; $$unregisterDraw
-;; $$unregiserKeyEvent
-;; $$unregiserMouseEvent
-;; $$unregiserKeyEvent
-;; $$unregiserPost
-;; $$unregisterPre
-;; $$unregisterSize
-;; $$update
 
 (defn update-pixels
   "Updates the display window with the data in the pixels array. Use
@@ -1985,8 +1921,7 @@
    corresponds to the official Processing.org version with which
    processing.core is compatible.")
 
-(defn
-  processing-version
+(defn processing-version
   "Returns clj-processing version as a printable string."
   []
   (str (:major *processing-version*)
