@@ -44,11 +44,6 @@
     (let [state-map (apply hash-map state-vals)]
       (reset! *state* state-map))))
 
-(def toupper (memfn toUpperCase))
-
-(defn tosymb [kw]
-  (-> kw name toupper symbol))
-
 (defn abs-int
   "Calculates the absolute value (magnitude) of a number. The absolute value of
   a number is always positive. Takes and returns an int."

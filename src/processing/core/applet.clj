@@ -3,6 +3,9 @@
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 
+(def ^{:private true}
+  toupper (memfn toUpperCase))
+
 (defn- fix-mname
   "Changes :method-name to :methodName."
   [[mname fun]]
