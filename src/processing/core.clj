@@ -18,6 +18,12 @@
 (def ^{:dynamic true} ^PApplet *applet*)
 (def ^{:dynamic true} *state*)
 
+(defn- int-like?
+  [val]
+  (let [t (type val)]
+    (or (= java.lang.Long t)
+        (= java.lang.Integer t))))
+
 (defn state
   "Retrieve canvas-specific state by key. Must initially call
   set-state! to store state.
@@ -56,22 +62,27 @@
   [n]
   (PApplet/abs (float n)))
 
-(def ^{:arglists (:arglists (meta #'abs-float))
-       :doc (:doc (meta #'abs-float))}
-  abs abs-float)
+(defn abs
+  "Calculates the absolute value (magnitude) of a number. The
+  absolute value of a number is always positive. Dynamically casts to
+  an int or float appropriately"
+    [n]
+    (if (int-like? n)
+      (abs-int n)
+      (abs-float n)))
 
 (defn acos
   "The inverse of cos, returns the arc cosine of a value. This
   function expects the values in the range of -1 to 1 and values are
   returned in the range 0 to Math/PI (3.1415927)."
   [n]
-  (PApplet/acos n))
+  (PApplet/acos (float n)))
 
 (defn alpha
   "Extracts the alpha value from a color."
   [color] (.alpha *applet* (int color)))
 
-(defn ambient
+(defn ambient-float
   "Sets the ambient reflectance for shapes drawn to the screen. This
   is combined with the ambient light component of environment. The
   color components set through the parameters define the
@@ -91,6 +102,17 @@
   [rgb]
   (.ambient
    *applet* (int rgb)))
+
+(defn ambient
+  "Sets the ambient reflectance for shapes drawn to the screen. This
+  is combined with the ambient light component of environment. The
+  color components set through the parameters define the
+  reflectance. For example in the default color mode, setting x=255,
+  y=126, z=0, would cause all the red light to reflect and half of the
+  green light to reflect. Used in combination with emissive, specular,
+  and shininess in setting the material properties of shapes."
+  ([rgb] (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb)))
+  ([x y z] (ambient-float x y z)))
 
 (defn ambient-light
   "Adds an ambient light. Ambient light doesn't come from a specific direction,
@@ -168,7 +190,7 @@
 
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
-  create-graphics."
+  create-graphics. Converts args to floats."
   ([gray] (.background *applet* (float gray)))
   ([gray alpha] (.background *applet* (float gray) (float alpha)))
   ([r g b] (.background *applet* (float r) (float g) (float b)))
@@ -182,13 +204,23 @@
 
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
-  create-graphics."
+  create-graphics. Converts rgb to an int and alpha to a float."
   ([rgb] (.background *applet* (int rgb)))
   ([rgb alpha] (.background *applet* (int rgb) (float alpha))))
 
-(def ^{:arglists (:arglists (meta #'background-float))
-       :doc (:doc (meta #'background-float))}
-  background background-float)
+(defn background
+  "Sets the color used for the background of the Processing
+  window. The default background is light gray. In the draw function,
+  the background color is used to clear the display window at the
+  beginning of each frame.
+
+  It is not possible to use transparency (alpha) in background colors
+  with the main drawing surface, however they will work properly with
+  create-graphics. Converts args to floats."
+  ([rgb] (if (int-like? rgb) (background-int rgb) (background-float rgb)))
+  ([rgb alpha] (if (int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
+  ([r g b] (background-float r g b))
+  ([r g b a] (background-float r g b a)))
 
 (defn background-image
   "Specify an image to be used as the background for a sketch. Its
@@ -528,7 +560,7 @@
   [n]
   (PApplet/ceil (float n)))
 
-(defn color-float
+(defn color
   "Creates an integer representation of a color The parameters are
   interpreted as RGB or HSB values depending on the current
   color-mode. The default mode is RGB values from 0 to 255 and
@@ -543,26 +575,6 @@
   ([gray alpha] (.color *applet* (float gray) (float alpha)))
   ([r g b] (.color *applet* (float r) (float g) (float b)))
   ([r g b a] (.color *applet* (float r) (float g) (float b) (float a))))
-
-(defn color-int
-    "Creates an integer representation of a color The parameters are
-  interpreted as RGB or HSB values depending on the current
-  color-mode. The default mode is RGB values from 0 to 255 and
-  therefore, the function call (color 255 204 0) will return a bright
-  yellow. Args are cast to ints.
-
-  r - red or hue value
-  g - green or saturation value
-  b - blue or brightness value
-  a - alpha value"
-  ([gray] (.color *applet* (int gray)))
-  ([gray alpha] (.color *applet* (int gray) (float alpha)))
-  ([r g b] (.color *applet* (int r) (int g) (int b)))
-  ([r g b a] (.color *applet* (int r) (int g) (int b) (int a))))
-
-(def ^{:arglists (:arglists (meta #'color-float))
-       :doc (:doc (meta #'color-float))}
-  color color-float)
 
 (defn ^{:private true}
   color-modes {:rgb RGB
@@ -609,9 +621,12 @@
   [amt low high]
   (PApplet/constrain (int amt) (int low) (int high)))
 
-(def ^{:arglists (:arglists (meta #'constrain-float))
-       :doc (:doc (meta #'constrain-float))}
-  constrain constrain-float)
+(defn constrain
+  "Constrains a value to not exceed a maximum and minimum value."
+  [amt low high]
+  (if (int-like? amt)
+    (constrain-int amt low high)
+    (constrain-float amt low high)))
 
 (defn copy
   "Copies a region of pixels from the display window to another area
@@ -873,8 +888,7 @@
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes. Converts all
   args to ints"
-  ([int-val] (.emissive *applet* (int int-val)))
-  ([r g b] (.emissive *applet* (int r) (int g) (int b))))
+  [int-val] (.emissive *applet* (int int-val)))
 
 (defn emissive
   "Sets the emissive color of the material used for drawing shapes
@@ -883,10 +897,14 @@
 
   If passed one arg - it is assumed to be an int (i.e. a color),
    multiple args are converted to floats."
-  ([col-int] (.emissive *applet* (int col-int)))
-  ([r g b] (.emissive *applet* (float r) (float g) (float b))))
+  ([c] (if (int-like? c) (emissive-int c) (emissive-float c)))
+  ([r g b] (emissive-float r g b)))
 
-(defn end-raw [] (.endRaw *applet*))
+(defn end-raw
+  "Complement to begin-raw; they must always be used together. See
+  the begin-raw docstring for details."
+  []
+  (.endRaw *applet*))
 
 (defn end-shape
   "May only be called after begin-shape. When end-shape is called,
@@ -918,17 +936,20 @@
   will specify that all subsequent shapes will be filled with orange."
   ([gray] (.fill *applet* (float gray)))
   ([gray alpha] (.fill *applet* (float gray) (float alpha)))
-  ([x y z] (.fill *applet* (float x) (float y) (float z)))
-  ([x y z alpha] (.fill *applet* (float x) (float y) (float z) (float alpha))))
+  ([r g b] (.fill *applet* (float r) (float g) (float b)))
+  ([r g b alpha] (.fill *applet* (float r) (float g) (float b) (float alpha))))
 
 (defn fill-int
   "Sets the color used to fill shapes."
   ([rgb] (.fill *applet* (int rgb)))
   ([rgb alpha] (.fill *applet* (int rgb) (float alpha))))
 
-(def ^{:arglists (:arglists (meta #'fill-float))
-       :doc (:doc (meta #'fill-float))}
-  fill fill-float)
+(defn fill
+  "Sets the color used to fill shapes."
+  ([rgb] (if (int-like? rgb) (fill-int rgb) (fill-float rgb)))
+  ([rgb alpha] (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha)))
+  ([r g b] (fill-float r g b))
+  ([r g b a] (fill-float r g b a)))
 
 (def ^{:private true}
   filter-map {:threshold THRESHOLD
@@ -1736,20 +1757,24 @@
     mode))
 
 (defn stroke-float
-  "Sets the color used to draw lines and borders around shapes."
+  "Sets the color used to draw lines and borders around
+  shapes. Converts all args to floats"
   ([gray] (.stroke *applet* (float gray)))
   ([gray alpha] (.stroke *applet* (float gray) (float alpha)))
   ([x y z] (.stroke *applet* (float x) (float y) (float z)))
   ([x y z a] (.stroke *applet* (float x) (float y) (float z) (float a))))
 
 (defn stroke-int
-  "Sets the color used to draw lines and borders around shapes."
+  "Sets the color used to draw lines and borders around
+  shapes. Converts rgb to int and alpha to a float."
   ([rgb] (.stroke *applet* (int rgb)))
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
-(def ^{:arglists (:arglists (meta #'stroke-float))
-       :doc (:doc (meta #'stroke-float))}
-  stroke stroke-float)
+(defn stroke
+  ([rgb] (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb)))
+  ([rgb alpha] (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha)))
+  ([x y z] (stroke-float x y z))
+  ([x y z a] (stroke-float x y z a)))
 
 (defn stroke-cap
   "Sets the style for rendering line endings. These ends are either
@@ -1759,7 +1784,29 @@
   (let [cap-mode (resolve-stroke-cap-mode cap-mode)]
     (.strokeCap *applet* (int cap-mode))))
 
-(defn stroke-join [jn] (.strokeJoin *applet* (int jn)))
+(def ^{:private true}
+  stroke-join-modes {:miter PConstants/MITER
+                     :bevel PConstants/BEVEL
+                     :round PConstants/ROUND})
+
+(defn- resolve-stroke-join-mode
+  [mode]
+  (if (keyword? mode)
+    (get stroke-join-modes mode)
+    mode))
+
+(defn stroke-join
+  "Sets the style of the joints which connect line
+  segments. These joints are either mitered, beveled, or rounded and
+  specified with the corresponding parameters :miter, :bevel, and
+  :round. The default joint is :miter.
+
+  This function is not available with the P2D, P3D, or OPENGL
+  renderers (see bug report). More information about the renderers can
+  be found in the size reference."
+  [join-mode]
+  (let [join-mode (resolve-stroke-join-mode join-mode)]
+    (.strokeJoin *applet* (int join-mode))))
 
 (defn stroke-weight
   "Sets the width of the stroke used for lines, points, and the border
@@ -1767,7 +1814,13 @@
   [weight]
   (.strokeWeight *applet* (float weight)))
 
-(defn tan [angle] (PApplet/tan (float angle)))
+(defn tan
+  "Calculates the ratio of the sine and cosine of an angle. This
+  function expects the values of the angle parameter to be provided in
+  radians (values from 0 to PI*2). Values are returned in the range
+  infinity to -infinity."
+  [angle]
+  (PApplet/tan (float angle)))
 
 (defn char->text
   ([c] (.text *applet* (char c)))
@@ -1820,16 +1873,59 @@
   [^String s] (.textWidth *applet* s))
 
 (defn tint-float
+  "Sets the fill value for displaying images. Images can be tinted to
+  specified colors or made transparent by setting the alpha.
+
+  To make an image transparent, but not change it's color, use white
+  as the tint color and specify an alpha value. For instance,
+  tint(255, 128) will make an image 50% transparent (unless
+  colorMode() has been used).
+
+  The value for the parameter gray must be less than or equal to the
+  current maximum value as specified by colorMode(). The default
+  maximum value is 255.
+
+  Also used to control the coloring of textures in 3D."
   ([gray] (.tint *applet* (float gray)))
   ([gray alpha] (.tint *applet* (float gray) (float alpha)))
-  ([x y z] (.tint *applet* (float x)(float y) (float z)))
-  ([x y z a] (.tint *applet* (float x)(float y) (float z) (float a))))
+  ([r g b] (.tint *applet* (float r)(float g) (float b)))
+  ([r g b a] (.tint *applet* (float g) (float g) (float b) (float a))))
 
 (defn tint-int
+  "Sets the fill value for displaying images. Images can be tinted to
+  specified colors or made transparent by setting the alpha.
+
+  To make an image transparent, but not change it's color, use white
+  as the tint color and specify an alpha value. For instance,
+  tint(255, 128) will make an image 50% transparent (unless
+  colorMode() has been used).
+
+  The value for the parameter gray must be less than or equal to the
+  current maximum value as specified by colorMode(). The default
+  maximum value is 255.
+
+  Also used to control the coloring of textures in 3D."
   ([rgb] (.tint *applet* (int rgb)))
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
-(def tint tint-float)
+(defn tint
+  "Sets the fill value for displaying images. Images can be tinted to
+  specified colors or made transparent by setting the alpha.
+
+  To make an image transparent, but not change it's color, use white
+  as the tint color and specify an alpha value. For instance,
+  tint(255, 128) will make an image 50% transparent (unless
+  colorMode() has been used).
+
+  The value for the parameter gray must be less than or equal to the
+  current maximum value as specified by colorMode(). The default
+  maximum value is 255.
+
+  Also used to control the coloring of textures in 3D."
+  ([rgb] (if (int-like? rgb) (tint-int rgb) (tint-float rgb)))
+  ([rgb alpha] (if (int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
+  ([r g b] (tint-float r g b))
+  ([r g b a] (tint-float r g b a)))
 
 (defn translate
   "Specifies an amount to displace objects within the display
