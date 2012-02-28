@@ -920,17 +920,28 @@
 ;; $$match
 ;; $$max
 
-(defn millis [] (.millis *applet*))
+(defn millis
+  "Returns the number of milliseconds (thousandths of a second) since
+  starting an applet. This information is often used for timing
+  animation sequences."
+  []
+  (.millis *applet*))
 
 ;; $$min
 
-(defn minute [] (PApplet/minute))
+(defn minute
+  "Returns the current minute as a value from 0 - 59"
+  []
+  (PApplet/minute))
 
 (defn model-x [x y z] (.modelX *applet* (float x) (float y) (float z)))
 (defn model-y [x y z] (.modelY *applet* (float x) (float y) (float z)))
 (defn model-z [x y z] (.modelZ *applet* (float x) (float y) (float z)))
 
-(defn month [] (PApplet/month))
+(defn month
+  "Returns the current month as a value from 1 - 12."
+  []
+  (PApplet/month))
 
 ;; $$mouseClicked
 ;; $$mouseDragged
@@ -1275,21 +1286,49 @@
 ;; $$saveStrings
 
 (defn scale
+  "Increases or decreases the size of a shape by expanding and
+  contracting vertices. Objects always scale from their relative
+  origin to the coordinate system. Scale values are specified as
+  decimal percentages. For example, the function call (scale 2)
+  increases the dimension of a shape by 200%. Transformations apply to
+  everything that happens after and subsequent calls to the function
+  multiply the effect. For example, calling (scale 2) and then
+  (scale 1.5) is the same as (scale 3). If scale is called within
+  draw, the transformation is reset when the loop begins again. Using
+  this fuction with the z parameter requires passing P3D or OPENGL
+  into the size parameter as shown in the example above. This function
+  can be further controlled by push-matrix and pop-matrix."
   ([s] (.scale *applet* (float s)))
   ([sx sy] (.scale *applet* (float sx) (float sy))))
 
 (defn screen-x
-  ([x y] (.screenX *applet* (float x) (float y)))
-  ([x y y] (.screenX *applet* (float x) (float y))))
+  "Takes a three-dimensional x, y, z position and returns the x value
+  for where it will appear on a (two-dimensional) screen, once
+  affected by translate, scale or any other transformations"
+  [x y z]
+  (.screenX *applet* (float x) (float y) (float z)))
 
 (defn screen-y
-  ([x y] (.screenY *applet* (float x) (float y)))
-  ([x y z] (.screenY *applet* (float x) (float y) (float z))))
+  "Takes a three-dimensional x, y, z position and returns the y value
+  for where it will appear on a (two-dimensional) screen, once
+  affected by translate, scale or any other transformations"
+  [x y z]
+  (.screenY *applet* (float x) (float y) (float z)))
 
 (defn screen-z
-  [x y z] (.screenX *applet* (float x) (float y) (float z)))
+  "Given an x, y, z coordinate, returns its z value.
+   This value can be used to determine if an x, y, z coordinate is in
+   front or in back of another (x, y, z) coordinate. The units are
+   based on how the zbuffer is set up, and don't relate to anything
+   'real'. They're only useful for in comparison to another value
+   obtained from screen-z, or directly out of the zbuffer"
+  [x y z]
+  (.screenX *applet* (float x) (float y) (float z)))
 
-(defn seconds [] (PApplet/second))
+(defn seconds
+  "Returns the current second as a value from 0 - 59."
+  []
+  (PApplet/second))
 
 ;; $$selectFolder
 ;; $$selectInput
