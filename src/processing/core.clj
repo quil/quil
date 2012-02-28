@@ -695,7 +695,7 @@
   See cursor-image for specifying a generic image as the cursor
   symbol."
   ([] (.cursor *applet*))
-  ([cursor-mode] (.cursor *applet* (int (resolve-cursor-mode cur-type)))))
+  ([cursor-mode] (.cursor *applet* (int (resolve-cursor-mode cursor-mode)))))
 
 (defn cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
@@ -885,7 +885,7 @@
 
   If passed one arg - it is assumed to be an int (i.e. a color),
    multiple args are converted to floats."
-  ([col-int]) (.emissive *applet* (int col-int))
+  ([col-int] (.emissive *applet* (int col-int)))
   ([r g b] (.emissive *applet* (float r) (float g) (float b))))
 
 (defn end-raw [] (.endRaw *applet*))
@@ -988,6 +988,11 @@
 ;; $$focusGained
 ;; $$focusLost
 
+(defn focused
+  "Returns a boolean value representing whether the applet has focus."
+  []
+  (. *applet* :focused))
+
 (defn frame-count
   "The system variable frameCount contains the number of frames
   displayed since the program started. Inside setup() the value is 0
@@ -1017,10 +1022,20 @@
   ([x y] (.get *applet* (int x) (int y)))
   ([x y w h] (.get *applet* (int x) (int y) (int w) (int h))))
 
-(defn green [what] (.green *applet* (int what)))
+(defn green
+  "Extracts the green value from a color, scaled to match current
+  color-mode. This value is always returned as a float so be careful
+  not to assign it to an int value."
+  [col]
+  (.green *applet* (int col)))
 
-;; $$handleDraw
-;; $$hex
+(defn hex
+  "Converts a byte, char, int, or color to a String containing the
+  equivalent hexadecimal notation. For example color(0, 102, 153) will
+  convert to the String \"FF006699\". This function can help make your
+  geeky debugging sessions much happier. "
+  ([val] (PApplet/hex val))
+  ([val num-digits] (PApplet/hex (int val) (int num-digits))))
 
 (defn height
   "Height of the display window. The value of height is zero until
@@ -1028,9 +1043,97 @@
   []
   (.getHeight *applet*))
 
-(defn hint [which] (.hint *applet* (int which)))
+(def ^{:private true}
+  hint-options {:enable-opengl-4x-smooth PConstants/ENABLE_OPENGL_4X_SMOOTH
+                :enable-opengl-2x-smooth PConstants/ENABLE_OPENGL_2X_SMOOTH
+                :enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
+                :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
+                :enable-depth-test PConstants/ENABLE_DEPTH_TEST
+                :disable-depth-test PConstants/DISABLE_DEPTH_TEST
+                :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
+                :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
+                :disable-opengl-error-report PConstants/DISABLE_OPENGL_ERROR_REPORT
+                :enable-opengl-error-report PConstants/ENABLE_OPENGL_ERROR_REPORT
+                :enable-accurate-textures PConstants/ENABLE_ACCURATE_TEXTURES
+                :disable-accurate-textures PConstants/DISABLE_ACCURATE_TEXTURES
+                :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
+                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK})
 
-(defn hour [] (PApplet/hour))
+(defn hint
+  "Set various hints and hacks for the renderer. This is used to
+  handle obscure rendering features that cannot be implemented in a
+  consistent manner across renderers. Many options will often graduate
+  to standard features instead of hints over time.
+
+  Options:
+
+  :enable-opengl-4x-smooth - Enable 4x anti-aliasing for OpenGL. This
+     can help force anti-aliasing if it has not been enabled by the
+     user. On some graphics cards, this can also be set by the
+     graphics driver's control panel, however not all cards make this
+     available. This hint must be called immediately after the size
+     command because it resets the renderer, obliterating any settings
+     and anything drawn (and like size(), re-running the code that
+     came before it again).
+
+  :disable-opengl-2x-smooth - In Processing 1.0, Processing always
+    enables 2x smoothing when the OpenGL renderer is used. This hint
+    disables the default 2x smoothing and returns the smoothing
+    behavior found in earlier releases, where smooth and no-smooth
+    could be used to enable and disable smoothing, though the quality
+    was inferior.
+
+  :enable-opengl-2x-smooth - Enables default OpenGL smoothing.
+
+  :enable-native-fonts - Use the native version fonts when they are
+    installed, rather than the bitmapped version from a .vlw
+    file. This is useful with the default (or JAVA2D) renderer
+    setting, as it will improve font rendering speed. This is not
+    enabled by default, because it can be misleading while testing
+    because the type will look great on your machine (because you have
+    the font installed) but lousy on others' machines if the identical
+    font is unavailable. This option can only be set per-sketch, and
+    must be called before any use of text-font.
+
+  :disable-native-fonts - Disables native font support.
+
+  :disable-depth-test - Disable the zbuffer, allowing you to draw on
+    top of everything at will. When depth testing is disabled, items
+    will be drawn to the screen sequentially, like a painting. This
+    hint is most often used to draw in 3D, then draw in 2D on top of
+    it (for instance, to draw GUI controls in 2D on top of a 3D
+    interface). Starting in release 0149, this will also clear the
+    depth buffer. Restore the default with :enable-depth-test
+    but note that with the depth buffer cleared, any 3D drawing that
+    happens later in draw will ignore existing shapes on the screen.
+
+  :enable-depth-test - Enables the zbuffer.
+
+  :enable-depth-sort - Enable primitive z-sorting of triangles and
+    lines in P3D and OPENGL. This can slow performance considerably,
+    and the algorithm is not yet perfect.
+
+  :disable-depth-sort - Disables hint :enable-depth-sort
+
+  :disable-opengl-error-report - Speeds up the OPENGL renderer setting
+     by not checking for errors while running.
+
+  :enable-opengl-error-report - Turns on OpenGL error checking
+
+  :enable-accurate-textures
+  :disable-accurate-textures
+  :enable-depth-mask
+  :disable-depth-mask"
+  [hint-type]
+  (let [hint-type (if (keyword? hint-type)
+                    (get hint-options hint-type)
+                    hint-type)]
+    (.hint *applet* (int hint-type))))
+
+(defn hour
+  "Returns the current hour as a value from 0 - 23."
+  []
+  (PApplet/hour))
 
 (defn hue [what] (.hue *applet* (int what)))
 
@@ -1148,10 +1251,6 @@
   "Returns the current month as a value from 1 - 12."
   []
   (PApplet/month))
-
-
-;; $$mouseEntered
-;; $$mouseExited
 
 ;; $$nf
 ;; $$nfc
