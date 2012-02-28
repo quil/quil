@@ -82,7 +82,7 @@
         fns               (dissoc options :name :title :size :key-pressed
                                   :key-released :mouse-pressed :mouse-released
                                   :mouse-moved :mouse-dragged :focus-gained
-                                  :focus-lost :setup)
+                                  :focus-lost :mouse-entered :mouse-exited :setup)
         fns               (merge {:draw (fn [] nil)} fns)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
@@ -90,6 +90,8 @@
         mouse-released-fn (or (:mouse-released options) (fn [] nil))
         mouse-moved-fn    (or (:mouse-moved options) (fn [] nil))
         mouse-dragged-fn  (or (:mouse-dragged options) (fn [] nil))
+        mouse-entered-fn  (or (:mouse-entered options) (fn [] nil))
+        mouse-exited-fn   (or (:mouse-exited options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
@@ -144,7 +146,7 @@
 
                             (focusGained
                               ([] nil) ;;The no arg version of the focus
-                                       ;;fns don't appear to be called
+                              ;;fns don't appear to be called
                               ([e]
                                  (proxy-super focusGained e)
                                  (binding [*applet* this
@@ -156,8 +158,24 @@
                               ([e]
                                  (proxy-super focusLost e)
                                  (binding [*applet* this
-                                            *state* state]
-                                    (focus-lost-fn))))
+                                           *state* state]
+                                   (focus-lost-fn))))
+
+                            (mouseEntered
+                              ([] nil)
+                              ([e]
+                                 (proxy-super mouseEntered e)
+                                 (binding [*applet* this
+                                           *state* state]
+                                   (mouse-entered-fn))))
+
+                            (mouseExited
+                              ([] nil)
+                              ([e]
+                                 (proxy-super mouseExited e)
+                                 (binding [*applet* this
+                                           *state* state]
+                                   (mouse-exited-fn))))
 
                             (setup
                               ([] (binding [*applet* this
