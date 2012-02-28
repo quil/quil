@@ -81,7 +81,8 @@
   (let [options           (merge {:size [500 300]} (apply hash-map opts))
         fns               (dissoc options :name :title :size :key-pressed
                                   :key-released :mouse-pressed :mouse-released
-                                  :mouse-moved :mouse-dragged :setup)
+                                  :mouse-moved :mouse-dragged :focus-gained
+                                  :focus-lost :setup)
         fns               (merge {:draw (fn [] nil)} fns)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
@@ -89,6 +90,8 @@
         mouse-released-fn (or (:mouse-released options) (fn [] nil))
         mouse-moved-fn    (or (:mouse-moved options) (fn [] nil))
         mouse-dragged-fn  (or (:mouse-dragged options) (fn [] nil))
+        focus-gained-fn   (or (:focus-gained options) (fn [] nil))
+        focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
                             (apply applet-set-size (:size options))
                             (when (:setup options)
@@ -138,6 +141,23 @@
                                     (mouse-dragged-fn)))
                               ([e]
                                  (proxy-super mouseDragged e)))
+
+                            (focusGained
+                              ([] nil) ;;The no arg version of the focus
+                                       ;;fns don't appear to be called
+                              ([e]
+                                 (proxy-super focusGained e)
+                                 (binding [*applet* this
+                                           *state* state]
+                                   (focus-gained-fn))))
+
+                            (focusLost
+                              ([] nil)
+                              ([e]
+                                 (proxy-super focusLost e)
+                                 (binding [*applet* this
+                                            *state* state]
+                                    (focus-lost-fn))))
 
                             (setup
                               ([] (binding [*applet* this
