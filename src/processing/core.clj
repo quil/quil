@@ -649,11 +649,57 @@
   Math/PI*2). Values are returned in the range -1 to 1."
   [angle] (PApplet/cos (float angle)))
 
+(def available-fonts
+  "A sequence of strings representing the fonts on this system
+  available for use.
+
+  Because of limitations in Java, not all fonts can be used and some
+  might work with one operating system and not others. When sharing a
+  sketch with other people or posting it on the web, you may need to
+  include a .ttf or .otf version of your font in the data directory of
+  the sketch because other people might not have the font installed on
+  their computer. Only fonts that can legally be distributed should be
+  included with a sketch."
+  (seq (PFont/list)))
+
+(defn font-available?
+  "Returns true if font (specified as a string) is available on this
+  system, false otherwise"
+  [font-str]
+  (if (some #{font-str} available-fonts)
+    true
+    false))
+
 (defn create-font
-  ([name size] (.createFont *applet* name (float size)))
-  ([name size smooth] (.createFont *applet* name (float size) smooth))
+  "Dynamically converts a font to the format used by Processing (a
+  PFont) from either a font name that's installed on the computer, or
+  from a .ttf or .otf file inside the sketches 'data' folder. This
+  function is an advanced feature for precise control.
+
+  Use available-fonts to obtain the names for the fonts recognized by
+  the computer and are compatible with this function.
+
+  The size parameter states the font size you want to generate. The
+  smooth parameter specifies if the font should be antialiased or not,
+  and the charset parameter is an array of chars that specifies the
+  characters to generate.
+
+  This function creates a bitmapped version of a font It loads a font
+  by name, and converts it to a series of images based on the size of
+  the font. When possible, the text function will use a native font
+  rather than the bitmapped version created behind the scenes with
+  create-font. For instance, when using the default renderer
+  setting (JAVA2D), the actual native version of the font will be
+  employed by the sketch, improving drawing quality and
+  performance. With the P2D, P3D, and OPENGL renderer settings, the
+  bitmapped version will be used. While this can drastically improve
+  speed and appearance, results are poor when exporting if the sketch
+  does not include the .otf or .ttf file, and the requested font is
+  not available on the machine running the sketch."
+  ([name size] (.createFont *applet* (str name) (float size)))
+  ([name size smooth] (.createFont *applet* (str name) (float size) smooth))
   ([name size smooth ^chars charset]
-     (.createFont *applet* name (float size) smooth charset)))
+     (.createFont *applet* (str name) (float size) smooth charset)))
 
 (defn create-graphics
   ([w h renderer]
@@ -1231,7 +1277,28 @@
 
 (defn load-bytes [filename] (PApplet/loadBytes filename))
 
-(defn load-font [filename] (.loadFont *applet* filename))
+(defn load-font
+  "Loads a font into a variable of type PFont. To load correctly,
+  fonts must be located in the data directory of the current sketch.
+  To create a font to use with Processing use the create-font fn.
+
+  Like load-image and other methods that load data, the load-font fn
+  should not be used inside draw, because it will slow down the sketch
+  considerably, as the font will be re-loaded from the disk (or
+  network) on each frame.
+
+  For most renderers, Processing displays fonts using the .vlw font
+  format, which uses images for each letter, rather than defining them
+  through vector data. When hint :enable-native-fonts is used with the
+  JAVA2D renderer, the native version of a font will be used if it is
+  installed on the user's machine.
+
+  Using create-font (instead of load-font) enables vector data to be
+  used with the JAVA2D (default) renderer setting. This can be helpful
+  when many font sizes are needed, or when using any renderer based on
+  JAVA2D, such as the PDF library."
+  [filename]
+  (.loadFont *applet*  (str filename)))
 
 (defn load-image [filename] (.loadImage *applet* filename))
 
@@ -1822,43 +1889,187 @@
   [angle]
   (PApplet/tan (float angle)))
 
-(defn char->text
+(defn text-char
+  "Draws a char to the screen in the specified position. See text fn
+  for more details."
   ([c] (.text *applet* (char c)))
   ([c x y] (.text *applet* (char c) (float x) (float y)))
   ([c x y z] (.text *applet* (char c) (float x) (float y) (float z))))
 
-(defn num->text
+(defn text-num
+  "Draws a number to the screen in the specified position. See text fn
+  for more details."
   ([num x y] (.text *applet* (float num) (float x) (float y)))
   ([num x y z] (.text *applet* (float num) (float x) (float y) (float z))))
 
-(defn string->text
+(defn text
+  "Draws text to the screen in the position specified by the x and y
+  parameters and the optional z parameter. A default font will be used
+  unless a font is set with the text-font fn. Change the color of the
+  text with the fill fn. The text displays in relation to the
+  text-align fn, which gives the option to draw to the left, right, and
+  center of the coordinates.
+
+  The x1, y1, x2 and y2 (and optional z) parameters define a
+  rectangular area to display within and may only be used with string
+  data. For text drawn inside a rectangle, the coordinates are
+  interpreted based on the current rect-mode setting.
+
+  Use the text-mode function with the :screen parameter to display text
+  in 2D at the surface of the window."
   ([^String s] (.text *applet* s))
   ([^String s x y] (.text *applet* s (float x) (float y)))
-  ([^String s x y z] (.text *applet* s (float x) (float y) (float z))))
+  ([^String s x y z] (.text *applet* s (float x) (float y) (float z)))
+  ([^String s x1 y1 x2 y2] (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
+  ([^String s x1 y1 x2 y2 z] (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
-(defn string->text-in
-  ([^String s x1 y1 x2 y2]
-     (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z]
-     (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
+(def ^{:private true}
+  horizontal-alignment-modes {:left LEFT
+                              :center CENTER
+                              :right RIGHT})
+
+(defn ^{:private true}
+  vertical-alignment-modes {:top TOP
+                            :bottom BOTTOM
+                            :center CENTER
+                            :baseline BASELINE})
+
+(defn- resolve-horizontal-alignment-mode
+  [mode]
+  (if (keyword? mode)
+    (get horizontal-alignment-modes mode)
+    mode))
+
+(defn- resolve-vertical-alignment-mode
+  [mode]
+  (if (keyword? mode)
+    (get vertical-alignment-modes mode)
+    mode))
 
 (defn text-align
-  ([align] (.textAlign *applet* (int align)))
-  ([align-x align-y] (.textAlign *applet* (int align-x) (int align-y))))
+  "Sets the current alignment for drawing text. Available modes are:
 
-(defn text-ascent [] (.textAscent *applet*))
+  horizontal - :left, :center, and :right
+  vertical   - :top, :bottom, :center, and :baseline
 
-(defn text-descend [] (.textDescent *applet*))
+  An optional second parameter specifies the vertical alignment
+  mode. :baseline is the default. The :top and :center parameters are
+  straightforward. The :bottom parameter offsets the line based on the
+  current text-descent. For multiple lines, the final line will be
+  aligned to the bottom, with the previous lines appearing above it.
+
+  When using text with width and height parameters, :baseline is
+  ignored, and treated as :top. (Otherwise, text would by default draw
+  outside the box, since :baseline is the default setting. :baseline is
+  not a useful drawing mode for text drawn in a rectangle.)
+
+  The vertical alignment is based on the value of text-ascent, which
+  many fonts do not specify correctly. It may be necessary to use a
+  hack and offset by a few pixels by hand so that the offset looks
+  correct. To do this as less of a hack, use some percentage of
+  text-ascent or text-descent so that the hack works even if you
+  change the size of the font."
+  ([align]
+     (let [align (resolve-horizontal-alignment-mode align)]
+       (.textAlign *applet* (int align))))
+  ([align-x align-y]
+     (let [align-x (resolve-horizontal-alignment-mode align-x)
+           align-y (resolve-vertical-alignment-mode align-y)]
+       (.textAlign *applet* (int align-x) (int align-y)))))
+
+(defn text-ascent
+  "Returns the ascent of the current font at its current size. This
+  information is useful for determining the height of the font above
+  the baseline. For example, adding the text-ascent and text-descent
+  values will give you the total height of the line."
+  []
+  (.textAscent *applet*))
+
+(defn text-descent
+  "Returns descent of the current font at its current size. This
+  information is useful for determining the height of the font below
+  the baseline. For example, adding the text-ascent and text-descent
+  values will give you the total height of the line."
+  []
+  (.textDescent *applet*))
 
 (defn text-font
-  ([^PFont which] (.textFont *applet* which))
-  ([^PFont which size] (.textFont *applet* which (int size))))
+  "Sets the current font that will be drawn with the text
+  function. Fonts must be loaded with load-font before it can be
+  used. This font will be used in all subsequent calls to the text
+  function. If no size parameter is input, the font will appear at its
+  original size until it is changed with text-size.
 
-(defn text-leading [leading] (.textLeading *applet* (float leading)))
+  Because fonts are usually bitmaped, you should create fonts at the
+  sizes that will be used most commonly. Using textFont without the
+  size parameter will result in the cleanest-looking text.
 
-(defn text-mode [mode] (.textMode *applet* (int mode)))
+  With the default (JAVA2D) and PDF renderers, it's also possible to
+  enable the use of native fonts via the command
+  (hint :enable-native-fonts). This will produce vector text in JAVA2D
+  sketches and PDF output in cases where the vector data is available:
+  when the font is still installed, or the font is created via the
+  create-font fn"
+  ([^PFont font] (.textFont *applet* font))
+  ([^PFont font size] (.textFont *applet* font (int size))))
 
-(defn text-size [size] (.textSize *applet* (float size)))
+(defn text-leading
+  "Sets the spacing between lines of text in units of pixels. This
+  setting will be used in all subsequent calls to the text function."
+  [leading]
+  (.textLeading *applet* (float leading)))
+
+(def ^{:private true}
+  text-modes {:model PConstants/MODEL
+              :shape PConstants/SHAPE
+              :screen PConstants/SCREEN})
+
+(defn- resolve-text-mode
+  [mode]
+  (if (keyword? mode)
+    (get text-modes mode)
+    mode))
+
+(defn text-mode
+  "Sets the way text draws to the screen - available modes
+  are :model, :shape and :screen
+
+  In the default configuration (the :model mode), it's possible to
+  rotate, scale, and place letters in two and three dimensional space.
+
+  Changing to :screen mode draws letters directly to the front of the
+  window and greatly increases rendering quality and speed when used
+  with the P2D and P3D renderers. :screen with OPENGL and JAVA2D (the
+  default) renderers will generally be slower, though pixel accurate
+  with P2D and P3D. With :screen, the letters draw at the actual size
+  of the font (in pixels) and therefore calls to text-size will not
+  affect the size of the letters. To create a font at the size you
+  desire, use create-font. When using :screen, any z-coordinate passed
+  to a text command will be ignored, because your computer screen
+  is...flat!
+
+  The :shape mode draws text using the the glyph outlines of
+  individual characters rather than as textures. This mode is only
+  only supported with the PDF and OPENGL renderer settings. With the
+  PDF renderer, you must specify the :shape text-mode before any other
+  drawing occurs. If the outlines are not available, then
+  :shape will be ignored and :model will be used instead.
+
+  The :shape option in OPENGL mode can be combined with begin-raw to
+  write vector-accurate text to 2D and 3D output files, for instance
+  DXF or PDF. :shape is not currently optimized for OPENGL, so if
+  recording shape data, use :model until you're ready to capture the
+  geometry with begin-raw."
+  [mode]
+  (let [mode (resove-text-mode mode)]
+    (.textMode *applet* (int mode))))
+
+(defn text-size
+  "Sets the current font size. This size will be used in all
+  subsequent calls to the text fn. Font size is measured in
+  units of pixels."
+  [size]
+  (.textSize *applet* (float size)))
 
 (defn texture [^PImage img] (.texture *applet* img))
 
