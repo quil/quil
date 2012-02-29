@@ -1071,14 +1071,38 @@
      (.frameRate *applet* (float new-rate))))
 
 (defn frustum
-  [l r b t near far]
-  (.frustum *applet* (float l) (float r) (float b) (float t)
+  "Sets a perspective matrix defined through the parameters. Works
+  like glFrustum, except it wipes out the current perspective matrix
+  rather than muliplying itself with it."
+  [left right bottom top near far]
+  (.frustum *applet* (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
 (defn get-pixel
+  "Reads the color of any pixel or grabs a section of an image. If no
+  parameters are specified, the entire image is returned. Get the
+  value of one pixel by specifying an x,y coordinate. Get a section of
+  the display window by specifying an additional width and height
+  parameter. If the pixel requested is outside of the image window,
+  black is returned. The numbers returned are scaled according to the
+  current color ranges, but only RGB values are returned by this
+  function. For example, even though you may have drawn a shape with
+  colorMode(HSB), the numbers returned will be in RGB.
+
+  Getting the color of a single pixel with (get x y) is easy, but not
+  as fast as grabbing the data directly using the pixels fn."
   ([] (.get *applet*))
   ([x y] (.get *applet* (int x) (int y)))
   ([x y w h] (.get *applet* (int x) (int y) (int w) (int h))))
+
+(defn pixels
+  "Array containing the values for all the pixels in the display
+  window. This array is therefore the size of the display window. If
+  this array is modified, the update-pixels fn must be called to update
+  the changes. Calls load-pixels before obtaining the pixel array."
+  []
+  (load-pixels)
+  (. *applet* :pixels))
 
 (defn green
   "Extracts the green value from a color, scaled to match current
@@ -1255,7 +1279,21 @@
   []
   (. *applet* :keyCode))
 
-(defn lights [] (.lights *applet*))
+(defn lights
+  "Sets the default ambient light, directional light, falloff, and
+  specular values. The defaults are:
+
+  (ambient-light 128 128 128)
+  (directional-light 128 128 128 0 0 -1)
+  (light-falloff 1 0 0)
+  (light-specular 0 0 0).
+
+  Lights need to be included in the draw to remain persistent in a
+  looping program. Placing them in the setup of a looping program
+  will cause them to only have an effect the first time through the
+  loop."
+  []
+  (.lights *applet*))
 
 (defn light-specular
   [x y z]
@@ -1304,7 +1342,19 @@
 
 (defn load-matrix [] (.loadMatrix *applet*))
 
-(defn load-pixels [] (.loadPixels *applet*))
+(defn load-pixels
+  "Loads the pixel data for the display window into the pixels[]
+  array. This function must always be called before reading from or
+  writing to pixels.
+
+  Certain renderers may or may not seem to require load-pixels or
+  update-pixels. However, the rule is that any time you want to
+  manipulate the pixels array, you must first call load-pixels, and
+  after changes have been made, call updatePixels. Even if the
+  renderer may not seem to use this function in the current Processing
+  release, this will always be subject to change."
+  []
+  (.loadPixels  *applet*))
 
 (defn load-shape
   "Load a geometry from a file as a PShape."
