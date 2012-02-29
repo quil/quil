@@ -480,7 +480,6 @@
 
   Available blend modes are:
 
-
   :blend      - linear interpolation of colours: C = A*factor + B
   :add        - additive blending with white clip:
                                             C = min(A*factor + B, 255)
@@ -649,37 +648,153 @@
   Math/PI*2). Values are returned in the range -1 to 1."
   [angle] (PApplet/cos (float angle)))
 
+(def available-fonts
+  "A sequence of strings representing the fonts on this system
+  available for use.
+
+  Because of limitations in Java, not all fonts can be used and some
+  might work with one operating system and not others. When sharing a
+  sketch with other people or posting it on the web, you may need to
+  include a .ttf or .otf version of your font in the data directory of
+  the sketch because other people might not have the font installed on
+  their computer. Only fonts that can legally be distributed should be
+  included with a sketch."
+  (seq (PFont/list)))
+
+(defn font-available?
+  "Returns true if font (specified as a string) is available on this
+  system, false otherwise"
+  [font-str]
+  (if (some #{font-str} available-fonts)
+    true
+    false))
+
 (defn create-font
-  ([name size] (.createFont *applet* name (float size)))
-  ([name size smooth] (.createFont *applet* name (float size) smooth))
+  "Dynamically converts a font to the format used by Processing (a
+  PFont) from either a font name that's installed on the computer, or
+  from a .ttf or .otf file inside the sketches 'data' folder. This
+  function is an advanced feature for precise control.
+
+  Use available-fonts to obtain the names for the fonts recognized by
+  the computer and are compatible with this function.
+
+  The size parameter states the font size you want to generate. The
+  smooth parameter specifies if the font should be antialiased or not,
+  and the charset parameter is an array of chars that specifies the
+  characters to generate.
+
+  This function creates a bitmapped version of a font It loads a font
+  by name, and converts it to a series of images based on the size of
+  the font. When possible, the text function will use a native font
+  rather than the bitmapped version created behind the scenes with
+  create-font. For instance, when using the default renderer
+  setting (JAVA2D), the actual native version of the font will be
+  employed by the sketch, improving drawing quality and
+  performance. With the P2D, P3D, and OPENGL renderer settings, the
+  bitmapped version will be used. While this can drastically improve
+  speed and appearance, results are poor when exporting if the sketch
+  does not include the .otf or .ttf file, and the requested font is
+  not available on the machine running the sketch."
+  ([name size] (.createFont *applet* (str name) (float size)))
+  ([name size smooth] (.createFont *applet* (str name) (float size) smooth))
   ([name size smooth ^chars charset]
-     (.createFont *applet* name (float size) smooth charset)))
+     (.createFont *applet* (str name) (float size) smooth charset)))
 
 (defn create-graphics
+  "Creates and returns a new PGraphics object of the types P2D, P3D,
+  and JAVA2D. Use this class if you need to draw into an off-screen
+  graphics buffer. It's not possible to use create-graphics with
+  OPENGL, because it doesn't allow offscreen use. The PDF renderer
+  requires the filename parameter. The DXF renderer should not be used
+  with create-graphics, it's only built for use with begin-raw and
+  end-raw.
+
+  It's important to call any drawing commands between begin-draw and
+  end-draw statements. This is also true for any commands that affect
+  drawing, such as smooth or colorMode.
+
+  Unlike the main drawing surface which is completely opaque, surfaces
+  created with create-graphics can have transparency. This makes it
+  possible to draw into a graphics and maintain the alpha channel. By
+  using save to write a PNG or TGA file, the transparency of the
+  graphics object will be honored. Note that transparency levels are
+  binary: pixels are either complete opaque or transparent. For the
+  time being (as of release 1.2.1), this means that text characters
+  will be opaque blocks. This will be fixed in a future release (Issue
+  80)."
   ([w h renderer]
      (.createGraphics *applet* (int w) (int h) renderer))
   ([w h renderer path]
-     (.createGraphics *applet* (int w) (int h) renderer path)))
+     (.createGraphics *applet* (int w) (int h) renderer (str path))))
 
-(defn create-image [w h format]
+(defn create-image
+  "Creates a new PImage (the datatype for storing images). This
+  provides a fresh buffer of pixels to play with. Set the size of the
+  buffer with the width and height parameters. The format parameter
+  defines how the pixels are stored. See the PImage reference for more
+  information.
+
+  Be sure to include all three parameters, specifying only the width
+  and height (but no format) will produce a strange error.
+
+  Prefer using create-image over initialising new PImage instances
+  directly."
+  [w h format]
   (.createImage *applet* (int w) (int h) (int format)))
 
-(defn create-input [filename]
-  (PApplet/createInput (java.io.File. filename)))
+(defn create-input
+  "This is a method for advanced programmers to open a Java
+  InputStream. The method is useful if you want to use the facilities
+  provided by PApplet to easily open files from the data folder or
+  from a URL, but want an InputStream object so that you can use other
+  Java methods to take more control of how the stream is read.
+
+  If the requested item doesn't exist, null is returned.
+
+  If not online, this will also check to see if the user is asking for
+  a file whose name isn't properly capitalized. If capitalization is
+  different an error will be printed to the console. This helps
+  prevent issues that appear when a sketch is exported to the web,
+  where case sensitivity matters, as opposed to running from inside
+  the Processing Development Environment on Windows or Mac OS, where
+  case sensitivity is preserved but ignored.
+
+  The filename passed in can be:
+  - A URL, for instance (open-stream \"http://processing.org/\";
+  - A file in the sketch's data folder
+  - The full path to a file to be opened locally (when running as an
+    application)
+
+  If the file ends with .gz, the stream will automatically be gzip
+  decompressed. If you don't want the automatic decompression, use the
+  related function create-input-raw."
+  [filename]
+  (PApplet/createInput (java.io.File. (str filename))))
 
 (defn create-input-raw
-  "Call openStream() without automatic gzip decompression."
+  "Call create-input without automatic gzip decompression."
   [filename]
   (.createInputRaw *applet* filename))
 
-(defn create-output [filename]
-  (PApplet/createOutput (java.io.File. filename)))
+(defn create-output
+  "Similar to create-input, this creates a Java OutputStream for a
+  given filename or path. The file will be created in the sketch
+  folder, or in the same folder as an exported application.
 
-(defn create-path [filename] (PApplet/createPath filename))
+  If the path does not exist, intermediate folders will be created. If
+  an exception occurs, it will be printed to the console, and null
+  will be returned.
 
-(defn create-reader [filename] (.createReader *applet* filename))
+  This method is a convenience over the Java approach that requires
+  you to 1) create a FileOutputStream object, 2) determine the exact
+  file location, and 3) handle exceptions. Exceptions are handled
+  internally by the function, which is more appropriate for sketch
+  projects.
 
-(defn create-writer [filename] (.createWriter *applet* filename))
+  If the output filename ends with .gz, the output will be
+  automatically GZIP compressed as it is written."
+  [filename]
+  (PApplet/createOutput (java.io.File. (str filename))))
 
 (def ^{:private true}
   cursor-modes {:arrow PConstants/ARROW
@@ -750,8 +865,8 @@
 
 (defn curve-point
   "Evalutes the curve at point t for points a, b, c, d. The parameter
-  t varies between 0 and 1, a and d are points on the curve, and b and
-  c are the control points. This can be done once with the x
+  t varies between 0 and 1, a and d are points on the curve, and b c
+  and are the control points. This can be done once with the x
   coordinates and a second time with the y coordinates to get the
   location of a curve at t."
   [a b c d t]
@@ -787,9 +902,6 @@
   Catmull-Rom splines."
   ([x y] (.curveVertex *applet* (float x) (float y)))
   ([x y z] (.curveVertex *applet* (float x) (float y) (float z))))
-
-;; $$dataFile
-;; $$dataPath
 
 (defn day
   "Get the current day of the month (1 through 31)."
@@ -829,7 +941,6 @@
   color mode. The nx, ny, and nz parameters specify the direction the
   light is facing. For example, setting ny to -1 will cause the
   geometry to be lit from below (the light is facing directly upward)"
-
   [r g b nx ny nz]
   (.directionalLight *applet* (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
@@ -892,11 +1003,11 @@
 
 (defn emissive
   "Sets the emissive color of the material used for drawing shapes
-   drawn to the screen. Used in combination with ambient, specular,
-   and shininess in setting the material properties of shapes.
+  drawn to the screen. Used in combination with ambient, specular, and
+  shininess in setting the material properties of shapes.
 
   If passed one arg - it is assumed to be an int (i.e. a color),
-   multiple args are converted to floats."
+  multiple args are converted to floats."
   ([c] (if (int-like? c) (emissive-int c) (emissive-float c)))
   ([r g b] (emissive-float r g b)))
 
@@ -1025,14 +1136,40 @@
      (.frameRate *applet* (float new-rate))))
 
 (defn frustum
-  [l r b t near far]
-  (.frustum *applet* (float l) (float r) (float b) (float t)
+  "Sets a perspective matrix defined through the parameters. Works
+  like glFrustum, except it wipes out the current perspective matrix
+  rather than muliplying itself with it."
+  [left right bottom top near far]
+  (.frustum *applet* (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
 (defn get-pixel
+  "Reads the color of any pixel or grabs a section of an image. If no
+  parameters are specified, the entire image is returned. Get the
+  value of one pixel by specifying an x,y coordinate. Get a section of
+  the display window by specifying an additional width and height
+  parameter. If the pixel requested is outside of the image window,
+  black is returned. The numbers returned are scaled according to the
+  current color ranges, but only RGB values are returned by this
+  function. For example, even though you may have drawn a shape with
+  colorMode(HSB), the numbers returned will be in RGB.
+
+  Getting the color of a single pixel with (get x y) is easy, but not
+  as fast as grabbing the data directly using the pixels fn."
   ([] (.get *applet*))
   ([x y] (.get *applet* (int x) (int y)))
   ([x y w h] (.get *applet* (int x) (int y) (int w) (int h))))
+
+(declare load-pixels)
+
+(defn pixels
+  "Array containing the values for all the pixels in the display
+  window. This array is therefore the size of the display window. If
+  this array is modified, the update-pixels fn must be called to update
+  the changes. Calls load-pixels before obtaining the pixel array."
+  []
+  (load-pixels)
+  (. *applet* :pixels))
 
 (defn green
   "Extracts the green value from a color, scaled to match current
@@ -1158,6 +1295,20 @@
   (.hue *applet* (int col)))
 
 (defn image
+  "Displays images to the screen. Processing currently works with GIF,
+  JPEG, and Targa images. The color of an image may be modified with
+  the tint function and if a GIF has transparency, it will maintain
+  its transparency. The img parameter specifies the image to display
+  and the x and y parameters define the location of the image from its
+  upper-left corner. The image is displayed at its original size
+  unless the width and height parameters specify a different size. The
+  image-mode fn changes the way the parameters work. A call to
+  (image-mode :corners) will change the width and height parameters to
+  define the x and y values of the opposite corner of the image.
+
+  Starting with release 0124, when using the default (JAVA2D)
+  renderer, smooth will also improve image quality of resized
+  images."
   ([^PImage img x y] (.image *applet* img (float x) (float y)))
   ([^PImage img x y c d] (.image *applet* img (float x) (float y)
                                   (float c) (float d)))
@@ -1165,7 +1316,33 @@
      (.image *applet* img (float x) (float y) (float c) (float d)
              (float u1) (float v1) (float u2) (float v2))))
 
-(defn image-mode [mode] (.imageMode *applet* (int mode)))
+(def ^{:private true}
+  image-modes {:corner CORNER
+               :corners CORNERS
+               :center CENTER})
+
+(defn- resolve-image-mode
+  [mode]
+  (if (keyword? mode)
+    (get image-modes mode)
+    mode))
+
+(defn image-mode
+  "Modifies the location from which images draw. The default mode is :corner.
+   Available modes are:
+
+  :corner  - specifies the location to be the upper left corner and
+             uses the fourth and fifth parameters of image to set the
+             image's width and height.
+
+  :corners - uses the second and third parameters of image to set the
+             location of one corner of the image and uses the fourth
+             and fifth parameters to set the opposite corner.
+
+  :center  - draw images centered at the given x and y position."
+  [mode]
+  (let [mode (resolve-image-mode mode)]
+    (.imageMode *applet* (int mode))))
 
 (defn light-falloff
   "Sets the falloff rates for point lights, spot lights, and ambient
@@ -1209,11 +1386,32 @@
   []
   (. *applet* :keyCode))
 
-(defn lights [] (.lights *applet*))
+(defn lights
+  "Sets the default ambient light, directional light, falloff, and
+  specular values. The defaults are:
+
+  (ambient-light 128 128 128)
+  (directional-light 128 128 128 0 0 -1)
+  (light-falloff 1 0 0)
+  (light-specular 0 0 0).
+
+  Lights need to be included in the draw to remain persistent in a
+  looping program. Placing them in the setup of a looping program
+  will cause them to only have an effect the first time through the
+  loop."
+  []
+  (.lights *applet*))
 
 (defn light-specular
-  [x y z]
-  (.lightSpecular *applet* (float x) (float y) (float z)))
+  "Sets the specular color for lights. Like fill, it affects only the
+  elements which are created after it in the code. Specular refers to
+  light which bounces off a surface in a perferred direction (rather
+  than bouncing in all directions like a diffuse light) and is used
+  for creating highlights. The specular quality of a light interacts
+  with the specular material qualities set through the specular and
+  shininess functions."
+  [r g b]
+  (.lightSpecular *applet* (float r) (float g) (float b)))
 
 (defn line
   "Draws a line (a direct path between two points) to the screen. The
@@ -1229,15 +1427,79 @@
      (.line *applet* (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
 
-(defn load-bytes [filename] (PApplet/loadBytes filename))
+(defn load-bytes
+  "Reads the contents of a file or url and places it in a byte
+  array. The filename parameter can also be a URL to a file found
+  online."
+  [filename]
+  (PApplet/loadBytes (str filename)))
 
-(defn load-font [filename] (.loadFont *applet* filename))
+(defn load-font
+  "Loads a font into a variable of type PFont. To load correctly,
+  fonts must be located in the data directory of the current sketch.
+  To create a font to use with Processing use the create-font fn.
 
-(defn load-image [filename] (.loadImage *applet* filename))
+  Like load-image and other methods that load data, the load-font fn
+  should not be used inside draw, because it will slow down the sketch
+  considerably, as the font will be re-loaded from the disk (or
+  network) on each frame.
 
-(defn load-matrix [] (.loadMatrix *applet*))
+  For most renderers, Processing displays fonts using the .vlw font
+  format, which uses images for each letter, rather than defining them
+  through vector data. When hint :enable-native-fonts is used with the
+  JAVA2D renderer, the native version of a font will be used if it is
+  installed on the user's machine.
 
-(defn load-pixels [] (.loadPixels *applet*))
+  Using create-font (instead of load-font) enables vector data to be
+  used with the JAVA2D (default) renderer setting. This can be helpful
+  when many font sizes are needed, or when using any renderer based on
+  JAVA2D, such as the PDF library."
+  [filename]
+  (.loadFont *applet*  (str filename)))
+
+(defn load-image
+  "Loads an image into a variable of type PImage. Four types of
+  images ( .gif, .jpg, .tga, .png) images may be loaded. To load
+  correctly, images must be located in the data directory of the
+  current sketch. In most cases, load all images in setup to preload
+  them at the start of the program. Loading images inside draw will
+  reduce the speed of a program.
+
+  The filename parameter can also be a URL to a file found online.
+
+  The extension parameter is used to determine the image type in cases
+  where the image filename does not end with a proper
+  extension. Specify the extension as the second parameter to
+  load-image, as shown in the third example on this page.
+
+  If an image is not loaded successfully, the null value is returned
+  and an error message will be printed to the console. The error
+  message does not halt the program, however the null value may cause
+  a NullPointerException if your code does not check whether the value
+  returned from load-image is nil.
+
+  Depending on the type of error, a PImage object may still be
+  returned, but the width and height of the image will be set to
+  -1. This happens if bad image data is returned or cannot be decoded
+  properly. Sometimes this happens with image URLs that produce a 403
+  error or that redirect to a password prompt, because load-image
+  will attempt to interpret the HTML as image data."
+  [filename]
+  (.loadImage *applet* (str filename)))
+
+(defn load-pixels
+  "Loads the pixel data for the display window into the pixels[]
+  array. This function must always be called before reading from or
+  writing to pixels.
+
+  Certain renderers may or may not seem to require load-pixels or
+  update-pixels. However, the rule is that any time you want to
+  manipulate the pixels array, you must first call load-pixels, and
+  after changes have been made, call updatePixels. Even if the
+  renderer may not seem to use this function in the current Processing
+  release, this will always be subject to change."
+  []
+  (.loadPixels  *applet*))
 
 (defn load-shape
   "Load a geometry from a file as a PShape."
@@ -1255,7 +1517,11 @@
   [val]
   (PApplet/log (float val)))
 
-(defn start-loop [] (.loop *applet*))
+(defn start-loop
+  "Causes Processing to continuously execute the code within
+  draw. If no-loop is called, the code in draw stops executing."
+  []
+  (.loop *applet*))
 
 (defn mag
   "Calculates the magnitude (or length) of a vector. A vector is a
@@ -1266,16 +1532,28 @@
   ([a b] (PApplet/mag (float a) (float b)))
   ([a b c] (PApplet/mag (float a) (float b) (float c))))
 
-(defn map-to [val istart istop ostart ostop]
-  (PApplet/map (float val) (float istart) (float istop) (float ostart) (float ostop)))
+(defn map-range
+  "Re-maps a number from one range to another. In the example above,
+  the number '25' is converted from a value in the range 0..100 into a
+  value that ranges from the left edge (0) to the right edge (width)
+  of the screen.
 
-(defn map-to-double [val istart istop ostart ostop]
-  (PApplet/map (double val) (double istart) (double istop) (double ostart) (double ostop)))
+  Numbers outside the range are not clamped to 0 and 1, because
+  out-of-range values are often intentional and useful."
+  [val low1 high1 low2 high2]
+  (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2)))
 
-(defn mask
-  ([^ints alpha-array] (.mask *applet* alpha-array)))
+(defn mask-image
+  "Masks part of an image from displaying by loading another image and
+  using it as an alpha channel.  This mask image should only contain
+  grayscale data, but only the blue color channel is used. The mask
+  image needs to be the same size as the image to which it is
+  applied.
 
-(defn mask-image [^PImage img] (.mask *applet* img))
+   This method is useful for creating dynamically generated alpha
+   masks."
+  [^PImage img]
+  (.mask *applet* img))
 
 (defn millis
   "Returns the number of milliseconds (thousandths of a second) since
@@ -1289,9 +1567,32 @@
   []
   (PApplet/minute))
 
-(defn model-x [x y z] (.modelX *applet* (float x) (float y) (float z)))
-(defn model-y [x y z] (.modelY *applet* (float x) (float y) (float z)))
-(defn model-z [x y z] (.modelZ *applet* (float x) (float y) (float z)))
+(defn model-x
+  "Returns the three-dimensional x, y, z position in model space. This
+  returns the x value for a given coordinate based on the current set
+  of transformations (scale, rotate, translate, etc.) The x value can
+  be used to place an object in space relative to the location of the
+  original point once the transformations are no longer in use."
+  [x y z]
+  (.modelX *applet* (float x) (float y) (float z)))
+
+(defn model-y
+  "Returns the three-dimensional x, y, z position in model space. This
+  returns the y value for a given coordinate based on the current set
+  of transformations (scale, rotate, translate, etc.) The y value can
+  be used to place an object in space relative to the location of the
+  original point once the transformations are no longer in use."
+  [x y z]
+  (.modelY *applet* (float x) (float y) (float z)))
+
+(defn model-z
+  "Returns the three-dimensional x, y, z position in model space. This
+  returns the z value for a given coordinate based on the current set
+  of transformations (scale, rotate, translate, etc.) The z value can
+  be used to place an object in space relative to the location of the
+  original point once the transformations are no longer in use."
+  [x y z]
+  (.modelZ *applet* (float x) (float y) (float z)))
 
 (defn month
   "Returns the current month as a value from 1 - 12."
@@ -1308,7 +1609,11 @@
   []
   (. *applet* :mouseY))
 
-(defn no-cursor [] (.noCursor *applet*))
+(defn no-cursor
+  "Hides the cursor from view. Will not work when running the in full
+  screen (Present) mode."
+  []
+  (.noCursor *applet*))
 
 (defn no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
@@ -1350,21 +1655,77 @@
   ([x y z] (.noise *applet* (float x) (float y) (float z))))
 
 (defn noise-detail
-  ([int detail] (.noiseDetail *applet* (int detail)))
-  ([int detail falloff] (.noiseDetail *applet* (int detail) (float falloff))))
+  "Adjusts the character and level of detail produced by the Perlin
+  noise function. Similar to harmonics in physics, noise is computed
+  over several octaves. Lower octaves contribute more to the output
+  signal and as such define the overal intensity of the noise, whereas
+  higher octaves create finer grained details in the noise
+  sequence. By default, noise is computed over 4 octaves with each
+  octave contributing exactly half than its predecessor, starting at
+  50% strength for the 1st octave. This falloff amount can be changed
+  by adding an additional function parameter. Eg. a falloff factor of
+  0.75 means each octave will now have 75% impact (25% less) of the
+  previous lower octave. Any value between 0.0 and 1.0 is valid,
+  however note that values greater than 0.5 might result in greater
+  than 1.0 values returned by noise.
 
-(defn noise-seed [what] (.noiseSeed *applet* (int what)))
+  By changing these parameters, the signal created by the noise
+  function can be adapted to fit very specific needs and
+  characteristics."
+  ([octaves] (.noiseDetail *applet* (int octaves)))
+  ([octaves falloff] (.noiseDetail *applet* (int octaves) (float falloff))))
 
-(defn no-lights [] (.noLights *applet*))
+(defn noise-seed
+  "Sets the seed value for noise. By default, noise produces different
+  results each time the program is run. Set the value parameter to a
+  constant to return the same pseudo-random numbers each time the
+  software is run."
+  [val]
+  (.noiseSeed *applet* (int val)))
 
-(defn no-loop [] (.noLoop *applet*))
+(defn no-lights
+  "Disable all lighting. Lighting is turned off by default and enabled
+  with the lights fn. This function can be used to disable lighting so
+  that 2D geometry (which does not require lighting) can be drawn
+  after a set of lighted 3D geometry."
+  []
+  (.noLights *applet*))
+
+(defn no-loop
+  "Stops Processing from continuously executing the code within
+  draw. If start-loop is called, the code in draw will begin to run
+  continuously again. If using no-loop in setup, it should be the last
+  line inside the block.
+
+  When no-loop is used, it's not possible to manipulate or access the
+  screen inside event handling functions such as mouse-pressed or
+  key-pressed. Instead, use those functions to call redraw or
+  loop which will run draw, which can update the screen
+  properly. This means that when no-loop has been called, no drawing
+  can happen, and functions like save-frame or load-pixels may not
+  be used.
+
+  Note that if the sketch is resized, redraw will be called to
+  update the sketch, even after no-oop has been
+  specified. Otherwise, the sketch would enter an odd state until
+  loop was called."
+  []
+  (.noLoop *applet*))
 
 (defn norm
   "Normalize a value to exist between 0 and 1 (inclusive)."
   [val start stop]
   (PApplet/norm (float val) (float start) (float stop)))
 
-(defn normal [nx ny nz] (.normal *applet* (float nx) (float ny) (float nz)))
+(defn normal
+  "Sets the current normal vector. This is for drawing three
+  dimensional shapes and surfaces and specifies a vector perpendicular
+  to the surface of the shape which determines how lighting affects
+  it. Processing attempts to automatically assign normals to shapes,
+  but since that's imperfect, this is a better option when you want
+  more control. This function is identical to glNormal3f() in OpenGL."
+  [nx ny nz]
+  (.normal *applet* (float nx) (float ny) (float nz)))
 
 (defn no-smooth
   "Draws all geometry with jagged (aliased) edges."
@@ -1376,18 +1737,37 @@
   []
   (.noStroke *applet*))
 
-(defn no-tint [] (.noTint *applet*))
-
-(defn open [^String filename] (PApplet/open filename))
-
-;; $$open -- overload
+(defn no-tint
+  "Removes the current fill value for displaying images and reverts to
+  displaying images with their original hues."
+  []
+  (.noTint *applet*))
 
 (defn ortho
+  "Sets an orthographic projection and defines a parallel clipping
+  volume. All objects with the same dimension appear the same size,
+  regardless of whether they are near or far from the camera. The
+  parameters to this function specify the clipping volume where left
+  and right are the minimum and maximum x values, top and bottom are
+  the minimum and maximum y values, and near and far are the minimum
+  and maximum z values. If no parameters are given, the default is
+  used: ortho(0, width, 0, height, -10, 10)."
   ([] (.ortho *applet*))
-  ([l r b t near far] (.ortho *applet* (float l) (float r) (float b)
-                              (float t) (float near) (float far))))
+  ([left right bottom top near far]
+     (.ortho *applet* (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
 (defn perspective
+  "Sets a perspective projection applying foreshortening, making
+  distant objects appear smaller than closer ones. The parameters
+  define a viewing volume with the shape of truncated pyramid. Objects
+  near to the front of the volume appear their actual size, while
+  farther objects appear smaller. This projection simulates the
+  perspective of the world more accurately than orthographic
+  projection. The version of perspective without parameters sets the
+  default perspective and the version with four parameters allows the
+  programmer to set the area precisely. The default values are:
+  perspective(PI/3.0, width/height, cameraZ/10.0, cameraZ*10.0) where
+  cameraZ is ((height/2.0) / tan(PI*60.0/360.0));"
   ([] (.perspective *applet*))
   ([fovy aspect z-near z-far]
      (.perspective *applet* (float fovy) (float aspect)
@@ -1498,7 +1878,13 @@
   ([min max] (.random *applet* (float min) (float max))))
 
 
-(defn random-seed [w] (.randomSeed *applet* (float w)))
+(defn random-seed
+  "Sets the seed value for random. By default, random produces
+  different results each time the program is run. Set the value
+  parameter to a constant to return the same pseudo-random numbers
+  each time the software is run."
+  [w]
+  (.randomSeed *applet* (float w)))
 
 (defn rect
   "Draws a rectangle to the screen. A rectangle is a four-sided shape
@@ -1509,19 +1895,85 @@
   [x y width height]
   (.rect *applet* (float x) (float y) (float width) (float height)))
 
-(defn rect-mode [mode] (.rectMode *applet* (int mode)))
+(def ^{:private true}
+  rect-modes {:corner CORNER
+              :corners CORNERS
+              :center CENTER
+              :radius RADIUS})
 
-(defn red [what] (.red *applet* (int what)))
+(defn- resolve-rect-mode
+  [mode]
+  (if (keyword? mode)
+    (get rect-modes mode)
+    mode))
 
-(defn redraw [] (.redraw *applet*))
+(defn rect-mode
+  "Modifies the location from which rectangles draw. The default mode
+  is :corner. Available modes are:
+
+
+  :corner  - Specifies the location to be the upper left corner of the
+             shape and uses the third and fourth parameters of rect to
+             specify the width and height.
+
+  :corners - Uses the first and second parameters of rect to set the
+             location of one corner and uses the third and fourth
+             parameters to set the opposite corner.
+
+  :center  - Draws the image from its center point and uses the third
+             and forth parameters of rect to specify the image's width
+             and height.
+
+  :radius  - Draws the image from its center point and uses the third
+             and forth parameters of rect() to specify half of the
+             image's width and height."
+
+  [mode]
+  (let [mode (resolve-rect-mode mode)]
+    (.rectMode *applet* (int mode))))
+
+(defn red
+  "Extracts the red value from a color, scaled to match current color-mode."
+  [c]
+  (.red *applet* (int c)))
+
+(defn redraw
+  "Executes the code within the draw fn one time. This functions
+  allows the program to update the display window only when necessary,
+  for example when an event registered by mouse-pressed or
+  key-pressed occurs.
+
+  In structuring a program, it only makes sense to call redraw
+  within events such as mouse-pressed. This is because redraw does
+  not run draw immediately (it only sets a flag that indicates an
+  update is needed).
+
+  Calling redraw within draw has no effect because draw is
+  continuously called anyway."
+  []
+  (.redraw *applet*))
 
 (defn request-image
-  ([filename] (.requestImage *applet* filename))
-  ([filename extension] (.requestImage *applet* filename extension)))
+  "This function load images on a separate thread so that your sketch
+  does not freeze while images load during setup. While the image is
+  loading, its width and height will be 0. If an error occurs while
+  loading the image, its width and height will be set to -1. You'll
+  know when the image has loaded properly because its width and height
+  will be greater than 0. Asynchronous image loading (particularly
+  when downloading from a server) can dramatically improve
+  performance.
 
-(defn reset-matrix [] (.resetMatrix *applet*))
+  The extension parameter is used to determine the image type in cases
+  where the image filename does not end with a proper
+  extension. Specify the extension as the second parameter to
+  request-image."
+  ([filename] (.requestImage *applet* (str filename)))
+  ([filename extension] (.requestImage *applet* (str filename) (str extension))))
 
-(defn reverse-array [arr] (PApplet/reverse arr))
+(defn reset-matrix
+  "Replaces the current matrix with the identity matrix. The
+  equivalent function in OpenGL is glLoadIdentity()"
+  [] (.resetMatrix *applet*))
 
 (defn rotate
   "Rotates a shape the amount specified by the angle parameter. Angles
@@ -1588,14 +2040,28 @@
   [angle]
   (.rotateZ *applet* (float angle)))
 
-(defn round [what] (PApplet/round (float what)))
+(defn round
+  "Calculates the integer closest to the value parameter. For example,
+  round(9.2) returns the value 9."
+  [val]
+  (PApplet/round (float val)))
 
-(defn saturation [what] (.saturation *applet* (int what)))
+(defn saturation
+  "Extracts the saturation value from a color."
+  [c]
+  (.saturation *applet* (int c)))
 
-(defn save [filename] (.save *applet* filename))
-
-;; $$saveBytes
-;; $$saveFile
+(defn save
+  "Saves an image from the display window. Images are saved in TIFF,
+  TARGA, JPEG, and PNG format depending on the extension within the
+  filename parameter. For example, image.tif will have a TIFF image
+  and image.png will save a PNG image. If no extension is included in
+  the filename, the image will save in TIFF format and .tif will be
+  added to the name. All images saved from the main drawing window
+  will be opaque. To save images without a background, use
+  create-graphics."
+  [filename]
+  (.save *applet* (str filename)))
 
 (defn save-frame
   "Saves an image identical to the current display window as a
@@ -1610,10 +2076,6 @@
   (save-frame \"pretty-pic-####.jpg\")"
   ([] (.saveFrame *applet*))
   ([name] (.saveFrame *applet* (str name))))
-
-;; $$savePath
-;; $$saveStream
-;; $$saveStrings
 
 (defn scale
   "Increases or decreases the size of a shape by expanding and
@@ -1660,17 +2122,38 @@
   []
   (PApplet/second))
 
-;; $$selectFolder
-;; $$selectInput
-;; $$selectOutput
-
 (defn set-pixel
-  [x y c] (.set *applet* (int x) (int y) (int c)))
+  "Changes the color of any pixel in the display window. The x and y
+  parameters specify the pixel to change and the color parameter
+  specifies the color value. The color parameter is affected by the
+  current color mode (the default is RGB values from 0 to 255).
 
-(defn set-image-at
-  [dx dy ^PImage src] (.set *applet* (int dx) (int dy) src))
+  Setting the color of a single pixel with (set x, y) is easy, but not
+  as fast as putting the data directly into pixels[].
 
-(defn shininess [shine] (.shininess *applet* (float shine)))
+  This function ignores imageMode().
+
+  Due to what appears to be a bug in Apple's Java implementation, the
+  point() and set() methods are extremely slow in some circumstances
+  when used with the default renderer. Using P2D or P3D will fix the
+  problem. Grouping many calls to point or set-pixel together can also
+  help. (Bug 1094)"
+  [x y c]
+  (.set *applet* (int x) (int y) (int c)))
+
+(defn set-image
+  "Writes an image directly into the display window. The x and y
+  parameters define the coordinates for the upper-left corner of the
+  image."
+  [x y ^PImage src]
+  (.set *applet* (int x) (int y) src))
+
+(defn shininess
+  "Sets the amount of gloss in the surface of shapes. Used in
+  combination with ambient, specular, and emissive in setting
+  the material properties of shapes."
+  [shine]
+  (.shininess *applet* (float shine)))
 
 (defn sin
   "Calculates the sine of an angle. This function expects the values
@@ -1685,9 +2168,6 @@
   (println "Deprecated - size should be specified as a :size key to applet or defapplet")
   nil)
 
-;; $$sketchFile
-;; $$sketchPath
-
 (defn smooth
   "Draws all geometry with smooth (anti-aliased) edges. This will slow
   down the frame rate of the application, but will enhance the visual
@@ -1698,6 +2178,12 @@
   (.smooth *applet*))
 
 (defn specular
+  "Sets the specular color of the materials used for shapes drawn to
+  the screen, which sets the color of hightlights. Specular refers to
+  light which bounces off a surface in a perferred direction (rather
+  than bouncing in all directions like a diffuse light). Used in
+  combination with emissive, ambient, and shininess in setting
+  the material properties of shapes."
   ([gray] (.specular *applet* (float gray)))
   ([gray alpha] (.specular *applet* (float gray) (float alpha)))
   ([x y z] (.specular *applet* (float x) (float y) (float z)))
@@ -1724,6 +2210,14 @@
   ([ures vres] (.sphereDetail *applet* (int ures) (int vres))))
 
 (defn spotlight
+  "Adds a spot light. Lights need to be included in the draw to
+  remain persistent in a looping program. Placing them in the setup
+  of a looping program will cause them to only have an effect the
+  first time through the loop. The affect of the r, g, and b
+  parameters is determined by the current color mode. The x, y, and z
+  parameters specify the position of the light and nx, ny, nz specify
+  the direction or light. The angle parameter affects angle of the
+  spotlight cone."
   ([r g b x y z nx ny nz angle concentration]
      (.spotLight *applet* r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
@@ -1771,6 +2265,10 @@
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
 (defn stroke
+  "Sets the color used to draw lines and borders around shapes. This
+  color is either specified in terms of the RGB or HSB color depending
+  on the current color-mode (the default color space is RGB, with
+  each value in the range from 0 to 255)."
   ([rgb] (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb)))
   ([rgb alpha] (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha)))
   ([x y z] (stroke-float x y z))
@@ -1822,55 +2320,230 @@
   [angle]
   (PApplet/tan (float angle)))
 
-(defn char->text
+(defn text-char
+  "Draws a char to the screen in the specified position. See text fn
+  for more details."
   ([c] (.text *applet* (char c)))
   ([c x y] (.text *applet* (char c) (float x) (float y)))
   ([c x y z] (.text *applet* (char c) (float x) (float y) (float z))))
 
-(defn num->text
+(defn text-num
+  "Draws a number to the screen in the specified position. See text fn
+  for more details."
   ([num x y] (.text *applet* (float num) (float x) (float y)))
   ([num x y z] (.text *applet* (float num) (float x) (float y) (float z))))
 
-(defn string->text
+(defn text
+  "Draws text to the screen in the position specified by the x and y
+  parameters and the optional z parameter. A default font will be used
+  unless a font is set with the text-font fn. Change the color of the
+  text with the fill fn. The text displays in relation to the
+  text-align fn, which gives the option to draw to the left, right, and
+  center of the coordinates.
+
+  The x1, y1, x2 and y2 (and optional z) parameters define a
+  rectangular area to display within and may only be used with string
+  data. For text drawn inside a rectangle, the coordinates are
+  interpreted based on the current rect-mode setting.
+
+  Use the text-mode function with the :screen parameter to display text
+  in 2D at the surface of the window."
   ([^String s] (.text *applet* s))
   ([^String s x y] (.text *applet* s (float x) (float y)))
-  ([^String s x y z] (.text *applet* s (float x) (float y) (float z))))
+  ([^String s x y z] (.text *applet* s (float x) (float y) (float z)))
+  ([^String s x1 y1 x2 y2] (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
+  ([^String s x1 y1 x2 y2 z] (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
-(defn string->text-in
-  ([^String s x1 y1 x2 y2]
-     (.text *applet* s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z]
-     (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
+(def ^{:private true}
+  horizontal-alignment-modes {:left LEFT
+                              :center CENTER
+                              :right RIGHT})
+
+(defn ^{:private true}
+  vertical-alignment-modes {:top TOP
+                            :bottom BOTTOM
+                            :center CENTER
+                            :baseline BASELINE})
+
+(defn- resolve-horizontal-alignment-mode
+  [mode]
+  (if (keyword? mode)
+    (get horizontal-alignment-modes mode)
+    mode))
+
+(defn- resolve-vertical-alignment-mode
+  [mode]
+  (if (keyword? mode)
+    (get vertical-alignment-modes mode)
+    mode))
 
 (defn text-align
-  ([align] (.textAlign *applet* (int align)))
-  ([align-x align-y] (.textAlign *applet* (int align-x) (int align-y))))
+  "Sets the current alignment for drawing text. Available modes are:
 
-(defn text-ascent [] (.textAscent *applet*))
+  horizontal - :left, :center, and :right
+  vertical   - :top, :bottom, :center, and :baseline
 
-(defn text-descend [] (.textDescent *applet*))
+  An optional second parameter specifies the vertical alignment
+  mode. :baseline is the default. The :top and :center parameters are
+  straightforward. The :bottom parameter offsets the line based on the
+  current text-descent. For multiple lines, the final line will be
+  aligned to the bottom, with the previous lines appearing above it.
+
+  When using text with width and height parameters, :baseline is
+  ignored, and treated as :top. (Otherwise, text would by default draw
+  outside the box, since :baseline is the default setting. :baseline is
+  not a useful drawing mode for text drawn in a rectangle.)
+
+  The vertical alignment is based on the value of text-ascent, which
+  many fonts do not specify correctly. It may be necessary to use a
+  hack and offset by a few pixels by hand so that the offset looks
+  correct. To do this as less of a hack, use some percentage of
+  text-ascent or text-descent so that the hack works even if you
+  change the size of the font."
+  ([align]
+     (let [align (resolve-horizontal-alignment-mode align)]
+       (.textAlign *applet* (int align))))
+  ([align-x align-y]
+     (let [align-x (resolve-horizontal-alignment-mode align-x)
+           align-y (resolve-vertical-alignment-mode align-y)]
+       (.textAlign *applet* (int align-x) (int align-y)))))
+
+(defn text-ascent
+  "Returns the ascent of the current font at its current size. This
+  information is useful for determining the height of the font above
+  the baseline. For example, adding the text-ascent and text-descent
+  values will give you the total height of the line."
+  []
+  (.textAscent *applet*))
+
+(defn text-descent
+  "Returns descent of the current font at its current size. This
+  information is useful for determining the height of the font below
+  the baseline. For example, adding the text-ascent and text-descent
+  values will give you the total height of the line."
+  []
+  (.textDescent *applet*))
 
 (defn text-font
-  ([^PFont which] (.textFont *applet* which))
-  ([^PFont which size] (.textFont *applet* which (int size))))
+  "Sets the current font that will be drawn with the text
+  function. Fonts must be loaded with load-font before it can be
+  used. This font will be used in all subsequent calls to the text
+  function. If no size parameter is input, the font will appear at its
+  original size until it is changed with text-size.
 
-(defn text-leading [leading] (.textLeading *applet* (float leading)))
+  Because fonts are usually bitmaped, you should create fonts at the
+  sizes that will be used most commonly. Using textFont without the
+  size parameter will result in the cleanest-looking text.
 
-(defn text-mode [mode] (.textMode *applet* (int mode)))
+  With the default (JAVA2D) and PDF renderers, it's also possible to
+  enable the use of native fonts via the command
+  (hint :enable-native-fonts). This will produce vector text in JAVA2D
+  sketches and PDF output in cases where the vector data is available:
+  when the font is still installed, or the font is created via the
+  create-font fn"
+  ([^PFont font] (.textFont *applet* font))
+  ([^PFont font size] (.textFont *applet* font (int size))))
 
-(defn text-size [size] (.textSize *applet* (float size)))
+(defn text-leading
+  "Sets the spacing between lines of text in units of pixels. This
+  setting will be used in all subsequent calls to the text function."
+  [leading]
+  (.textLeading *applet* (float leading)))
 
-(defn texture [^PImage img] (.texture *applet* img))
+(def ^{:private true}
+  text-modes {:model PConstants/MODEL
+              :shape PConstants/SHAPE
+              :screen PConstants/SCREEN})
 
-(defn texture-mode [mode] (.textureMode *applet* (int mode)))
+(defn- resolve-text-mode
+  [mode]
+  (if (keyword? mode)
+    (get text-modes mode)
+    mode))
 
-(defmulti text-width #(= (class %) (class \a)))
+(defn text-mode
+  "Sets the way text draws to the screen - available modes
+  are :model, :shape and :screen
 
-(defmethod text-width true
-  [c] (.textWidth *applet* (char c)))
+  In the default configuration (the :model mode), it's possible to
+  rotate, scale, and place letters in two and three dimensional space.
 
-(defmethod text-width false
-  [^String s] (.textWidth *applet* s))
+  Changing to :screen mode draws letters directly to the front of the
+  window and greatly increases rendering quality and speed when used
+  with the P2D and P3D renderers. :screen with OPENGL and JAVA2D (the
+  default) renderers will generally be slower, though pixel accurate
+  with P2D and P3D. With :screen, the letters draw at the actual size
+  of the font (in pixels) and therefore calls to text-size will not
+  affect the size of the letters. To create a font at the size you
+  desire, use create-font. When using :screen, any z-coordinate passed
+  to a text command will be ignored, because your computer screen
+  is...flat!
+
+  The :shape mode draws text using the the glyph outlines of
+  individual characters rather than as textures. This mode is only
+  only supported with the PDF and OPENGL renderer settings. With the
+  PDF renderer, you must specify the :shape text-mode before any other
+  drawing occurs. If the outlines are not available, then
+  :shape will be ignored and :model will be used instead.
+
+  The :shape option in OPENGL mode can be combined with begin-raw to
+  write vector-accurate text to 2D and 3D output files, for instance
+  DXF or PDF. :shape is not currently optimized for OPENGL, so if
+  recording shape data, use :model until you're ready to capture the
+  geometry with begin-raw."
+  [mode]
+  (let [mode (resolve-text-mode mode)]
+    (.textMode *applet* (int mode))))
+
+(defn text-size
+  "Sets the current font size. This size will be used in all
+  subsequent calls to the text fn. Font size is measured in
+  units of pixels."
+  [size]
+  (.textSize *applet* (float size)))
+
+(defn texture
+  "Sets a texture to be applied to vertex points. The texture fn must
+  be called between begin-shape and end-shape and before any calls to
+  vertex.
+
+  When textures are in use, the fill color is ignored. Instead, use
+  tint to specify the color of the texture as it is applied to the
+  shape."
+  [^PImage img]
+  (.texture *applet* img))
+
+(def ^{:private true}
+  texture-modes {:image IMAGE
+                :normalized NORMALIZED})
+
+(defn- resolve-texture-mode
+  [mode]
+  (if (keyword? mode)
+    (get texture-modes mode)
+    mode))
+
+(defn texture-mode
+  "Sets the coordinate space for texture mapping. There are two
+  options, :image and :normalized.
+
+  :image refers to the actual coordinates of the image and :normalized
+  refers to a normalized space of values ranging from 0 to 1. The
+  default mode is :image. In :image, if an image is 100 x 200 pixels,
+  mapping the image onto the entire size of a quad would require the
+  points (0,0) (0,100) (100,200) (0,200). The same mapping in
+  NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
+  [mode]
+  (let [mode (resolve-texture-mode mode)]
+    (.textureMode *applet* (int mode))))
+
+(defn text-width
+  "Calculates and returns the width of any character or text string."
+  [data]
+  (let [data  (if (= (class data) (class \a))
+                (char data)
+                (str data))]
+    (.textWidth *applet* data)))
 
 (defn tint-float
   "Sets the fill value for displaying images. Images can be tinted to
