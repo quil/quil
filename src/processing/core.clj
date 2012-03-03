@@ -10,7 +10,7 @@
 ;; remove this notice, or any other, from this software.
 
 (ns processing.core
-  (:import (processing.core PApplet PImage PGraphics PFont PConstants))
+  (:import (processing.core PApplet PImage PGraphics PFont PConstants PShape))
   (:load "constants"))
 
 ;; used by functions in this lib. Use binding to set it
@@ -24,7 +24,10 @@
     (or (= java.lang.Long t)
         (= java.lang.Integer t))))
 
-(defn state
+(defn
+  ^{:requires-bindings true
+    :added "1.0"}
+  state
   "Retrieve canvas-specific state by key. Must initially call
   set-state! to store state.
 
@@ -39,7 +42,10 @@
       (throw (Exception. (str "Unable to find state with key: " key))))
     (get state key)))
 
-(defn set-state!
+(defn
+  ^{:requires-bindings true
+    :added "1.0"}
+  set-state!
   "Set canvas-specific state. May only be called once (ideally in the
   setup fn).  Subsequent calls have no effect.
 
@@ -50,19 +56,37 @@
     (let [state-map (apply hash-map state-vals)]
       (reset! *state* state-map))))
 
-(defn abs-int
+(defn
+  ^{:requires-bindings false
+    :processing-name "abs()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  abs-int
   "Calculates the absolute value (magnitude) of a number. The absolute
   value of a number is always positive. Takes and returns an int."
   [n]
   (PApplet/abs (int n)))
 
-(defn abs-float
+(defn
+  ^{:requires-bindings false
+    :processing-name "abs()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  abs-float
   "Calculates the absolute value (magnitude) of a number. The absolute
   value of a number is always positive. Takes and returns a float."
   [n]
   (PApplet/abs (float n)))
 
-(defn abs
+(defn
+  ^{:requires-bindings false
+    :processing-name "abs()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  abs
   "Calculates the absolute value (magnitude) of a number. The
   absolute value of a number is always positive. Dynamically casts to
   an int or float appropriately"
@@ -71,18 +95,37 @@
       (abs-int n)
       (abs-float n)))
 
-(defn acos
+(defn
+  ^{:requires-bindings false
+    :processing-name "acos()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  acos
   "The inverse of cos, returns the arc cosine of a value. This
   function expects the values in the range of -1 to 1 and values are
   returned in the range 0 to Math/PI (3.1415927)."
   [n]
   (PApplet/acos (float n)))
 
-(defn alpha
+(defn
+  ^{:requires-bindings true
+    :processing-name "alpha()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  alpha
   "Extracts the alpha value from a color."
-  [color] (.alpha *applet* (int color)))
+  [color]
+  (.alpha *applet* (int color)))
 
-(defn ambient-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "ambient()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  ambient-float
   "Sets the ambient reflectance for shapes drawn to the screen. This
   is combined with the ambient light component of environment. The
   color components set through the parameters define the
@@ -93,7 +136,13 @@
   ([gray] (.ambient *applet* (float gray)))
   ([x y z] (.ambient *applet* (float x) (float y) (float z))))
 
-(defn ambient-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "ambient()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  ambient-int
   "Sets the ambient reflectance for shapes drawn to the screen. This
   is combined with the ambient light component of environment. The rgb
   color components set define the reflectance. Used in combination
@@ -103,7 +152,13 @@
   (.ambient
    *applet* (int rgb)))
 
-(defn ambient
+(defn
+  ^{:requires-bindings true
+    :processing-name "ambient()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  ambient
   "Sets the ambient reflectance for shapes drawn to the screen. This
   is combined with the ambient light component of environment. The
   color components set through the parameters define the
@@ -114,7 +169,13 @@
   ([rgb] (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb)))
   ([x y z] (ambient-float x y z)))
 
-(defn ambient-light
+(defn
+  ^{:requires-bindings true
+    :processing-name "ambientLight()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  ambient-light
   "Adds an ambient light. Ambient light doesn't come from a specific direction,
    the rays have light have bounced around so much that objects are
    evenly lit from all sides. Ambient lights are almost always used in
@@ -129,7 +190,13 @@
      (.ambientLight *applet* (float red) (float green) (float blue)
                     (float x) (float y) (float z))))
 
-(defn apply-matrix
+(defn
+  ^{:requires-bindings true
+    :processing-name "applyMatrix()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  apply-matrix
   "Multiplies the current matrix by the one specified through the
   parameters. This is very slow because it will try to calculate the
   inverse of the transform, so avoid it whenever possible. The
@@ -146,7 +213,13 @@
                    (float n20) (float n21) (float n22) (float 23)
                    (float n30) (float n31) (float n32) (float 33))))
 
-(defn arc
+(defn
+  ^{:requires-bindings true
+    :processing-name "arc()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  arc
   "Draws an arc in the display window. Arcs are drawn along the outer
   edge of an ellipse defined by the x, y, width and height
   parameters. The origin or the arc's ellipse may be changed with the
@@ -156,14 +229,26 @@
   (.arc *applet* (float x)(float y) (float width) (float height)
         (float start) (float stop)))
 
-(defn asin
+(defn
+  ^{:requires-bindings false
+    :processing-name "asin()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  asin
   "The inverse of sin, returns the arc sine of a value. This function
   expects the values in the range of -1 to 1 and values are returned
   in the range -PI/2 to PI/2."
   [n]
   (PApplet/asin (float n)))
 
-(defn atan
+(defn
+  ^{:requires-bindings false
+    :processing-name "atan()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  atan
   "The inverse of tan, returns the arc tangent of a value. This
   function expects the values in the range of -Infinity to
   Infinity (exclusive) and values are returned in the range -PI/2 to
@@ -171,7 +256,13 @@
   [n]
   (PApplet/atan (float n)))
 
-(defn atan2
+(defn
+  ^{:requires-bindings false
+    :processing-name "atan2()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  atan2
   "Calculates the angle (in radians) from a specified point to the
   coordinate origin as measured from the positive x-axis. Values are
   returned as a float in the range from PI to -PI. The atan2 function
@@ -182,7 +273,13 @@
   [y x]
   (PApplet/atan2 (float y) (float x)))
 
-(defn background-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "background()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  background-float
   "Sets the color used for the background of the Processing
   window. The default background is light gray. In the draw function,
   the background color is used to clear the display window at the
@@ -196,7 +293,13 @@
   ([r g b] (.background *applet* (float r) (float g) (float b)))
   ([r g b a] (.background *applet* (float r) (float g) (float b) (float a))))
 
-(defn background-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "background()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  background-int
   "Sets the color used for the background of the Processing
   window. The default background is light gray. In the draw function,
   the background color is used to clear the display window at the
@@ -208,7 +311,13 @@
   ([rgb] (.background *applet* (int rgb)))
   ([rgb alpha] (.background *applet* (int rgb) (float alpha))))
 
-(defn background
+(defn
+  ^{:requires-bindings true
+    :processing-name "background()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  background
   "Sets the color used for the background of the Processing
   window. The default background is light gray. In the draw function,
   the background color is used to clear the display window at the
@@ -222,14 +331,26 @@
   ([r g b] (background-float r g b))
   ([r g b a] (background-float r g b a)))
 
-(defn background-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "background()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  background-image
   "Specify an image to be used as the background for a sketch. Its
   width and height must be the same size as the sketch window. Images
   used as background will ignore the current tint setting."
   [^PImage img]
   (.background *applet* img))
 
-(defn begin-camera
+(defn
+  ^{:requires-bindings true
+    :processing-name "beginCamera()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  begin-camera
   "Sets the matrix mode to the camera matrix so calls such as
   translate, rotate, apply-matrix and reset-matrix affect the
   camera. begin-camera should always be used with a following
@@ -240,12 +361,24 @@
   []
   (.beginCamera *applet*))
 
-(defn end-camera
+(defn
+  ^{:requires-bindings true
+    :processing-name "endCamera()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  end-camera
   "Unsets the matrix mode from the camera matrix. See begin-camera."
   []
   (.endCamera *applet*))
 
-(defn begin-raw
+(defn
+  ^{:requires-bindings true
+    :processing-name "beginRaw()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  begin-raw
   "Enables the creation of vectors from 3D data. Requires
   corresponding end-raw command. These commands will grab the shape
   data just before it is rendered to the screen. At this stage, your
@@ -272,7 +405,13 @@
     (get render-modes mode)
     mode))
 
-(defn begin-record
+(defn
+  ^{:requires-bindings true
+    :processing-name "beginRecord()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  begin-record
   "Opens a new file and all subsequent drawing functions are echoed to
   this file as well as the display window. The begin-record fn
   requires two parameters, the first is the renderer and the second is
@@ -288,7 +427,13 @@
     (println "renderer: " renderer)
     (.beginRecord *applet* (str renderer) (str filename))))
 
-(defn end-record
+(defn
+  ^{:requires-bindings true
+    :processing-name "endRecord()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  end-record
   "Stops the recording process started by begin-record and closes the
   file."
   []
@@ -309,7 +454,13 @@
     (get shapes-map mode)
     mode))
 
-(defn begin-shape
+(defn
+  ^{:requires-bindings true
+    :processing-name "beginShape()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  begin-shape
   "Enables the creation of complex forms. begin-shape begins recording
   vertices for a shape and end-shape stops recording. Use the mode
   keyword to specify which shape create from the provided
@@ -335,7 +486,13 @@
      (let [mode (resolve-shape-mode  mode)]
        (.beginShape *applet* (int mode)))))
 
-(defn bezier
+(defn
+  ^{:requires-bindings true
+    :processing-name "bezier()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  bezier
   "Draws a Bezier curve on the screen. These curves are defined by a
   series of anchor and control points. The first two parameters
   specify the first anchor point and the last two parameters specify
@@ -354,7 +511,13 @@
               (float cx2) (float cy2) (float cz2)
               (float x2) (float y2) (float z2))))
 
-(defn bezier-detail
+(defn
+  ^{:requires-bindings true
+    :processing-name "bezierDetail()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  bezier-detail
   "Sets the resolution at which Beziers display. The default value is
   20. This function is only useful when using the P3D or OPENGL
   renderer as the default (JAVA2D) renderer does not use this
@@ -362,7 +525,13 @@
   [detail]
   (.bezierDetail *applet* (int detail)))
 
-(defn bezier-point
+(defn
+  ^{:requires-bindings true
+    :processing-name "bezierPoint()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  bezier-point
   "Evaluates the Bezier at point t for points a, b, c, d. The
   parameter t varies between 0 and 1, a and d are points on the curve,
   and b and c are the control points. This can be done once with the x
@@ -372,14 +541,26 @@
   (.bezierPoint *applet* (float a) (float b) (float c)
                 (float d) (float t)))
 
-(defn bezier-tangent
+(defn
+  ^{:requires-bindings true
+    :processing-name "bezierTangent()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  bezier-tangent
   "Calculates the tangent of a point on a Bezier curve.
   (See http://en.wikipedia.org/wiki/Tangent)"
   [a b c d t]
   (.bezierTangent *applet* (float a) (float b) (float c)
                   (float d) (float t)))
 
-(defn bezier-vertex
+(defn
+  ^{:requires-bindings true
+    :processing-name "bezierVertex()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  bezier-vertex
   "Specifies vertex coordinates for Bezier curves. Each call to
   bezier-vertex defines the position of two control points and one
   anchor point of a Bezier curve, adding a new segment to a line or
@@ -399,14 +580,26 @@
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
 
-(defn binary
+(defn
+  ^{:require-binding false
+    :processing-name "binary()"
+    :category "Data"
+    :subcategory "Conversion"
+    :added "1.0"}
+  binary
   "Returns a string representing the binary value of an int, char or
   byte. When converting an int to a string, it is possible to specify
   the number of digits used."
   ([val] (PApplet/binary (if (number? val) (int val) val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
 
-(defn unbinary
+(defn
+  ^{:require-binding false
+    :processing-name "unbinary()"
+    :category "Data"
+    :subcategory "Conversion"
+    :added "1.0"}
+    unbinary
   "Unpack a binary string to an integer. See binary for converting
   integers to strings."
   [str-val]
@@ -434,7 +627,13 @@
     (get blend-map mode)
     mode))
 
-(defn blend
+(defn
+  ^{:requires-bindings true
+    :processing-name "blend()"
+    :category "Color"
+    :subcategory "Pixels"
+    :added "1.0"}
+  blend
   "Blends a region of pixels from one image into another (or in itself
   again) with full alpha channel support.
 
@@ -474,7 +673,13 @@
        (.blend *applet* src (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
-(defn blend-color
+(defn
+  ^{:requires-bindings false
+    :processing-name "blendColor()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  blend-color
   "Blends two color values together based on the blending mode given specified
   with the mode keyword.
 
@@ -509,23 +714,47 @@
   (let [mode (resolve-blend-mode mode)]
     (PApplet/blendColor (int c1) (int c2) (int mode))))
 
-(defn blue
+(defn
+  ^{:requires-bindings true
+    :processing-name "blue()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  blue
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
   (.blue *applet* (int color)))
 
-(defn box
+(defn
+  ^{:requires-bindings true
+    :processing-name "box()"
+    :category "Shape"
+    :subcategory "3D Primitives"
+    :added "1.0"}
+  box
   "Creates an extruded rectangle."
   ([size] (.box *applet* (float size)))
   ([width height depth] (.box *applet* (float width) (float height) (float depth))))
 
-(defn brightness
+(defn
+  ^{:requires-bindings true
+    :processing-name "brightness()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
   (.brightness *applet* (int color)))
 
-(defn camera
+(defn
+  ^{:requires-bindings true
+    :processing-name "camera()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  camera
   "Sets the position of the camera through setting the eye position,
   the center of the scene, and which axis is facing upward. Moving the
   eye position and the direction it is pointing (the center of the
@@ -552,14 +781,26 @@
               (float centerX) (float centerY) (float centerZ)
               (float upX) (float upY) (float upZ))))
 
-(defn ceil
+(defn
+  ^{:requires-bindings false
+    :processing-name "ceil()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  ceil
   "Calculates the closest int value that is greater than or equal to
   the value of the parameter. For example, (ceil 9.03) returns the
   value 10."
   [n]
   (PApplet/ceil (float n)))
 
-(defn color
+(defn
+  ^{:requires-bindings true
+    :processing-name "color()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  color
   "Creates an integer representation of a color The parameters are
   interpreted as RGB or HSB values depending on the current
   color-mode. The default mode is RGB values from 0 to 255 and
@@ -585,7 +826,13 @@
     (get color-modes mode)
     mode))
 
-(defn color-mode
+(defn
+  ^{:requires-bindings true
+    :processing-name "colorMode()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  color-mode
   "Changes the way Processing interprets color data. Available modes
   are :rgb and :hsb.By default, the parameters for fill, stroke,
   background, and color are defined by values between 0 and 255 using
@@ -608,26 +855,50 @@
      (let [mode (resolve-color-mode mode)]
        (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
-(defn constrain-float
+(defn
+  ^{:requires-bindings false
+    :processing-name "constrain()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  constrain-float
   "Constrains a value to not exceed a maximum and minimum value. All
   args are cast to floats."
   [amt low high]
   (PApplet/constrain (float amt) (float low) (float high)))
 
-(defn constrain-int
+(defn
+  ^{:requires-bindings false
+    :processing-name "constrain()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  constrain-int
   "Constrains a value to not exceed a maximum and minimum value. All
   args are cast to ints."
   [amt low high]
   (PApplet/constrain (int amt) (int low) (int high)))
 
-(defn constrain
+(defn
+  ^{:requires-bindings false
+    :processing-name "constrain()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  constrain
   "Constrains a value to not exceed a maximum and minimum value."
   [amt low high]
   (if (int-like? amt)
     (constrain-int amt low high)
     (constrain-float amt low high)))
 
-(defn copy
+(defn
+  ^{:requires-bindings true
+    :processing-name "copy()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  copy
   "Copies a region of pixels from the display window to another area
   of the display window and copies a region of pixels from an image
   used as the src-img parameter into the display window. If the source
@@ -642,13 +913,26 @@
      (.copy *applet* img (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2))))
 
-(defn cos
+(defn
+  ^{:requires-bindings false
+    :processing-name "cos()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  cos
   "Calculates the cosine of an angle. This function expects the values
   of the angle parameter to be provided in radians (values from 0 to
   Math/PI*2). Values are returned in the range -1 to 1."
-  [angle] (PApplet/cos (float angle)))
+  [angle]
+  (PApplet/cos (float angle)))
 
-(def available-fonts
+(defn
+  ^{:requires-bindings false
+    :processing-name "PFont.list()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  available-fonts
   "A sequence of strings representing the fonts on this system
   available for use.
 
@@ -659,9 +943,16 @@
   the sketch because other people might not have the font installed on
   their computer. Only fonts that can legally be distributed should be
   included with a sketch."
+  []
   (seq (PFont/list)))
 
-(defn font-available?
+(defn
+  ^{:requires-bindings false
+    :processing-name :none
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  font-available?
   "Returns true if font (specified as a string) is available on this
   system, false otherwise"
   [font-str]
@@ -669,7 +960,13 @@
     true
     false))
 
-(defn create-font
+(defn
+  ^{:requires-bindings true
+    :processing-name "createFont()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  create-font
   "Dynamically converts a font to the format used by Processing (a
   PFont) from either a font name that's installed on the computer, or
   from a .ttf or .otf file inside the sketches 'data' folder. This
@@ -700,7 +997,13 @@
   ([name size smooth ^chars charset]
      (.createFont *applet* (str name) (float size) smooth charset)))
 
-(defn create-graphics
+(defn
+  ^{:requires-bindings true
+    :processing-name "createGraphics()"
+    :category "Rendering"
+    :subcategory nil
+    :added "1.0"}
+  create-graphics
   "Creates and returns a new PGraphics object of the types P2D, P3D,
   and JAVA2D. Use this class if you need to draw into an off-screen
   graphics buffer. It's not possible to use create-graphics with
@@ -727,7 +1030,13 @@
   ([w h renderer path]
      (.createGraphics *applet* (int w) (int h) renderer (str path))))
 
-(defn create-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "createImage()"
+    :category "Image"
+    :subcategory nil
+    :added "1.0"}
+  create-image
   "Creates a new PImage (the datatype for storing images). This
   provides a fresh buffer of pixels to play with. Set the size of the
   buffer with the width and height parameters. The format parameter
@@ -742,7 +1051,13 @@
   [w h format]
   (.createImage *applet* (int w) (int h) (int format)))
 
-(defn create-input
+(defn
+  ^{:requires-bindings true
+    :processing-name "createInput()"
+    :category "Input"
+    :subcategory "Files"
+    :added "1.0"}
+  create-input
   "This is a method for advanced programmers to open a Java
   InputStream. The method is useful if you want to use the facilities
   provided by PApplet to easily open files from the data folder or
@@ -769,14 +1084,26 @@
   decompressed. If you don't want the automatic decompression, use the
   related function create-input-raw."
   [filename]
-  (PApplet/createInput (java.io.File. (str filename))))
+  (.createInput *applet* (str filename)))
 
-(defn create-input-raw
+(defn
+  ^{:requires-bindings true
+    :processing-name "createInputRaw()"
+    :category "Input"
+    :subcategory "Files"
+    :added "1.0"}
+  create-input-raw
   "Call create-input without automatic gzip decompression."
   [filename]
   (.createInputRaw *applet* filename))
 
-(defn create-output
+(defn
+  ^{:requires-bindings true
+    :processing-name "createOutput()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  create-output
   "Similar to create-input, this creates a Java OutputStream for a
   given filename or path. The file will be created in the sketch
   folder, or in the same folder as an exported application.
@@ -794,7 +1121,7 @@
   If the output filename ends with .gz, the output will be
   automatically GZIP compressed as it is written."
   [filename]
-  (PApplet/createOutput (java.io.File. (str filename))))
+  (.createOutput *applet* (str filename)))
 
 (def ^{:private true}
   cursor-modes {:arrow PConstants/ARROW
@@ -810,7 +1137,13 @@
     (get cursor-modes mode)
     mode))
 
-(defn cursor
+(defn
+  ^{:requires-bindings true
+    :processing-name "cursor()"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  cursor
   "Sets the cursor to a predefined symbol, an image, or makes it
   visible if already hidden. If you are trying to set an image as the
   cursor, it is recommended to make the size 16x16 or 32x32 pixels.
@@ -827,13 +1160,25 @@
   ([] (.cursor *applet*))
   ([cursor-mode] (.cursor *applet* (int (resolve-cursor-mode cursor-mode)))))
 
-(defn cursor-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "cursor()"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+    cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
   active spots of the cursor may be specified with hx and hy"
   ([^PImage img] (.cursor *applet* img))
   ([^PImage img hx hy] (.cursor *applet* img (int hx) (int hy))))
 
-(defn curve
+(defn
+  ^{:requires-bindings true
+    :processing-name "curve()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  curve
   "Draws a curved line on the screen. The first and second parameters
   specify the beginning control point and the last two parameters
   specify the ending control point. The middle parameters specify the
@@ -855,7 +1200,13 @@
              (float x3) (float y3) (float z3)
              (float x4) (float y4) (float z4))))
 
-(defn curve-detail
+(defn
+  ^{:requires-bindings true
+    :processing-name "curveDetail()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  curve-detail
   "Sets the resolution at which curves display. The default value is
   20. This function is only useful when using the P3D or OPENGL
   renderer as the default (JAVA2D) renderer does not use this
@@ -863,7 +1214,13 @@
   [detail]
   (.curveDetail *applet* (int detail)))
 
-(defn curve-point
+(defn
+  ^{:requires-bindings true
+    :processing-name "curvePoint()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  curve-point
   "Evalutes the curve at point t for points a, b, c, d. The parameter
   t varies between 0 and 1, a and d are points on the curve, and b c
   and are the control points. This can be done once with the x
@@ -872,13 +1229,25 @@
   [a b c d t]
   (.bezierPoint *applet* (float a) (float b) (float c) (float d) (float t)))
 
-(defn curve-tangent
+(defn
+  ^{:requires-bindings true
+    :processing-name "curveTangent()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  curve-tangent
   "Calculates the tangent of a point on a curve.
   See: http://en.wikipedia.org/wiki/Tangent"
   [a b c d t]
   (.curveTangent *applet* (float a) (float b) (float c) (float d) (float t)))
 
-(defn curve-tightness
+(defn
+  ^{:requires-bindings true
+   :processing-name "curveTightness()"
+    :category "Shape"
+    :subcategory "Curves"
+    :added "1.0"}
+  curve-tightness
   "Modifies the quality of forms created with curve and
   curve-vertex. The parameter squishy determines how the curve fits
   to the vertex points. The value 0.0 is the default value for
@@ -890,7 +1259,13 @@
   [ti]
   (.curveTightness *applet* (float ti)))
 
-(defn curve-vertex
+(defn
+  ^{:requires-bindings true
+    :processing-name "curveVertex()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  curve-vertex
   "Specifies vertex coordinates for curves. This function may only be
   used between begin-shape and end-shape and only when there is no
   mode keyword specified to begin-hape. The first and last points in a
@@ -903,12 +1278,24 @@
   ([x y] (.curveVertex *applet* (float x) (float y)))
   ([x y z] (.curveVertex *applet* (float x) (float y) (float z))))
 
-(defn day
+(defn
+  ^{:requires-bindings false
+    :processing-name "day()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  day
   "Get the current day of the month (1 through 31)."
   []
   (PApplet/day))
 
-(defn degrees
+(defn
+  ^{:requires-bindings false
+    :processing-name "degrees()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  degrees
   "Converts a radian measurement to its corresponding value in
   degrees. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and (* 2 Math/PI) radians
@@ -918,7 +1305,13 @@
   [radians]
   (PApplet/degrees (float radians)))
 
-(defn delay-frame
+(defn
+  ^{:requires-bindings true
+    :processing-name "delay()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  delay-frame
   "Forces the program to stop running for a specified time. Delay
   times are specified in thousandths of a second, therefore the
   function call (delay 3000) will stop the program for three
@@ -929,7 +1322,13 @@
   [freeze-ms]
   (.delay *applet* (int freeze-ms)))
 
-(defn directional-light
+(defn
+  ^{:requires-bindings true
+    :processing-name "directionalLight()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  directional-light
   "Adds a directional light. Directional light comes from one
   direction and is stronger when hitting a surface squarely and weaker
   if it hits at a a gentle angle. After hitting a surface, a
@@ -945,13 +1344,25 @@
   (.directionalLight *applet* (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
 
-(defn dist
+(defn
+  ^{:requires-bindings false
+    :processing-name "dist()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  dist
   "Calculates the distance between two points"
   ([x1 y1 x2 y2] (PApplet/dist (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2] (PApplet/dist (float x1) (float y1) (float z1)
                                (float x2) (float y2) (float z2))))
 
-(defn ellipse
+(defn
+  ^{:requires-bindings true
+    :processing-name "ellipse()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  ellipse
   "Draws an ellipse (oval) in the display window. An ellipse with an
   equal width and height is a circle.  The origin may be changed with
   the ellipse-mode function"
@@ -970,7 +1381,13 @@
     (get ellipse-map mode)
     mode))
 
-(defn ellipse-mode
+(defn
+  ^{:requires-bindings true
+    :processing-name "ellipseMode()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  ellipse-mode
   "Modifies the origin of the ellispse according to the specified mode:
 
   :center  - specifies the location of the ellipse as
@@ -986,7 +1403,13 @@
   (let [mode (resolve-ellipse-mode mode)]
     (.ellipseMode *applet* (int mode))))
 
-(defn emissive-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "emissive()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  emissive-float
   "Sets the emissive color of the material used for drawing shapes
  drawn to the screen. Used in combination with ambient, specular, and
  shininess in setting the material properties of shapes. Converts all
@@ -994,14 +1417,26 @@
   ([float-val] (.emissive *applet* (float float-val)))
   ([r g b] (.emissive *applet* (float r) (float g) (float b))))
 
-(defn emissive-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "emissive()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  emissive-int
   "Sets the emissive color of the material used for drawing shapes
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes. Converts all
   args to ints"
   [int-val] (.emissive *applet* (int int-val)))
 
-(defn emissive
+(defn
+  ^{:requires-bindings true
+    :processing-name "emissive()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  emissive
   "Sets the emissive color of the material used for drawing shapes
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes.
@@ -1011,13 +1446,25 @@
   ([c] (if (int-like? c) (emissive-int c) (emissive-float c)))
   ([r g b] (emissive-float r g b)))
 
-(defn end-raw
+(defn
+  ^{:requires-bindings true
+    :processing-name "endRaw()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  end-raw
   "Complement to begin-raw; they must always be used together. See
   the begin-raw docstring for details."
   []
   (.endRaw *applet*))
 
-(defn end-shape
+(defn
+  ^{:requires-bindings true
+    :processing-name "endShape()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  end-shape
   "May only be called after begin-shape. When end-shape is called,
   all of image data defined since the previous call to begin-shape is
   written into the image buffer. The keyword :close may be passed to
@@ -1028,7 +1475,13 @@
        (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
      (.endShape *applet* CLOSE)))
 
-(defn exit
+(defn
+  ^{:requires-bindings true
+    :processing-name "exit()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+    exit
   "Quits/stops/exits the program.  Rather than terminating
   immediately, exit will cause the sketch to exit after draw has
   completed (or after setup completes if called during the setup
@@ -1036,13 +1489,25 @@
   []
   (.exit *applet*))
 
-(defn exp
+(defn
+  ^{:requires-bindings false
+    :processing-name "exp()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  exp
   "Returns Euler's number e (2.71828...) raised to the power of the
   value parameter."
   [val]
   (PApplet/exp (float val)))
 
-(defn fill-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "fill()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
   will specify that all subsequent shapes will be filled with orange."
   ([gray] (.fill *applet* (float gray)))
@@ -1050,12 +1515,24 @@
   ([r g b] (.fill *applet* (float r) (float g) (float b)))
   ([r g b alpha] (.fill *applet* (float r) (float g) (float b) (float alpha))))
 
-(defn fill-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "fill()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  fill-int
   "Sets the color used to fill shapes."
   ([rgb] (.fill *applet* (int rgb)))
   ([rgb alpha] (.fill *applet* (int rgb) (float alpha))))
 
-(defn fill
+(defn
+  ^{:requires-bindings true
+    :processing-name "fill()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  fill
   "Sets the color used to fill shapes."
   ([rgb] (if (int-like? rgb) (fill-int rgb) (fill-float rgb)))
   ([rgb alpha] (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha)))
@@ -1078,7 +1555,13 @@
     (get filter-map mode)
     mode))
 
-(defn display-filter
+(defn
+  ^{:requires-bindings true
+    :processing-name "filter()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  display-filter
   "Originally named filter in Processing Language.
   Filters the display window with the specified mode and level. Level
   defines the quality of the filter and mode may be one of the
@@ -1111,31 +1594,64 @@
      (let [mode (resolve-filter-mode mode)]
        (.filter *applet* (int mode) (float level)))))
 
-(defn focused
+(defn
+  ^{:requires-bindings true
+    :processing-name "focused"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  focused
   "Returns a boolean value representing whether the applet has focus."
   []
   (. *applet* :focused))
 
-(defn frame-count
+(defn
+  ^{:requires-bindings true
+    :processing-name "frameCount"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  frame-count
   "The system variable frameCount contains the number of frames
   displayed since the program started. Inside setup() the value is 0
   and and after the first iteration of draw it is 1, etc."
   []
   (.frameCount *applet*))
 
-(defn frame-rate
-  "With no args, returns the current framerate. With one arg specifies
-  a new target framerate (number of frames to be displayed every
+(defn
+  ^{:requires-bindings true
+    :processing-name "frameRate"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  current-frame-rate
+  "Returns the current framerate"
+  []
+  (.frameRate *applet*)  )
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "frameRate()"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  frame-rate
+  "Specifies a new target framerate (number of frames to be displayed every
   second). If the processor is not fast enough to maintain the
   specified rate, it will not be achieved. For example, the function
   call (frame-rate 30) will attempt to refresh 30 times a second. It
   is recommended to set the frame rate within setup. The default rate
   is 60 frames per second."
-  ([] (.frameRate *applet*))
-  ([new-rate]
-     (.frameRate *applet* (float new-rate))))
+  [new-rate]
+  (.frameRate *applet* (float new-rate)))
 
-(defn frustum
+(defn
+  ^{:requires-bindings true
+    :processing-name "frustum()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  frustum
   "Sets a perspective matrix defined through the parameters. Works
   like glFrustum, except it wipes out the current perspective matrix
   rather than muliplying itself with it."
@@ -1143,7 +1659,13 @@
   (.frustum *applet* (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
-(defn get-pixel
+(defn
+  ^{:requires-bindings true
+    :processing-name "get()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  get-pixel
   "Reads the color of any pixel or grabs a section of an image. If no
   parameters are specified, the entire image is returned. Get the
   value of one pixel by specifying an x,y coordinate. Get a section of
@@ -1162,7 +1684,13 @@
 
 (declare load-pixels)
 
-(defn pixels
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixels[]"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  pixels
   "Array containing the values for all the pixels in the display
   window. This array is therefore the size of the display window. If
   this array is modified, the update-pixels fn must be called to update
@@ -1171,14 +1699,25 @@
   (load-pixels)
   (. *applet* :pixels))
 
-(defn green
+(defn
+  ^{:requires-bindings true
+    :processing-name "green()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  green
   "Extracts the green value from a color, scaled to match current
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
   (.green *applet* (int col)))
 
-(defn hex
+(defn
+  ^{:require-binding false
+    :processing-name "hex()"
+    :category "Data"
+    :subcategory "Conversion"}
+  hex
   "Converts a byte, char, int, or color to a String containing the
   equivalent hexadecimal notation. For example color(0, 102, 153) will
   convert to the String \"FF006699\". This function can help make your
@@ -1186,14 +1725,26 @@
   ([val] (PApplet/hex val))
   ([val num-digits] (PApplet/hex (int val) (int num-digits))))
 
-(defn unhex
+(defn
+  ^{:require-binding false
+    :processing-name "hex()"
+    :category "Data"
+    :subcategory "Conversion"}
+  unhex
   "Converts a String representation of a hexadecimal number to its
   equivalent integer value."
-  [hex-str] (PApplet/unhex (str hex-str)))
+  [hex-str]
+  (PApplet/unhex (str hex-str)))
 
-(defn height
+(defn
+  ^{:requires-bindings true
+    :processing-name "height"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  height
   "Height of the display window. The value of height is zero until
-  size() is called."
+  size is called."
   []
   (.getHeight *applet*))
 
@@ -1213,7 +1764,13 @@
                 :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
                 :enable-depth-mask PConstants/ENABLE_DEPTH_MASK})
 
-(defn hint
+(defn
+  ^{:requires-bindings true
+    :processing-name "hint()"
+    :category "Rendering"
+    :subcategory nil
+    :added "1.0"}
+  hint
   "Set various hints and hacks for the renderer. This is used to
   handle obscure rendering features that cannot be implemented in a
   consistent manner across renderers. Many options will often graduate
@@ -1284,17 +1841,35 @@
                     hint-type)]
     (.hint *applet* (int hint-type))))
 
-(defn hour
+(defn
+  ^{:requires-bindings false
+    :processing-name "hour()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  hour
   "Returns the current hour as a value from 0 - 23."
   []
   (PApplet/hour))
 
-(defn hue
+(defn
+  ^{:requires-bindings true
+    :processing-name "hue()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  hue
   "Extracts the hue value from a color."
   [col]
   (.hue *applet* (int col)))
 
-(defn image
+(defn
+  ^{:requires-bindings true
+    :processing-name "image()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  image
   "Displays images to the screen. Processing currently works with GIF,
   JPEG, and Targa images. The color of an image may be modified with
   the tint function and if a GIF has transparency, it will maintain
@@ -1327,7 +1902,13 @@
     (get image-modes mode)
     mode))
 
-(defn image-mode
+(defn
+  ^{:requires-bindings true
+    :processing-name "imageMode()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  image-mode
   "Modifies the location from which images draw. The default mode is :corner.
    Available modes are:
 
@@ -1344,7 +1925,13 @@
   (let [mode (resolve-image-mode mode)]
     (.imageMode *applet* (int mode))))
 
-(defn light-falloff
+(defn
+  ^{:requires-bindings true
+    :processing-name "lightFalloff()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  light-falloff
   "Sets the falloff rates for point lights, spot lights, and ambient
   lights. The parameters are used to determine the falloff with the
   following equation:
@@ -1363,7 +1950,13 @@
   [constant linear quadratic]
   (.lightFalloff *applet* (float constant) (float linear) (float quadratic)))
 
-(defn lerp-color
+(defn
+  ^{:requires-bindings true
+    :processing-name "lerpColor()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  lerp-color
   "Calculates a color or colors between two color at a specific
   increment. The amt parameter is the amount to interpolate between
   the two values where 0.0 equal to the first point, 0.1 is very near
@@ -1371,7 +1964,13 @@
   [c1 c2 amt]
   (.lerpColor *applet* (int c1) (int c2) (float amt)))
 
-(defn lerp
+(defn
+  ^{:requires-bindings false
+    :processing-name "lerp()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  lerp
   "Calculates a number between two numbers at a specific
   increment. The amt parameter is the amount to interpolate between
   the two values where 0.0 equal to the first point, 0.1 is very near
@@ -1381,12 +1980,72 @@
   [start stop amt]
   (PApplet/lerp (float start) (float stop) (float amt)))
 
-(defn key-code
-  "Returns current key's unique code."
+(defn
+  ^{:requires-bindings true
+    :processing-name "key"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  raw-key
+  "Contains the value of the most recent key on the keyboard that was
+  used (either pressed or released).
+
+  For non-ASCII keys, use the keyCode variable. The keys included in
+  the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
+  DELETE) do not require checking to see if they key is coded, and you
+  should simply use the key variable instead of keyCode If you're
+  making cross-platform projects, note that the ENTER key is commonly
+  used on PCs and Unix and the RETURN key is used instead on
+  Macintosh. Check for both ENTER and RETURN to make sure your program
+  will work for all platforms."
+  []
+  (. *applet* :key))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "keyCode"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  key-code
+  "The variable keyCode is used to detect special keys such as the UP,
+  DOWN, LEFT, RIGHT arrow keys and ALT, CONTROL, SHIFT. When checking
+  for these keys, it's first necessary to check and see if the key is
+  coded. This is done with the conditional (= (key) CODED).
+
+  The keys included in the ASCII specification (BACKSPACE, TAB, ENTER,
+  RETURN, ESC, and DELETE) do not require checking to see if they key
+  is coded, and you should simply use the key variable instead of
+  key-code If you're making cross-platform projects, note that the
+  ENTER key is commonly used on PCs and Unix and the RETURN key is
+  used instead on Macintosh. Check for both ENTER and RETURN to make
+  sure your program will work for all platforms.
+
+  For users familiar with Java, the values for UP and DOWN are simply
+  shorter versions of Java's KeyEvent.VK_UP and
+  KeyEvent.VK_DOWN. Other keyCode values can be found in the Java
+  KeyEvent reference."
   []
   (. *applet* :keyCode))
 
-(defn lights
+(defn
+  ^{:requires-bindings true
+    :processing-name "keyPressed"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+    key-pressed
+  "true if any key is currently pressed, false otherwise."
+  []
+  (. *applet* :keyPressed))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "lights()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  lights
   "Sets the default ambient light, directional light, falloff, and
   specular values. The defaults are:
 
@@ -1402,7 +2061,13 @@
   []
   (.lights *applet*))
 
-(defn light-specular
+(defn
+  ^{:requires-bindings true
+    :processing-name "lightSpecular()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  light-specular
   "Sets the specular color for lights. Like fill, it affects only the
   elements which are created after it in the code. Specular refers to
   light which bounces off a surface in a perferred direction (rather
@@ -1413,7 +2078,13 @@
   [r g b]
   (.lightSpecular *applet* (float r) (float g) (float b)))
 
-(defn line
+(defn
+  ^{:requires-bindings true
+    :processing-name "line()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  line
   "Draws a line (a direct path between two points) to the screen. The
   version of line with four parameters draws the line in 2D. To color
   a line, use the stroke function. A line cannot be filled, therefore
@@ -1427,14 +2098,26 @@
      (.line *applet* (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
 
-(defn load-bytes
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadBytes()"
+    :category "Input"
+    :subcategory "Files"
+    :added "1.0"}
+  load-bytes
   "Reads the contents of a file or url and places it in a byte
   array. The filename parameter can also be a URL to a file found
   online."
   [filename]
-  (PApplet/loadBytes (str filename)))
+  (.loadBytes *applet* (str filename)))
 
-(defn load-font
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadFont()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  load-font
   "Loads a font into a variable of type PFont. To load correctly,
   fonts must be located in the data directory of the current sketch.
   To create a font to use with Processing use the create-font fn.
@@ -1457,7 +2140,13 @@
   [filename]
   (.loadFont *applet*  (str filename)))
 
-(defn load-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadImage()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  load-image
   "Loads an image into a variable of type PImage. Four types of
   images ( .gif, .jpg, .tga, .png) images may be loaded. To load
   correctly, images must be located in the data directory of the
@@ -1487,7 +2176,13 @@
   [filename]
   (.loadImage *applet* (str filename)))
 
-(defn load-pixels
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadPixels()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  load-pixels
   "Loads the pixel data for the display window into the pixels[]
   array. This function must always be called before reading from or
   writing to pixels.
@@ -1501,29 +2196,59 @@
   []
   (.loadPixels  *applet*))
 
-(defn load-shape
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadShape()"
+    :category "Shape"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  load-shape
   "Load a geometry from a file as a PShape."
   [filename]
   (.loadShape *applet* filename))
 
-(defn load-strings
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadStrings()"
+    :category "Input"
+    :subcategory "Files"
+    :added "1.0"}
+  load-strings
   "Load data from a file and shove it into a String array."
   [filename]
   (.loadStrings *applet* filename))
 
-(defn log
+(defn
+  ^{:requires-bindings false
+    :processing-name "log()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  log
   "Calculates the natural logarithm (the base-e logarithm) of a
   number. This function expects the values greater than 0.0."
   [val]
   (PApplet/log (float val)))
 
-(defn start-loop
+(defn
+  ^{:requires-bindings true
+    :processing-name "loop()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+    start-loop
   "Causes Processing to continuously execute the code within
   draw. If no-loop is called, the code in draw stops executing."
   []
   (.loop *applet*))
 
-(defn mag
+(defn
+  ^{:requires-bindings false
+    :processing-name "mag()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  mag
   "Calculates the magnitude (or length) of a vector. A vector is a
   direction in space commonly used in computer graphics and linear
   algebra. Because it has no start position, the magnitude of a vector
@@ -1532,7 +2257,13 @@
   ([a b] (PApplet/mag (float a) (float b)))
   ([a b c] (PApplet/mag (float a) (float b) (float c))))
 
-(defn map-range
+(defn
+  ^{:requires-bindings false
+    :processing-name "map()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  map-range
   "Re-maps a number from one range to another. In the example above,
   the number '25' is converted from a value in the range 0..100 into a
   value that ranges from the left edge (0) to the right edge (width)
@@ -1543,7 +2274,13 @@
   [val low1 high1 low2 high2]
   (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2)))
 
-(defn mask-image
+(defn
+  ^{:requires-bindings false
+    :processing-name :none
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  mask-image
   "Masks part of an image from displaying by loading another image and
   using it as an alpha channel.  This mask image should only contain
   grayscale data, but only the blue color channel is used. The mask
@@ -1555,19 +2292,37 @@
   [^PImage img]
   (.mask *applet* img))
 
-(defn millis
+(defn
+  ^{:requires-bindings true
+    :processing-name "millis()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  millis
   "Returns the number of milliseconds (thousandths of a second) since
   starting an applet. This information is often used for timing
   animation sequences."
   []
   (.millis *applet*))
 
-(defn minute
+(defn
+  ^{:requires-bindings false
+    :processing-name "minute()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  minute
   "Returns the current minute as a value from 0 - 59"
   []
   (PApplet/minute))
 
-(defn model-x
+(defn
+  ^{:requires-bindings true
+    :processing-name "modelX()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  model-x
   "Returns the three-dimensional x, y, z position in model space. This
   returns the x value for a given coordinate based on the current set
   of transformations (scale, rotate, translate, etc.) The x value can
@@ -1576,7 +2331,13 @@
   [x y z]
   (.modelX *applet* (float x) (float y) (float z)))
 
-(defn model-y
+(defn
+  ^{:requires-bindings true
+    :processing-name "modelY()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  model-y
   "Returns the three-dimensional x, y, z position in model space. This
   returns the y value for a given coordinate based on the current set
   of transformations (scale, rotate, translate, etc.) The y value can
@@ -1585,7 +2346,13 @@
   [x y z]
   (.modelY *applet* (float x) (float y) (float z)))
 
-(defn model-z
+(defn
+  ^{:requires-bindings true
+    :processing-name "modelZ()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  model-z
   "Returns the three-dimensional x, y, z position in model space. This
   returns the z value for a given coordinate based on the current set
   of transformations (scale, rotate, translate, etc.) The z value can
@@ -1594,33 +2361,120 @@
   [x y z]
   (.modelZ *applet* (float x) (float y) (float z)))
 
-(defn month
+(defn
+  ^{:requires-bindings false
+    :processing-name "month()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  month
   "Returns the current month as a value from 1 - 12."
   []
   (PApplet/month))
 
-(defn mouse-x
+(defn
+  ^{:requires-bindings true
+    :processing-name "mouseButton"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  mouse-button
+  "The value of the system variable mouseButton is either :left, :right,
+  or :center depending on which button is pressed."
+  []
+  (let [button-code   (. *applet* :mouseButton)]
+    (case button-code
+      LEFT :left
+      RIGHT :right
+      CENTER :center)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "mousePressed"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  mouse-pressed
+  "Variable storing if a mouse button is pressed. The value of the
+  system variable mousePressed is true if a mouse button is pressed
+  and false if a button is not pressed."
+  []
+  (. *applet* :mousePressed))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "mouseX"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  mouse-x
   "Current horizontal coordinate of the mouse."
   []
   (. *applet* :mouseX))
 
-(defn mouse-y
+(defn
+  ^{:requires-bindings true
+    :processing-name "mouseY"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  mouse-y
   "Current vertical coordinate of the mouse."
   []
   (. *applet* :mouseY))
 
-(defn no-cursor
+(defn
+  ^{:requires-bindings true
+    :processing-name "pmouseX"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  pmouse-x
+  "Horizontal coordinate of the mouse in the previous frame"
+  []
+  (. *applet* :pmouseX))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "pmouseY"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  pmouse-y
+  "Vertical coordinate of the mouse in the previous frame"
+  []
+  (. *applet* :pmouseY))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "noCursor()"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  no-cursor
   "Hides the cursor from view. Will not work when running the in full
   screen (Present) mode."
   []
   (.noCursor *applet*))
 
-(defn no-fill
+(defn
+  ^{:requires-bindings true
+    :processing-name "noFill()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
  (.noFill *applet*))
 
-(defn noise
+(defn
+  ^{:requires-bindings true
+    :processing-name "noise()"
+    :category "Math"
+    :subcategory "Random"
+    :added "1.0"}
+  noise
   "Returns the Perlin noise value at specified coordinates. Perlin
   noise is a random sequence generator producing a more natural
   ordered, harmonic succession of numbers compared to the standard
@@ -1654,7 +2508,13 @@
   ([x y] (.noise *applet* (float x) (float y)))
   ([x y z] (.noise *applet* (float x) (float y) (float z))))
 
-(defn noise-detail
+(defn
+  ^{:requires-bindings true
+    :processing-name "noiseDetail()"
+    :category "Math"
+    :subcategory "Random"
+    :added "1.0"}
+  noise-detail
   "Adjusts the character and level of detail produced by the Perlin
   noise function. Similar to harmonics in physics, noise is computed
   over several octaves. Lower octaves contribute more to the output
@@ -1675,7 +2535,13 @@
   ([octaves] (.noiseDetail *applet* (int octaves)))
   ([octaves falloff] (.noiseDetail *applet* (int octaves) (float falloff))))
 
-(defn noise-seed
+(defn
+  ^{:requires-bindings true
+    :processing-name "noiseSeed()"
+    :category "Math"
+    :subcategory "Random"
+    :added "1.0"}
+  noise-seed
   "Sets the seed value for noise. By default, noise produces different
   results each time the program is run. Set the value parameter to a
   constant to return the same pseudo-random numbers each time the
@@ -1683,7 +2549,13 @@
   [val]
   (.noiseSeed *applet* (int val)))
 
-(defn no-lights
+(defn
+  ^{:requires-bindings true
+    :processing-name "noLights()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  no-lights
   "Disable all lighting. Lighting is turned off by default and enabled
   with the lights fn. This function can be used to disable lighting so
   that 2D geometry (which does not require lighting) can be drawn
@@ -1691,7 +2563,13 @@
   []
   (.noLights *applet*))
 
-(defn no-loop
+(defn
+  ^{:requires-bindings true
+    :processing-name "noLoop()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  no-loop
   "Stops Processing from continuously executing the code within
   draw. If start-loop is called, the code in draw will begin to run
   continuously again. If using no-loop in setup, it should be the last
@@ -1712,12 +2590,24 @@
   []
   (.noLoop *applet*))
 
-(defn norm
+(defn
+  ^{:requires-bindings true
+    :processing-name "norm()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  norm
   "Normalize a value to exist between 0 and 1 (inclusive)."
   [val start stop]
   (PApplet/norm (float val) (float start) (float stop)))
 
-(defn normal
+(defn
+  ^{:requires-bindings true
+    :processing-name "normal()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  normal
   "Sets the current normal vector. This is for drawing three
   dimensional shapes and surfaces and specifies a vector perpendicular
   to the surface of the shape which determines how lighting affects
@@ -1727,23 +2617,47 @@
   [nx ny nz]
   (.normal *applet* (float nx) (float ny) (float nz)))
 
-(defn no-smooth
+(defn
+  ^{:requires-bindings true
+    :processing-name "noSmooth()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  no-smooth
   "Draws all geometry with jagged (aliased) edges."
   [] (.noSmooth *applet*))
 
-(defn no-stroke
+(defn
+  ^{:requires-bindings true
+    :processing-name "noStroke()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  no-stroke
   "Disables drawing the stroke (outline). If both no-stroke and
   no-fill are called, nothing will be drawn to the screen."
   []
   (.noStroke *applet*))
 
-(defn no-tint
+(defn
+  ^{:requires-bindings true
+    :processing-name "noTint()"
+    :category "Color"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  no-tint
   "Removes the current fill value for displaying images and reverts to
   displaying images with their original hues."
   []
   (.noTint *applet*))
 
-(defn ortho
+(defn
+  ^{:requires-bindings true
+    :processing-name "ortho()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  ortho
   "Sets an orthographic projection and defines a parallel clipping
   volume. All objects with the same dimension appear the same size,
   regardless of whether they are near or far from the camera. The
@@ -1756,7 +2670,13 @@
   ([left right bottom top near far]
      (.ortho *applet* (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
-(defn perspective
+(defn
+  ^{:requires-bindings true
+    :processing-name "perspective()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  perspective
   "Sets a perspective projection applying foreshortening, making
   distant objects appear smaller than closer ones. The parameters
   define a viewing volume with the shape of truncated pyramid. Objects
@@ -1773,7 +2693,13 @@
      (.perspective *applet* (float fovy) (float aspect)
                    (float z-near) (float z-far))))
 
-(defn point
+(defn
+  ^{:requires-bindings true
+    :processing-name "point()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  point
   "Draws a point, a coordinate in space at the dimension of one
   pixel. The first parameter is the horizontal value for the point,
   the second value is the vertical value for the point, and the
@@ -1783,7 +2709,13 @@
   ([x y] (.point *applet* (float x)(float y)))
   ([x y z] (.point *applet* (float x) (float y) (float z))))
 
-(defn point-light
+(defn
+  ^{:requires-bindings true
+    :processing-name "pointLight()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  point-light
   "Adds a point light. Lights need to be included in the draw() to
   remain persistent in a looping program. Placing them in the setup()
   of a looping program will cause them to only have an effect the
@@ -1793,7 +2725,13 @@
   [r g b x y z]
   (.pointLight *applet* (float r) (float g) (float b) (float x) (float y) (float z)))
 
-(defn pop-matrix
+(defn
+  ^{:requires-bindings true
+    :processing-name "popMatrix()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  pop-matrix
   "Pops the current transformation matrix off the matrix
   stack. Understanding pushing and popping requires understanding the
   concept of a matrix stack. The push-matrix fn saves the current
@@ -1804,7 +2742,29 @@
   []
   (.popMatrix *applet*))
 
-(defn pow
+(defn
+  ^{:requires-bindings true
+    :processing-name "popStyle()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  pop-style
+  "Restores the prior settings on the 'style stack'. Used in
+  conjunction with push-style. Together they allow you to change the
+  style settings and later return to what you had. When a new style is
+  started with push-style, it builds on the current style information.
+  The push-style and pop-style functions can be nested to provide more
+  control"
+  []
+  (.popStyle *applet*))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name "pow()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  pow
   "Facilitates exponential expressions. The pow() function is an
   efficient way of multiplying numbers by themselves (or their
   reciprocal) in large quantities. For example, (pow 3 5) is
@@ -1813,23 +2773,47 @@
   [num exponent]
   (PApplet/pow (float num) (float exponent)))
 
-(defn print-camera
+(defn
+  ^{:requires-bindings true
+    :processing-name "printCamera()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  print-camera
   "Prints the current camera matrix to std out. Useful for debugging."
   []
   (.printCamera *applet*))
 
-(defn print-matrix
+(defn
+  ^{:requires-bindings true
+    :processing-name "printMatrix()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  print-matrix
   "Prints the current matrix to std out. Useful for debugging."
   []
   (.printMatrix *applet*))
 
-(defn print-projection
+(defn
+  ^{:requires-bindings true
+    :processing-name "printProjection()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  print-projection
   "Prints the current projection matrix to std out. Useful for
   debugging"
   []
   (.printProjection *applet*))
 
-(defn push-matrix
+(defn
+  ^{:requires-bindings true
+    :processing-name "pushMatrix()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  push-matrix
   "Pushes the current transformation matrix onto the matrix
   stack. Understanding push-matrix and pop-matrix requires
   understanding the concept of a matrix stack. The push-matrix
@@ -1841,7 +2825,37 @@
   []
   (.pushMatrix *applet*))
 
-(defn quad
+(defn
+  ^{:requires-bindings true
+    :processing-name "pushStyle()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  push-style
+  "Saves the current style settings onto a 'style stack'. Use with
+  pop-style which restores the prior settings. Note that these
+  functions are always used together. They allow you to change the
+  style settings and later return to what you had. When a new style is
+  started with push-style, it builds on the current style
+  information. The push-style and pop-style fns can be embedded to
+  provide more control (see the second example above for a
+  demonstration.)
+
+  The style information controlled by the following functions are
+  included in the style: fill, stroke, tint, stroke-weight,
+  stroke-cap, stroke-join, image-mode, rect-mode, ellipse-mode,
+  shape-mode, color-mode, text-align, text-font, text-mode, text-size,
+  text-leading, emissive, specular, shininess, and ambient"
+  []
+  (.pushStyle *applet*))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "quad()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  quad
   "A quad is a quadrilateral, a four sided polygon. It is similar to a
   rectangle, but the angles between its edges are not constrained to
   be ninety degrees. The first pair of parameters (x1,y1) sets the
@@ -1854,7 +2868,13 @@
          (float x3) (float y3)
          (float x4) (float y4)))
 
-(defn radians
+(defn
+  ^{:requires-bindings false
+    :processing-name "radians()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  radians
   "Converts a degree measurement to its corresponding value in
   radians. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and 2*PI radians in a
@@ -1864,7 +2884,13 @@
   [degrees]
   (PApplet/radians (float degrees)))
 
-(defn random
+(defn
+  ^{:requires-bindings true
+    :processing-name "random()"
+    :category "Math"
+    :subcategory "Random"
+    :added "1.0"}
+  random
   "Generates random numbers. Each time the random function is called,
   it returns an unexpected value within the specified range. If one
   parameter is passed to the function it will return a float between
@@ -1878,7 +2904,13 @@
   ([min max] (.random *applet* (float min) (float max))))
 
 
-(defn random-seed
+(defn
+  ^{:requires-bindings true
+    :processing-name "randomSeed()"
+    :category "Math"
+    :subcategory "Random"
+    :added "1.0"}
+  random-seed
   "Sets the seed value for random. By default, random produces
   different results each time the program is run. Set the value
   parameter to a constant to return the same pseudo-random numbers
@@ -1886,7 +2918,13 @@
   [w]
   (.randomSeed *applet* (float w)))
 
-(defn rect
+(defn
+  ^{:requires-bindings true
+    :processing-name "rect()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  rect
   "Draws a rectangle to the screen. A rectangle is a four-sided shape
    with every angle at ninety degrees. By default, the first two
    parameters set the location of the upper-left corner, the third
@@ -1907,7 +2945,13 @@
     (get rect-modes mode)
     mode))
 
-(defn rect-mode
+(defn
+  ^{:requires-bindings true
+    :processing-name "rectMode()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  rect-mode
   "Modifies the location from which rectangles draw. The default mode
   is :corner. Available modes are:
 
@@ -1932,12 +2976,24 @@
   (let [mode (resolve-rect-mode mode)]
     (.rectMode *applet* (int mode))))
 
-(defn red
+(defn
+  ^{:requires-bindings true
+    :processing-name "red()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
   (.red *applet* (int c)))
 
-(defn redraw
+(defn
+  ^{:requires-bindings true
+    :processing-name "redraw()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  redraw
   "Executes the code within the draw fn one time. This functions
   allows the program to update the display window only when necessary,
   for example when an event registered by mouse-pressed or
@@ -1953,7 +3009,13 @@
   []
   (.redraw *applet*))
 
-(defn request-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "requestImage()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  request-image
   "This function load images on a separate thread so that your sketch
   does not freeze while images load during setup. While the image is
   loading, its width and height will be 0. If an error occurs while
@@ -1970,12 +3032,25 @@
   ([filename] (.requestImage *applet* (str filename)))
   ([filename extension] (.requestImage *applet* (str filename) (str extension))))
 
-(defn reset-matrix
+(defn
+  ^{:requires-bindings true
+    :processing-name "resetMatrix()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  reset-matrix
   "Replaces the current matrix with the identity matrix. The
   equivalent function in OpenGL is glLoadIdentity()"
-  [] (.resetMatrix *applet*))
+  []
+  (.resetMatrix *applet*))
 
-(defn rotate
+(defn
+  ^{:requires-bindings true
+    :processing-name "rotate()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  rotate
   "Rotates a shape the amount specified by the angle parameter. Angles
   should be specified in radians (values from 0 to TWO-PI) or
   converted to radians with the radians function.
@@ -1995,7 +3070,13 @@
   ([angle vx vy vz] (.rotate *applet* (float angle)
                              (float vx) (float vy) (float vz))))
 
-(defn rotate-x
+(defn
+  ^{:requires-bindings true
+    :processing-name "rotateX()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  rotate-x
   "Rotates a shape around the x-axis the amount specified by the angle
   parameter. Angles should be specified in radians (values from 0 to
   (* PI 2)) or converted to radians with the radians function. Objects
@@ -2010,7 +3091,13 @@
   [angle]
   (.rotateX *applet* (float angle)))
 
-(defn rotate-y
+(defn
+  ^{:requires-bindings true
+    :processing-name "rotateY()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  rotate-y
   "Rotates a shape around the y-axis the amount specified by the angle
   parameter. Angles should be specified in radians (values from 0
   to (* PI 2)) or converted to radians with the radians function.
@@ -2025,7 +3112,13 @@
   [angle]
   (.rotateY *applet* (float angle)))
 
-(defn rotate-z
+(defn
+  ^{:requires-bindings true
+    :processing-name "rotateZ()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  rotate-z
   "Rotates a shape around the z-axis the amount specified by the angle
   parameter. Angles should be specified in radians (values from 0
   to (* PI 2)) or converted to radians with the radians function.
@@ -2040,18 +3133,36 @@
   [angle]
   (.rotateZ *applet* (float angle)))
 
-(defn round
+(defn
+  ^{:requires-bindings false
+    :processing-name "round()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  round
   "Calculates the integer closest to the value parameter. For example,
   round(9.2) returns the value 9."
   [val]
   (PApplet/round (float val)))
 
-(defn saturation
+(defn
+  ^{:requires-bindings true
+    :processing-name "saturation()"
+    :category "Color"
+    :subcategory "Creating & Reading"
+    :added "1.0"}
+  saturation
   "Extracts the saturation value from a color."
   [c]
   (.saturation *applet* (int c)))
 
-(defn save
+(defn
+  ^{:requires-bindings true
+    :processing-name "save()"
+    :category "Image"
+    :subcategory nil
+    :added "1.0"}
+  save
   "Saves an image from the display window. Images are saved in TIFF,
   TARGA, JPEG, and PNG format depending on the extension within the
   filename parameter. For example, image.tif will have a TIFF image
@@ -2063,7 +3174,13 @@
   [filename]
   (.save *applet* (str filename)))
 
-(defn save-frame
+(defn
+  ^{:requires-bindings true
+    :processing-name "saveFrame()"
+    :category "Image"
+    :subcategory nil
+    :added "1.0"}
+  save-frame
   "Saves an image identical to the current display window as a
   file. May be called multple times - each file saved will have a
   unique name. Name and image formate may be modified by passing a
@@ -2077,7 +3194,13 @@
   ([] (.saveFrame *applet*))
   ([name] (.saveFrame *applet* (str name))))
 
-(defn scale
+(defn
+  ^{:requires-bindings true
+    :processing-name "scale()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  scale
   "Increases or decreases the size of a shape by expanding and
   contracting vertices. Objects always scale from their relative
   origin to the coordinate system. Scale values are specified as
@@ -2093,21 +3216,74 @@
   ([s] (.scale *applet* (float s)))
   ([sx sy] (.scale *applet* (float sx) (float sy))))
 
-(defn screen-x
+(defn- current-screen
+  []
+  (let [default-toolkit (java.awt.Toolkit/getDefaultToolkit)]
+    (.getScreenSize default-toolkit)))
+
+(def ^{:private true} orig-screen-width
+  (let [screen (current-screen)]
+    (.width screen)))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name "screen.width"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  screen-width
+  "Returns the width of the main screen in pixels."
+  []
+  orig-screen-width)
+
+(def ^{:private true} orig-screen-height
+  (let [screen (current-screen)]
+    (.height screen)))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name "screen.height"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  screen-height
+  "Returns the height of the main screen in pixels."
+  []
+  orig-screen-height)
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "screenX()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  screen-x
   "Takes a three-dimensional x, y, z position and returns the x value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
   (.screenX *applet* (float x) (float y) (float z)))
 
-(defn screen-y
+(defn
+  ^{:requires-bindings true
+    :processing-name "screenY()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  screen-y
   "Takes a three-dimensional x, y, z position and returns the y value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
   (.screenY *applet* (float x) (float y) (float z)))
 
-(defn screen-z
+(defn
+  ^{:requires-bindings true
+    :processing-name "screenZ()"
+    :category "Lights, Camera"
+    :subcategory "Coordinates"
+    :added "1.0"}
+  screen-z
   "Given an x, y, z coordinate, returns its z value.
    This value can be used to determine if an x, y, z coordinate is in
    front or in back of another (x, y, z) coordinate. The units are
@@ -2117,12 +3293,24 @@
   [x y z]
   (.screenX *applet* (float x) (float y) (float z)))
 
-(defn seconds
+(defn
+  ^{:requires-bindings false
+    :processing-name "seconds()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  seconds
   "Returns the current second as a value from 0 - 59."
   []
   (PApplet/second))
 
-(defn set-pixel
+(defn
+  ^{:requires-bindings true
+    :processing-name "set()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  set-pixel
   "Changes the color of any pixel in the display window. The x and y
   parameters specify the pixel to change and the color parameter
   specifies the color value. The color parameter is affected by the
@@ -2141,21 +3329,149 @@
   [x y c]
   (.set *applet* (int x) (int y) (int c)))
 
-(defn set-image
+(defn
+  ^{:requires-bindings true
+    :processing-name "set()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  set-image
   "Writes an image directly into the display window. The x and y
   parameters define the coordinates for the upper-left corner of the
   image."
   [x y ^PImage src]
   (.set *applet* (int x) (int y) src))
 
-(defn shininess
+(defn
+  ^{:requires-bindings true
+    :processing-name "shape()"
+    :category "Shape"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  shape
+  "Displays shapes to the screen. The shapes must have been loaded
+  with load-shape. Processing currently works with SVG shapes
+  only. The sh parameter specifies the shape to display and the x and
+  y parameters define the location of the shape from its upper-left
+  corner. The shape is displayed at its original size unless the width
+  and height parameters specify a different size. The shape-mode
+  fn changes the way the parameters work. A call to
+  (shape-mode :corners), for example, will change the width and height
+  parameters to define the x and y values of the opposite corner of
+  the shape.
+
+  Note complex shapes may draw awkwardly with P2D, P3D, and
+  OPENGL. Those renderers do not yet support shapes that have holes or
+  complicated breaks."
+  ([^PShape sh] (.shape *applet* sh))
+  ([^PShape sh x y] (.shape *applet* sh (float x) (float y)))
+  ([^PShape sh x y width height] (.shape *applet* sh (float x) (float y) (float width) (float height))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "shearX()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  shear-x
+  "Shears a shape around the x-axis the amount specified by the angle
+  parameter. Angles should be specified in radians (values from 0 to
+  PI*2) or converted to radians with the radians() function. Objects
+  are always sheared around their relative position to the origin and
+  positive numbers shear objects in a clockwise direction.
+  Transformations apply to everything that happens after and
+  subsequent calls to the function accumulates the effect. Fora
+  example, calling (shear-x (/ PI 2)) and then (shear-x (/ PI 2)) is
+  the same as (shear-x PI). If shear-x is called within the draw fn,
+  the transformation is reset when the loop begins again. This
+  function works in P2D or JAVA2D mode as shown in the example above.
+
+  Technically, shear-x multiplies the current transformation matrix
+  by a rotation matrix. This function can be further controlled by the
+  push-matrix and pop-matrix fns."
+  [angle]
+  (.shearX *applet* (float angle)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "shearY()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  shear-y
+  "Shears a shape around the y-axis the amount specified by the angle
+  parameter. Angles should be specified in radians (values from 0 to
+  PI*2) or converted to radians with the radians() function. Objects
+  are always sheared around their relative position to the origin and
+  positive numbers shear objects in a clockwise direction.
+  Transformations apply to everything that happens after and
+  subsequent calls to the function accumulates the effect. Fora
+  example, calling (shear-y (/ PI 2)) and then (shear-y (/ PI 2)) is
+  the same as (shear-y PI). If shear-y is called within the draw fn,
+  the transformation is reset when the loop begins again. This
+  function works in P2D or JAVA2D mode as shown in the example above.
+
+  Technically, shear-y multiplies the current transformation matrix
+  by a rotation matrix. This function can be further controlled by the
+  push-matrix and pop-matrix fns."
+  [angle]
+  (.shearY *applet* (float angle)))
+
+(def ^{:private true}
+  p-shape-modes {:corner CORNER
+                 :corners CORNERS
+                 :center CENTER})
+
+(defn- resolve-p-shape-mode
+  [mode]
+  (if (keyword? mode)
+    (get p-shape-modes mode)
+    mode))
+
+(defn ^{:requires-bindings true
+        :processing-name "shapeMode()"
+        :category "Shape"
+        :subcategory "Loading & Displaying"
+        :added "1.0"}
+  shape-mode
+  "Modifies the location from which shapes draw. Available modes are
+  :corner, :corners and :center. Default is :corner.
+
+  :corner  - specifies the location to be the upper left corner of the
+             shape and uses the third and fourth parameters of shape
+             to specify the width and height.
+
+  :corners - uses the first and second parameters of shape to set
+             the location of one corner and uses the third and fourth
+             parameters to set the opposite corner.
+
+  :center  - draws the shape from its center point and uses the third
+             and forth parameters of shape to specify the width and
+             height. "
+  [mode]
+  (let [mode (resolve-p-shape-mode mode)]
+    (.shapeMode *applet* (int mode))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "shininess()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  shininess
   "Sets the amount of gloss in the surface of shapes. Used in
   combination with ambient, specular, and emissive in setting
   the material properties of shapes."
   [shine]
   (.shininess *applet* (float shine)))
 
-(defn sin
+(defn
+  ^{:requires-bindings false
+    :processing-name "sin()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  sin
   "Calculates the sine of an angle. This function expects the values
   of the angle parameter to be provided in radians (values from 0 to
   6.28). A float within the range -1 to 1 is returned."
@@ -2168,7 +3484,13 @@
   (println "Deprecated - size should be specified as a :size key to applet or defapplet")
   nil)
 
-(defn smooth
+(defn
+  ^{:requires-bindings true
+    :processing-name "smooth()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  smooth
   "Draws all geometry with smooth (anti-aliased) edges. This will slow
   down the frame rate of the application, but will enhance the visual
   refinement.
@@ -2177,7 +3499,13 @@
   []
   (.smooth *applet*))
 
-(defn specular
+(defn
+  ^{:requires-bindings true
+    :processing-name "specular()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  specular
   "Sets the specular color of the materials used for shapes drawn to
   the screen, which sets the color of hightlights. Specular refers to
   light which bounces off a surface in a perferred direction (rather
@@ -2189,11 +3517,23 @@
   ([x y z] (.specular *applet* (float x) (float y) (float z)))
   ([x y z a] (.specular *applet* (float x) (float y) (float z) (float a))))
 
-(defn sphere
+(defn
+  ^{:requires-bindings true
+    :processing-name "sphere()"
+    :category "Shape"
+    :subcategory "3D Primitives"
+    :added "1.0"}
+  sphere
   "Genarates a hollow ball made from tessellated triangles."
   [radius] (.sphere *applet* (float radius)))
 
-(defn sphere-detail
+(defn
+  ^{:requires-bindings true
+    :processing-name "sphereDetail()"
+    :category "Shape"
+    :subcategory "3D Primitives"
+    :added "1.0"}
+  sphere-detail
   "Controls the detail used to render a sphere by adjusting the number
   of vertices of the sphere mesh. The default resolution is 30, which
   creates a fairly detailed sphere definition with vertices every
@@ -2209,7 +3549,13 @@
   ([res] (.sphereDetail *applet* (int res)))
   ([ures vres] (.sphereDetail *applet* (int ures) (int vres))))
 
-(defn spotlight
+(defn
+  ^{:requires-bindings true
+    :processing-name "spotLight()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  spot-light
   "Adds a spot light. Lights need to be included in the draw to
   remain persistent in a looping program. Placing them in the setup
   of a looping program will cause them to only have an effect the
@@ -2223,14 +3569,26 @@
   ([[r g b] [x y z] [nx ny nz] angle concentration]
      (.spotLight *applet* r g b x y z nx ny nz angle concentration)))
 
-(defn sq
+(defn
+  ^{:requires-bindings false
+    :processing-name "sq()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  sq
   "Squares a number (multiplies a number by itself). The result is
   always a positive number, as multiplying two negative numbers always
   yields a positive result. For example, -1 * -1 = 1."
   [a]
   (PApplet/sq (float a)))
 
-(defn sqrt
+(defn
+  ^{:requires-bindings false
+    :processing-name "sqrt()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "1.0"}
+  sqrt
   "Calculates the square root of a number. The square root of a number
   is always positive, even though there may be a valid negative
   root. The square root s of number a is such that (= a (* s s)) . It
@@ -2250,7 +3608,13 @@
     (get stroke-cap-map mode)
     mode))
 
-(defn stroke-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "stroke()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  stroke-float
   "Sets the color used to draw lines and borders around
   shapes. Converts all args to floats"
   ([gray] (.stroke *applet* (float gray)))
@@ -2258,13 +3622,25 @@
   ([x y z] (.stroke *applet* (float x) (float y) (float z)))
   ([x y z a] (.stroke *applet* (float x) (float y) (float z) (float a))))
 
-(defn stroke-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "stroke()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
   ([rgb] (.stroke *applet* (int rgb)))
   ([rgb alpha] (.stroke *applet* (int rgb) (float alpha))))
 
-(defn stroke
+(defn
+  ^{:requires-bindings true
+    :processing-name "stroke()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "1.0"}
+  stroke
   "Sets the color used to draw lines and borders around shapes. This
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
@@ -2274,7 +3650,13 @@
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
 
-(defn stroke-cap
+(defn
+  ^{:requires-bindings true
+    :processing-name "strokeCap()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  stroke-cap
   "Sets the style for rendering line endings. These ends are either
   squared, extended, or rounded and specified with the corresponding
   parameters :square, :project, and :round. The default cap is :round."
@@ -2293,7 +3675,13 @@
     (get stroke-join-modes mode)
     mode))
 
-(defn stroke-join
+(defn
+  ^{:requires-bindings true
+    :processing-name "strokeJoin()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  stroke-join
   "Sets the style of the joints which connect line
   segments. These joints are either mitered, beveled, or rounded and
   specified with the corresponding parameters :miter, :bevel, and
@@ -2306,13 +3694,25 @@
   (let [join-mode (resolve-stroke-join-mode join-mode)]
     (.strokeJoin *applet* (int join-mode))))
 
-(defn stroke-weight
+(defn
+  ^{:requires-bindings true
+    :processing-name "strokeWeight()"
+    :category "Shape"
+    :subcategory "Attributes"
+    :added "1.0"}
+  stroke-weight
   "Sets the width of the stroke used for lines, points, and the border
   around shapes. All widths are set in units of pixels. "
   [weight]
   (.strokeWeight *applet* (float weight)))
 
-(defn tan
+(defn
+  ^{:requires-bindings false
+    :processing-name "tan()"
+    :category "Math"
+    :subcategory "Trigonometry"
+    :added "1.0"}
+  tan
   "Calculates the ratio of the sine and cosine of an angle. This
   function expects the values of the angle parameter to be provided in
   radians (values from 0 to PI*2). Values are returned in the range
@@ -2320,20 +3720,38 @@
   [angle]
   (PApplet/tan (float angle)))
 
-(defn text-char
+(defn
+  ^{:requires-bindings true
+    :processing-name "text()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
   ([c] (.text *applet* (char c)))
   ([c x y] (.text *applet* (char c) (float x) (float y)))
   ([c x y z] (.text *applet* (char c) (float x) (float y) (float z))))
 
-(defn text-num
+(defn
+  ^{:requires-bindings true
+    :processing-name "text()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  text-num
   "Draws a number to the screen in the specified position. See text fn
   for more details."
   ([num x y] (.text *applet* (float num) (float x) (float y)))
   ([num x y z] (.text *applet* (float num) (float x) (float y) (float z))))
 
-(defn text
+(defn
+  ^{:requires-bindings true
+    :processing-name "text()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  text
   "Draws text to the screen in the position specified by the x and y
   parameters and the optional z parameter. A default font will be used
   unless a font is set with the text-font fn. Change the color of the
@@ -2377,7 +3795,13 @@
     (get vertical-alignment-modes mode)
     mode))
 
-(defn text-align
+(defn
+  ^{:requires-bindings true
+    :processing-name "textAlign()"
+    :category "Typography"
+    :subcategory "Attributes"
+    :added "1.0"}
+  text-align
   "Sets the current alignment for drawing text. Available modes are:
 
   horizontal - :left, :center, and :right
@@ -2408,7 +3832,13 @@
            align-y (resolve-vertical-alignment-mode align-y)]
        (.textAlign *applet* (int align-x) (int align-y)))))
 
-(defn text-ascent
+(defn
+  ^{:requires-bindings true
+    :processing-name "textAscent()"
+    :category "Typography"
+    :subcategory "Metrics"
+    :added "1.0"}
+  text-ascent
   "Returns the ascent of the current font at its current size. This
   information is useful for determining the height of the font above
   the baseline. For example, adding the text-ascent and text-descent
@@ -2416,7 +3846,13 @@
   []
   (.textAscent *applet*))
 
-(defn text-descent
+(defn
+  ^{:requires-bindings true
+    :processing-name "textDescent()"
+    :category "Typography"
+    :subcategory "Metrics"
+    :added "1.0"}
+  text-descent
   "Returns descent of the current font at its current size. This
   information is useful for determining the height of the font below
   the baseline. For example, adding the text-ascent and text-descent
@@ -2424,7 +3860,13 @@
   []
   (.textDescent *applet*))
 
-(defn text-font
+(defn
+  ^{:requires-bindings true
+    :processing-name "textFont()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  text-font
   "Sets the current font that will be drawn with the text
   function. Fonts must be loaded with load-font before it can be
   used. This font will be used in all subsequent calls to the text
@@ -2444,7 +3886,13 @@
   ([^PFont font] (.textFont *applet* font))
   ([^PFont font size] (.textFont *applet* font (int size))))
 
-(defn text-leading
+(defn
+  ^{:requires-bindings true
+    :processing-name "textLeading()"
+    :category "Typography"
+    :subcategory "Attributes"
+    :added "1.0"}
+  text-leading
   "Sets the spacing between lines of text in units of pixels. This
   setting will be used in all subsequent calls to the text function."
   [leading]
@@ -2461,7 +3909,13 @@
     (get text-modes mode)
     mode))
 
-(defn text-mode
+(defn
+  ^{:requires-bindings true
+    :processing-name "textMode()"
+    :category "Typography"
+    :subcategory "Attributes"
+    :added "1.0"}
+  text-mode
   "Sets the way text draws to the screen - available modes
   are :model, :shape and :screen
 
@@ -2495,14 +3949,26 @@
   (let [mode (resolve-text-mode mode)]
     (.textMode *applet* (int mode))))
 
-(defn text-size
+(defn
+  ^{:requires-bindings true
+    :processing-name "textSize()"
+    :category "Typography"
+    :subcategory "Attributes"
+    :added "1.0"}
+  text-size
   "Sets the current font size. This size will be used in all
   subsequent calls to the text fn. Font size is measured in
   units of pixels."
   [size]
   (.textSize *applet* (float size)))
 
-(defn texture
+(defn
+  ^{:requires-bindings true
+    :processing-name "texture()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  texture
   "Sets a texture to be applied to vertex points. The texture fn must
   be called between begin-shape and end-shape and before any calls to
   vertex.
@@ -2523,7 +3989,13 @@
     (get texture-modes mode)
     mode))
 
-(defn texture-mode
+(defn
+    ^{:requires-bindings true
+    :processing-name "textureMode()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  texture-mode
   "Sets the coordinate space for texture mapping. There are two
   options, :image and :normalized.
 
@@ -2537,7 +4009,13 @@
   (let [mode (resolve-texture-mode mode)]
     (.textureMode *applet* (int mode))))
 
-(defn text-width
+(defn
+  ^{:requires-bindings true
+    :processing-name "textWidth()"
+    :category "Typography"
+    :subcategory "Attributes"
+    :added "1.0"}
+  text-width
   "Calculates and returns the width of any character or text string."
   [data]
   (let [data  (if (= (class data) (class \a))
@@ -2545,7 +4023,13 @@
                 (str data))]
     (.textWidth *applet* data)))
 
-(defn tint-float
+(defn
+  ^{:requires-bindings true
+    :processing-name "tint()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  tint-float
   "Sets the fill value for displaying images. Images can be tinted to
   specified colors or made transparent by setting the alpha.
 
@@ -2564,7 +4048,13 @@
   ([r g b] (.tint *applet* (float r)(float g) (float b)))
   ([r g b a] (.tint *applet* (float g) (float g) (float b) (float a))))
 
-(defn tint-int
+(defn
+  ^{:requires-bindings true
+    :processing-name "tint()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  tint-int
   "Sets the fill value for displaying images. Images can be tinted to
   specified colors or made transparent by setting the alpha.
 
@@ -2581,7 +4071,13 @@
   ([rgb] (.tint *applet* (int rgb)))
   ([rgb alpha] (.tint *applet* (int rgb) (float alpha))))
 
-(defn tint
+(defn
+  ^{:requires-bindings true
+    :processing-name "tint()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  tint
   "Sets the fill value for displaying images. Images can be tinted to
   specified colors or made transparent by setting the alpha.
 
@@ -2600,7 +4096,13 @@
   ([r g b] (tint-float r g b))
   ([r g b a] (tint-float r g b a)))
 
-(defn translate
+(defn
+  ^{:requires-bindings true
+    :processing-name "translate()"
+    :category "Transform"
+    :subcategory nil
+    :added "1.0"}
+  translate
   "Specifies an amount to displace objects within the display
   window. The x parameter specifies left/right translation, the y
   parameter specifies up/down translation, and the z parameter
@@ -2615,7 +4117,13 @@
   ([tx ty] (.translate *applet* (float tx) (float ty)))
   ([tx ty tz] (.translate *applet* (float tx) (float ty) (float tz))))
 
-(defn triangle
+(defn
+  ^{:requires-bindings true
+    :processing-name "triangle()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  triangle
   "A triangle is a plane created by connecting three points. The first
   two arguments specify the first point, the middle two arguments
   specify the second point, and the last two arguments specify the
@@ -2627,7 +4135,13 @@
              (float x3) (float y3)))
 
 
-(defn update-pixels
+(defn
+  ^{:requires-bindings true
+    :processing-name "updatePixels()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  update-pixels
   "Updates the display window with the data in the pixels array. Use
   in conjunction with load-pixels. If you're only reading pixels from
   the array, there's no need to call update-pixels unless there are
@@ -2642,7 +4156,13 @@
   []
   (.updatePixels *applet*))
 
-(defn vertex
+(defn
+  ^{:requires-bindings true
+    :processing-name "vertex()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  vertex
   "All shapes are constructed by connecting a series of
   vertices. vertex is used to specify the vertex coordinates for
   points, lines, triangles, quads, and polygons and is used
@@ -2664,14 +4184,24 @@
   ([x y z u v]
      (.vertex *applet* (float x) (float y) (float z) (float u) (float v))))
 
-(defn year
+(defn
+  ^{:requires-bindings false
+    :processing-name "year()"
+    :category "Input"
+    :subcategory "Time & Date"
+    :added "1.0"}
+  year
   "Returns the current year as an integer (2003, 2004, 2005, etc)."
   []
   (PApplet/year))
 
-;; utility functions. clj-processing specific
-
-(defn width
+(defn
+  ^{:requires-bindings true
+    :processing-name "width"
+    :category "Environment"
+    :subcategory nil
+    :added "1.0"}
+  width
   "Width of the display window. The value of width is zero until size is
   called."
   []

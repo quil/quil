@@ -80,18 +80,21 @@
   [& opts]
   (let [options           (merge {:size [500 300]} (apply hash-map opts))
         fns               (dissoc options :name :title :size :key-pressed
-                                  :key-released :mouse-pressed :mouse-released
-                                  :mouse-moved :mouse-dragged :focus-gained
-                                  :focus-lost :mouse-entered :mouse-exited :setup)
+                                  :key-released :key-typed :mouse-pressed
+                                  :mouse-released :mouse-moved :mouse-dragged
+                                  :focus-gained :focus-lost :mouse-entered
+                                  :mouse-exited :mouse-clicked :setup)
         fns               (merge {:draw (fn [] nil)} fns)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
+        key-typed-fn   (or (:key-typed options) (fn [] nil))
         mouse-pressed-fn  (or (:mouse-pressed options) (fn [] nil))
         mouse-released-fn (or (:mouse-released options) (fn [] nil))
         mouse-moved-fn    (or (:mouse-moved options) (fn [] nil))
         mouse-dragged-fn  (or (:mouse-dragged options) (fn [] nil))
         mouse-entered-fn  (or (:mouse-entered options) (fn [] nil))
         mouse-exited-fn   (or (:mouse-exited options) (fn [] nil))
+        mouse-clicked-fn  (or (:mouse-exited options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
@@ -110,12 +113,21 @@
                                     (key-pressed-fn)))
                               ([e]
                                  (proxy-super keyPressed e)))
+
                             (keyReleased
                               ([] (binding [*applet* this
                                             *state* state]
                                     (key-released-fn)))
                               ([e]
                                  (proxy-super keyReleased e)))
+
+                            (keyTyped
+                              ([] (binding [*applet* this
+                                            *state* state]
+                                    (key-typed-fn)))
+                              ([e]
+                                 (proxy-super keyTyped e)))
+
                             (mousePressed
                               ([] (binding [*applet* this
                                             *state* state]
@@ -143,6 +155,13 @@
                                     (mouse-dragged-fn)))
                               ([e]
                                  (proxy-super mouseDragged e)))
+
+                            (mouseClicked
+                              ([] (binding [*applet* this
+                                            *state* state]
+                                    (mouse-clicked-fn)))
+                              ([e]
+                                 (proxy-super mouseClicked e)))
 
                             (focusGained
                               ([] nil) ;;The no arg version of the focus

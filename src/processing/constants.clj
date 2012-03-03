@@ -171,6 +171,8 @@
 
 ;; keys
 
+(def CODED PConstants/CODED)
+
 (def BACKSPACE PApplet/BACKSPACE)
 (def TAB PApplet/TAB)
 (def ENTER PApplet/ENTER)
