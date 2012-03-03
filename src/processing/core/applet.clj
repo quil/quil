@@ -1,5 +1,7 @@
 (ns processing.core.applet
-  (:use [processing.core :except (size)])
+  (:use [processing.core :except (size)]
+        [processing.constants]
+        [processing.util :only [resolve-constant-key]])
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 
@@ -72,9 +74,18 @@
                  (.pack)
                  (.show))))))
 
+(def ^{:private true}
+  renderer-modes {:p2d    P2D
+                  :java2d JAVA2D
+                  :opengl OPENGL
+                  :pdf    PDF
+                  :dxf    DXF})
+
 (defn- applet-set-size
   ([width height] (.size *applet* (int width) (int height)))
-  ([width height ^String renderer] (.size *applet* (int width) (int height) renderer)))
+  ([width height renderer]
+     (let [renderer (resolve-constant-key renderer renderer-modes)]
+       (.size *applet* (int width) (int height) renderer))))
 
 (defn applet
   [& opts]
@@ -99,8 +110,8 @@
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
                             (apply applet-set-size (:size options))
-                            (when (:setup options)
-                              ((:setup options))))
+                            (when-let [f (:setup options)]
+                              (f)))
         methods           (into {} (map fix-mname fns))
         frame             (atom nil)
         state             (atom nil)

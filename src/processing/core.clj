@@ -10,19 +10,14 @@
 ;; remove this notice, or any other, from this software.
 
 (ns processing.core
-  (:import (processing.core PApplet PImage PGraphics PFont PConstants PShape))
-  (:load "constants"))
+  (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
+  (:use [processing.constants]
+        [processing.util :only [int-like? resolve-constant-key]]))
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
 (def ^{:dynamic true} ^PApplet *applet*)
 (def ^{:dynamic true} *state*)
-
-(defn- int-like?
-  [val]
-  (let [t (type val)]
-    (or (= java.lang.Long t)
-        (= java.lang.Integer t))))
 
 (defn
   ^{:requires-bindings true
@@ -399,11 +394,6 @@
                 :pdf PDF
                 :dxf DXF})
 
-(defn- resolve-render-mode
-  [mode]
-  (if (keyword? mode)
-    (get render-modes mode)
-    mode))
 
 (defn
   ^{:requires-bindings true
@@ -423,7 +413,7 @@
   before begin-record, then that font will not be set for the file
   that you're recording to."
   [renderer filename]
-  (let [renderer (resolve-render-mode renderer)]
+  (let [renderer (resolve-constant-key renderer render-modes)]
     (println "renderer: " renderer)
     (.beginRecord *applet* (str renderer) (str filename))))
 
@@ -440,19 +430,13 @@
   (.endRecord *applet*))
 
 (def ^{:private true}
-     shapes-map {:points POINTS
-                 :lines LINES
-                 :triangles TRIANGLES
-                 :triangle-strip TRIANGLE-STRIP
-                 :triangle-fan TRIANGLE-FAN
-                 :quads QUADS
-                 :quad-strip QUAD-STRIP})
-
-(defn- resolve-shape-mode
-  [mode]
-  (if (keyword? mode)
-    (get shapes-map mode)
-    mode))
+     shape-modes {:points POINTS
+                  :lines LINES
+                  :triangles TRIANGLES
+                  :triangle-strip TRIANGLE-STRIP
+                  :triangle-fan TRIANGLE-FAN
+                  :quads QUADS
+                  :quad-strip QUAD-STRIP})
 
 (defn
   ^{:requires-bindings true
@@ -483,7 +467,7 @@
   such as ellipse or rect within begin-shape."
   ([] (.beginShape *applet*))
   ([mode]
-     (let [mode (resolve-shape-mode  mode)]
+     (let [mode (resolve-constant-key mode shape-modes)]
        (.beginShape *applet* (int mode)))))
 
 (defn
@@ -606,26 +590,20 @@
   (PApplet/unbinary (str str-val)))
 
 (def ^{:private true}
-  blend-map {:blend BLEND
-             :add ADD
-             :subtract SUBTRACT
-             :darkest DARKEST
-             :lightest LIGHTEST
-             :difference DIFFERENCE
-             :exclusion EXCLUSION
-             :multiply MULTIPLY
-             :screen SCREEN
-             :overlay OVERLAY
-             :hard-light HARD-LIGHT
-             :soft-light SOFT-LIGHT
-             :dodge DODGE
-             :burn BURN})
-
-(defn- resolve-blend-mode
-  [mode]
-  (if (keyword? mode)
-    (get blend-map mode)
-    mode))
+  blend-modes {:blend BLEND
+               :add ADD
+               :subtract SUBTRACT
+               :darkest DARKEST
+               :lightest LIGHTEST
+               :difference DIFFERENCE
+               :exclusion EXCLUSION
+               :multiply MULTIPLY
+               :screen SCREEN
+               :overlay OVERLAY
+               :hard-light HARD-LIGHT
+               :soft-light SOFT-LIGHT
+               :dodge DODGE
+               :burn BURN})
 
 (defn
   ^{:requires-bindings true
@@ -665,11 +643,11 @@
                 lights. Called \"Color Burn\" in Illustrator and
                 Photoshop."
   ([x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-blend-mode mode)]
+     (let [mode (resolve-constant-key mode blend-modes)]
        (.blend *applet* (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
   ([^PImage src x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-blend-mode mode)]
+     (let [mode (resolve-constant-key mode blend-modes)]
        (.blend *applet* src (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
@@ -711,7 +689,7 @@
                 lights. Called \"Color Burn\" in Illustrator and
                 Photoshop."
   [c1 c2 mode]
-  (let [mode (resolve-blend-mode mode)]
+  (let [mode (resolve-constant-key mode blend-modes)]
     (PApplet/blendColor (int c1) (int c2) (int mode))))
 
 (defn
@@ -820,12 +798,6 @@
   color-modes {:rgb RGB
                :hsb HSB})
 
-(defn- resolve-color-mode
-  [mode]
-  (if (keyword? mode)
-    (get color-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "colorMode()"
@@ -843,16 +815,16 @@
   0 and 1. The limits for defining colors are altered by setting the
   parameters range1, range2, range3, and range 4."
   ([mode]
-     (let [mode (resolve-color-mode mode)]
+     (let [mode (resolve-constant-key mode color-modes)]
        (.colorMode *applet* (int mode))))
   ([mode max]
-     (let [mode (resolve-color-mode mode)]
+     (let [mode (resolve-constant-key mode color-modes)]
        (.colorMode *applet* (int mode) (float max))))
   ([mode max-x max-y max-z]
-     (let [mode (resolve-color-mode mode)]
+     (let [mode (resolve-constant-key mode color-modes)]
        (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
-     (let [mode (resolve-color-mode mode)]
+     (let [mode (resolve-constant-key mode color-modes)]
        (.colorMode *applet* (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 (defn
@@ -1131,12 +1103,6 @@
                 :text PConstants/TEXT
                 :wait PConstants/WAIT})
 
-(defn- resolve-cursor-mode
-  [mode]
-  (if (keyword? mode)
-    (get cursor-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "cursor()"
@@ -1158,7 +1124,7 @@
   See cursor-image for specifying a generic image as the cursor
   symbol."
   ([] (.cursor *applet*))
-  ([cursor-mode] (.cursor *applet* (int (resolve-cursor-mode cursor-mode)))))
+  ([cursor-mode] (.cursor *applet* (int (resolve-constant-key cursor-mode cursor-modes)))))
 
 (defn
   ^{:requires-bindings true
@@ -1370,16 +1336,12 @@
   (.ellipse *applet* (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
-     ellipse-map   {:center CENTER
-                    :radius RADIUS
-                    :corner CORNER
-                    :corners CORNERS})
+     ellipse-modes   {:center CENTER
+                      :radius RADIUS
+                      :corner CORNER
+                      :corners CORNERS})
 
-(defn- resolve-ellipse-mode
-  [mode]
-  (if (keyword? mode)
-    (get ellipse-map mode)
-    mode))
+
 
 (defn
   ^{:requires-bindings true
@@ -1400,7 +1362,7 @@
   :corners - uses the four parameters to ellipse to set two opposing
              corners of the ellipse's bounding box."
   [mode]
-  (let [mode (resolve-ellipse-mode mode)]
+  (let [mode (resolve-constant-key mode ellipse-modes)]
     (.ellipseMode *applet* (int mode))))
 
 (defn
@@ -1540,20 +1502,14 @@
   ([r g b a] (fill-float r g b a)))
 
 (def ^{:private true}
-  filter-map {:threshold THRESHOLD
-              :gray GRAY
-              :invert INVERT
-              :posterize POSTERIZE
-              :blur BLUR
-              :opaque OPAQUE
-              :erode ERODE
-              :dilate DILATE})
-
-(defn- resolve-filter-mode
-  [mode]
-  (if (keyword? mode)
-    (get filter-map mode)
-    mode))
+  filter-modes {:threshold THRESHOLD
+                :gray GRAY
+                :invert INVERT
+                :posterize POSTERIZE
+                :blur BLUR
+                :opaque OPAQUE
+                :erode ERODE
+                :dilate DILATE})
 
 (defn
   ^{:requires-bindings true
@@ -1588,10 +1544,10 @@
   :dilate    - increases the light areas with the amount defined by
                the level parameter."
   ([mode]
-     (let [mode (resolve-filter-mode mode)]
+     (let [mode (resolve-constant-key mode filter-modes)]
        (.filter *applet* (int mode))))
   ([mode level]
-     (let [mode (resolve-filter-mode mode)]
+     (let [mode (resolve-constant-key mode filter-modes)]
        (.filter *applet* (int mode) (float level)))))
 
 (defn
@@ -1896,12 +1852,6 @@
                :corners CORNERS
                :center CENTER})
 
-(defn- resolve-image-mode
-  [mode]
-  (if (keyword? mode)
-    (get image-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "imageMode()"
@@ -1922,7 +1872,7 @@
 
   :center  - draw images centered at the given x and y position."
   [mode]
-  (let [mode (resolve-image-mode mode)]
+  (let [mode (resolve-constant-key mode image-modes)]
     (.imageMode *applet* (int mode))))
 
 (defn
@@ -2939,12 +2889,6 @@
               :center CENTER
               :radius RADIUS})
 
-(defn- resolve-rect-mode
-  [mode]
-  (if (keyword? mode)
-    (get rect-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "rectMode()"
@@ -2973,7 +2917,7 @@
              image's width and height."
 
   [mode]
-  (let [mode (resolve-rect-mode mode)]
+  (let [mode (resolve-constant-key mode rect-modes)]
     (.rectMode *applet* (int mode))))
 
 (defn
@@ -3422,12 +3366,6 @@
                  :corners CORNERS
                  :center CENTER})
 
-(defn- resolve-p-shape-mode
-  [mode]
-  (if (keyword? mode)
-    (get p-shape-modes mode)
-    mode))
-
 (defn ^{:requires-bindings true
         :processing-name "shapeMode()"
         :category "Shape"
@@ -3449,7 +3387,7 @@
              and forth parameters of shape to specify the width and
              height. "
   [mode]
-  (let [mode (resolve-p-shape-mode mode)]
+  (let [mode (resolve-constant-key mode p-shape-modes)]
     (.shapeMode *applet* (int mode))))
 
 (defn
@@ -3596,18 +3534,6 @@
   [a]
   (PApplet/sqrt (float a)))
 
-(def ^{:private true}
-  stroke-cap-map {:square SQUARE
-                  :round ROUND
-                  :project PROJECT
-                  :model MODEL})
-
-(defn- resolve-stroke-cap-mode
-  [mode]
-  (if (keyword? mode)
-    (get stroke-cap-map mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "stroke()"
@@ -3650,6 +3576,13 @@
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
 
+(def ^{:private true}
+  stroke-cap-modes {:square SQUARE
+                    :round ROUND
+                    :project PROJECT
+                    :model MODEL})
+
+
 (defn
   ^{:requires-bindings true
     :processing-name "strokeCap()"
@@ -3661,19 +3594,13 @@
   squared, extended, or rounded and specified with the corresponding
   parameters :square, :project, and :round. The default cap is :round."
   [cap-mode]
-  (let [cap-mode (resolve-stroke-cap-mode cap-mode)]
+  (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
     (.strokeCap *applet* (int cap-mode))))
 
 (def ^{:private true}
   stroke-join-modes {:miter PConstants/MITER
                      :bevel PConstants/BEVEL
                      :round PConstants/ROUND})
-
-(defn- resolve-stroke-join-mode
-  [mode]
-  (if (keyword? mode)
-    (get stroke-join-modes mode)
-    mode))
 
 (defn
   ^{:requires-bindings true
@@ -3691,7 +3618,7 @@
   renderers (see bug report). More information about the renderers can
   be found in the size reference."
   [join-mode]
-  (let [join-mode (resolve-stroke-join-mode join-mode)]
+  (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
     (.strokeJoin *applet* (int join-mode))))
 
 (defn
@@ -3783,18 +3710,6 @@
                             :center CENTER
                             :baseline BASELINE})
 
-(defn- resolve-horizontal-alignment-mode
-  [mode]
-  (if (keyword? mode)
-    (get horizontal-alignment-modes mode)
-    mode))
-
-(defn- resolve-vertical-alignment-mode
-  [mode]
-  (if (keyword? mode)
-    (get vertical-alignment-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "textAlign()"
@@ -3825,11 +3740,11 @@
   text-ascent or text-descent so that the hack works even if you
   change the size of the font."
   ([align]
-     (let [align (resolve-horizontal-alignment-mode align)]
+     (let [align (resolve-constant-key align horizontal-alignment-modes)]
        (.textAlign *applet* (int align))))
   ([align-x align-y]
-     (let [align-x (resolve-horizontal-alignment-mode align-x)
-           align-y (resolve-vertical-alignment-mode align-y)]
+     (let [align-x (resolve-constant-key align-x horizontal-alignment-modes)
+           align-y (resolve-constant-key align-y vertical-alignment-modes)]
        (.textAlign *applet* (int align-x) (int align-y)))))
 
 (defn
@@ -3903,12 +3818,6 @@
               :shape PConstants/SHAPE
               :screen PConstants/SCREEN})
 
-(defn- resolve-text-mode
-  [mode]
-  (if (keyword? mode)
-    (get text-modes mode)
-    mode))
-
 (defn
   ^{:requires-bindings true
     :processing-name "textMode()"
@@ -3946,7 +3855,7 @@
   recording shape data, use :model until you're ready to capture the
   geometry with begin-raw."
   [mode]
-  (let [mode (resolve-text-mode mode)]
+  (let [mode (resolve-constant-key mode text-modes)]
     (.textMode *applet* (int mode))))
 
 (defn
@@ -3983,12 +3892,6 @@
   texture-modes {:image IMAGE
                 :normalized NORMALIZED})
 
-(defn- resolve-texture-mode
-  [mode]
-  (if (keyword? mode)
-    (get texture-modes mode)
-    mode))
-
 (defn
     ^{:requires-bindings true
     :processing-name "textureMode()"
@@ -4006,7 +3909,7 @@
   points (0,0) (0,100) (100,200) (0,200). The same mapping in
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
   [mode]
-  (let [mode (resolve-texture-mode mode)]
+  (let [mode (resolve-constant-key mode texture-modes)]
     (.textureMode *applet* (int mode))))
 
 (defn
@@ -4265,3 +4168,13 @@
          (when (pos? (count q)) (str "-" q)))
        (when (:interim *processing-version*)
          "-SNAPSHOT")))
+
+;; Useful trig constants
+(def PI  (float Math/PI))
+(def HALF-PI    (/ PI (float 2.0)))
+(def THIRD-PI   (/ PI (float 3.0)))
+(def QUARTER-PI (/ PI (float 4.0)))
+(def TWO-PI     (* PI (float 2.0)))
+
+(def DEG-TO-RAD (/ PI (float 180.0)))
+(def RAD-TO-DEG (/ (float 180.0) PI))

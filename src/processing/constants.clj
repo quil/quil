@@ -9,6 +9,9 @@
 ;; agreeing to be bound by the terms of this license.  You must not
 ;; remove this notice, or any other, from this software.
 
+(ns processing.constants
+  (:import [processing.core PApplet PConstants]))
+
 ;; renderers known to org.processing.core
 
 (def P2D PApplet/P2D)
@@ -33,14 +36,6 @@
 (def MAX-INT PApplet/MAX_FLOAT)
 (def MIN-INT PApplet/MIN_FLOAT)
 
-(def PI  (float Math/PI))
-(def HALF-PI    (/ PI (float 2.0)))
-(def THIRD-PI   (/ PI (float 3.0)))
-(def QUARTER-PI (/ PI (float 4.0)))
-(def TWO-PI     (* PI (float 2.0)))
-
-(def DEG-TO-RAD (/ PI (float 180.0)))
-(def RAD-TO-DEG (/ (float 180.0) PI))
 
 ;; for colors and/or images
 
