@@ -11,6 +11,7 @@
 
 (ns processing.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
+  (:require [clojure.set])
   (:use [processing.constants]
         [processing.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
 
