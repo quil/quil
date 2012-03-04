@@ -1,3 +1,5 @@
+*.aux
+*.log
 *.jar
 lib/*
 classes/
