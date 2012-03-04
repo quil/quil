@@ -4110,8 +4110,13 @@
   []
   (.getWidth *applet*))
 
-(defmacro with-translation
-  "Berforms body with translation, restores current transformation on
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Transform"
+    :subcategory "Utility Macros"}
+  with-translation
+  "Performs body with translation, restores current transformation on
   exit."
   [translation-vector & body]
   `(let [tr# ~translation-vector]
@@ -4120,7 +4125,12 @@
      ~@body
      (pop-matrix)))
 
-(defmacro with-rotation
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Transform"
+    :subcategory "Utility Macros"}
+  with-rotation
   "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
 
@@ -4248,6 +4258,8 @@
             (merge sum (:subcategories v)))
           (into {} (map (fn [[k v]] [(str k) v]) (sorted-category-map)))
           (sorted-category-map)))
+
+
 
 (defn doc-cats
   "Print out a list of all the categories and subcategories,
