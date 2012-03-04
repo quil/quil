@@ -58,7 +58,7 @@
                       JFrame/EXIT_ON_CLOSE
                       JFrame/DISPOSE_ON_CLOSE)]
        (reset! (:frame m)
-               (doto (JFrame. (or (:title m) (:name m)))
+               (doto (JFrame. (or (:title m) "Processing-core"))
                  (.addWindowListener  (reify WindowListener
                                         (windowActivated [this e])
                                         (windowClosing [this e]
@@ -88,9 +88,55 @@
        (.size *applet* (int width) (int height) renderer))))
 
 (defn applet
+  "Create and start a new visualisation applet.
+
+  :size           - a vector of width, height and optional renderer
+                    (one of :p2d, :java2d, :opengl, :pdf or :dxf). i.e.
+                    [500 300] or [400 600 :opengl].
+                    Defaults to [500 300].
+
+  :title          - a string which will be displayed at the top of
+                    the applet window.
+
+  :setup          - a fn to be called once when setting the applet up.
+
+  :draw           - a fn to be repeatedly called at most n times per
+                    second where n is the target frame-rate set for
+                    the visualisation.
+
+  :focus-gained   - Called when the applet gains focus.
+
+  :focus-lost     - Called when the applet loses focus.
+
+  :mouse-entered  - Called when the mouse enters the applet window.
+
+  :mouse-exited   - Called when the mouse leaves the applet window
+
+  :mouse-pressed  - Called every time a mouse button is pressed.
+
+  :mouse-released - Called every time a mouse button is released.
+
+  :mouse-clicked  - called once after a mouse button has been pressed
+                    and then released.
+
+  :mouse-moved    - Called every time the mouse moves and a button is
+                    not pressed.
+
+  :mouse-dragged  - Called every time the mouse moves and a button is
+                    pressed.
+
+  :key-pressed    - Called every time any key is pressed.
+
+  :key-released   - Called every time any key is released.
+
+  :key-typed      - Called once every time non-modifier keys are
+                    pressed."
+
+
+
   [& opts]
   (let [options           (merge {:size [500 300]} (apply hash-map opts))
-        fns               (dissoc options :name :title :size :key-pressed
+        fns               (dissoc options :title :size :key-pressed
                                   :key-released :key-typed :mouse-pressed
                                   :mouse-released :mouse-moved :mouse-dragged
                                   :focus-gained :focus-lost :mouse-entered
@@ -105,7 +151,7 @@
         mouse-dragged-fn  (or (:mouse-dragged options) (fn [] nil))
         mouse-entered-fn  (or (:mouse-entered options) (fn [] nil))
         mouse-exited-fn   (or (:mouse-exited options) (fn [] nil))
-        mouse-clicked-fn  (or (:mouse-exited options) (fn [] nil))
+        mouse-clicked-fn  (or (:mouse-clicked options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
@@ -225,7 +271,11 @@
     prx))
 
 (defmacro defapplet
-  "Define an applet. Takes an app-name and a map of options."
+  "Define and start an applet and bind it to a var with the symbol
+  app-name. If any of the options to the various callbacks are
+  symbols, it wraps them in a call to var to ensure they aren't
+  inlined and that redefinitions to the original fns are reflected in
+  the visualisation. See applet for the available options."
   [app-name & opts]
   (let [opts  (mapcat (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) (partition 2 opts))]
     `(def ~app-name (applet ~@opts))))

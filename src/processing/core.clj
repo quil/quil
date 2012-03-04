@@ -12,7 +12,7 @@
 (ns processing.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:use [processing.constants]
-        [processing.util :only [int-like? resolve-constant-key]]))
+        [processing.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
@@ -920,7 +920,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name :none
+    :processing-name nil
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -1984,7 +1984,7 @@
     :category "Input"
     :subcategory "Keyboard"
     :added "1.0"}
-    key-pressed
+    key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
   (. *applet* :keyPressed))
@@ -2226,7 +2226,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name :none
+    :processing-name nil
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2344,7 +2344,7 @@
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
-  mouse-pressed
+  mouse-state
   "Variable storing if a mouse button is pressed. The value of the
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
@@ -3103,8 +3103,8 @@
 (defn
   ^{:requires-bindings true
     :processing-name "save()"
-    :category "Image"
-    :subcategory nil
+    :category "Output"
+    :subcategory "Image"
     :added "1.0"}
   save
   "Saves an image from the display window. Images are saved in TIFF,
@@ -3121,8 +3121,8 @@
 (defn
   ^{:requires-bindings true
     :processing-name "saveFrame()"
-    :category "Image"
-    :subcategory nil
+    :category "Output"
+    :subcategory "Image"
     :added "1.0"}
   save-frame
   "Saves an image identical to the current display window as a
@@ -4169,7 +4169,125 @@
        (when (:interim *processing-version*)
          "-SNAPSHOT")))
 
-;; Useful trig constants
+;;; doc utils
+
+(def ^{:private true}
+  processing-fn-metas
+  "Returns a seq of metadata maps for all fns related to the original
+  Processing API (but may not have a direct Processing API equivalent)."
+  (map #(-> % second meta) (ns-publics *ns*)))
+
+(defn- processing-fn-metas-with-orig-method-name
+  "Returns a seq of metadata maps for all fns with a corresponding
+  Processing API method."
+  []
+  (filter :processing-name processing-fn-metas))
+
+(defn- matching-processing-methods
+  "Takes a string representing the start of a method name in the
+  original Processing API and returns a map of orig/new-name pairs"
+  [orig-name]
+  (let [metas   (processing-fn-metas-with-orig-method-name)
+        matches (filter #(.startsWith (:processing-name %) orig-name) metas)]
+    (into {} (map (fn [{:keys [name processing-name]}]
+                    [(str processing-name) (str name)])
+                  matches))))
+
+(defn- find-categories
+  []
+  (let [metas processing-fn-metas
+        cats  (into (sorted-set) (map :category metas))]
+    (clojure.set/difference cats #{nil})))
+
+(defn- find-subcategories
+  [category]
+  (let [metas  processing-fn-metas
+        in-cat (filter #(= category (:category %)) metas)
+        res    (into (sorted-set) (map :subcategory in-cat))]
+    (clojure.set/difference res #{nil})))
+
+(defn- find-fns
+  "Find the names of fns in category cat that don't also belong to a
+  subcategory"
+  [cat subcat]
+  (let [metas processing-fn-metas
+        res   (filter (fn [m]
+                        (and (= cat (:category m))
+                             (= subcat (:subcategory m))))
+                      metas)]
+    (sort (map :name res))))
+
+(defn- subcategory-map
+  [cat cat-idx]
+  (let [subcats (find-subcategories cat)
+        idxs    (map inc (range))
+        idxd-subcats (map (fn [idx subcat]
+                            [(str cat-idx "." idx) subcat])
+                          idxs subcats)]
+    (into {}
+          (map (fn [[idx subcat]]
+                 [idx {:name subcat
+                       :fns (find-fns cat subcat)}])
+               idxd-subcats))))
+
+(defn- sorted-category-map
+  []
+  (let [cats      (find-categories)
+        idxs      (map inc (range))
+        idxd-cats (into {} (map (fn [idx cat] [idx cat]) idxs cats))]
+    (into (sorted-map)
+          (map (fn [[idx cat]]
+                 [idx  {:name cat
+                        :fns (find-fns cat nil)
+                        :subcategories (subcategory-map cat idx)}])
+               idxd-cats))))
+
+(defn- all-category-map
+  []
+  (reduce (fn [sum [k v]]
+            (merge sum (:subcategories v)))
+          (into {} (map (fn [[k v]] [(str k) v]) (sorted-category-map)))
+          (sorted-category-map)))
+
+(defn doc-cats
+  "Print out a list of all the categories and subcategories,
+  associated index nums and fn count (in parens)."
+  []
+  (let [cats (sorted-category-map)]
+    (dorun
+     (map (fn [[cat-idx cat]]
+            (println cat-idx
+                     (:name cat)
+                     (str "(" (count (find-fns (:name cat) nil)) ")"))
+            (dorun (map (fn [[subcat-idx subcat]]
+                          (println "  "
+                                   subcat-idx
+                                   (:name subcat)
+                                   (str "(" (count (find-fns (:name cat) (:name subcat))) ")")))
+                        (:subcategories cat))))
+          cats))))
+
+(defn doc-fns
+  "Print all the functions within category or subcategory specified by
+  cat-idx (use print-cats to see a list of index nums). If a category is
+  specified, it will not print out the fns in any of cat's
+  subcategories. "
+  [cat-idx]
+  (let [res (get (all-category-map) (str cat-idx))]
+    (println (:name res))
+    (dorun
+     (map #(println "  -" %) (:fns res)))))
+
+(defn doc-meths
+  "Takes a string representing the start of a method name in the
+  original Processing API and prints out all matches alongside the
+  Processing-core equivalent."
+  [orig-name]
+  (let [res (matching-processing-methods orig-name)]
+    (print-definition-list res))
+  nil)
+
+;;; Useful trig constants
 (def PI  (float Math/PI))
 (def HALF-PI    (/ PI (float 2.0)))
 (def THIRD-PI   (/ PI (float 3.0)))

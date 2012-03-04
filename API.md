@@ -109,7 +109,7 @@ mouseClicked() - :mouse-clicked A
 mouseDragged() - :mouse-dragged A
 mouseMoved() - :mouse-moved A
 mousePressed() - :mouse-pressed A
-mousePressed - mouse-pressed *
+mousePressed - mouse-state *
 mouseReleased() :mouse-released A
 mouseX - mouse-x *
 mouseY mouse-y *
@@ -120,7 +120,7 @@ pmouseY - pmouse-y *
 key - raw-key *
 keyCode - key-code *
 keyPressed() - :key-pressed A
-keyPressed - key-pressed *
+keyPressed - key-pressed? *
 keyReleased() :key-released A
 keyTyped() :key-typed A
 
