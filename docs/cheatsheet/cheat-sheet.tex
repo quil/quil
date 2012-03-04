@@ -77,7 +77,7 @@
  {\Large{\textbf{Processing-core Cheat Sheet 1.0.0}}}
 
 
-\colouredbox{pink}{
+\colouredbox{blue2}{
   \section{Color}
   \begin{tabularx}{\hsize}{lX}
    Creating \& Reading & \cmd{alpha  blend-color  blue  brightness  color  color-mode  green  hue  lerp-color  red  saturation  } \\
@@ -86,19 +86,19 @@
    Setting & \cmd{background  background-float  background-image  background-int  fill  fill-float  fill-int  no-fill  no-stroke  stroke  stroke-float  stroke-int  } \\
   \end{tabularx}
 }
-\colouredbox{blue2}{
+\colouredbox{yellow}{
   \section{Data}
   \begin{tabularx}{\hsize}{lX}
    Conversion & \cmd{binary  hex  unbinary  unhex  } \\
   \end{tabularx}
 }
-\colouredbox{yellow}{
+\colouredbox{purple}{
   \section{Environment}
   \begin{tabularx}{\hsize}{lX}
    & \cmd{current-frame-rate  cursor  cursor-image  focused  frame-count  frame-rate  height  no-cursor  screen-height  screen-width  width  } \\
   \end{tabularx}
 }
-\colouredbox{purple}{
+\colouredbox{green}{
   \section{Image}
   \begin{tabularx}{\hsize}{lX}
    & \cmd{create-image  } \\
@@ -115,7 +115,7 @@
    Time \& Date & \cmd{day  hour  millis  minute  month  seconds  year  } \\
   \end{tabularx}
 }
-\colouredbox{green}{
+\colouredbox{pink}{
   \section{Lights, Camera}
   \begin{tabularx}{\hsize}{lX}
    Camera & \cmd{begin-camera  camera  end-camera  frustum  ortho  perspective  print-camera  print-projection  } \\
@@ -124,7 +124,7 @@
    Material Properties & \cmd{ambient  ambient-float  ambient-int  emissive  emissive-float  emissive-int  shininess  specular  } \\
   \end{tabularx}
 }
-\colouredbox{red}{
+\colouredbox{blue}{
   \section{Math}
   \begin{tabularx}{\hsize}{lX}
    Calculation & \cmd{abs  abs-float  abs-int  ceil  constrain  constrain-float  constrain-int  dist  exp  lerp  log  mag  map-range  norm  pow  round  sq  sqrt  } \\
@@ -132,7 +132,7 @@
    Trigonometry & \cmd{acos  asin  atan  atan2  cos  degrees  radians  sin  tan  } \\
   \end{tabularx}
 }
-\colouredbox{blue}{
+\colouredbox{yellow}{
   \section{Output}
   \begin{tabularx}{\hsize}{lX}
    Files & \cmd{begin-raw  begin-record  create-output  end-raw  end-record  } \\
@@ -145,7 +145,7 @@
    & \cmd{create-graphics  hint  } \\
   \end{tabularx}
 }
-\colouredbox{pink}{
+\colouredbox{red}{
   \section{Shape}
   \begin{tabularx}{\hsize}{lX}
    2D Primitives & \cmd{arc  ellipse  line  point  quad  rect  triangle  } \\
@@ -156,20 +156,26 @@
    Vertex & \cmd{begin-shape  bezier-vertex  curve-vertex  end-shape  texture  texture-mode  vertex  } \\
   \end{tabularx}
 }
-\colouredbox{blue2}{
+\colouredbox{green}{
+  \section{State}
+  \begin{tabularx}{\hsize}{lX}
+   & \cmd{set-state!  state  } \\
+  \end{tabularx}
+}
+\colouredbox{blue}{
   \section{Structure}
   \begin{tabularx}{\hsize}{lX}
    & \cmd{delay-frame  exit  no-loop  pop-style  push-style  redraw  start-loop  } \\
   \end{tabularx}
 }
-\colouredbox{yellow}{
+\colouredbox{pink}{
   \section{Transform}
   \begin{tabularx}{\hsize}{lX}
    & \cmd{apply-matrix  pop-matrix  print-matrix  push-matrix  reset-matrix  rotate  rotate-x  rotate-y  rotate-z  scale  shear-x  shear-y  translate  } \\
    Utility Macros & \cmd{with-rotation  with-translation  } \\
   \end{tabularx}
 }
-\colouredbox{purple}{
+\colouredbox{yellow}{
   \section{Typography}
   \begin{tabularx}{\hsize}{lX}
    Attributes & \cmd{text-align  text-leading  text-mode  text-size  text-width  } \\
@@ -177,6 +183,30 @@
    Metrics & \cmd{text-ascent  text-descent  } \\
   \end{tabularx}
 }
+
+\colouredbox{blue2}{
+  \section{Applet}
+  \begin{tabularx}{\hsize}{lX}
+ Creation & \cmd{applet defapplet} \\
+ Control & \cmd{applet-stop applet-start applet-exit applet-close} \\
+ Config Keywords & \cmd{:title :size} \\
+ Draw Callback Keywords & \cmd{:setup :draw} \\
+ Mouse Callback Keywords & \cmd{:mouse-pressed :mouse-released :mouse-moved :mouse-dragged :mouse-entered :mouse-exited :mouse-clicked} \\
+ Keyboard Callback Keywords & \cmd{:key-pressed :key-released :key-typed } \\
+ Window Callback Keywords & \cmd{:focus-gained :focus-lost} \\
+  \end{tabularx}
+}
+
+
+\colouredbox{grey}{
+  \section{Reflection}
+  \begin{tabularx}{\hsize}{lX}
+API Exploration & \cmd{doc-cats doc-fns doc-meths} \\
+Version & \cmd{processing-version} \\
+  \end{tabularx}
+}
+
+
 
  \begin{flushright}
   \footnotesize

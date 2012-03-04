@@ -22,6 +22,8 @@
 
 (defn
   ^{:requires-bindings true
+    :category "State"
+    :subcategory nil
     :added "1.0"}
   state
   "Retrieve canvas-specific state by key. Must initially call
@@ -40,6 +42,8 @@
 
 (defn
   ^{:requires-bindings true
+    :category "State"
+    :subcategory nil
     :added "1.0"}
   set-state!
   "Set canvas-specific state. May only be called once (ideally in the
