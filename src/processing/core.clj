@@ -1984,7 +1984,7 @@
     :category "Input"
     :subcategory "Keyboard"
     :added "1.0"}
-    key-pressed
+    key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
   (. *applet* :keyPressed))
@@ -2344,7 +2344,7 @@
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
-  mouse-pressed
+  mouse-state
   "Variable storing if a mouse button is pressed. The value of the
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
