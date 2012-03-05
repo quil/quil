@@ -1,6 +1,5 @@
 (ns example2
-  (:use [processing.core]
-        [processing.core.applet]))
+  (:use [quil core applet]))
 
 ;; here's a function which will be called by Processing's (PApplet)
 ;; draw method every frame. Place your code here. If you eval it
@@ -37,5 +36,3 @@
   :setup setup
   :draw draw
   :size [200 200])
-
-(applet-start example2)

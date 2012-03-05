@@ -1,19 +1,11 @@
-;; simple processing wrapper for Clojure
-;; Roland Sadowski [szabla gmail com]
-
-;; Copyright (c) 2008 Roland Sadowski. All rights reserved.  The use and
-;; distribution terms for this software are covered by the Common
-;; Public License 1.0 (http://www.opensource.org/licenses/cpl1.0.php)
-;; which can be found in the file CPL.TXT at the root of this
-;; distribution.  By using this software in any fashion, you are
-;; agreeing to be bound by the terms of this license.  You must not
-;; remove this notice, or any other, from this software.
-
-(ns processing.core
+(ns
+    ^{:doc "Wrappers and extensions around the core Processing.org API."
+      :author "Roland Sadowsky, Sam Aaron"}
+    quil.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:require [clojure.set])
-  (:use [processing.constants]
-        [processing.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
+  (:use [quil.constants]
+        [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
@@ -4152,7 +4144,7 @@
 ;;; version number
 
 (let [version-stream (.getResourceAsStream (clojure.lang.RT/baseLoader)
-                                           "processing/core/version.properties")
+                                           "quil/processing-core/version.properties")
       properties     (doto (new java.util.Properties) (.load version-stream))
       prop (fn [k] (.getProperty properties (str "processing.core.version." k)))
       processing-version {:major       (Integer/valueOf ^String (prop "major"))

@@ -1,4 +1,7 @@
-(ns processing.util)
+(ns
+    ^{:doc "Utility fns"
+      :author "Roland Sadowsky, Sam Aaron"}
+    quil.util)
 
 (defn int-like?
   [val]

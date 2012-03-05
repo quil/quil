@@ -1,7 +1,10 @@
-(ns processing.core.applet
-  (:use [processing.core :except (size)]
-        [processing.constants]
-        [processing.util :only [resolve-constant-key]])
+(ns
+    ^{:doc "Functions and macros for initialising and controlling visualisation applets."
+      :author "Roland Sadowsky, Sam Aaron"}
+    quil.applet
+  (:use [quil.core]
+        [quil.constants]
+        [quil.util :only [resolve-constant-key]])
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 
