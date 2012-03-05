@@ -36,8 +36,10 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ![Random Walk Scribble](http://cloud.github.com/downloads/quil/quil/gen-art-rand-walk-scribble.png)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/rand_walk_scribble.clj)
+(p56 - Section 3.2(b))
 
 ## Perlin Noise Scribble
 ![Random Walk Scribble](http://cloud.github.com/downloads/quil/quil/gen-art-perlin-noise-scribble.png)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/perlin_noise_scribble.clj)
+(p59 - Listing 3.1)
