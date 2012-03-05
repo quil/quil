@@ -1,5 +1,5 @@
-(defproject processing-core/processing.core "1.0.0-SNAPSHOT"
-  :description "A wrapper for Processing in Clojure."
+(defproject quil "1.0.0-SNAPSHOT"
+  :description "(mix Processing Clojure)"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.clojars.processing-core/org.processing.core "1.5.1"]
                  [org.clojars.processing-core/org.processing.gluegen-rt "1.5.1"]
