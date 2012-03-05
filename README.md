@@ -1,7 +1,6 @@
-# Quil
-
 <img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil OPainting" title="Quil" align="right" />
 
+# Quil
 
 Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling feet a distant shepard called his scribbly sheep in for re-drawing. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
