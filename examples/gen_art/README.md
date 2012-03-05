@@ -45,6 +45,6 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 (p59 - Listing 3.1)
 
 ## Sine Wave
-![Sine Wave](http://cloud.github.com/downloads/quil/quil/gen-art-sine-wave.png)
+![Sine Wave](http://cloud.github.com/downloads/quil/quil/gen-art-sine-wave.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/sine_wave.clj)
