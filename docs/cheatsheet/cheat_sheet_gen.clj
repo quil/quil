@@ -78,7 +78,7 @@
 
 \\begin{document}
 
- {\\Large{\\textbf{Processing-core Cheat Sheet 1.0.0}}}
+ {\\Large{\\textbf{Quil 1.0.0}}}
 
 ")
 
@@ -87,7 +87,7 @@
  \\begin{flushright}
   \\footnotesize
   \\rule{0.7\\linewidth}{0.25pt}
-  \\verb!$Revision: 1.0.0.0, $Date: 4th March, 2012!\\\\
+  \\verb!$Revision: 1.0.0.0, $Date: 5th March, 2012!\\\\
   \\verb!Sam Aaron (sam.aaron gmail com)!
  \\end{flushright}
 
