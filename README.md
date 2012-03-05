@@ -58,7 +58,7 @@ Feast your eyes on this beauty. You're witnessing `setup`, `draw` and `applet` w
 
 ## Processing Support
 
-Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.md`.
+Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.txt`.
 
 ## API Exploration
 
@@ -66,7 +66,7 @@ Quil supports an explorable API. For a full list of API categories and subcatego
 
 ## License
 
-Quil is distributed under Common Public License Version 1.0. See LICENCE for details.
+Quil is distributed under Common Public License Version 1.0. See LICENSE for details.
 
 The official Processing.org's jars, used as dependencies, are distributed under LGPG and their code can be found on http://processing.org/
 
