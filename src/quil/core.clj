@@ -5,6 +5,7 @@
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:require [clojure.set])
   (:use [quil.constants]
+        [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
 
 ;; used by functions in this lib. Use binding to set it
@@ -4143,38 +4144,10 @@
 
 ;;; version number
 
-(let [version-stream (.getResourceAsStream (clojure.lang.RT/baseLoader)
-                                           "quil/processing-core/version.properties")
-      properties     (doto (new java.util.Properties) (.load version-stream))
-      prop (fn [k] (.getProperty properties (str "processing.core.version." k)))
-      processing-version {:major       (Integer/valueOf ^String (prop "major"))
-                          :minor       (Integer/valueOf ^String (prop "minor"))
-                          :incremental (Integer/valueOf ^String (prop "incremental"))
-                          :qualifier   (prop "qualifier")}]
-  (def ^{:dynamic true}
-    *processing-version*
-    (if (not (= (prop "interim") "false"))
-      (clojure.lang.RT/assoc processing-version :interim true)
-      processing-version)))
-
-(alter-meta! (var *processing-version*) assoc :doc
-  "The version info for clj-processing, as a map containing :major :minor
-  :incremental and optional :qualifier keys. This version number
-   corresponds to the official Processing.org version with which
-   processing.core is compatible.")
-
-(defn processing-version
-  "Returns clj-processing version as a printable string."
+(defn quil-version
   []
-  (str (:major *processing-version*)
-       "."
-       (:minor *processing-version*)
-       (when-let [i (:incremental *processing-version*)]
-         (str "." i))
-       (when-let [q (:qualifier *processing-version*)]
-         (when (pos? (count q)) (str "-" q)))
-       (when (:interim *processing-version*)
-         "-SNAPSHOT")))
+  QUIL-VERSION-STR)
+
 
 ;;; doc utils
 
