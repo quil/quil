@@ -16,6 +16,10 @@ Simply add Quil as a dependency in your `project.clj`:
 
     [quil "1.0.0-SNAPSHOT"]
 
+Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
+
+    (:use [quil core applet])
+
 **Please Note:** In order to use the OpenGL features, you need to be using Leiningen 2.x.
 
 ## Getting Started
@@ -31,6 +35,8 @@ If `setup` and `draw` are hard working *artistic gladiators*, `applet` is the *a
 `setup` lays all the groundwork and is called only once at the start. `draw`, on the other hand, is called immediately after `setup` has completed, and then repeatedly until you summon it to stop. When you create an `applet` and name your `setup` and `draw` fns, the fun automatically starts.
 
 A simple example is called for:
+    (ns for-the-glory-of-art
+      (:use [quil core applet]))
 
     (defn setup []
       (smooth)                          ;;Turn on anti-aliasing
