@@ -1,14 +1,14 @@
 # Quil
 
-Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. The underlying beauty of what he saw unfolded before him. A flock of bezier gulls whistled past him. Beneath his dangling feet a distant shepard called his scribbly sheep in for re-drawing. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
+Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling feet a distant shepard called his scribbly sheep in for re-drawing. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
 This truly was an amazing place. Here, dreams and reality had been drawn together - all in one Process. "*_Why* would I ever leave?" he barked with joy! *_Why* indeed!
 
 ## (mix Processing Clojure)
 
-In one hand Quil holds Processing, a carefully crafted API for making drawing and animation extremely easy to get your biscuit-loving chops around. In the other she clutches Clojure, an interlocking suite of exquisite language abstractions forged by an army of hammocks and wrapped in flowing silky parens of un-braided joy.
+In one hand Quil holds Processing, a carefully crafted API for making drawing and animation extremely easy to get your biscuit-loving chops around. In the other she clutches Clojure, an interlocking suite of exquisite language abstractions forged by an army of hammocks and delicately wrapped in flowing silky parens of un-braided joy.
 
-In one skilled motion, Quil throws them high into the air together. They bond instantly and fly off into the distance painting their way with immutable trails of brilliant colour. Moments later, you see them swiftly return and hover nearby. Your very own ride to Perlinwould awaits. Summon the winds and ride well, my friend.
+In one swift, skilled motion, Quil throws them both high into the air. In a dusty cloud of pixels, they bond instantly and fly off into the distance painting their way with immutable trails of brilliant colour. Moments later, you see them swiftly return and hover nearby. Your very own ride to Perlinwould awaits. Summon the winds and ride well, my friend.
 
 ## Installation
 
