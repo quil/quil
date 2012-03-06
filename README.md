@@ -71,9 +71,9 @@ You're witnessing `setup`, `draw` and `applet` working in complete harmony. See 
 ## Documentation
 
 
-<a href="http://github.com/downloads/quil/quil/cheatsheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
+<a href="http://github.com/downloads/quil/quil/quil-cheatsheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. 
+When getting started with Quil, it's always useful to have the [Cheatsheet](http://github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. 
 
 If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time. 
 
