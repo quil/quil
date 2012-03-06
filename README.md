@@ -73,11 +73,11 @@ Further documentation will drop into the wiki soon - watch this space!
 
 ## Examples
 
-<img src="http://cloud.github.com/downloads/quil/quil/example-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
+<img src="http://cloud.github.com/downloads/quil/quil/readme-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
 
-<img src="http://cloud.github.com/downloads/quil/quil/example-spiral.png" alt="Spiral" title="Sprial" align="right" />
+<img src="http://cloud.github.com/downloads/quil/quil/readme-spiral.png" alt="Spiral" title="Sprial" align="right" />
 
-<img src="http://cloud.github.com/downloads/quil/quil/example-lines.png" alt="Lines" title="Lines" align="right" />
+<img src="http://cloud.github.com/downloads/quil/quil/readme-lines.png" alt="Lines" title="Lines" align="right" />
 
 Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author. Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
 
