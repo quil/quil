@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.hundred-noisy-spirals
+(ns quil.examples.gen-art.14-hundred-noisy-spirals
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl steps]]

@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.sine-wave-with-noise
+(ns quil.examples.gen-art.09-sine-wave-with-noise
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]

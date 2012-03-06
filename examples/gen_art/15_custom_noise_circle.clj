@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.noise-circle
+(ns quil.examples.gen-art.15-noise-circle
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]

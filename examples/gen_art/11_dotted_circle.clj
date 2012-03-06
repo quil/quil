@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.dotted-circle
+(ns quil.examples.gen-art.11-dotted-circle
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]))

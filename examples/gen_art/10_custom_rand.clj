@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.custom-rand
+(ns quil.examples.gen-art.10-custom-rand
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]

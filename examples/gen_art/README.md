@@ -48,3 +48,43 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ![Sine Wave](http://cloud.github.com/downloads/quil/quil/gen-art-sine-wave.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/08_sine_wave.clj)
+(p60 - Listing 3.2)
+
+## 9. Sine Wave with Noise
+![Sine Wave with Noise](http://cloud.github.com/downloads/quil/quil/gen-art-sine-wave-with-noise.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/09_sine_wave_with_noise.clj)
+(p63 - Section 3.3.2)
+
+## 10. Custom Random Function
+![Custom Random Function](http://cloud.github.com/downloads/quil/quil/gen-art-custom-random-function.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/10_custom_rand.clj)
+(p63 - Section 3.3.3)
+
+## 11. Dotted Circle
+![Dotted Circle](http://cloud.github.com/downloads/quil/quil/gen-art-dotted-circle.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/11_dotted_circle.clj)
+(p68 - Listing 4.1)
+
+## 12. Spiral
+![Spiral](http://cloud.github.com/downloads/quil/quil/gen-art-spiral.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/12_spiral.clj)
+(p69 - Listing 4.2)
+
+## 13. Noisy Spiral
+![Noisy Spiral](http://cloud.github.com/downloads/quil/quil/gen-art-noisy-spiral.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/13_noisy_spiral.clj)
+
+## 14. 100 Noisy Spirals
+![100 Noisy Spirals](http://cloud.github.com/downloads/quil/quil/gen-art-hundred-noisy-spirals.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/14_hundred_noisy_spirals.clj)
+
+## 15. Custom Noise Circle
+![Custom Noise Circle](http://cloud.github.com/downloads/quil/quil/gen-art-custom-noise-circle.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/15_custom_noise_circle.clj)
