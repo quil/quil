@@ -84,11 +84,44 @@ Quil comes chock-packed full of examples covering most of the available API. Man
 
 ## API Exploration
 
-Quil supports an explorable API. For a full list of API categories and subcategories simply type `(doc-cats)` at the REPL. In order to see the fns within a specific category use `(doc-fns 1.1)` if `1.1` is the index of the category you wish to examine. If you know the start of Processing API method name such as `bezier`, you can use `(doc-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents.
+Quil supports an explorable API. For a full list of API categories and subcategories simply type `(doc-cats)` at the REPL.
+
+    user=> (doc-cats)
+    1 Color (0)
+       1.1 Creating & Reading (11)
+       1.2 Loading & Displaying (1)
+       1.3 Pixels (1)
+       1.4 Setting (12)
+    2 Data (0)
+       2.1 Conversion (4)
+       .
+       .
+       . etc
+
+In order to see the fns within a specific category use `(doc-fns 10.1)` if `10.1` is the index of the category you wish to examine.
+
+    user=> (doc-fns 10.1)
+    2D Primitives
+      - arc
+      - ellipse
+      - line
+      - point
+      - quad
+      - rect
+      - triangle
+
+If you know the start of Processing API method name such as `bezier`, you can use `(doc-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
+
+    user=> (doc-meths "bezier")
+    bezierPoint()    -  bezier-point
+    bezierDetail()   -  bezier-detail
+    bezier()         -  bezier
+    bezierTangent()  -  bezier-tangent
+    bezierVertex()   -  bezier-vertex
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.txt`.
+Quil provides support for the standard Processing API - currently version `1.5.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
 ## License
 
