@@ -70,6 +70,9 @@ You're witnessing `setup`, `draw` and `applet` working in complete harmony. See 
 
 ## Documentation
 
+
+<href="http://github.com/downloads/quil/quil/cheatsheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet-thumb.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
+
 When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. Also, the [Processing.org Learning Pages](http://processing.org/learning/) are super useful for beginners.
 
 The [full Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
@@ -120,7 +123,9 @@ If you know the start of Processing API method name such as `bezier`, you can us
 
 <img src="http://cloud.github.com/downloads/quil/quil/readme-lines.png" alt="Lines" title="Lines" align="right" />
 
-Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author. Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
+Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author.
+
+Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
 
 ## Processing Compatibility
 
