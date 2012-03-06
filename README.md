@@ -65,13 +65,33 @@ A simple example is called for:
 
 Feast your eyes on this beauty. You're witnessing `setup`, `draw` and `applet` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defapplet` a convenience macro around `applet` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
 
-## Processing Support
+## Documentation
 
-Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.txt`.
+When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy.
+
+Further documentation will drop into the wiki soon - watch this space!
+
+## Examples
+
+Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author. Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
+
+<img src="http://cloud.github.com/downloads/quil/quil/example-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
+
+<img src="http://cloud.github.com/downloads/quil/quil/example-spiral.png" alt="Spiral" title="Sprial" align="right" />
+
+<img src="http://cloud.github.com/downloads/quil/quil/example-lines.png" alt="Lines" title="Lines" align="right" />
+
+
 
 ## API Exploration
 
 Quil supports an explorable API. For a full list of API categories and subcategories simply type `(doc-cats)` at the REPL. In order to see the fns within a specific category use `(doc-fns 1.1)` if `1.1` is the index of the category you wish to examine. If you know the start of Processing API method name such as `bezier`, you can use `(doc-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents.
+
+## Processing Compatibility
+
+Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.txt`.
+
+
 
 ## License
 
