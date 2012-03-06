@@ -62,9 +62,11 @@ A simple example is called for:
       :draw draw                        ;;Specify the draw fn
       :size [323 200])                  ;;You struggle to beat the golden ratio
 
-<img src="https://github.com/downloads/quil/quil/readme-oh-so-many-grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="right" />
+<img src="https://github.com/downloads/quil/quil/readme-oh-so-many-grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
-Feast your eyes on this beauty. You're witnessing `setup`, `draw` and `applet` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defapplet` a convenience macro around `applet` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
+Feast your eyes on this beauty. 
+
+You're witnessing `setup`, `draw` and `applet` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defapplet` a convenience macro around `applet` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
 
 ## Documentation
 
