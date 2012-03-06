@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.sine-save
+(ns quil.examples.gen-art.08-sine-save
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]

@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.concentric-circles
+(ns quil.examples.gen-art.03-concentric-circles
   (:use [quil core applet]))
 
 ;; Example 3 - Concentric circles drawn using traces

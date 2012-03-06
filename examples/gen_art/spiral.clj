@@ -53,7 +53,7 @@
     (stroke 20 50 70)
     (dorun (map #(apply line %) line-args))))
 
-(applet
+(defapplet gen-art-12
   :title "Spiral"
   :setup setup
   :size [500 300])

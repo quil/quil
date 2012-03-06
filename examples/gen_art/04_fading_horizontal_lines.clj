@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.fading-horizontal-lines
+(ns quil.examples.gen-art.04-fading-horizontal-lines
   (:use [quil core applet]))
 
 ;; Example 4 - Fading Horizontal Lines

@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.rand-walk-scribble
+(ns quil.examples.gen-art.06-rand-walk-scribble
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]))

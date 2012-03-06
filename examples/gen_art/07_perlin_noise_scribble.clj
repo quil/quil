@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.perlin-noise-scribble
+(ns quil.examples.gen-art.07-perlin-noise-scribble
   (:use [quil core applet]
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl perlin-noise-seq]]

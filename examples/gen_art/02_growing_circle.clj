@@ -1,4 +1,4 @@
-(ns quil.examples.gen-art.growing-circle
+(ns quil.examples.gen-art.02-growing-circle
   (:use [quil core applet]
         [quil.helpers.seqs :only [seq->stream range-incl]]))
 
