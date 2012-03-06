@@ -1,5 +1,13 @@
-== Structure ==
+Symbols
+========
+@: Use Clojure Equivalent,
+*: Function must be called within a Quil applet,
++: Function does not need to be called within a Quil applet,
+A: Applet initialisation keyword,
+!: Not supported or other warning.
 
+
+== Structure ==
 
 delay() - delay-frame *
 draw() :draw A
