@@ -67,7 +67,7 @@ Feast your eyes on this beauty. You're witnessing `setup`, `draw` and `applet` w
 
 ## Documentation
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy.
+When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. Also, the [Processing.org Learning Pages](http://processing.org/learning/) are super useful for beginners.
 
 Further documentation will drop into the wiki soon - watch this space!
 
