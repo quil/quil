@@ -99,13 +99,13 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 (p76 - Section 4.2)
 
 ## 17. Circle from Fading Opposing Lines
-![Circle from Fading Opposing Lines](http://cloud.github.com/downloads/quil/quil/gen-art-circle-from-fading-opposing-lines.jpg)
+![Circle from Fading Opposing Lines](https://github.com/downloads/quil/quil/gen-art-circle-from-fading-opposing-lines.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/17_circle_from_fading_opposing_lines.clj)
 (p79 - Section 4.2 - Figure 4.12)
 
 ## 18. Warped Circle from Fading Opposing Lines
-![Warped Circle from Fading Opposing Lines](http://cloud.github.com/downloads/quil/quil/gen-art-warped-circle-from-fading-opposing-lines.jpg)
+![Warped Circle from Fading Opposing Lines](https://github.com/downloads/quil/quil/gen-art-warped-circle-from-fading-opposing-lines.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/18_warped_circle_from_fading_opposing_lines.clj)
 (p79 - Section 4.2 - Figure 4.1)
@@ -127,3 +127,41 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ![Squared 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-squared-2D-noise-grid.png)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/21_squared_noise-grid.clj)
+(p86 - Listing 5.2)
+
+## 22. Rotating Lines 2D Noise Grid
+![Rotating Lines 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-rotating-lines-2D-noise-grid.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/22_rotating_lines_noise-grid.clj)
+(p86 - Section 5.12 - Figure 5.3)
+
+## 23. Fluffy Clouds 2D Noise Grid
+![Fluffy Clouds 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-fluffy-clouds-2D-noise-grid.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/23_fluffy_clouds_noise-grid.clj)
+(p88 - Section 5.12 - Figure 5.4)
+
+## 24. Animated Fluffly Clouds
+![Animated Fluffly Clouds](https://github.com/downloads/quil/quil/gen-art-animated-fluffy-clouds.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/24_animated_fluffy_clouds.clj)
+(p91 - Listing 5.3)
+
+## 25. Animated Rotated Lines
+![Animated Rotated Lines](https://github.com/downloads/quil/quil/gen-art-animated-rotated-lines.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/25_animated_rotated_lines.clj)
+(p91 - Listing 5.4)
+Try setting the step-size to 15.
+
+## 26. 3D Sphere
+![3D Sphere](https://github.com/downloads/quil/quil/gen-art-sphere.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/26_sphere.clj)
+(p94 - Section 5..1 - Figure 5.5)
+
+## 27. Noise from a 3D Perspective
+![Noise from a 3D Perspective](https://github.com/downloads/quil/quil/gen-art-noise-perspective.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/27_noise_perspective.clj)
+(p95 - Listing 5.5)
