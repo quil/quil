@@ -79,6 +79,7 @@
 
 (def ^{:private true}
   renderer-modes {:p2d    P2D
+                  :p3d    P3D
                   :java2d JAVA2D
                   :opengl OPENGL
                   :pdf    PDF
