@@ -64,7 +64,7 @@ A simple example is called for:
 
 <img src="https://github.com/downloads/quil/quil/readme-oh-so-many-grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
-Feast your eyes on this beauty. 
+Feast your eyes on this beauty.
 
 You're witnessing `setup`, `draw` and `applet` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defapplet` a convenience macro around `applet` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
 
@@ -73,16 +73,6 @@ You're witnessing `setup`, `draw` and `applet` working in complete harmony. See 
 When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. Also, the [Processing.org Learning Pages](http://processing.org/learning/) are super useful for beginners.
 
 The [full Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
-
-## Examples
-
-<img src="http://cloud.github.com/downloads/quil/quil/readme-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
-
-<img src="http://cloud.github.com/downloads/quil/quil/readme-spiral.png" alt="Spiral" title="Sprial" align="right" />
-
-<img src="http://cloud.github.com/downloads/quil/quil/readme-lines.png" alt="Lines" title="Lines" align="right" />
-
-Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author. Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
 
 ## API Exploration
 
@@ -120,6 +110,17 @@ If you know the start of Processing API method name such as `bezier`, you can us
     bezier()         -  bezier
     bezierTangent()  -  bezier-tangent
     bezierVertex()   -  bezier-vertex
+
+
+## Examples
+
+<img src="http://cloud.github.com/downloads/quil/quil/readme-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
+
+<img src="http://cloud.github.com/downloads/quil/quil/readme-spiral.png" alt="Spiral" title="Sprial" align="right" />
+
+<img src="http://cloud.github.com/downloads/quil/quil/readme-lines.png" alt="Lines" title="Lines" align="right" />
+
+Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author. Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
 
 ## Processing Compatibility
 
