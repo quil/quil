@@ -78,13 +78,40 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ![Noisy Spiral](http://cloud.github.com/downloads/quil/quil/gen-art-noisy-spiral.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/13_noisy_spiral.clj)
+(p69 - Listing 4.3)
 
 ## 14. 100 Noisy Spirals
 ![100 Noisy Spirals](http://cloud.github.com/downloads/quil/quil/gen-art-hundred-noisy-spirals.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/14_hundred_noisy_spirals.clj)
+(p71 - Listing 4.4)
 
 ## 15. Custom Noise Circle
 ![Custom Noise Circle](http://cloud.github.com/downloads/quil/quil/gen-art-custom-noise-circle.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/15_custom_noise_circle.clj)
+(p73 - Listing 4.5)
+
+## 16. Circle from Opposing Lines
+![Circle from Opposing Lines](http://cloud.github.com/downloads/quil/quil/gen-art-circle-from-opposing-lines.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/16_circle_from_opposing_lines.clj)
+(p76 - Section 4.2)
+
+## 17. Circle from Fading Opposing Lines
+![Circle from Fading Opposing Lines](http://cloud.github.com/downloads/quil/quil/gen-art-circle-from-fading-opposing-lines.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/17_circle_from_fading_pposing_lines.clj)
+(p79 - Section 4.2 - Figure 4.12)
+
+## 18. Warped Circle from Fading Opposing Lines
+![Warped Circle from Fading Opposing Lines](http://cloud.github.com/downloads/quil/quil/gen-art-warped-circle-from-fading-opposing-lines.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/18_warped_circle_from_fading_pposing_lines.clj)
+(p79 - Section 4.2 - Figure 4.1)
+
+## 19. Wave Clock
+![Wave Clock](http://cloud.github.com/downloads/quil/quil/gen-art-wave-clock.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/19_wave_clock.clj)
+(p79 - Listing 4.6)
