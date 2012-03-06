@@ -115,4 +115,9 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/19_wave_clock.clj)
 (p79 - Listing 4.6)
-#
+
+## 20. 2D Noise Grid
+![2D Noise Grid](http://cloud.github.com/downloads/quil/quil/gen-art-2d-noise-grid.jpg)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/20_noise-grid.clj)
+(p84 - Listing 5.1)
