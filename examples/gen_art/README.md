@@ -111,13 +111,19 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 (p79 - Section 4.2 - Figure 4.1)
 
 ## 19. Wave Clock
-![Wave Clock](http://cloud.github.com/downloads/quil/quil/gen-art-wave-clock.jpg)
+![Wave Clock](https://github.com/downloads/quil/quil/gen-art-wave-clock.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/19_wave_clock.clj)
 (p79 - Listing 4.6)
 
 ## 20. 2D Noise Grid
-![2D Noise Grid](http://cloud.github.com/downloads/quil/quil/gen-art-2d-noise-grid.png)
+![2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-2d-noise-grid.png)
+
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/20_noise-grid.clj)
 (p84 - Listing 5.1)
+
+## 21. Squared 2D Noise Grid
+![Squared 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-squared-2D-noise-grid.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/21_squared_noise-grid.clj)
