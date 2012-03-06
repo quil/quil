@@ -1,4 +1,4 @@
-<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil OPainting" title="Quil" align="right" />
+<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
 
 # Quil
 
@@ -69,9 +69,7 @@ Feast your eyes on this beauty. You're witnessing `setup`, `draw` and `applet` w
 
 When getting started with Quil, it's always useful to have the [Cheatsheet](http://cloud.github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. Also, the [Processing.org Learning Pages](http://processing.org/learning/) are super useful for beginners.
 
-The [full Quil API](https://github.com/quil/quil/wiki/API) is also available on the wiki.
-
-Further documentation will drop into the wiki soon - watch this space!
+The [full Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
 
 ## Examples
 
@@ -90,8 +88,6 @@ Quil supports an explorable API. For a full list of API categories and subcatego
 ## Processing Compatibility
 
 Quil provides support for the standard Processing API. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see `API.txt`.
-
-
 
 ## License
 
