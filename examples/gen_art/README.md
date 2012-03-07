@@ -165,3 +165,27 @@ Try setting the step-size to 15.
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/27_noise_perspective.clj)
 (p95 - Listing 5.5)
+
+## 28. A Cube of 3D Noise
+![A Cube of 3D Noise](https://github.com/downloads/quil/quil/gen-art-cube-of-noise.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/28_cloud_cube.clj)
+(p97 - Listing 5.6)
+
+## 29. Spiral Sphere
+![Spiral Sphere](https://github.com/downloads/quil/quil/gen-art-spiral-sphere.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/29_spiral_sphere.clj)
+(p100 - Listing 5.7)
+
+## 30. Random Clicked Circles
+![Random Clicked Circles](https://github.com/downloads/quil/quil/gen-art-random-clicked-circles.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/30_random_clicked_circles.clj)
+(p113 - Listing 6.1)
+
+## 31. OO Circles
+![OO Circles](https://github.com/downloads/quil/quil/gen-art-oo-circles.png)
+
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/31_oo_circles.clj)
+(p117 - Listing 6.4)
