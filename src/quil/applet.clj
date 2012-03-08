@@ -11,6 +11,8 @@
 (def ^{:private true}
   toupper (memfn toUpperCase))
 
+(defonce untitled-applet-id* (atom 0))
+
 (defn- fix-mname
   "Changes :method-name to :methodName."
   [[mname fun]]
@@ -61,7 +63,7 @@
                       JFrame/EXIT_ON_CLOSE
                       JFrame/DISPOSE_ON_CLOSE)]
        (reset! (:frame m)
-               (let [f (JFrame. (or (:title m) "Processing-core"))]
+               (let [f (JFrame. (or (:title m) (str "Quil " (swap! untitled-applet-id* inc))))]
                  (doto f
                    (.addWindowListener  (reify WindowListener
                                           (windowActivated [this e])
