@@ -61,21 +61,24 @@
                       JFrame/EXIT_ON_CLOSE
                       JFrame/DISPOSE_ON_CLOSE)]
        (reset! (:frame m)
-               (doto (JFrame. (or (:title m) "Processing-core"))
-                 (.addWindowListener  (reify WindowListener
-                                        (windowActivated [this e])
-                                        (windowClosing [this e]
-                                          (future (applet-close applet)))
-                                        (windowDeactivated [this e])
-                                        (windowDeiconified [this e])
-                                        (windowIconified [this e])
-                                        (windowOpened [this e])
-                                        (windowClosed [this e])))
-                 (.setDefaultCloseOperation close-op)
-                 (.setSize width height)
-                 (.add applet)
-                 (.pack)
-                 (.show))))))
+               (let [f (JFrame. (or (:title m) "Processing-core"))]
+                 (doto f
+                   (.addWindowListener  (reify WindowListener
+                                          (windowActivated [this e])
+                                          (windowClosing [this e]
+                                            (future (applet-close applet)))
+                                          (windowDeactivated [this e])
+                                          (windowDeiconified [this e])
+                                          (windowIconified [this e])
+                                          (windowOpened [this e])
+                                          (windowClosed [this e])))
+                   (.setDefaultCloseOperation close-op)
+                   (.setSize width height)
+                   (.add applet)
+                   (.pack))
+                 (when (= mode :opengl)
+                   (.setResizable f false))
+                 (.show f))))))
 
 (def ^{:private true}
   renderer-modes {:p2d    P2D
@@ -145,10 +148,13 @@
                                   :mouse-released :mouse-moved :mouse-dragged
                                   :focus-gained :focus-lost :mouse-entered
                                   :mouse-exited :mouse-clicked :setup)
+        mode              (if (< 2 (count (:size options)))
+                            (nth (:size options) 2)
+                            :p2d)
         fns               (merge {:draw (fn [] nil)} fns)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
-        key-typed-fn   (or (:key-typed options) (fn [] nil))
+        key-typed-fn      (or (:key-typed options) (fn [] nil))
         mouse-pressed-fn  (or (:mouse-pressed options) (fn [] nil))
         mouse-released-fn (or (:mouse-released options) (fn [] nil))
         mouse-moved-fn    (or (:mouse-moved options) (fn [] nil))
@@ -271,7 +277,7 @@
                                   {}
                                   methods)]
     (update-proxy prx bound-meths)
-    (applet-run prx)
+    (applet-run prx mode)
     prx))
 
 (defmacro defapplet
