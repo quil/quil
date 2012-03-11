@@ -147,3 +147,4 @@ The official Processing.org's jars, used as dependencies, are distributed under 
 * Marshall T. Vandegrift
 * Ilya Epifanov
 * Sam Aaron
+* David Nolen
