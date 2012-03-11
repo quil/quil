@@ -78,7 +78,8 @@
                    (.pack))
                  (when (= mode :opengl)
                    (.setResizable f false))
-                 (.show f))))))
+                 (.show f)
+                 f)))))
 
 (def ^{:private true}
   renderer-modes {:p2d    P2D
