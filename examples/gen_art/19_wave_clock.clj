@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.19-wave-clock
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [cycle-between seq->stream steps]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -103,7 +103,7 @@
     (stroke col 60)
     (apply line line-args)))
 
-(defapplet gen-art-19
+(defsketch gen-art-19
   :title "Wave Clock"
   :setup setup
   :draw draw

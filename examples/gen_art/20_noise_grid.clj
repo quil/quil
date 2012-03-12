@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.20-noise-grid
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -39,7 +39,7 @@
          (stroke-int 0 alph)
          (line x y (inc x) (inc y)))))))
 
-(defapplet gen-art-20
+(defsketch gen-art-20
   :title "2D Noise Grid"
   :setup setup
   :size [300 300])

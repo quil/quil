@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.12-aspiral
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl steps]]))
 
@@ -53,7 +53,7 @@
     (stroke 20 50 70)
     (dorun (map #(apply line %) line-args))))
 
-(defapplet gen-art-12
+(defsketch gen-art-12
   :title "Spiral"
   :setup setup
   :size [500 300])

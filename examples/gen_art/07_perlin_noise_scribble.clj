@@ -1,16 +1,8 @@
 (ns quil.examples.gen-art.07-perlin-noise-scribble
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl perlin-noise-seq]]
         [quil.helpers.calc :only [mul-add]]))
-
-(ns gen-art.perlin-noise-scribble
-  (:use [processing.core]
-        [processing.core.applet]
-        [gen-art.util :only [line-join-points
-                             range-incl
-                             perlin-noise-seq
-                             mul-add]]))
 
 ;; Example 7 - Perlin Noise Scribblea
 ;; Taken from Listing 3.1, p59
@@ -62,7 +54,7 @@
         line-args (line-join-points xs scaled-ys)]
     (dorun (map #(apply line %) line-args))))
 
-(applet
+(defsketch gen-art-7
   :title "Perlin Noise Scribble"
   :setup setup
   :size [500 100])

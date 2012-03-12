@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.27-noise-perspectivea
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [indexed-range-incl seq->stream steps]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -81,8 +81,9 @@
         shifts   (map list x-shifts y-shifts)]
     (set-state! :shifts (seq->stream shifts))))
 
-(defapplet gen-art-27
+(defsketch gen-art-27
   :title "2D Noise from a 3D Perspective"
   :setup setup
   :draw draw
-  :size [500 300 :opengl])
+  :size [500 300]
+  :renderer :opengl)

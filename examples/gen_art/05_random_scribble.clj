@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.05-random-scribble
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.drawing :only [line-join-points]]))
 
@@ -52,7 +52,7 @@
     (dorun (map #(apply line %) line-args))))
 
 
-(defapplet example-5
+(defsketch example-5
   :title "Random Scribble"
   :setup setup
   :size [500 100])

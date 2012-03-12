@@ -2,9 +2,9 @@
     ^{:doc "Functions and macros for initialising and controlling visualisation applets."
       :author "Roland Sadowsky, Sam Aaron"}
     quil.applet
-  (:use [quil.core]
-        [quil.constants]
-        [quil.util :only [resolve-constant-key]])
+  (:use [quil.constants]
+        [quil.util :only [resolve-constant-key]]
+        [quil.dynamics])
   (:import (javax.swing JFrame)
            (java.awt.event WindowListener)))
 
@@ -30,6 +30,11 @@
   [applet]
   (.stop applet))
 
+(defn applet-state
+  "Fetch an element of state from within the applet"
+  [applet k]
+  (get (:state (meta applet)) k))
+
 (defn applet-start
   "Start an applet"
   [applet]
@@ -54,10 +59,11 @@
 
 (defn- applet-run
   "Launches the applet."
-  ([applet] (applet-run applet nil))
-  ([applet mode]
+  ([applet] (applet-run applet nil false))
+  ([applet mode keep-on-top?]
      (.init applet)
      (let [m (.meta applet)
+           keep-on-top? (true? keep-on-top?)
            [width height & _] (or (:size m) [200 200])
            close-op (if (= :exit-on-close mode)
                       JFrame/EXIT_ON_CLOSE
@@ -80,7 +86,9 @@
                    (.pack))
                  (when (= mode :opengl)
                    (.setResizable f false))
-                 (.show f))))))
+                 (.show f)
+                 (.setAlwaysOnTop f keep-on-top?)
+                 f)))))
 
 (def ^{:private true}
   renderer-modes {:p2d    P2D
@@ -90,11 +98,21 @@
                   :pdf    PDF
                   :dxf    DXF})
 
+
+
 (defn- applet-set-size
   ([width height] (.size *applet* (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
        (.size *applet* (int width) (int height) renderer))))
+
+(defn- validate-size!
+  "Checks that the size vector is exactly two elements. If not, throws
+  an exception, otherwise returns the size vector unmodified."
+  [size]
+  (when-not (= 2 (count size))
+    (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
+  size)
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -140,16 +158,15 @@
 
   :key-typed      - Called once every time non-modifier keys are
                     pressed."
-
-
-
   [& opts]
   (let [options           (merge {:size [500 300]} (apply hash-map opts))
+        size              (validate-size! (:size options))
+        renderer          (or (:renderer options) :p2d)
         fns               (dissoc options :title :size :key-pressed
                                   :key-released :key-typed :mouse-pressed
                                   :mouse-released :mouse-moved :mouse-dragged
                                   :focus-gained :focus-lost :mouse-entered
-                                  :mouse-exited :mouse-clicked :setup)
+                                  :mouse-exited :mouse-clicked :setup :keep-on-top :renderer)
         mode              (if (< 2 (count (:size options)))
                             (nth (:size options) 2)
                             :p2d)
@@ -167,15 +184,20 @@
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         setup-fn          (fn []
-                            (apply applet-set-size (:size options))
+                            (let [size-vec (concat size [renderer])]
+                              (apply applet-set-size size-vec))
                             (when-let [f (:setup options)]
                               (f)))
         methods           (into {} (map fix-mname fns))
         frame             (atom nil)
         state             (atom nil)
+        keep-on-top?      (atom (:keep-on-top options))
         prx               (proxy [processing.core.PApplet
                                   clojure.lang.IMeta] []
-                            (meta [] (assoc options :frame frame))
+                            (meta [] (assoc options :frame frame
+                                            :state state))
+                            (toggleVisibility
+                              ([] (.setAlwaysOnTop this (swap! keep-on-top? false?))))
                             (keyPressed
                               ([] (binding [*applet* this
                                             *state* state]
@@ -279,7 +301,7 @@
                                   {}
                                   methods)]
     (update-proxy prx bound-meths)
-    (applet-run prx mode)
+    (applet-run prx mode @keep-on-top?)
     prx))
 
 (defmacro defapplet
@@ -291,10 +313,3 @@
   [app-name & opts]
   (let [opts  (mapcat (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) (partition 2 opts))]
     `(def ~app-name (applet ~@opts))))
-
-(comment ;; Usage:
-  (defapplet growing-triangle
-    :draw (fn [] (line 10 10 (frame-count) 100)))
-
-  (applet-stop growing-triangle)
-  (applet-close growing-triangle))

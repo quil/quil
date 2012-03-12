@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.16-circle-from-opposing-lines
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
@@ -50,7 +50,7 @@
     (doall (map line x1s y1s x2s y2s))))
 
 
-(defapplet gen-art-16
+(defsketch gen-art-16
   :title "Circle from Opposing Lines"
   :setup setup
   :size [500 300])

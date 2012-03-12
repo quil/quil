@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.02-growing-circle
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [seq->stream range-incl]]))
 
 ;; Example 2 - Growing Circle
@@ -48,8 +48,9 @@
       (background 180)
       (ellipse cent-x cent-y diam diam))))
 
-(defapplet gen-art-2
+(defsketch gen-art-2
   :title "Growing circle"
   :setup setup
   :draw draw
-  :size [500 300])
+  :size [500 300]
+  :keep-on-top true)

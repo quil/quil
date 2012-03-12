@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.06-rand-walk-scribble
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]))
 
@@ -50,7 +50,7 @@
         line-args (line-join-points xs ys)]
     (dorun (map #(apply line %) line-args))))
 
-(defapplet gen-art-6
+(defsketch gen-art-6
   :title "Random Walk Scribble"
   :setup setup
   :size [500 100])

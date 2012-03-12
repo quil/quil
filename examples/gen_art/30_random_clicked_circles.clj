@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.30-random-clicked-circles
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; Example 30 - Random Clicked Circles
 ;; Taken from Listing 6.1, p113
@@ -54,7 +54,7 @@
   (fill 150 50)
   (draw-circles))
 
-(defapplet gen-art-30
+(defsketch gen-art-30
   :title "Random Clicked Circles"
   :setup setup
   :mouse-released draw-circles

@@ -1,5 +1,5 @@
 (ns mouse-example
-  (:use [quil core applet]))
+  (:use quil.core))
 
 (defn setup []
   (smooth)
@@ -18,7 +18,7 @@
   (let [x (mouse-x)  y (mouse-y)]
     (reset! (state :mouse-position) [x y])))
 
-(defapplet mouse-example
+(defsketch mouse-example
   :title "Mouse example."
   :size [200 200]
   :setup setup

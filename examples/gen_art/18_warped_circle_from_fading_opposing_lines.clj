@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.18-warped-circle-from-fading-opposing-lines
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl steps]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -61,7 +61,7 @@
                   (line x1 y1 x2 y2))
                 x1s y1s x2s y2s colours))))
 
-(defapplet gen-art-18
+(defsketch gen-art-18
   :title "Warped Circle from Fading Opposing Lines"
   :setup setup
   :size [500 300])

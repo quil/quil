@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.10-custom-rand
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
@@ -56,7 +56,7 @@
 
     (dorun (map #(apply line %) line-args))))
 
-(defapplet gen-art-10
+(defsketch gen-art-10
   :title "Custom Random Function"
   :setup setup
   :size [500 100])

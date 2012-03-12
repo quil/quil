@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.25-animated-rotated-lines
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [steps seq->stream range-incl tap tally indexed-range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -100,7 +100,7 @@
   (let [[x-start y-start] ((state :starts-str))]
     (draw-all-points x-start y-start 5)))
 
-(defapplet gen-art-25
+(defsketch gen-art-25
   :title "Animated Rotated Lines"
   :setup setup
   :draw draw

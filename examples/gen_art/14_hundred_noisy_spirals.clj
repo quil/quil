@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.14-hundred-noisy-spirals
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl steps]]
         [quil.helpers.calc :only [mul-add]]))
@@ -64,7 +64,7 @@
       (stroke (rand 20) (rand 50) (rand 70) 80)
       (dorun (map #(apply line %) line-args)))))
 
-(defapplet gen-art-14
+(defsketch gen-art-14
   :title "100 Noisy Spirals"
   :setup setup
   :size [500 300])

@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.22-squared-noise-grid
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -50,7 +50,7 @@
   (background 255)
   (draw-squares (random 10) (random 10)))
 
-(defapplet gen-art-21
+(defsketch gen-art-21
   :title "Squared 2D Noise Grid"
   :setup setup
   :size [300 300])

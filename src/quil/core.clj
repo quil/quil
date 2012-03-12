@@ -4,14 +4,14 @@
     quil.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:require [clojure.set])
-  (:use [quil.constants]
+  (:use [quil.dynamics]
+        [quil.constants]
         [quil.version :only [QUIL-VERSION-STR]]
-        [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]))
+        [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
+        [quil.applet :only [applet-stop applet-state applet-start applet-close applet defapplet]]))
 
 ;; used by functions in this lib. Use binding to set it
 ;; to an instance of processing.core.PApplet
-(def ^{:dynamic true} ^PApplet *applet*)
-(def ^{:dynamic true} *state*)
 
 (defn
   ^{:requires-bindings true
@@ -4278,3 +4278,88 @@
 
 (def DEG-TO-RAD (/ PI (float 180.0)))
 (def RAD-TO-DEG (/ (float 180.0) PI))
+
+;; Sketch control
+
+(defn sketch-stop
+  "Stop/pause the sketch (restart with sketch-start)"
+  [sketch]
+  (applet-stop sketch))
+
+(defn sketch-state
+  "Fetch an element of state from within the sketch"
+  [sketch k]
+  (applet-state sketch k))
+
+(defn sketch-start
+  "Restart the sketch (if it has been stopped with sketch-stop)"
+  [sketch]
+  (applet-start sketch))
+
+(defn sketch-close
+  "Stop the sketch and close the window"
+  [sketch]
+  (applet-close sketch))
+
+;; Sketch creation
+
+
+(defn sketch
+  "Create and start a new sketch.
+
+  :size           - a vector of width and height for the sketch.
+                    Defaults to [500 300].
+
+  :renderer       - Select the renderer type. One of :p2d, :java2d,
+                    :opengl, :pdf or :dxf). Defaults to :p2d.
+
+  :title          - a string which will be displayed at the top of
+                    the sketch window.
+
+  :keep-on-top    - Specify whether the window should be on top of
+                    all other OS windows.
+
+  :setup          - a fn to be called once when setting the sketch up.
+
+  :draw           - a fn to be repeatedly called at most n times per
+                    second where n is the target frame-rate set for
+                    the visualisation.
+
+  :focus-gained   - Called when the sketch gains focus.
+
+  :focus-lost     - Called when the sketch loses focus.
+
+  :mouse-entered  - Called when the mouse enters the sketch window.
+
+  :mouse-exited   - Called when the mouse leaves the sketch window
+
+  :mouse-pressed  - Called every time a mouse button is pressed.
+
+  :mouse-released - Called every time a mouse button is released.
+
+  :mouse-clicked  - called once after a mouse button has been pressed
+                    and then released.
+
+  :mouse-moved    - Called every time the mouse moves and a button is
+                    not pressed.
+
+  :mouse-dragged  - Called every time the mouse moves and a button is
+                    pressed.
+
+  :key-pressed    - Called every time any key is pressed.
+
+  :key-released   - Called every time any key is released.
+
+  :key-typed      - Called once every time non-modifier keys are
+                    pressed."
+    [& opts]
+    (apply applet opts))
+
+(defmacro defsketch
+  "Define and start a sketch and bind it to a var with the symbol
+  app-name. If any of the options to the various callbacks are
+  symbols, it wraps them in a call to var to ensure they aren't
+  inlined and that redefinitions to the original fns are reflected in
+  the visualisation. See sketch for the available options."
+  [app-name & opts]
+  `(defapplet ~app-name ~@opts))

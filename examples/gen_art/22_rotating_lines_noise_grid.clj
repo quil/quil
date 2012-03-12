@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.22-rotating-lines-noise-grid
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -59,7 +59,7 @@
   (background 255)
   (draw-all-points (random 10) (random 10)))
 
-(defapplet gen-art-22
+(defsketch gen-art-22
   :title "Rotating Lines 2D Noise Grid"
   :setup setup
   :size [300 300])

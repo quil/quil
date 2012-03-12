@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.23-fluffy-clouds-noise-grid
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -65,7 +65,7 @@
   (background 0)
   (draw-all-points (random 10) (random 10)))
 
-(defapplet gen-art-23
+(defsketch gen-art-23
   :title "Fluffy Clouds 2D Noise Grid"
   :setup setup
   :size [300 300])

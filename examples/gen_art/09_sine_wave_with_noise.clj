@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.09-sine-wave-with-noise
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
@@ -52,7 +52,7 @@
         line-args (line-join-points xs scaled-ys)]
     (dorun (map #(apply line %) line-args))))
 
-(defapplet gen-art-9
+(defsketch gen-art-9
   :title "Sine Wave with Noise"
   :setup setup
   :size [500 100])

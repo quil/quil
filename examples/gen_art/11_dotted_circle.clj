@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.11-dotted-circle
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]))
 
@@ -45,7 +45,7 @@
     (stroke 20 50 70)
     (dorun (map point xs ys))))
 
-(defapplet gen-art-11
+(defsketch gen-art-11
   :title "Dotted Circle"
   :setup setup
   :size [500 300])

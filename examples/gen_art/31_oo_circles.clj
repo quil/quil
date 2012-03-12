@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.31-oo_circles
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.calc :only [mod-range]]))
 
 ;; Example 31 - OO Circles
@@ -139,7 +139,7 @@
     (doseq [c circles]
       (draw-circle c))))
 
-(defapplet gen-art-31
+(defsketch gen-art-31
   :title "OO Circles"
   :setup setup
   :draw draw

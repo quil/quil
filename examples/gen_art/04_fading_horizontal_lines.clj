@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.04-fading-horizontal-lines
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; Example 4 - Fading Horizontal Lines
 ;; Taken from Section 2.4.3, p 39
@@ -32,7 +32,7 @@
   (let [line-heights (range 10 (- (height) 15) 10)]
     (dorun (map draw-line line-heights))))
 
-(defapplet example-4
+(defsketch example-4
   :title "Fading Horizontal Lines"
   :setup setup
   :size [500 300])

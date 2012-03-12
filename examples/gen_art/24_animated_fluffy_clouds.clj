@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.24-animated-fluffy-clouds
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [steps seq->stream range-incl tap]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -94,7 +94,7 @@
 
     (set-state! :starts-str starts-str)))
 
-(defapplet gen-art-24
+(defsketch gen-art-24
   :title "Animated Fluffy Clouds"
   :setup setup
   :draw draw

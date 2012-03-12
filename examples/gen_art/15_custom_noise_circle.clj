@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.15-noise-circle
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
@@ -83,7 +83,7 @@
     (dorun (map curve-vertex xs ys))
     (end-shape)))
 
-(defapplet gen-art-15
+(defsketch gen-art-15
   :title "Custom Noise Circle"
   :setup setup
   :size [500 300])

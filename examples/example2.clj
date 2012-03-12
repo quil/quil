@@ -1,5 +1,5 @@
 (ns example2
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; here's a function which will be called by Processing's (PApplet)
 ;; draw method every frame. Place your code here. If you eval it
@@ -31,7 +31,7 @@
 
 ;; Now we just need to define an applet:
 
-(defapplet example2
+(defsketch example2
   :title "An example."
   :setup setup
   :draw draw

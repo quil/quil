@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.17-circle-from-fading-opposing-lines
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -58,7 +58,7 @@
                   (line x1 y1 x2 y2))
                 x1s y1s x2s y2s colours))))
 
-(defapplet gen-art-17
+(defsketch gen-art-17
  :title "Circle from Fading Opposing Lines"
  :setup setup
  :size [500 300])

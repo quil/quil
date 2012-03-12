@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.cross-with-circle
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; Example 1 - Cross with Circle
 ;; Taken from Section 2.2.1, p20
@@ -35,7 +35,7 @@
     (fill 255 150)
     (ellipse canvas-x-center canvas-y-center circ-size circ-size)))
 
-(defapplet gen-art-1
+(defsketch gen-art-1
   :title "Cross with circle"
   :setup setup
   :size [500 300])

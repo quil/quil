@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.29-spiral-sphere
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -72,8 +72,9 @@
      (map #(apply line %) (line-join-points line-args)))))
 
 
-(defapplet gen-art-29
+(defsketch gen-art-29
   :title "Spiral Sphere"
   :setup setup
   :draw draw
-  :size [500 300 :opengl])
+  :size [500 300]
+  :renderer :opengl)

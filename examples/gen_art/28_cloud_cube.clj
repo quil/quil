@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.28-cloud-cube
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.seqs :only [indexed-range-incl]]
         [quil.helpers.calc :only [mul-add]]))
 
@@ -100,8 +100,9 @@
               :y-start (random 10)
               :z-start (random 10)))
 
-(defapplet gen-art-28
+(defsketch gen-art-28
   :title "A Cube of 3D Noise"
   :setup setup
   :draw draw
-  :size [500 300 :p3d])
+  :size [500 300]
+  :renderer :p3d)

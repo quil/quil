@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.03-concentric-circles
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; Example 3 - Concentric circles drawn using traces
 ;; Taken from Listing 2.3, p37
@@ -45,7 +45,7 @@
       (ellipse cent-x cent-y @diam @diam)
       (swap! diam + 10))))
 
-(defapplet gen-art-3
+(defsketch gen-art-3
   :title "Concentric Circles"
   :setup setup
   :draw draw

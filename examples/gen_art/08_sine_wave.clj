@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.08-sine-save
-  (:use [quil core applet]
+  (:use quil.core
         [quil.helpers.drawing :only [line-join-points]]
         [quil.helpers.seqs :only [range-incl]]
         [quil.helpers.calc :only [mul-add]]))
@@ -49,7 +49,7 @@
         line-args (line-join-points xs scaled-ys)]
     (dorun (map #(apply line %) line-args))))
 
-(defapplet gen-art-8
+(defsketch gen-art-8
   :title "Sine Wave"
   :setup setup
   :size [500 100])

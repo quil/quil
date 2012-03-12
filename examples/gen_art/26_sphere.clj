@@ -1,5 +1,5 @@
 (ns quil.examples.gen-art.26-sphere
-  (:use [quil core applet]))
+  (:use quil.core))
 
 ;; Example 26 - 3D Sphere
 ;; Taken from Section 5.3.1, p94
@@ -20,7 +20,8 @@
   (translate (/ (width) 2) (/ (height) 2) 0)
   (sphere 100))
 
-(defapplet gen-art-26
+(defsketch gen-art-26
   :title "3D Sphere"
   :setup setup
-  :size [500 300 :opengl])
+  :size [500 300]
+  :renderer :opengl)
