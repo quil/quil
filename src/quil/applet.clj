@@ -13,18 +13,6 @@
 
 (defonce untitled-applet-id* (atom 0))
 
-(defn- fix-mname
-  "Changes :method-name to :methodName."
-  [[mname fun]]
-  (let [mname (name mname)
-        mr (re-matcher #"\-[a-zA-z]" mname)
-        replace-fn (comp #(.replaceFirst mr %) toupper #(.substring % 1))
-        fixed-name (if-let [matched (re-find mr)]
-                     (replace-fn matched)
-                     mname)]
-    [(keyword fixed-name) fun]))
-
-
 (defn applet-stop
   "Stop an applet"
   [applet]
@@ -162,15 +150,8 @@
   (let [options           (merge {:size [500 300]} (apply hash-map opts))
         size              (validate-size! (:size options))
         renderer          (or (:renderer options) :p2d)
-        fns               (dissoc options :title :size :key-pressed
-                                  :key-released :key-typed :mouse-pressed
-                                  :mouse-released :mouse-moved :mouse-dragged
-                                  :focus-gained :focus-lost :mouse-entered
-                                  :mouse-exited :mouse-clicked :setup :keep-on-top :renderer)
-        mode              (if (< 2 (count (:size options)))
-                            (nth (:size options) 2)
-                            :p2d)
-        fns               (merge {:draw (fn [] nil)} fns)
+        draw-fn           (or (:draw options) (fn [] nil))
+        setup-fn          (or (:setup options) (fn [] nil))
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
         key-typed-fn      (or (:key-typed options) (fn [] nil))
@@ -188,7 +169,6 @@
                               (apply applet-set-size size-vec))
                             (when-let [f (:setup options)]
                               (f)))
-        methods           (into {} (map fix-mname fns))
         frame             (atom nil)
         state             (atom nil)
         keep-on-top?      (atom (:keep-on-top options))
@@ -290,18 +270,13 @@
                             (setup
                               ([] (binding [*applet* this
                                             *state* state]
-                                    (setup-fn)))))
+                                    (setup-fn))))
 
-        bound-meths       (reduce (fn [methods [method-name f]]
-                                    (assoc methods (name method-name)
-                                           (fn [this & args]
-                                             (binding [*applet* this
-                                                       *state* state]
-                                               (apply f args)))))
-                                  {}
-                                  methods)]
-    (update-proxy prx bound-meths)
-    (applet-run prx mode @keep-on-top?)
+                            (draw
+                              [] (binding [*applet* this
+                                           *state* state]
+                                   (draw-fn))))]
+    (applet-run prx renderer @keep-on-top?)
     prx))
 
 (defmacro defapplet
