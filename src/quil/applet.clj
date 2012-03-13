@@ -33,50 +33,67 @@
   [applet]
   (.exit applet))
 
-(defn applet-close
-  "Stop the applet and close the window."
+(defn- applet-close-applet
+  [applet]
+  (.stop applet))
+
+(defn- applet-close-frame
   [applet]
   (let [closing-fn (fn []
-                     (let [frame @(:frame (meta applet))]
-                       (.stop applet)
+                     (let [frame @(:target-obj (meta applet))]
+                       (applet-close-applet applet)
                        ;;.destroy appears to kill the process too
                        (doto frame
                          (.hide)
                          (.dispose))))]
-    (javax.swing.SwingUtilities/invokeAndWait closing-fn))  )
+    (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
+
+(defn applet-close
+  "Stop the applet and close the window."
+  [applet]
+  (case (:target (meta applet))
+    :frame      (applet-close-frame applet)
+    :perm-frame (applet-close-frame applet)
+    :applet     (applet-close-applet applet)))
+
+(defn- launch-applet-frame
+  [applet renderer keep-on-top?]
+  (let [truthify       #(not (or (nil? %) (false? %)))
+        keep-on-top?   (truthify keep-on-top?)
+        m              (.meta applet)
+        [width height] (or (:size m) [800 600])
+        close-op       JFrame/DISPOSE_ON_CLOSE
+        title          (or (:title m) (str "Quil " (swap! untitled-applet-id* inc)))
+        f              (JFrame. title)]
+    (doto f
+      (.addWindowListener  (reify WindowListener
+                             (windowActivated [this e])
+                             (windowClosing [this e]
+                               (future (applet-close applet)))
+                             (windowDeactivated [this e])
+                             (windowDeiconified [this e])
+                             (windowIconified [this e])
+                             (windowOpened [this e])
+                             (windowClosed [this e])))
+      (.setDefaultCloseOperation close-op)
+      (.setSize width height)
+      (.add applet)
+      (.pack))
+    (when (= renderer :opengl)
+      (.setResizable f false))
+    (.show f)
+    (.setAlwaysOnTop f keep-on-top?)
+    (reset! (:target-obj (meta applet)) f)
+    applet))
 
 (defn- applet-run
-  "Launches the applet."
-  ([applet] (applet-run applet nil false))
-  ([applet mode keep-on-top?]
-     (.init applet)
-     (let [m (.meta applet)
-           keep-on-top? (true? keep-on-top?)
-           [width height & _] (or (:size m) [200 200])
-           close-op (if (= :exit-on-close mode)
-                      JFrame/EXIT_ON_CLOSE
-                      JFrame/DISPOSE_ON_CLOSE)]
-       (reset! (:frame m)
-               (let [f (JFrame. (or (:title m) (str "Quil " (swap! untitled-applet-id* inc))))]
-                 (doto f
-                   (.addWindowListener  (reify WindowListener
-                                          (windowActivated [this e])
-                                          (windowClosing [this e]
-                                            (future (applet-close applet)))
-                                          (windowDeactivated [this e])
-                                          (windowDeiconified [this e])
-                                          (windowIconified [this e])
-                                          (windowOpened [this e])
-                                          (windowClosed [this e])))
-                   (.setDefaultCloseOperation close-op)
-                   (.setSize width height)
-                   (.add applet)
-                   (.pack))
-                 (when (= mode :opengl)
-                   (.setResizable f false))
-                 (.show f)
-                 (.setAlwaysOnTop f keep-on-top?)
-                 f)))))
+  "Launches the applet to the specified target."
+  [applet renderer target]
+  (.init applet)
+  (case target
+    :frame (launch-applet-frame applet renderer false)
+    :perm-frame (launch-applet-frame applet renderer true)
+    :applet applet))
 
 (def ^{:private true}
   renderer-modes {:p2d    P2D
@@ -85,8 +102,6 @@
                   :opengl OPENGL
                   :pdf    PDF
                   :dxf    DXF})
-
-
 
 (defn- applet-set-size
   ([width height] (.size *applet* (int width) (int height)))
@@ -101,6 +116,16 @@
   (when-not (= 2 (count size))
     (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
   size)
+
+(def ^{:private true} VALID-TARGETS #{:frame :perm-frame})
+
+(defn- validate-target!
+  "Checks that the target option is one of the following allowed
+  targets: [:frame, :perm-frame]."
+  [target]
+  (when-not (some VALID-TARGETS [target])
+    (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
+  target)
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -118,6 +143,8 @@
   :draw           - a fn to be repeatedly called at most n times per
                     second where n is the target frame-rate set for
                     the visualisation.
+
+  :target         - one of :frame, :perm-frame. Default :frame.
 
   :focus-gained   - Called when the applet gains focus.
 
@@ -147,11 +174,17 @@
   :key-typed      - Called once every time non-modifier keys are
                     pressed."
   [& opts]
-  (let [options           (merge {:size [500 300]} (apply hash-map opts))
+  (let [options           (merge {:size [500 300] :target :frame}
+                                 (apply hash-map opts))
         size              (validate-size! (:size options))
+        target            (validate-target! (:target options))
         renderer          (or (:renderer options) :p2d)
         draw-fn           (or (:draw options) (fn [] nil))
-        setup-fn          (or (:setup options) (fn [] nil))
+        setup-fn          (fn []
+                            (let [size-vec (concat size [renderer])]
+                              (apply applet-set-size size-vec))
+                            (when-let [f (:setup options)]
+                              (f)))
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
         key-typed-fn      (or (:key-typed options) (fn [] nil))
@@ -164,20 +197,14 @@
         mouse-clicked-fn  (or (:mouse-clicked options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
-        setup-fn          (fn []
-                            (let [size-vec (concat size [renderer])]
-                              (apply applet-set-size size-vec))
-                            (when-let [f (:setup options)]
-                              (f)))
-        frame             (atom nil)
         state             (atom nil)
-        keep-on-top?      (atom (:keep-on-top options))
-        prx               (proxy [processing.core.PApplet
+        target-obj        (atom nil)
+        prx-obj           (proxy [processing.core.PApplet
                                   clojure.lang.IMeta] []
-                            (meta [] (assoc options :frame frame
-                                            :state state))
-                            (toggleVisibility
-                              ([] (.setAlwaysOnTop this (swap! keep-on-top? false?))))
+                            (meta [] (assoc options
+                                       :state state
+                                       :target-obj target-obj
+                                       :target target))
                             (keyPressed
                               ([] (binding [*applet* this
                                             *state* state]
@@ -276,8 +303,8 @@
                               [] (binding [*applet* this
                                            *state* state]
                                    (draw-fn))))]
-    (applet-run prx renderer @keep-on-top?)
-    prx))
+    (applet-run prx-obj renderer target)
+    prx-obj))
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
