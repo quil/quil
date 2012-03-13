@@ -792,7 +792,7 @@
   ([r g b] (.color *applet* (float r) (float g) (float b)))
   ([r g b a] (.color *applet* (float r) (float g) (float b) (float a))))
 
-(defn ^{:private true}
+(def ^{:private true}
   color-modes {:rgb RGB
                :hsb HSB})
 
