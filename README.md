@@ -20,7 +20,7 @@ Simply add Quil as a dependency in your `project.clj`:
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
-    (:use [quil core applet])
+    (:use quil.core)
 
 **Please Note:** In order to use the OpenGL features, you need to be using Leiningen 2.x.
 
@@ -30,16 +30,16 @@ Using Quil is as easy as eating chocolate digestives. You just need to grok thre
 
 * The Setup fn
 * The Draw fn
-* The Applet obj
+* The Sketch
 
-If `setup` and `draw` are hard working *artistic gladiators*, `applet` is the *arena* in which they battle for the glory of art. However, they don't actually fight each other - they work as a team - relentlessly spilling colour all over the arena sands. The crowds roar for messy fight.
+If `setup` and `draw` are hard working *artistic gladiators*, `sketch` is the *arena* in which they battle for the glory of art. However, they don't actually fight each other - they work as a team - relentlessly spilling colour all over the arena sands. The crowds roar for messy fight.
 
-`setup` lays all the groundwork and is called only once at the start. `draw`, on the other hand, is called immediately after `setup` has completed, and then repeatedly until you summon it to stop. When you create an `applet` and name your `setup` and `draw` fns, the fun automatically starts.
+`setup` lays all the groundwork and is called only once at the start. `draw`, on the other hand, is called immediately after `setup` has completed, and then repeatedly until you summon it to stop. When you create an `sketch` and name your `setup` and `draw` fns, the fun automatically starts.
 
 A simple example is called for:
 
     (ns for-the-glory-of-art
-      (:use [quil core applet]))
+      (:use quil.core))
 
     (defn setup []
       (smooth)                          ;;Turn on anti-aliasing
@@ -52,12 +52,12 @@ A simple example is called for:
       (fill (random 255))               ;;Set the fill colour to a random grey
 
       (let [diam (random 100)           ;;Set the diameter to a value between 0 and 100
-            x    (random (width))       ;;Set the x coord randomly within the applet
-            y    (random (height))]     ;;Set the y coord randomly within the applet
+            x    (random (width))       ;;Set the x coord randomly within the sketch
+            y    (random (height))]     ;;Set the y coord randomly within the sketch
         (ellipse x y diam diam)))       ;;Draw a circle at x y with the correct diameter
 
-    (defapplet example                  ;;Define a new applet named example
-      :title "Oh so many grey circles"  ;;Set the title of the applet
+    (defsketch example                  ;;Define a new sketch named example
+      :title "Oh so many grey circles"  ;;Set the title of the sketch
       :setup setup                      ;;Specify the setup fn
       :draw draw                        ;;Specify the draw fn
       :size [323 200])                  ;;You struggle to beat the golden ratio
@@ -66,16 +66,16 @@ A simple example is called for:
 
 Feast your eyes on this beauty.
 
-You're witnessing `setup`, `draw` and `applet` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defapplet` a convenience macro around `applet` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
+You're witnessing `setup`, `draw` and `sketch` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defsketch` a convenience macro around `sketch` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
 
 ## Documentation
 
 
 <a href="http://github.com/downloads/quil/quil/quil-cheatsheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](http://github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy. 
+When getting started with Quil, it's always useful to have the [Cheatsheet](http://github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy.
 
-If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time. 
+If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
 
 The full [Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
 
