@@ -1,15 +1,12 @@
 (ns
     ^{:doc "Functions and macros for initialising and controlling visualisation applets."
       :author "Roland Sadowsky, Sam Aaron"}
-    quil.applet
-  (:use [quil.constants]
-        [quil.util :only [resolve-constant-key]]
-        [quil.dynamics])
-  (:import (javax.swing JFrame)
-           (java.awt.event WindowListener)))
-
-(def ^{:private true}
-  toupper (memfn toUpperCase))
+  quil.applet
+  (:import (processing.core PApplet)
+           (javax.swing JFrame)
+           (java.awt.event WindowListener))
+  (:use [quil.util :only [resolve-constant-key]]
+        [quil.dynamics :only [*applet* *state*]]))
 
 (defonce untitled-applet-id* (atom 0))
 
@@ -96,12 +93,12 @@
     :applet applet))
 
 (def ^{:private true}
-  renderer-modes {:p2d    P2D
-                  :p3d    P3D
-                  :java2d JAVA2D
-                  :opengl OPENGL
-                  :pdf    PDF
-                  :dxf    DXF})
+  renderer-modes {:p2d    PApplet/P2D
+                  :p3d    PApplet/P3D
+                  :java2d PApplet/JAVA2D
+                  :opengl PApplet/OPENGL
+                  :pdf    PApplet/PDF
+                  :dxf    PApplet/DXF})
 
 (defn- applet-set-size
   ([width height] (.size *applet* (int width) (int height)))

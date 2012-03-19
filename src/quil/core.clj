@@ -4,14 +4,10 @@
     quil.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:require [clojure.set])
-  (:use [quil.dynamics]
-        [quil.constants]
+  (:use [quil.dynamics :only [*applet* *state*]]
         [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
         [quil.applet :only [applet-stop applet-state applet-start applet-close applet defapplet]]))
-
-;; used by functions in this lib. Use binding to set it
-;; to an instance of processing.core.PApplet
 
 (defn
   ^{:requires-bindings true
@@ -385,13 +381,12 @@
      (.beginRaw *applet* renderer filename)))
 
 (def ^{:private true}
-  render-modes {:p2d P2D
-                :p3d P3D
-                :java2d JAVA2D
-                :opengl OPENGL
-                :pdf PDF
-                :dxf DXF})
-
+  render-modes {:p2d PApplet/P2D
+                :p3d PApplet/P3D
+                :java2d PApplet/JAVA2D
+                :opengl PApplet/OPENGL
+                :pdf PApplet/PDF
+                :dxf PApplet/DXF})
 
 (defn
   ^{:requires-bindings true
@@ -428,13 +423,13 @@
   (.endRecord *applet*))
 
 (def ^{:private true}
-     shape-modes {:points POINTS
-                  :lines LINES
-                  :triangles TRIANGLES
-                  :triangle-strip TRIANGLE-STRIP
-                  :triangle-fan TRIANGLE-FAN
-                  :quads QUADS
-                  :quad-strip QUAD-STRIP})
+     shape-modes {:points PApplet/POINTS
+                  :lines PApplet/LINES
+                  :triangles PApplet/TRIANGLES
+                  :triangle-strip PApplet/TRIANGLE_STRIP
+                  :triangle-fan PApplet/TRIANGLE_FAN
+                  :quads PApplet/QUADS
+                  :quad-strip PApplet/QUAD_STRIP})
 
 (defn
   ^{:requires-bindings true
@@ -588,20 +583,20 @@
   (PApplet/unbinary (str str-val)))
 
 (def ^{:private true}
-  blend-modes {:blend BLEND
-               :add ADD
-               :subtract SUBTRACT
-               :darkest DARKEST
-               :lightest LIGHTEST
-               :difference DIFFERENCE
-               :exclusion EXCLUSION
-               :multiply MULTIPLY
-               :screen SCREEN
-               :overlay OVERLAY
-               :hard-light HARD-LIGHT
-               :soft-light SOFT-LIGHT
-               :dodge DODGE
-               :burn BURN})
+  blend-modes {:blend PApplet/BLEND
+               :add PApplet/ADD
+               :subtract PApplet/SUBTRACT
+               :darkest PApplet/DARKEST
+               :lightest PApplet/LIGHTEST
+               :difference PApplet/DIFFERENCE
+               :exclusion PApplet/EXCLUSION
+               :multiply PApplet/MULTIPLY
+               :screen PApplet/SCREEN
+               :overlay PApplet/OVERLAY
+               :hard-light PApplet/HARD_LIGHT
+               :soft-light PApplet/SOFT_LIGHT
+               :dodge PApplet/DODGE
+               :burn PApplet/BURN})
 
 (defn
   ^{:requires-bindings true
@@ -793,8 +788,8 @@
   ([r g b a] (.color *applet* (float r) (float g) (float b) (float a))))
 
 (def ^{:private true}
-  color-modes {:rgb RGB
-               :hsb HSB})
+  color-modes {:rgb (int 1)
+               :hsb (int 3)})
 
 (defn
   ^{:requires-bindings true
@@ -1334,12 +1329,10 @@
   (.ellipse *applet* (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
-     ellipse-modes   {:center CENTER
-                      :radius RADIUS
-                      :corner CORNER
-                      :corners CORNERS})
-
-
+     ellipse-modes   {:center PApplet/CENTER
+                      :radius PApplet/RADIUS
+                      :corner PApplet/CORNER
+                      :corners PApplet/CORNERS})
 
 (defn
   ^{:requires-bindings true
@@ -1433,7 +1426,7 @@
   ([mode]
      (when-not (= :close mode)
        (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
-     (.endShape *applet* CLOSE)))
+     (.endShape *applet* PApplet/CLOSE)))
 
 (defn
   ^{:requires-bindings true
@@ -1500,14 +1493,14 @@
   ([r g b a] (fill-float r g b a)))
 
 (def ^{:private true}
-  filter-modes {:threshold THRESHOLD
-                :gray GRAY
-                :invert INVERT
-                :posterize POSTERIZE
-                :blur BLUR
-                :opaque OPAQUE
-                :erode ERODE
-                :dilate DILATE})
+  filter-modes {:threshold PConstants/THRESHOLD
+                :gray PConstants/GRAY
+                :invert PConstants/INVERT
+                :posterize PConstants/POSTERIZE
+                :blur PConstants/BLUR
+                :opaque PConstants/OPAQUE
+                :erode PConstants/ERODE
+                :dilate PConstants/DILATE})
 
 (defn
   ^{:requires-bindings true
@@ -1846,9 +1839,9 @@
              (float u1) (float v1) (float u2) (float v2))))
 
 (def ^{:private true}
-  image-modes {:corner CORNER
-               :corners CORNERS
-               :center CENTER})
+  image-modes {:corner PApplet/CORNER
+               :corners PApplet/CORNERS
+               :center PApplet/CENTER})
 
 (defn
   ^{:requires-bindings true
@@ -2882,10 +2875,10 @@
   (.rect *applet* (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
-  rect-modes {:corner CORNER
-              :corners CORNERS
-              :center CENTER
-              :radius RADIUS})
+  rect-modes {:corner PApplet/CORNER
+              :corners PApplet/CORNERS
+              :center PApplet/CENTER
+              :radius PApplet/RADIUS})
 
 (defn
   ^{:requires-bindings true
@@ -3360,9 +3353,9 @@
   (.shearY *applet* (float angle)))
 
 (def ^{:private true}
-  p-shape-modes {:corner CORNER
-                 :corners CORNERS
-                 :center CENTER})
+  p-shape-modes {:corner PApplet/CORNER
+                 :corners PApplet/CORNERS
+                 :center PApplet/CENTER})
 
 (defn ^{:requires-bindings true
         :processing-name "shapeMode()"
@@ -3575,10 +3568,10 @@
   ([x y z a] (stroke-float x y z a)))
 
 (def ^{:private true}
-  stroke-cap-modes {:square SQUARE
-                    :round ROUND
-                    :project PROJECT
-                    :model MODEL})
+  stroke-cap-modes {:square PApplet/SQUARE
+                    :round PApplet/ROUND
+                    :project PApplet/PROJECT
+                    :model PApplet/MODEL})
 
 
 (defn
@@ -3698,15 +3691,15 @@
   ([^String s x1 y1 x2 y2 z] (.text *applet* s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (def ^{:private true}
-  horizontal-alignment-modes {:left LEFT
-                              :center CENTER
-                              :right RIGHT})
+  horizontal-alignment-modes {:left PApplet/LEFT
+                              :center PApplet/CENTER
+                              :right PApplet/RIGHT})
 
 (defn ^{:private true}
-  vertical-alignment-modes {:top TOP
-                            :bottom BOTTOM
-                            :center CENTER
-                            :baseline BASELINE})
+  vertical-alignment-modes {:top PApplet/TOP
+                            :bottom PApplet/BOTTOM
+                            :center PApplet/CENTER
+                            :baseline PApplet/BASELINE})
 
 (defn
   ^{:requires-bindings true
@@ -3887,8 +3880,8 @@
   (.texture *applet* img))
 
 (def ^{:private true}
-  texture-modes {:image IMAGE
-                :normalized NORMALIZED})
+  texture-modes {:image PApplet/IMAGE
+                 :normalized PApplet/NORMALIZED})
 
 (defn
     ^{:requires-bindings true
