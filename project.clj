@@ -7,6 +7,7 @@
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
   :dependencies [[org.clojure/clojure "1.3.0"]
+				 [criterium "0.2.1-SNAPSHOT"]
                  [org.clojars.processing-core/org.processing.core "1.5.1"]
                  [org.clojars.processing-core/org.processing.gluegen-rt "1.5.1"]
                  [org.clojars.processing-core/org.processing.jogl "1.5.1"]

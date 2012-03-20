@@ -9,8 +9,14 @@
         [quil.dynamics :only [*applet* *state*]]))
 
 (defonce untitled-applet-id* (atom 0))
-(defonce applet-tl (ThreadLocal.))
-(defonce state-tl (ThreadLocal.))
+(def ^ThreadLocal applet-tl (ThreadLocal.))
+(def ^ThreadLocal state-tl (ThreadLocal.))
+ 
+(defn ^PApplet current-applet []
+  (.get ^ThreadLocal applet-tl))
+
+(defn state []
+  (.get ^ThreadLocal state-tl))
 
 (defn applet-stop
   "Stop an applet"
@@ -106,7 +112,7 @@
   ([width height] (.size *applet* (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (.get applet-tl) (int width) (int height) renderer))))
+       (.size (current-applet) (int width) (int height) renderer))))
 
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws

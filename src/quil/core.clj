@@ -6,7 +6,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl]]))
+        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl]]))
 
 (defn
   ^{:requires-bindings true
@@ -20,7 +20,7 @@
   (set-state! :foo 1)
   (state :foo) ;=> 1 "
   [key]
-  (let [state* (.get state-tl)]
+  (let [state* (state)]
     (when-not @state*
       (throw (Exception. "State not set - use set-state! before fetching state")))
 
@@ -41,7 +41,7 @@
   Example:
   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
   [& state-vals]
-  (let [state* (.get state-tl)]
+  (let [state* (state)]
     (when-not @state*
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
@@ -107,7 +107,7 @@
   alpha
   "Extracts the alpha value from a color."
   [color]
-  (.alpha (.get applet-tl) (int color)))
+  (.alpha (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -123,8 +123,8 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([gray] (.ambient (.get applet-tl) (float gray)))
-  ([x y z] (.ambient (.get applet-tl) (float x) (float y) (float z))))
+  ([gray] (.ambient (current-applet) (float gray)))
+  ([x y z] (.ambient (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -140,7 +140,7 @@
   properties of shapes."
   [rgb]
   (.ambient
-   (.get applet-tl) (int rgb)))
+   (current-applet) (int rgb)))
 
 (defn
   ^{:requires-bindings true
@@ -175,9 +175,9 @@
    effect the first time through the loop. The effect of the
    parameters is determined by the current color mode."
   ([red green blue]
-     (.ambientLight (.get applet-tl) (float red) (float green) (float blue)))
+     (.ambientLight (current-applet) (float red) (float green) (float blue)))
   ([red green blue x y z]
-     (.ambientLight (.get applet-tl) (float red) (float green) (float blue)
+     (.ambientLight (current-applet) (float red) (float green) (float blue)
                     (float x) (float y) (float z))))
 
 (defn
@@ -192,13 +192,13 @@
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
   ([n00 n01 n02 n10 n11 n12]
-     (.applyMatrix (.get applet-tl) (float n00) (float n01) (float n02)
+     (.applyMatrix (current-applet) (float n00) (float n01) (float n02)
                    (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
     n10 n11 n12 n13
     n20 n21 n22 n23
     n30 n31 n32 n33]
-     (.applyMatrix (.get applet-tl) (float n00) (float n01) (float n02) (float 03)
+     (.applyMatrix (current-applet) (float n00) (float n01) (float n02) (float 03)
                    (float n10) (float n11) (float n12) (float 13)
                    (float n20) (float n21) (float n22) (float 23)
                    (float n30) (float n31) (float n32) (float 33))))
@@ -216,7 +216,7 @@
   ellipseMode() function. The start and stop parameters specify the
   angles at which to draw the arc."
   [x y width height start stop]
-  (.arc (.get applet-tl) (float x)(float y) (float width) (float height)
+  (.arc (current-applet) (float x)(float y) (float width) (float height)
         (float start) (float stop)))
 
 (defn
@@ -278,10 +278,10 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts args to floats."
-  ([gray] (.background (.get applet-tl) (float gray)))
-  ([gray alpha] (.background (.get applet-tl) (float gray) (float alpha)))
-  ([r g b] (.background (.get applet-tl) (float r) (float g) (float b)))
-  ([r g b a] (.background (.get applet-tl) (float r) (float g) (float b) (float a))))
+  ([gray] (.background (current-applet) (float gray)))
+  ([gray alpha] (.background (current-applet) (float gray) (float alpha)))
+  ([r g b] (.background (current-applet) (float r) (float g) (float b)))
+  ([r g b a] (.background (current-applet) (float r) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -298,8 +298,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (.get applet-tl) (int rgb)))
-  ([rgb alpha] (.background (.get applet-tl) (int rgb) (float alpha))))
+  ([rgb] (.background (current-applet) (int rgb)))
+  ([rgb alpha] (.background (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -332,7 +332,7 @@
   width and height must be the same size as the sketch window. Images
   used as background will ignore the current tint setting."
   [^PImage img]
-  (.background (.get applet-tl) img))
+  (.background (current-applet) img))
 
 (defn
   ^{:requires-bindings true
@@ -349,7 +349,7 @@
 
   For most situations the camera function will be sufficient."
   []
-  (.beginCamera (.get applet-tl)))
+  (.beginCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -360,7 +360,7 @@
   end-camera
   "Unsets the matrix mode from the camera matrix. See begin-camera."
   []
-  (.endCamera (.get applet-tl)))
+  (.endCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -377,9 +377,9 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([^PGraphics raw-gfx] (.beginRaw (.get applet-tl) raw-gfx))
+  ([^PGraphics raw-gfx] (.beginRaw (current-applet) raw-gfx))
   ([^String renderer ^String filename]
-     (.beginRaw (.get applet-tl) renderer filename)))
+     (.beginRaw (current-applet) renderer filename)))
 
 (def ^{:private true}
   render-modes {:p2d PApplet/P2D
@@ -409,7 +409,7 @@
   [renderer filename]
   (let [renderer (resolve-constant-key renderer render-modes)]
     (println "renderer: " renderer)
-    (.beginRecord (.get applet-tl) (str renderer) (str filename))))
+    (.beginRecord (current-applet) (str renderer) (str filename))))
 
 (defn
   ^{:requires-bindings true
@@ -421,7 +421,7 @@
   "Stops the recording process started by begin-record and closes the
   file."
   []
-  (.endRecord (.get applet-tl)))
+  (.endRecord (current-applet)))
 
 (def ^{:private true}
      shape-modes {:points PApplet/POINTS
@@ -459,10 +459,10 @@
   Transformations such as translate, rotate, and scale do not work
   within begin-shape. It is also not possible to use other shapes,
   such as ellipse or rect within begin-shape."
-  ([] (.beginShape (.get applet-tl)))
+  ([] (.beginShape (current-applet)))
   ([mode]
      (let [mode (resolve-constant-key mode shape-modes)]
-       (.beginShape (.get applet-tl) (int mode)))))
+       (.beginShape (current-applet) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -477,13 +477,13 @@
   the other anchor point. The middle parameters specify the control
   points which define the shape of the curve."
   ([x1 y1 cx1 cy1 cx2 cy2 x2 y2]
-     (.bezier (.get applet-tl)
+     (.bezier (current-applet)
               (float x1) (float y1)
               (float cx1) (float cy1)
               (float cx2) (float cy2)
               (float x2) (float y2)))
   ([x1 y1 z1 cx1 cy1 cz1 cx2 cy2 cz2 x2 y2 z2]
-     (.bezier (.get applet-tl)
+     (.bezier (current-applet)
               (float x1) (float y1) (float z1)
               (float cx1) (float cy1) (float cz1)
               (float cx2) (float cy2) (float cz2)
@@ -501,7 +501,7 @@
   renderer as the default (JAVA2D) renderer does not use this
   information."
   [detail]
-  (.bezierDetail (.get applet-tl) (int detail)))
+  (.bezierDetail (current-applet) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -516,7 +516,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a bezier curve at t."
   [a b c d t]
-  (.bezierPoint (.get applet-tl) (float a) (float b) (float c)
+  (.bezierPoint (current-applet) (float a) (float b) (float c)
                 (float d) (float t)))
 
 (defn
@@ -529,7 +529,7 @@
   "Calculates the tangent of a point on a Bezier curve.
   (See http://en.wikipedia.org/wiki/Tangent)"
   [a b c d t]
-  (.bezierTangent (.get applet-tl) (float a) (float b) (float c)
+  (.bezierTangent (current-applet) (float a) (float b) (float c)
                   (float d) (float t)))
 
 (defn
@@ -548,12 +548,12 @@
   end-shape and only when there is no parameter specified to
   begin-shape."
   ([cx1 cy1 cx2 cy2 x y]
-     (.bezierVertex (.get applet-tl)
+     (.bezierVertex (current-applet)
                     (float cx1) (float cx1)
                     (float cx2) (float cy2)
                     (float x) (float y)))
   ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
-     (.bezierVertex (.get applet-tl)
+     (.bezierVertex (current-applet)
                     (float cx1) (float cy1) (float cz1)
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
@@ -638,11 +638,11 @@
                 Photoshop."
   ([x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (.get applet-tl) (int x) (int y) (int width) (int height)
+       (.blend (current-applet) (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
   ([^PImage src x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (.get applet-tl) src (int x) (int y) (int width) (int height)
+       (.blend (current-applet) src (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
@@ -696,7 +696,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (.get applet-tl) (int color)))
+  (.blue (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -706,8 +706,8 @@
     :added "1.0"}
   box
   "Creates an extruded rectangle."
-  ([size] (.box (.get applet-tl) (float size)))
-  ([width height depth] (.box (.get applet-tl) (float width) (float height) (float depth))))
+  ([size] (.box (current-applet) (float size)))
+  ([width height depth] (.box (current-applet) (float width) (float height) (float depth))))
 
 (defn
   ^{:requires-bindings true
@@ -718,7 +718,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (.get applet-tl) (int color)))
+  (.brightness (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -747,9 +747,9 @@
 
   Similar imilar to gluLookAt() in OpenGL, but it first clears the
   current camera settings."
-  ([] (.camera (.get applet-tl)))
+  ([] (.camera (current-applet)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
-     (.camera (.get applet-tl) (float eyeX) (float eyeY) (float eyeZ)
+     (.camera (current-applet) (float eyeX) (float eyeY) (float eyeZ)
               (float centerX) (float centerY) (float centerZ)
               (float upX) (float upY) (float upZ))))
 
@@ -783,10 +783,10 @@
   g - green or saturation value
   b - blue or brightness value
   a - alpha value"
-  ([gray] (.color (.get applet-tl) (float gray)))
-  ([gray alpha] (.color (.get applet-tl) (float gray) (float alpha)))
-  ([r g b] (.color (.get applet-tl) (float r) (float g) (float b)))
-  ([r g b a] (.color (.get applet-tl) (float r) (float g) (float b) (float a))))
+  ([gray] (.color (current-applet) (float gray)))
+  ([gray alpha] (.color (current-applet) (float gray) (float alpha)))
+  ([r g b] (.color (current-applet) (float r) (float g) (float b)))
+  ([r g b a] (.color (current-applet) (float r) (float g) (float b) (float a))))
 
 (def ^{:private true}
   color-modes {:rgb (int 1)
@@ -810,16 +810,16 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (.get applet-tl) (int mode))))
+       (.colorMode (current-applet) (int mode))))
   ([mode max]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (.get applet-tl) (int mode) (float max))))
+       (.colorMode (current-applet) (int mode) (float max))))
   ([mode max-x max-y max-z]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (.get applet-tl) (int mode) (float max-x) (float max-y) (float max-z))))
+       (.colorMode (current-applet) (int mode) (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (.get applet-tl) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
+       (.colorMode (current-applet) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 (defn
   ^{:requires-bindings false
@@ -873,10 +873,10 @@
   alpha information is used in the process, however if the source
   image has an alpha channel set, it will be copied as well. "
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (.get applet-tl) (int sx1) (int sy1) (int sx2) (int sy2)
+     (.copy (current-applet) (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2)))
   ([^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (.get applet-tl) img (int sx1) (int sy1) (int sx2) (int sy2)
+     (.copy (current-applet) img (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2))))
 
 (defn
@@ -958,10 +958,10 @@
   speed and appearance, results are poor when exporting if the sketch
   does not include the .otf or .ttf file, and the requested font is
   not available on the machine running the sketch."
-  ([name size] (.createFont (.get applet-tl) (str name) (float size)))
-  ([name size smooth] (.createFont (.get applet-tl) (str name) (float size) smooth))
+  ([name size] (.createFont (current-applet) (str name) (float size)))
+  ([name size smooth] (.createFont (current-applet) (str name) (float size) smooth))
   ([name size smooth ^chars charset]
-     (.createFont (.get applet-tl) (str name) (float size) smooth charset)))
+     (.createFont (current-applet) (str name) (float size) smooth charset)))
 
 (defn
   ^{:requires-bindings true
@@ -992,9 +992,9 @@
   will be opaque blocks. This will be fixed in a future release (Issue
   80)."
   ([w h renderer]
-     (.createGraphics (.get applet-tl) (int w) (int h) renderer))
+     (.createGraphics (current-applet) (int w) (int h) renderer))
   ([w h renderer path]
-     (.createGraphics (.get applet-tl) (int w) (int h) renderer (str path))))
+     (.createGraphics (current-applet) (int w) (int h) renderer (str path))))
 
 (defn
   ^{:requires-bindings true
@@ -1015,7 +1015,7 @@
   Prefer using create-image over initialising new PImage instances
   directly."
   [w h format]
-  (.createImage (.get applet-tl) (int w) (int h) (int format)))
+  (.createImage (current-applet) (int w) (int h) (int format)))
 
 (defn
   ^{:requires-bindings true
@@ -1050,7 +1050,7 @@
   decompressed. If you don't want the automatic decompression, use the
   related function create-input-raw."
   [filename]
-  (.createInput (.get applet-tl) (str filename)))
+  (.createInput (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -1061,7 +1061,7 @@
   create-input-raw
   "Call create-input without automatic gzip decompression."
   [filename]
-  (.createInputRaw (.get applet-tl) filename))
+  (.createInputRaw (current-applet) filename))
 
 (defn
   ^{:requires-bindings true
@@ -1087,7 +1087,7 @@
   If the output filename ends with .gz, the output will be
   automatically GZIP compressed as it is written."
   [filename]
-  (.createOutput (.get applet-tl) (str filename)))
+  (.createOutput (current-applet) (str filename)))
 
 (def ^{:private true}
   cursor-modes {:arrow PConstants/ARROW
@@ -1117,8 +1117,8 @@
 
   See cursor-image for specifying a generic image as the cursor
   symbol."
-  ([] (.cursor (.get applet-tl)))
-  ([cursor-mode] (.cursor (.get applet-tl) (int (resolve-constant-key cursor-mode cursor-modes)))))
+  ([] (.cursor (current-applet)))
+  ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
 
 (defn
   ^{:requires-bindings true
@@ -1129,8 +1129,8 @@
     cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
   active spots of the cursor may be specified with hx and hy"
-  ([^PImage img] (.cursor (.get applet-tl) img))
-  ([^PImage img hx hy] (.cursor (.get applet-tl) img (int hx) (int hy))))
+  ([^PImage img] (.cursor (current-applet) img))
+  ([^PImage img hx hy] (.cursor (current-applet) img (int hx) (int hy))))
 
 (defn
   ^{:requires-bindings true
@@ -1148,13 +1148,13 @@
   the curve. The curve fn is an implementation of Catmull-Rom
   splines."
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-     (.curve (.get applet-tl)
+     (.curve (current-applet)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)
              (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-     (.curve (.get applet-tl)
+     (.curve (current-applet)
              (float x1) (float y1) (float z1)
              (float x2) (float y2) (float z2)
              (float x3) (float y3) (float z3)
@@ -1172,7 +1172,7 @@
   renderer as the default (JAVA2D) renderer does not use this
   information."
   [detail]
-  (.curveDetail (.get applet-tl) (int detail)))
+  (.curveDetail (current-applet) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -1187,7 +1187,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a curve at t."
   [a b c d t]
-  (.bezierPoint (.get applet-tl) (float a) (float b) (float c) (float d) (float t)))
+  (.bezierPoint (current-applet) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1199,7 +1199,7 @@
   "Calculates the tangent of a point on a curve.
   See: http://en.wikipedia.org/wiki/Tangent"
   [a b c d t]
-  (.curveTangent (.get applet-tl) (float a) (float b) (float c) (float d) (float t)))
+  (.curveTangent (current-applet) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1217,7 +1217,7 @@
   but will leave them recognizable and as values increase in
   magnitude, they will continue to deform."
   [ti]
-  (.curveTightness (.get applet-tl) (float ti)))
+  (.curveTightness (current-applet) (float ti)))
 
 (defn
   ^{:requires-bindings true
@@ -1235,8 +1235,8 @@
   with curveVertex will draw the curve between the second, third, and
   fourth points. The curveVertex function is an implementation of
   Catmull-Rom splines."
-  ([x y] (.curveVertex (.get applet-tl) (float x) (float y)))
-  ([x y z] (.curveVertex (.get applet-tl) (float x) (float y) (float z))))
+  ([x y] (.curveVertex (current-applet) (float x) (float y)))
+  ([x y z] (.curveVertex (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings false
@@ -1280,7 +1280,7 @@
   update when the delay fn is used. This function has no affect
   inside setup."
   [freeze-ms]
-  (.delay (.get applet-tl) (int freeze-ms)))
+  (.delay (current-applet) (int freeze-ms)))
 
 (defn
   ^{:requires-bindings true
@@ -1301,7 +1301,7 @@
   light is facing. For example, setting ny to -1 will cause the
   geometry to be lit from below (the light is facing directly upward)"
   [r g b nx ny nz]
-  (.directionalLight (.get applet-tl) (float r) (float g) (float b)
+  (.directionalLight (current-applet) (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
 
 (defn
@@ -1327,7 +1327,7 @@
   equal width and height is a circle.  The origin may be changed with
   the ellipse-mode function"
   [x y width height]
-  (.ellipse (.get applet-tl) (float x) (float y) (float width) (float height)))
+  (.ellipse (current-applet) (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
      ellipse-modes   {:center PApplet/CENTER
@@ -1355,7 +1355,7 @@
              corners of the ellipse's bounding box."
   [mode]
   (let [mode (resolve-constant-key mode ellipse-modes)]
-    (.ellipseMode (.get applet-tl) (int mode))))
+    (.ellipseMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1368,8 +1368,8 @@
  drawn to the screen. Used in combination with ambient, specular, and
  shininess in setting the material properties of shapes. Converts all
  args to floats"
-  ([float-val] (.emissive (.get applet-tl) (float float-val)))
-  ([r g b] (.emissive (.get applet-tl) (float r) (float g) (float b))))
+  ([float-val] (.emissive (current-applet) (float float-val)))
+  ([r g b] (.emissive (current-applet) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -1382,7 +1382,7 @@
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes. Converts all
   args to ints"
-  [int-val] (.emissive (.get applet-tl) (int int-val)))
+  [int-val] (.emissive (current-applet) (int int-val)))
 
 (defn
   ^{:requires-bindings true
@@ -1410,7 +1410,7 @@
   "Complement to begin-raw; they must always be used together. See
   the begin-raw docstring for details."
   []
-  (.endRaw (.get applet-tl)))
+  (.endRaw (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1423,11 +1423,11 @@
   all of image data defined since the previous call to begin-shape is
   written into the image buffer. The keyword :close may be passed to
   close the shape (to connect the beginning and the end)."
-  ([] (.endShape (.get applet-tl)))
+  ([] (.endShape (current-applet)))
   ([mode]
      (when-not (= :close mode)
        (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
-     (.endShape (.get applet-tl) PApplet/CLOSE)))
+     (.endShape (current-applet) PApplet/CLOSE)))
 
 (defn
   ^{:requires-bindings true
@@ -1441,7 +1441,7 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (.exit (.get applet-tl)))
+  (.exit (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -1464,10 +1464,10 @@
   fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
   will specify that all subsequent shapes will be filled with orange."
-  ([gray] (.fill (.get applet-tl) (float gray)))
-  ([gray alpha] (.fill (.get applet-tl) (float gray) (float alpha)))
-  ([r g b] (.fill (.get applet-tl) (float r) (float g) (float b)))
-  ([r g b alpha] (.fill (.get applet-tl) (float r) (float g) (float b) (float alpha))))
+  ([gray] (.fill (current-applet) (float gray)))
+  ([gray alpha] (.fill (current-applet) (float gray) (float alpha)))
+  ([r g b] (.fill (current-applet) (float r) (float g) (float b)))
+  ([r g b alpha] (.fill (current-applet) (float r) (float g) (float b) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1477,8 +1477,8 @@
     :added "1.0"}
   fill-int
   "Sets the color used to fill shapes."
-  ([rgb] (.fill (.get applet-tl) (int rgb)))
-  ([rgb alpha] (.fill (.get applet-tl) (int rgb) (float alpha))))
+  ([rgb] (.fill (current-applet) (int rgb)))
+  ([rgb alpha] (.fill (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1537,10 +1537,10 @@
                the level parameter."
   ([mode]
      (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (.get applet-tl) (int mode))))
+       (.filter (current-applet) (int mode))))
   ([mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (.get applet-tl) (int mode) (float level)))))
+       (.filter (current-applet) (int mode) (float level)))))
 
 (defn
   ^{:requires-bindings true
@@ -1551,7 +1551,7 @@
   focused
   "Returns a boolean value representing whether the applet has focus."
   []
-  (. (.get applet-tl) :focused))
+  (. (current-applet) :focused))
 
 (defn
   ^{:requires-bindings true
@@ -1564,7 +1564,7 @@
   displayed since the program started. Inside setup() the value is 0
   and and after the first iteration of draw it is 1, etc."
   []
-  (.frameCount (.get applet-tl)))
+  (.frameCount (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1575,7 +1575,7 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  (.frameRate (.get applet-tl))  )
+  (.frameRate (current-applet))  )
 
 (defn
   ^{:requires-bindings true
@@ -1591,7 +1591,7 @@
   is recommended to set the frame rate within setup. The default rate
   is 60 frames per second."
   [new-rate]
-  (.frameRate (.get applet-tl) (float new-rate)))
+  (.frameRate (current-applet) (float new-rate)))
 
 (defn
   ^{:requires-bindings true
@@ -1604,7 +1604,7 @@
   like glFrustum, except it wipes out the current perspective matrix
   rather than muliplying itself with it."
   [left right bottom top near far]
-  (.frustum (.get applet-tl) (float left) (float right) (float bottom) (float top)
+  (.frustum (current-applet) (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
 (defn
@@ -1626,9 +1626,9 @@
 
   Getting the color of a single pixel with (get x y) is easy, but not
   as fast as grabbing the data directly using the pixels fn."
-  ([] (.get (.get applet-tl)))
-  ([x y] (.get (.get applet-tl) (int x) (int y)))
-  ([x y w h] (.get (.get applet-tl) (int x) (int y) (int w) (int h))))
+  ([] (.get (current-applet)))
+  ([x y] (.get (current-applet) (int x) (int y)))
+  ([x y w h] (.get (current-applet) (int x) (int y) (int w) (int h))))
 
 (declare load-pixels)
 
@@ -1645,7 +1645,7 @@
   the changes. Calls load-pixels before obtaining the pixel array."
   []
   (load-pixels)
-  (. (.get applet-tl) :pixels))
+  (. (current-applet) :pixels))
 
 (defn
   ^{:requires-bindings true
@@ -1658,7 +1658,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (.get applet-tl) (int col)))
+  (.green (current-applet) (int col)))
 
 (defn
   ^{:require-binding false
@@ -1694,7 +1694,7 @@
   "Height of the display window. The value of height is zero until
   size is called."
   []
-  (.getHeight (.get applet-tl)))
+  (.getHeight (current-applet)))
 
 (def ^{:private true}
   hint-options {:enable-opengl-4x-smooth PConstants/ENABLE_OPENGL_4X_SMOOTH
@@ -1787,7 +1787,7 @@
   (let [hint-type (if (keyword? hint-type)
                     (get hint-options hint-type)
                     hint-type)]
-    (.hint (.get applet-tl) (int hint-type))))
+    (.hint (current-applet) (int hint-type))))
 
 (defn
   ^{:requires-bindings false
@@ -1809,7 +1809,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (.get applet-tl) (int col)))
+  (.hue (current-applet) (int col)))
 
 (defn
   ^{:requires-bindings true
@@ -1832,11 +1832,11 @@
   Starting with release 0124, when using the default (JAVA2D)
   renderer, smooth will also improve image quality of resized
   images."
-  ([^PImage img x y] (.image (.get applet-tl) img (float x) (float y)))
-  ([^PImage img x y c d] (.image (.get applet-tl) img (float x) (float y)
+  ([^PImage img x y] (.image (current-applet) img (float x) (float y)))
+  ([^PImage img x y c d] (.image (current-applet) img (float x) (float y)
                                   (float c) (float d)))
   ([^PImage img x y c d u1 v1 u2 v2]
-     (.image (.get applet-tl) img (float x) (float y) (float c) (float d)
+     (.image (current-applet) img (float x) (float y) (float c) (float d)
              (float u1) (float v1) (float u2) (float v2))))
 
 (def ^{:private true}
@@ -1865,7 +1865,7 @@
   :center  - draw images centered at the given x and y position."
   [mode]
   (let [mode (resolve-constant-key mode image-modes)]
-    (.imageMode (.get applet-tl) (int mode))))
+    (.imageMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1890,7 +1890,7 @@
   falloff. You can think of it as a point light that doesn't care
   which direction a surface is facing."
   [constant linear quadratic]
-  (.lightFalloff (.get applet-tl) (float constant) (float linear) (float quadratic)))
+  (.lightFalloff (current-applet) (float constant) (float linear) (float quadratic)))
 
 (defn
   ^{:requires-bindings true
@@ -1904,7 +1904,7 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (.get applet-tl) (int c1) (int c2) (float amt)))
+  (.lerpColor (current-applet) (int c1) (int c2) (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -1941,7 +1941,7 @@
   Macintosh. Check for both ENTER and RETURN to make sure your program
   will work for all platforms."
   []
-  (. (.get applet-tl) :key))
+  (. (current-applet) :key))
 
 (defn
   ^{:requires-bindings true
@@ -1968,7 +1968,7 @@
   KeyEvent.VK_DOWN. Other keyCode values can be found in the Java
   KeyEvent reference."
   []
-  (. (.get applet-tl) :keyCode))
+  (. (current-applet) :keyCode))
 
 (defn
   ^{:requires-bindings true
@@ -1979,7 +1979,7 @@
     key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
-  (. (.get applet-tl) :keyPressed))
+  (. (current-applet) :keyPressed))
 
 (defn
   ^{:requires-bindings true
@@ -2001,7 +2001,7 @@
   will cause them to only have an effect the first time through the
   loop."
   []
-  (.lights (.get applet-tl)))
+  (.lights (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2018,7 +2018,7 @@
   with the specular material qualities set through the specular and
   shininess functions."
   [r g b]
-  (.lightSpecular (.get applet-tl) (float r) (float g) (float b)))
+  (.lightSpecular (current-applet) (float r) (float g) (float b)))
 
 (defn
   ^{:requires-bindings true
@@ -2035,9 +2035,9 @@
   with the stroke-weight function. The version with six parameters
   allows the line to be placed anywhere within XYZ space. "
   ([p1 p2] (apply line (concat p1 p2)))
-  ([x1 y1 x2 y2] (.line (.get applet-tl) (float x1) (float y1) (float x2) (float y2)))
+  ([x1 y1 x2 y2] (.line (current-applet) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
-     (.line (.get applet-tl) (float x1) (float y1) (float z1)
+     (.line (current-applet) (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
 
 (defn
@@ -2051,7 +2051,7 @@
   array. The filename parameter can also be a URL to a file found
   online."
   [filename]
-  (.loadBytes (.get applet-tl) (str filename)))
+  (.loadBytes (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2080,7 +2080,7 @@
   when many font sizes are needed, or when using any renderer based on
   JAVA2D, such as the PDF library."
   [filename]
-  (.loadFont (.get applet-tl)  (str filename)))
+  (.loadFont (current-applet)  (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2116,7 +2116,7 @@
   error or that redirect to a password prompt, because load-image
   will attempt to interpret the HTML as image data."
   [filename]
-  (.loadImage (.get applet-tl) (str filename)))
+  (.loadImage (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2136,7 +2136,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   []
-  (.loadPixels  (.get applet-tl)))
+  (.loadPixels  (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2147,7 +2147,7 @@
   load-shape
   "Load a geometry from a file as a PShape."
   [filename]
-  (.loadShape (.get applet-tl) filename))
+  (.loadShape (current-applet) filename))
 
 (defn
   ^{:requires-bindings true
@@ -2158,7 +2158,7 @@
   load-strings
   "Load data from a file and shove it into a String array."
   [filename]
-  (.loadStrings (.get applet-tl) filename))
+  (.loadStrings (current-applet) filename))
 
 (defn
   ^{:requires-bindings false
@@ -2182,7 +2182,7 @@
   "Causes Processing to continuously execute the code within
   draw. If no-loop is called, the code in draw stops executing."
   []
-  (.loop (.get applet-tl)))
+  (.loop (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -2232,7 +2232,7 @@
    This method is useful for creating dynamically generated alpha
    masks."
   [^PImage img]
-  (.mask (.get applet-tl) img))
+  (.mask (current-applet) img))
 
 (defn
   ^{:requires-bindings true
@@ -2245,7 +2245,7 @@
   starting an applet. This information is often used for timing
   animation sequences."
   []
-  (.millis (.get applet-tl)))
+  (.millis (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -2271,7 +2271,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelX (.get applet-tl) (float x) (float y) (float z)))
+  (.modelX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2286,7 +2286,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelY (.get applet-tl) (float x) (float y) (float z)))
+  (.modelY (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2301,7 +2301,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelZ (.get applet-tl) (float x) (float y) (float z)))
+  (.modelZ (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
@@ -2324,7 +2324,7 @@
   "The value of the system variable mouseButton is either :left, :right,
   or :center depending on which button is pressed."
   []
-  (let [button-code   (. (.get applet-tl) :mouseButton)]
+  (let [button-code   (. (current-applet) :mouseButton)]
     (case button-code
       LEFT :left
       RIGHT :right
@@ -2341,7 +2341,7 @@
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
   []
-  (. (.get applet-tl) :mousePressed))
+  (. (current-applet) :mousePressed))
 
 (defn
   ^{:requires-bindings true
@@ -2352,7 +2352,7 @@
   mouse-x
   "Current horizontal coordinate of the mouse."
   []
-  (. (.get applet-tl) :mouseX))
+  (. (current-applet) :mouseX))
 
 (defn
   ^{:requires-bindings true
@@ -2363,7 +2363,7 @@
   mouse-y
   "Current vertical coordinate of the mouse."
   []
-  (. (.get applet-tl) :mouseY))
+  (. (current-applet) :mouseY))
 
 (defn
   ^{:requires-bindings true
@@ -2374,7 +2374,7 @@
   pmouse-x
   "Horizontal coordinate of the mouse in the previous frame"
   []
-  (. (.get applet-tl) :pmouseX))
+  (. (current-applet) :pmouseX))
 
 (defn
   ^{:requires-bindings true
@@ -2385,7 +2385,7 @@
   pmouse-y
   "Vertical coordinate of the mouse in the previous frame"
   []
-  (. (.get applet-tl) :pmouseY))
+  (. (current-applet) :pmouseY))
 
 (defn
   ^{:requires-bindings true
@@ -2397,7 +2397,7 @@
   "Hides the cursor from view. Will not work when running the in full
   screen (Present) mode."
   []
-  (.noCursor (.get applet-tl)))
+  (.noCursor (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2408,7 +2408,7 @@
   no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
- (.noFill (.get applet-tl)))
+ (.noFill (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2446,9 +2446,9 @@
   difference between coordinates, the smoother the resulting noise
   sequence will be. Steps of 0.005-0.03 work best for most
   applications, but this will differ depending on use."
-  ([x] (.noise (.get applet-tl) (float x)))
-  ([x y] (.noise (.get applet-tl) (float x) (float y)))
-  ([x y z] (.noise (.get applet-tl) (float x) (float y) (float z))))
+  ([x] (.noise (current-applet) (float x)))
+  ([x y] (.noise (current-applet) (float x) (float y)))
+  ([x y z] (.noise (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -2474,8 +2474,8 @@
   By changing these parameters, the signal created by the noise
   function can be adapted to fit very specific needs and
   characteristics."
-  ([octaves] (.noiseDetail (.get applet-tl) (int octaves)))
-  ([octaves falloff] (.noiseDetail (.get applet-tl) (int octaves) (float falloff))))
+  ([octaves] (.noiseDetail (current-applet) (int octaves)))
+  ([octaves falloff] (.noiseDetail (current-applet) (int octaves) (float falloff))))
 
 (defn
   ^{:requires-bindings true
@@ -2489,7 +2489,7 @@
   constant to return the same pseudo-random numbers each time the
   software is run."
   [val]
-  (.noiseSeed (.get applet-tl) (int val)))
+  (.noiseSeed (current-applet) (int val)))
 
 (defn
   ^{:requires-bindings true
@@ -2503,7 +2503,7 @@
   that 2D geometry (which does not require lighting) can be drawn
   after a set of lighted 3D geometry."
   []
-  (.noLights (.get applet-tl)))
+  (.noLights (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2530,7 +2530,7 @@
   specified. Otherwise, the sketch would enter an odd state until
   loop was called."
   []
-  (.noLoop (.get applet-tl)))
+  (.noLoop (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2557,7 +2557,7 @@
   but since that's imperfect, this is a better option when you want
   more control. This function is identical to glNormal3f() in OpenGL."
   [nx ny nz]
-  (.normal (.get applet-tl) (float nx) (float ny) (float nz)))
+  (.normal (current-applet) (float nx) (float ny) (float nz)))
 
 (defn
   ^{:requires-bindings true
@@ -2567,7 +2567,7 @@
     :added "1.0"}
   no-smooth
   "Draws all geometry with jagged (aliased) edges."
-  [] (.noSmooth (.get applet-tl)))
+  [] (.noSmooth (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2579,7 +2579,7 @@
   "Disables drawing the stroke (outline). If both no-stroke and
   no-fill are called, nothing will be drawn to the screen."
   []
-  (.noStroke (.get applet-tl)))
+  (.noStroke (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2591,7 +2591,7 @@
   "Removes the current fill value for displaying images and reverts to
   displaying images with their original hues."
   []
-  (.noTint (.get applet-tl)))
+  (.noTint (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2608,9 +2608,9 @@
   the minimum and maximum y values, and near and far are the minimum
   and maximum z values. If no parameters are given, the default is
   used: ortho(0, width, 0, height, -10, 10)."
-  ([] (.ortho (.get applet-tl)))
+  ([] (.ortho (current-applet)))
   ([left right bottom top near far]
-     (.ortho (.get applet-tl) (float left) (float right) (float bottom) (float top) (float near) (float far))))
+     (.ortho (current-applet) (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
 (defn
   ^{:requires-bindings true
@@ -2630,9 +2630,9 @@
   programmer to set the area precisely. The default values are:
   perspective(PI/3.0, width/height, cameraZ/10.0, cameraZ*10.0) where
   cameraZ is ((height/2.0) / tan(PI*60.0/360.0));"
-  ([] (.perspective (.get applet-tl)))
+  ([] (.perspective (current-applet)))
   ([fovy aspect z-near z-far]
-     (.perspective (.get applet-tl) (float fovy) (float aspect)
+     (.perspective (current-applet) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
 
 (defn
@@ -2648,8 +2648,8 @@
   optional third value is the depth value. Drawing this shape in 3D
   using the z parameter requires the P3D or OPENGL parameter in
   combination with size as shown in the above example."
-  ([x y] (.point (.get applet-tl) (float x)(float y)))
-  ([x y z] (.point (.get applet-tl) (float x) (float y) (float z))))
+  ([x y] (.point (current-applet) (float x)(float y)))
+  ([x y z] (.point (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -2665,7 +2665,7 @@
   parameters is determined by the current color mode. The x, y, and z
   parameters set the position of the light"
   [r g b x y z]
-  (.pointLight (.get applet-tl) (float r) (float g) (float b) (float x) (float y) (float z)))
+  (.pointLight (current-applet) (float r) (float g) (float b) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2682,7 +2682,7 @@
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
-  (.popMatrix (.get applet-tl)))
+  (.popMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2698,7 +2698,7 @@
   The push-style and pop-style functions can be nested to provide more
   control"
   []
-  (.popStyle (.get applet-tl)))
+  (.popStyle (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -2724,7 +2724,7 @@
   print-camera
   "Prints the current camera matrix to std out. Useful for debugging."
   []
-  (.printCamera (.get applet-tl)))
+  (.printCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2735,7 +2735,7 @@
   print-matrix
   "Prints the current matrix to std out. Useful for debugging."
   []
-  (.printMatrix (.get applet-tl)))
+  (.printMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2747,7 +2747,7 @@
   "Prints the current projection matrix to std out. Useful for
   debugging"
   []
-  (.printProjection (.get applet-tl)))
+  (.printProjection (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2765,7 +2765,7 @@
   methods and may be embedded to control the scope of the
   transformations."
   []
-  (.pushMatrix (.get applet-tl)))
+  (.pushMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2789,7 +2789,7 @@
   shape-mode, color-mode, text-align, text-font, text-mode, text-size,
   text-leading, emissive, specular, shininess, and ambient"
   []
-  (.pushStyle (.get applet-tl)))
+  (.pushStyle (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2804,7 +2804,7 @@
   first vertex and the subsequent pairs should proceed clockwise or
   counter-clockwise around the defined shape."
   [x1 y1 x2 y2 x3 y3 x4 y4]
-  (.quad (.get applet-tl)
+  (.quad (current-applet)
          (float x1) (float y1)
          (float x2) (float y2)
          (float x3) (float y3)
@@ -2842,8 +2842,8 @@
   with a value between the the parameters. The function call
   (random -5 10.2) returns values starting at -5 up to (but not
   including) 10.2."
-  ([max] (.random (.get applet-tl) (float max)))
-  ([min max] (.random (.get applet-tl) (float min) (float max))))
+  ([max] (.random (current-applet) (float max)))
+  ([min max] (.random (current-applet) (float min) (float max))))
 
 
 (defn
@@ -2858,7 +2858,7 @@
   parameter to a constant to return the same pseudo-random numbers
   each time the software is run."
   [w]
-  (.randomSeed (.get applet-tl) (float w)))
+  (.randomSeed (current-applet) (float w)))
 
 (defn
   ^{:requires-bindings true
@@ -2873,7 +2873,7 @@
    sets the width, and the fourth sets the height. These parameters
    may be changed with rect-mode."
   [x y width height]
-  (.rect (.get applet-tl) (float x) (float y) (float width) (float height)))
+  (.rect (current-applet) (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
   rect-modes {:corner PApplet/CORNER
@@ -2910,7 +2910,7 @@
 
   [mode]
   (let [mode (resolve-constant-key mode rect-modes)]
-    (.rectMode (.get applet-tl) (int mode))))
+    (.rectMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -2921,7 +2921,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (.get applet-tl) (int c)))
+  (.red (current-applet) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -2943,7 +2943,7 @@
   Calling redraw within draw has no effect because draw is
   continuously called anyway."
   []
-  (.redraw (.get applet-tl)))
+  (.redraw (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2965,8 +2965,8 @@
   where the image filename does not end with a proper
   extension. Specify the extension as the second parameter to
   request-image."
-  ([filename] (.requestImage (.get applet-tl) (str filename)))
-  ([filename extension] (.requestImage (.get applet-tl) (str filename) (str extension))))
+  ([filename] (.requestImage (current-applet) (str filename)))
+  ([filename extension] (.requestImage (current-applet) (str filename) (str extension))))
 
 (defn
   ^{:requires-bindings true
@@ -2978,7 +2978,7 @@
   "Replaces the current matrix with the identity matrix. The
   equivalent function in OpenGL is glLoadIdentity()"
   []
-  (.resetMatrix (.get applet-tl)))
+  (.resetMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3002,8 +3002,8 @@
   Technically, rotate multiplies the current transformation matrix by
   a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix."
-  ([angle] (.rotate (.get applet-tl) (float angle)))
-  ([angle vx vy vz] (.rotate (.get applet-tl) (float angle)
+  ([angle] (.rotate (current-applet) (float angle)))
+  ([angle vx vy vz] (.rotate (current-applet) (float angle)
                              (float vx) (float vy) (float vz))))
 
 (defn
@@ -3025,7 +3025,7 @@
   the transformation is reset when the loop begins again. This
   function requires passing P3D or OPENGL into the size parameter."
   [angle]
-  (.rotateX (.get applet-tl) (float angle)))
+  (.rotateX (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3046,7 +3046,7 @@
   the transformation is reset when the loop begins again. This
   function requires passing P3D or OPENGL into the size parameter."
   [angle]
-  (.rotateY (.get applet-tl) (float angle)))
+  (.rotateY (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3067,7 +3067,7 @@
   the transformation is reset when the loop begins again. This
   function requires passing P3D or OPENGL into the size parameter."
   [angle]
-  (.rotateZ (.get applet-tl) (float angle)))
+  (.rotateZ (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings false
@@ -3090,7 +3090,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (.get applet-tl) (int c)))
+  (.saturation (current-applet) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3108,7 +3108,7 @@
   will be opaque. To save images without a background, use
   create-graphics."
   [filename]
-  (.save (.get applet-tl) (str filename)))
+  (.save (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -3127,8 +3127,8 @@
   Examples:
   (save-frame)
   (save-frame \"pretty-pic-####.jpg\")"
-  ([] (.saveFrame (.get applet-tl)))
-  ([name] (.saveFrame (.get applet-tl) (str name))))
+  ([] (.saveFrame (current-applet)))
+  ([name] (.saveFrame (current-applet) (str name))))
 
 (defn
   ^{:requires-bindings true
@@ -3149,8 +3149,8 @@
   this fuction with the z parameter requires passing P3D or OPENGL
   into the size parameter as shown in the example above. This function
   can be further controlled by push-matrix and pop-matrix."
-  ([s] (.scale (.get applet-tl) (float s)))
-  ([sx sy] (.scale (.get applet-tl) (float sx) (float sy))))
+  ([s] (.scale (current-applet) (float s)))
+  ([sx sy] (.scale (current-applet) (float sx) (float sy))))
 
 (defn- current-screen
   []
@@ -3198,7 +3198,7 @@
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
-  (.screenX (.get applet-tl) (float x) (float y) (float z)))
+  (.screenX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -3211,7 +3211,7 @@
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
-  (.screenY (.get applet-tl) (float x) (float y) (float z)))
+  (.screenY (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -3227,7 +3227,7 @@
    'real'. They're only useful for in comparison to another value
    obtained from screen-z, or directly out of the zbuffer"
   [x y z]
-  (.screenX (.get applet-tl) (float x) (float y) (float z)))
+  (.screenX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
@@ -3263,7 +3263,7 @@
   problem. Grouping many calls to point or set-pixel together can also
   help. (Bug 1094)"
   [x y c]
-  (.set (.get applet-tl) (int x) (int y) (int c)))
+  (.set (current-applet) (int x) (int y) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3276,7 +3276,7 @@
   parameters define the coordinates for the upper-left corner of the
   image."
   [x y ^PImage src]
-  (.set (.get applet-tl) (int x) (int y) src))
+  (.set (current-applet) (int x) (int y) src))
 
 (defn
   ^{:requires-bindings true
@@ -3299,9 +3299,9 @@
   Note complex shapes may draw awkwardly with P2D, P3D, and
   OPENGL. Those renderers do not yet support shapes that have holes or
   complicated breaks."
-  ([^PShape sh] (.shape (.get applet-tl) sh))
-  ([^PShape sh x y] (.shape (.get applet-tl) sh (float x) (float y)))
-  ([^PShape sh x y width height] (.shape (.get applet-tl) sh (float x) (float y) (float width) (float height))))
+  ([^PShape sh] (.shape (current-applet) sh))
+  ([^PShape sh x y] (.shape (current-applet) sh (float x) (float y)))
+  ([^PShape sh x y width height] (.shape (current-applet) sh (float x) (float y) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -3326,7 +3326,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearX (.get applet-tl) (float angle)))
+  (.shearX (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3351,7 +3351,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearY (.get applet-tl) (float angle)))
+  (.shearY (current-applet) (float angle)))
 
 (def ^{:private true}
   p-shape-modes {:corner PApplet/CORNER
@@ -3380,7 +3380,7 @@
              height. "
   [mode]
   (let [mode (resolve-constant-key mode p-shape-modes)]
-    (.shapeMode (.get applet-tl) (int mode))))
+    (.shapeMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3393,7 +3393,7 @@
   combination with ambient, specular, and emissive in setting
   the material properties of shapes."
   [shine]
-  (.shininess (.get applet-tl) (float shine)))
+  (.shininess (current-applet) (float shine)))
 
 (defn
   ^{:requires-bindings false
@@ -3427,7 +3427,7 @@
 
   Note that smooth will also improve image quality of resized images."
   []
-  (.smooth (.get applet-tl)))
+  (.smooth (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3442,10 +3442,10 @@
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
-  ([gray] (.specular (.get applet-tl) (float gray)))
-  ([gray alpha] (.specular (.get applet-tl) (float gray) (float alpha)))
-  ([x y z] (.specular (.get applet-tl) (float x) (float y) (float z)))
-  ([x y z a] (.specular (.get applet-tl) (float x) (float y) (float z) (float a))))
+  ([gray] (.specular (current-applet) (float gray)))
+  ([gray alpha] (.specular (current-applet) (float gray) (float alpha)))
+  ([x y z] (.specular (current-applet) (float x) (float y) (float z)))
+  ([x y z a] (.specular (current-applet) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3455,7 +3455,7 @@
     :added "1.0"}
   sphere
   "Genarates a hollow ball made from tessellated triangles."
-  [radius] (.sphere (.get applet-tl) (float radius)))
+  [radius] (.sphere (current-applet) (float radius)))
 
 (defn
   ^{:requires-bindings true
@@ -3476,8 +3476,8 @@
   ones further away from the camera. To controla the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
-  ([res] (.sphereDetail (.get applet-tl) (int res)))
-  ([ures vres] (.sphereDetail (.get applet-tl) (int ures) (int vres))))
+  ([res] (.sphereDetail (current-applet) (int res)))
+  ([ures vres] (.sphereDetail (current-applet) (int ures) (int vres))))
 
 (defn
   ^{:requires-bindings true
@@ -3495,9 +3495,9 @@
   the direction or light. The angle parameter affects angle of the
   spotlight cone."
   ([r g b x y z nx ny nz angle concentration]
-     (.spotLight (.get applet-tl) r g b x y z nx ny nz angle concentration))
+     (.spotLight (current-applet) r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
-     (.spotLight (.get applet-tl) r g b x y z nx ny nz angle concentration)))
+     (.spotLight (current-applet) r g b x y z nx ny nz angle concentration)))
 
 (defn
   ^{:requires-bindings false
@@ -3535,10 +3535,10 @@
   stroke-float
   "Sets the color used to draw lines and borders around
   shapes. Converts all args to floats"
-  ([gray] (.stroke (.get applet-tl) (float gray)))
-  ([gray alpha] (.stroke (.get applet-tl) (float gray) (float alpha)))
-  ([x y z] (.stroke (.get applet-tl) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (.get applet-tl) (float x) (float y) (float z) (float a))))
+  ([gray] (.stroke (current-applet) (float gray)))
+  ([gray alpha] (.stroke (current-applet) (float gray) (float alpha)))
+  ([x y z] (.stroke (current-applet) (float x) (float y) (float z)))
+  ([x y z a] (.stroke (current-applet) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3549,8 +3549,8 @@
   stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (.get applet-tl) (int rgb)))
-  ([rgb alpha] (.stroke (.get applet-tl) (int rgb) (float alpha))))
+  ([rgb] (.stroke (current-applet) (int rgb)))
+  ([rgb alpha] (.stroke (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -3587,7 +3587,7 @@
   parameters :square, :project, and :round. The default cap is :round."
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
-    (.strokeCap (.get applet-tl) (int cap-mode))))
+    (.strokeCap (current-applet) (int cap-mode))))
 
 (def ^{:private true}
   stroke-join-modes {:miter PConstants/MITER
@@ -3611,7 +3611,7 @@
   be found in the size reference."
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
-    (.strokeJoin (.get applet-tl) (int join-mode))))
+    (.strokeJoin (current-applet) (int join-mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3623,7 +3623,7 @@
   "Sets the width of the stroke used for lines, points, and the border
   around shapes. All widths are set in units of pixels. "
   [weight]
-  (.strokeWeight (.get applet-tl) (float weight)))
+  (.strokeWeight (current-applet) (float weight)))
 
 (defn
   ^{:requires-bindings false
@@ -3648,9 +3648,9 @@
   text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
-  ([c] (.text (.get applet-tl) (char c)))
-  ([c x y] (.text (.get applet-tl) (char c) (float x) (float y)))
-  ([c x y z] (.text (.get applet-tl) (char c) (float x) (float y) (float z))))
+  ([c] (.text (current-applet) (char c)))
+  ([c x y] (.text (current-applet) (char c) (float x) (float y)))
+  ([c x y z] (.text (current-applet) (char c) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3661,8 +3661,8 @@
   text-num
   "Draws a number to the screen in the specified position. See text fn
   for more details."
-  ([num x y] (.text (.get applet-tl) (float num) (float x) (float y)))
-  ([num x y z] (.text (.get applet-tl) (float num) (float x) (float y) (float z))))
+  ([num x y] (.text (current-applet) (float num) (float x) (float y)))
+  ([num x y z] (.text (current-applet) (float num) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3685,11 +3685,11 @@
 
   Use the text-mode function with the :screen parameter to display text
   in 2D at the surface of the window."
-  ([^String s] (.text (.get applet-tl) s))
-  ([^String s x y] (.text (.get applet-tl) s (float x) (float y)))
-  ([^String s x y z] (.text (.get applet-tl) s (float x) (float y) (float z)))
-  ([^String s x1 y1 x2 y2] (.text (.get applet-tl) s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z] (.text (.get applet-tl) s (float x1) (float y1) (float x2) (float y2) (float z))))
+  ([^String s] (.text (current-applet) s))
+  ([^String s x y] (.text (current-applet) s (float x) (float y)))
+  ([^String s x y z] (.text (current-applet) s (float x) (float y) (float z)))
+  ([^String s x1 y1 x2 y2] (.text (current-applet) s (float x1) (float y1) (float x2) (float y2)))
+  ([^String s x1 y1 x2 y2 z] (.text (current-applet) s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (def ^{:private true}
   horizontal-alignment-modes {:left PApplet/LEFT
@@ -3733,11 +3733,11 @@
   change the size of the font."
   ([align]
      (let [align (resolve-constant-key align horizontal-alignment-modes)]
-       (.textAlign (.get applet-tl) (int align))))
+       (.textAlign (current-applet) (int align))))
   ([align-x align-y]
      (let [align-x (resolve-constant-key align-x horizontal-alignment-modes)
            align-y (resolve-constant-key align-y vertical-alignment-modes)]
-       (.textAlign (.get applet-tl) (int align-x) (int align-y)))))
+       (.textAlign (current-applet) (int align-x) (int align-y)))))
 
 (defn
   ^{:requires-bindings true
@@ -3751,7 +3751,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textAscent (.get applet-tl)))
+  (.textAscent (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3765,7 +3765,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textDescent (.get applet-tl)))
+  (.textDescent (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3790,8 +3790,8 @@
   sketches and PDF output in cases where the vector data is available:
   when the font is still installed, or the font is created via the
   create-font fn"
-  ([^PFont font] (.textFont (.get applet-tl) font))
-  ([^PFont font size] (.textFont (.get applet-tl) font (int size))))
+  ([^PFont font] (.textFont (current-applet) font))
+  ([^PFont font size] (.textFont (current-applet) font (int size))))
 
 (defn
   ^{:requires-bindings true
@@ -3803,7 +3803,7 @@
   "Sets the spacing between lines of text in units of pixels. This
   setting will be used in all subsequent calls to the text function."
   [leading]
-  (.textLeading (.get applet-tl) (float leading)))
+  (.textLeading (current-applet) (float leading)))
 
 (def ^{:private true}
   text-modes {:model PConstants/MODEL
@@ -3848,7 +3848,7 @@
   geometry with begin-raw."
   [mode]
   (let [mode (resolve-constant-key mode text-modes)]
-    (.textMode (.get applet-tl) (int mode))))
+    (.textMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3861,7 +3861,7 @@
   subsequent calls to the text fn. Font size is measured in
   units of pixels."
   [size]
-  (.textSize (.get applet-tl) (float size)))
+  (.textSize (current-applet) (float size)))
 
 (defn
   ^{:requires-bindings true
@@ -3878,7 +3878,7 @@
   tint to specify the color of the texture as it is applied to the
   shape."
   [^PImage img]
-  (.texture (.get applet-tl) img))
+  (.texture (current-applet) img))
 
 (def ^{:private true}
   texture-modes {:image PApplet/IMAGE
@@ -3902,7 +3902,7 @@
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
   [mode]
   (let [mode (resolve-constant-key mode texture-modes)]
-    (.textureMode (.get applet-tl) (int mode))))
+    (.textureMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3916,7 +3916,7 @@
   (let [data  (if (= (class data) (class \a))
                 (char data)
                 (str data))]
-    (.textWidth (.get applet-tl) data)))
+    (.textWidth (current-applet) data)))
 
 (defn
   ^{:requires-bindings true
@@ -3938,10 +3938,10 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([gray] (.tint (.get applet-tl) (float gray)))
-  ([gray alpha] (.tint (.get applet-tl) (float gray) (float alpha)))
-  ([r g b] (.tint (.get applet-tl) (float r)(float g) (float b)))
-  ([r g b a] (.tint (.get applet-tl) (float g) (float g) (float b) (float a))))
+  ([gray] (.tint (current-applet) (float gray)))
+  ([gray alpha] (.tint (current-applet) (float gray) (float alpha)))
+  ([r g b] (.tint (current-applet) (float r)(float g) (float b)))
+  ([r g b a] (.tint (current-applet) (float g) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3963,8 +3963,8 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([rgb] (.tint (.get applet-tl) (int rgb)))
-  ([rgb alpha] (.tint (.get applet-tl) (int rgb) (float alpha))))
+  ([rgb] (.tint (current-applet) (int rgb)))
+  ([rgb alpha] (.tint (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -4009,8 +4009,8 @@
   the loop begins again. This function can be further controlled by
   the push-matrix and pop-matrix."
   ([v] (apply translate v))
-  ([tx ty] (.translate (.get applet-tl) (float tx) (float ty)))
-  ([tx ty tz] (.translate (.get applet-tl) (float tx) (float ty) (float tz))))
+  ([tx ty] (.translate (current-applet) (float tx) (float ty)))
+  ([tx ty tz] (.translate (current-applet) (float tx) (float ty) (float tz))))
 
 (defn
   ^{:requires-bindings true
@@ -4024,7 +4024,7 @@
   specify the second point, and the last two arguments specify the
   third point."
   [x1 y1 x2 y2 x3 y3]
-  (.triangle (.get applet-tl)
+  (.triangle (current-applet)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)))
@@ -4049,7 +4049,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   []
-  (.updatePixels (.get applet-tl)))
+  (.updatePixels (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -4073,11 +4073,11 @@
   form. By default, the coordinates used for u and v are specified in
   relation to the image's size in pixels, but this relation can be
   changed with texture-mode."
-  ([x y] (.vertex (.get applet-tl) (float x) (float y)))
-  ([x y z] (.vertex (.get applet-tl) (float x) (float y) (float z)))
-  ([x y u v] (.vertex (.get applet-tl) (float x) (float y) (float u) (float v)))
+  ([x y] (.vertex (current-applet) (float x) (float y)))
+  ([x y z] (.vertex (current-applet) (float x) (float y) (float z)))
+  ([x y u v] (.vertex (current-applet) (float x) (float y) (float u) (float v)))
   ([x y z u v]
-     (.vertex (.get applet-tl) (float x) (float y) (float z) (float u) (float v))))
+     (.vertex (current-applet) (float x) (float y) (float z) (float u) (float v))))
 
 (defn
   ^{:requires-bindings false
@@ -4100,7 +4100,7 @@
   "Width of the display window. The value of width is zero until size is
   called."
   []
-  (.getWidth (.get applet-tl)))
+  (.getWidth (current-applet)))
 
 (defmacro
   ^{:requires-bindings true
