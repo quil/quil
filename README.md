@@ -81,9 +81,9 @@ The full [Quil API](https://github.com/quil/quil/wiki/API) and [Installation Int
 
 ## API Exploration
 
-Quil supports an explorable API. For a full list of API categories and subcategories simply type `(doc-cats)` at the REPL.
+Quil supports an explorable API. For a full list of API categories and subcategories simply type `(show-cats)` at the REPL.
 
-    user=> (doc-cats)
+    user=> (show-cats)
     1 Color (0)
        1.1 Creating & Reading (11)
        1.2 Loading & Displaying (1)
@@ -95,9 +95,9 @@ Quil supports an explorable API. For a full list of API categories and subcatego
        .
        . etc
 
-In order to see the fns within a specific category use `(doc-fns 10.1)` if `10.1` is the index of the category you wish to examine.
+In order to see the fns within a specific category use `(show-fns 10.1)` if `10.1` is the index of the category you wish to examine.
 
-    user=> (doc-fns 10.1)
+    user=> (show-fns 10.1)
     2D Primitives
       - arc
       - ellipse
@@ -107,9 +107,9 @@ In order to see the fns within a specific category use `(doc-fns 10.1)` if `10.1
       - rect
       - triangle
 
-If you know the start of Processing API method name such as `bezier`, you can use `(doc-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
+If you know the start of Processing API method name such as `bezier`, you can use `(show-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
 
-    user=> (doc-meths "bezier")
+    user=> (show-meths "bezier")
     bezierPoint()    -  bezier-point
     bezierDetail()   -  bezier-detail
     bezier()         -  bezier
