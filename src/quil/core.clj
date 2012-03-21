@@ -4224,7 +4224,7 @@
 
 
 
-(defn doc-cats
+(defn show-cats
   "Print out a list of all the categories and subcategories,
   associated index nums and fn count (in parens)."
   []
@@ -4242,7 +4242,7 @@
                         (:subcategories cat))))
           cats))))
 
-(defn doc-fns
+(defn show-fns
   "Print all the functions within category or subcategory specified by
   cat-idx (use print-cats to see a list of index nums). If a category is
   specified, it will not print out the fns in any of cat's
@@ -4253,7 +4253,7 @@
     (dorun
      (map #(println "  -" %) (:fns res)))))
 
-(defn doc-meths
+(defn show-meths
   "Takes a string representing the start of a method name in the
   original Processing API and prints out all matches alongside the
   Processing-core equivalent."
