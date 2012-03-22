@@ -71,7 +71,7 @@ You're witnessing `setup`, `draw` and `sketch` working in complete harmony. See 
 ## Documentation
 
 
-<a href="http://github.com/downloads/quil/quil/quil-cheatsheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
+<a href="https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
 
 When getting started with Quil, it's always useful to have the [Cheatsheet](http://github.com/downloads/quil/quil/quil-cheatsheet.pdf) handy.
 
