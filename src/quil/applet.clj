@@ -51,12 +51,14 @@
   (case (:target (meta applet))
     :frame      (applet-close-frame applet)
     :perm-frame (applet-close-frame applet)
+    :un-decorated (applet-close-frame applet)
     :applet     (applet-close-applet applet)))
 
 (defn- launch-applet-frame
-  [applet renderer keep-on-top?]
+  [applet renderer keep-on-top? un-decorated?]
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
+        un-decorated?   (truthify un-decorated?)
         m              (.meta applet)
         [width height] (or (:size m) [800 600])
         close-op       JFrame/DISPOSE_ON_CLOSE
@@ -73,6 +75,7 @@
                              (windowOpened [this e])
                              (windowClosed [this e])))
       (.setDefaultCloseOperation close-op)
+      (.setUndecorated un-decorated?)
       (.setSize width height)
       (.add applet)
       (.pack))
@@ -88,8 +91,9 @@
   [applet renderer target]
   (.init applet)
   (case target
-    :frame (launch-applet-frame applet renderer false)
-    :perm-frame (launch-applet-frame applet renderer true)
+    :frame (launch-applet-frame applet renderer false false)
+    :perm-frame (launch-applet-frame applet renderer true false)
+    :un-decorated (launch-applet-frame applet renderer true true)
     :applet applet))
 
 (def ^{:private true}
@@ -114,7 +118,7 @@
     (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
   size)
 
-(def ^{:private true} VALID-TARGETS #{:frame :perm-frame})
+(def ^{:private true} VALID-TARGETS #{:frame :perm-frame :un-decorated})
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
@@ -141,7 +145,7 @@
                     second where n is the target frame-rate set for
                     the visualisation.
 
-  :target         - one of :frame, :perm-frame. Default :frame.
+  :target         - one of :frame, :perm-frame, :un-decorated. Default :frame.
 
   :focus-gained   - Called when the applet gains focus.
 
