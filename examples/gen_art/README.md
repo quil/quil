@@ -93,7 +93,7 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 (p73 - Listing 4.5)
 
 ## 16. Circle from Opposing Lines
-![Circle from Opposing Lines](https://github.com/downloads/quil/quil/gen-art-circle-from-opposing-lines.png)
+![Circle from Opposing Lines](https://github.com/downloads/quil/quil/gen-art-circle-from-opposing-lines.jpg)
 
 [View Source](https://github.com/quil/quil/blob/master/examples/gen_art/16_circle_from_opposing_lines.clj)
 (p76 - Section 4.2)
