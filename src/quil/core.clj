@@ -921,7 +921,7 @@
   "Returns true if font (specified as a string) is available on this
   system, false otherwise"
   [font-str]
-  (if (some #{font-str} available-fonts)
+  (if (some #{font-str} (available-fonts))
     true
     false))
 
