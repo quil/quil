@@ -9,6 +9,14 @@
         [quil.dynamics :only [*applet* *state*]]))
 
 (defonce untitled-applet-id* (atom 0))
+(def ^ThreadLocal applet-tl (ThreadLocal.))
+(def ^ThreadLocal state-tl (ThreadLocal.))
+ 
+(defn ^PApplet current-applet []
+  (.get ^ThreadLocal applet-tl))
+
+(defn state []
+  (.get ^ThreadLocal state-tl))
 
 (defn applet-stop
   "Stop an applet"
@@ -104,7 +112,7 @@
   ([width height] (.size *applet* (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size *applet* (int width) (int height) renderer))))
+       (.size (current-applet) (int width) (int height) renderer))))
 
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws
@@ -114,11 +122,11 @@
     (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
   size)
 
-(def ^{:private true} VALID-TARGETS #{:frame :perm-frame})
+(def ^{:private true} VALID-TARGETS #{:frame :perm-frame :applet})
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
-  targets: [:frame, :perm-frame]."
+  targets: [:frame, :perm-frame :applet]."
   [target]
   (when-not (some VALID-TARGETS [target])
     (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
@@ -203,103 +211,86 @@
                                        :target-obj target-obj
                                        :target target))
                             (keyPressed
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (key-pressed-fn)))
+                              ([]
+                                 (key-pressed-fn))
                               ([e]
                                  (proxy-super keyPressed e)))
 
                             (keyReleased
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (key-released-fn)))
+                              ([]
+                                 (key-released-fn))
                               ([e]
                                  (proxy-super keyReleased e)))
 
                             (keyTyped
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (key-typed-fn)))
+                              ([]
+                                 (key-typed-fn))
                               ([e]
                                  (proxy-super keyTyped e)))
 
                             (mousePressed
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (mouse-pressed-fn)))
+                              ([]
+                                 (mouse-pressed-fn))
                               ([e]
                                  (proxy-super mousePressed e)))
 
                             (mouseReleased
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (mouse-released-fn)))
+                              ([]
+                                 (mouse-released-fn))
                               ([e]
                                  (proxy-super mouseReleased e)))
 
                             (mouseMoved
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (mouse-moved-fn)))
+                              ([]
+                                 (mouse-moved-fn))
                               ([e]
                                  (proxy-super mouseMoved e)))
 
                             (mouseDragged
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (mouse-dragged-fn)))
+                              ([]
+                                 (mouse-dragged-fn))
                               ([e]
                                  (proxy-super mouseDragged e)))
 
                             (mouseClicked
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (mouse-clicked-fn)))
+                              ([]
+                                 (mouse-clicked-fn))
                               ([e]
                                  (proxy-super mouseClicked e)))
 
                             (focusGained
                               ([] nil) ;;The no arg version of the focus
-                              ;;fns don't appear to be called
+                              ;;fns don't appear too be called
                               ([e]
                                  (proxy-super focusGained e)
-                                 (binding [*applet* this
-                                           *state* state]
-                                   (focus-gained-fn))))
+                                 (focus-gained-fn)))
 
                             (focusLost
                               ([] nil)
                               ([e]
                                  (proxy-super focusLost e)
-                                 (binding [*applet* this
-                                           *state* state]
-                                   (focus-lost-fn))))
+                                 (focus-lost-fn)))
 
                             (mouseEntered
                               ([] nil)
                               ([e]
                                  (proxy-super mouseEntered e)
-                                 (binding [*applet* this
-                                           *state* state]
-                                   (mouse-entered-fn))))
+                                 (mouse-entered-fn)))
 
                             (mouseExited
                               ([] nil)
                               ([e]
                                  (proxy-super mouseExited e)
-                                 (binding [*applet* this
-                                           *state* state]
-                                   (mouse-exited-fn))))
+                                 (mouse-exited-fn)))
 
                             (setup
-                              ([] (binding [*applet* this
-                                            *state* state]
-                                    (setup-fn))))
+                              ([]
+                                 (.set applet-tl this)
+                                 (.set state-tl state)
+                                 (setup-fn)))
 
                             (draw
-                              [] (binding [*applet* this
-                                           *state* state]
-                                   (draw-fn))))]
+                              [] (draw-fn)))]
     (applet-run prx-obj renderer target)
     prx-obj))
 
