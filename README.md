@@ -2,7 +2,7 @@
 
 # Quil
 
-Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling feet a distant shepherd called his scribbly sheep in for re-drawing. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
+Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling paws a distant shepherd called his scribbly sheep in for re-drawing. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
 This truly was an amazing place. Here, dreams and reality had been drawn together - all in one Process. "*_Why* would I ever leave?" he barked with joy! *_Why* indeed!
 
@@ -137,7 +137,7 @@ Quil provides support for the standard Processing API - currently version `1.5.1
 
 Quil is distributed under Common Public License Version 1.0. See LICENSE for details.
 
-The official Processing.org's jars, used as dependencies, are distributed under LGPG and their code can be found on http://processing.org/
+The official Processing.org's jars, used as dependencies, are distributed under LGPL and their code can be found on http://processing.org/
 
 ## Contributors ##
 
