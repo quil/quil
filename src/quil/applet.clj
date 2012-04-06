@@ -11,11 +11,11 @@
 (defonce untitled-applet-id* (atom 0))
 (def ^ThreadLocal applet-tl (ThreadLocal.))
 (def ^ThreadLocal state-tl (ThreadLocal.))
- 
+
 (defn ^PApplet current-applet []
   (.get ^ThreadLocal applet-tl))
 
-(defn state []
+(defn current-state []
   (.get ^ThreadLocal state-tl))
 
 (defn applet-stop
@@ -26,7 +26,7 @@
 (defn applet-state
   "Fetch an element of state from within the applet"
   [applet k]
-  (get (:state (meta applet)) k))
+  (get @(:state (meta applet)) k))
 
 (defn applet-start
   "Start an applet"

@@ -6,7 +6,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl]]))
+        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl]]))
 
 (defn
   ^{:requires-bindings true
@@ -14,13 +14,13 @@
     :subcategory nil
     :added "1.0"}
   state
-  "Retrieve canvas-specific state by key. Must initially call
+  "Retrieve sketch-specific state by key. Must initially call
   set-state! to store state.
 
   (set-state! :foo 1)
   (state :foo) ;=> 1 "
   [key]
-  (let [state* (state)]
+  (let [state* (current-state)]
     (when-not @state*
       (throw (Exception. "State not set - use set-state! before fetching state")))
 
@@ -35,13 +35,13 @@
     :subcategory nil
     :added "1.0"}
   set-state!
-  "Set canvas-specific state. May only be called once (ideally in the
+  "Set sketch-specific state. May only be called once (ideally in the
   setup fn).  Subsequent calls have no effect.
 
   Example:
   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
   [& state-vals]
-  (let [state* (state)]
+  (let [state* (current-state)]
     (when-not @state*
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
