@@ -497,8 +497,8 @@
     :added "1.0"}
   bezier-detail
   "Sets the resolution at which Beziers display. The default value is
-  20. This function is only useful when using the P3D or OPENGL
-  renderer as the default (JAVA2D) renderer does not use this
+  20. This function is only useful when using the :p3d or :opengl
+  renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
   (.bezierDetail (current-applet) (int detail)))
@@ -953,7 +953,7 @@
   create-font. For instance, when using the default renderer
   setting (JAVA2D), the actual native version of the font will be
   employed by the sketch, improving drawing quality and
-  performance. With the P2D, P3D, and OPENGL renderer settings, the
+  performance. With the :p2d, :p3d, and :opengl renderer settings, the
   bitmapped version will be used. While this can drastically improve
   speed and appearance, results are poor when exporting if the sketch
   does not include the .otf or .ttf file, and the requested font is
@@ -973,10 +973,10 @@
   "Creates and returns a new PGraphics object of the types P2D, P3D,
   and JAVA2D. Use this class if you need to draw into an off-screen
   graphics buffer. It's not possible to use create-graphics with
-  OPENGL, because it doesn't allow offscreen use. The PDF renderer
-  requires the filename parameter. The DXF renderer should not be used
-  with create-graphics, it's only built for use with begin-raw and
-  end-raw.
+  the OPENGL renderer, because it doesn't allow offscreen use. The
+  PDF renderer requires the filename parameter. The DXF renderer
+  should not be used with create-graphics, it's only built for use
+  with begin-raw and end-raw.
 
   It's important to call any drawing commands between begin-draw and
   end-draw statements. This is also true for any commands that affect
@@ -1168,8 +1168,8 @@
     :added "1.0"}
   curve-detail
   "Sets the resolution at which curves display. The default value is
-  20. This function is only useful when using the P3D or OPENGL
-  renderer as the default (JAVA2D) renderer does not use this
+  20. This function is only useful when using the :p3d or :opengl
+  renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
   (.curveDetail (current-applet) (int detail)))
@@ -1769,8 +1769,8 @@
   :enable-depth-test - Enables the zbuffer.
 
   :enable-depth-sort - Enable primitive z-sorting of triangles and
-    lines in P3D and OPENGL. This can slow performance considerably,
-    and the algorithm is not yet perfect.
+    lines in :p3d and :opengl rendering modes. This can slow
+    performance considerably, and the algorithm is not yet perfect.
 
   :disable-depth-sort - Disables hint :enable-depth-sort
 
@@ -2646,8 +2646,8 @@
   pixel. The first parameter is the horizontal value for the point,
   the second value is the vertical value for the point, and the
   optional third value is the depth value. Drawing this shape in 3D
-  using the z parameter requires the P3D or OPENGL parameter in
-  combination with size as shown in the above example."
+  using the z parameter requires the :P3D or :opengl renderer to be
+  used."
   ([x y] (.point (current-applet) (float x)(float y)))
   ([x y z] (.point (current-applet) (float x) (float y) (float z))))
 
@@ -3023,7 +3023,7 @@
   example, calling (rotate-x HALF-PI) and then (rotate-x HALF-PI) is
   the same as (rotate-x PI). If rotate-x is called within the draw fn,
   the transformation is reset when the loop begins again. This
-  function requires passing P3D or OPENGL into the size parameter."
+  function requires either the :p3d or :opengl renderer."
   [angle]
   (.rotateX (current-applet) (float angle)))
 
@@ -3044,7 +3044,7 @@
   example, calling (rotate-y HALF-PI) and then (rotate-y HALF-PI) is
   the same as (rotate-y PI). If rotate-y is called within the draw fn,
   the transformation is reset when the loop begins again. This
-  function requires passing P3D or OPENGL into the size parameter."
+  function requires either the :p3d or :opengl renderer."
   [angle]
   (.rotateY (current-applet) (float angle)))
 
@@ -3065,7 +3065,7 @@
   example, calling (rotate-z HALF-PI) and then (rotate-z HALF-PI) is
   the same as (rotate-z PI). If rotate-y is called within the draw fn,
   the transformation is reset when the loop begins again. This
-  function requires passing P3D or OPENGL into the size parameter."
+  function requires either the :p3d or :opengl renderer."
   [angle]
   (.rotateZ (current-applet) (float angle)))
 
@@ -3146,9 +3146,9 @@
   multiply the effect. For example, calling (scale 2) and then
   (scale 1.5) is the same as (scale 3). If scale is called within
   draw, the transformation is reset when the loop begins again. Using
-  this fuction with the z parameter requires passing P3D or OPENGL
-  into the size parameter as shown in the example above. This function
-  can be further controlled by push-matrix and pop-matrix."
+  this fuction with the z parameter requires specfying :p3d or :opengl
+  as the renderer. This function can be further controlled by
+  push-matrix and pop-matrix."
   ([s] (.scale (current-applet) (float s)))
   ([sx sy] (.scale (current-applet) (float sx) (float sy))))
 
@@ -3259,7 +3259,7 @@
 
   Due to what appears to be a bug in Apple's Java implementation, the
   point() and set() methods are extremely slow in some circumstances
-  when used with the default renderer. Using P2D or P3D will fix the
+  when used with the default renderer. Using :p2d or :p3d will fix the
   problem. Grouping many calls to point or set-pixel together can also
   help. (Bug 1094)"
   [x y c]
@@ -3296,9 +3296,9 @@
   parameters to define the x and y values of the opposite corner of
   the shape.
 
-  Note complex shapes may draw awkwardly with P2D, P3D, and
-  OPENGL. Those renderers do not yet support shapes that have holes or
-  complicated breaks."
+  Note complex shapes may draw awkwardly with the renderers :p2d, :p3d, and
+  :opengl. Those renderers do not yet support shapes that have holes
+  or complicated breaks."
   ([^PShape sh] (.shape (current-applet) sh))
   ([^PShape sh x y] (.shape (current-applet) sh (float x) (float y)))
   ([^PShape sh x y width height] (.shape (current-applet) sh (float x) (float y) (float width) (float height))))
@@ -3606,9 +3606,8 @@
   specified with the corresponding parameters :miter, :bevel, and
   :round. The default joint is :miter.
 
-  This function is not available with the P2D, P3D, or OPENGL
-  renderers (see bug report). More information about the renderers can
-  be found in the size reference."
+  This function is not available with the :p2d, :p3d, or :opengl
+  renderers."
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
     (.strokeJoin (current-applet) (int join-mode))))
@@ -3825,14 +3824,14 @@
 
   Changing to :screen mode draws letters directly to the front of the
   window and greatly increases rendering quality and speed when used
-  with the P2D and P3D renderers. :screen with OPENGL and JAVA2D (the
-  default) renderers will generally be slower, though pixel accurate
-  with P2D and P3D. With :screen, the letters draw at the actual size
-  of the font (in pixels) and therefore calls to text-size will not
-  affect the size of the letters. To create a font at the size you
-  desire, use create-font. When using :screen, any z-coordinate passed
-  to a text command will be ignored, because your computer screen
-  is...flat!
+  with the :p2d and :p3d renderers. :screen with :opengl
+  and :java2d (the default) renderers will generally be slower, though
+  pixel accurate with :p2d and :p3d. With :screen, the letters draw at
+  the actual size of the font (in pixels) and therefore calls to
+  text-size will not affect the size of the letters. To create a font
+  at the size you desire, use create-font. When using :screen, any
+  z-coordinate passed to a text command will be ignored, because your
+  computer screen is...flat!
 
   The :shape mode draws text using the the glyph outlines of
   individual characters rather than as textures. This mode is only
@@ -4063,9 +4062,8 @@
   points, lines, triangles, quads, and polygons and is used
   exclusively within the begin-shape and end-shape fns.
 
-  Drawing a vertex in 3D using the z parameter requires the P3D or
-  OPENGL parameter in combination with size as shown in the above
-  example.
+  Drawing a vertex in 3D using the z parameter requires the :p3d or
+  :opengl renderers to be used.
 
   This function is also used to map a texture onto the geometry. The
   texture fn declares the texture to apply to the geometry and the u
@@ -4304,8 +4302,8 @@
   :size           - a vector of width and height for the sketch.
                     Defaults to [500 300].
 
-  :renderer       - Select the renderer type. One of :p2d, :java2d,
-                    :opengl, :pdf or :dxf). Defaults to :p2d.
+  :renderer       - Specify the renderer type. One of :p2d, :java2d,
+                    :opengl, :pdf or :dxf). Defaults to :java2d.
 
   :title          - a string which will be displayed at the top of
                     the sketch window.
