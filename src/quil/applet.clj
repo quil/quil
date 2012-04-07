@@ -183,7 +183,7 @@
                                  (apply hash-map opts))
         size              (validate-size! (:size options))
         target            (validate-target! (:target options))
-        renderer          (or (:renderer options) :p2d)
+        renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
         setup-fn          (fn []
                             (let [size-vec (concat size [renderer])]
