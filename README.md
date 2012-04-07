@@ -127,7 +127,7 @@ If you know the start of Processing API method name such as `bezier`, you can us
 
 Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author.
 
-Head over to the [Gen Art Examples Page](https://github.com/quil/quil/tree/master/examples/gen_art).
+Head over to the [Gen Art Examples Page](https://github.com/quil/quil/blob/master/examples/gen_art/README.md).
 
 ## Processing Compatibility
 
