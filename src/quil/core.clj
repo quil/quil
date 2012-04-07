@@ -4311,6 +4311,9 @@
   :keep-on-top    - Specify whether the window should be on top of
                     all other OS windows.
 
+  :decor          - Specify if the window should have OS frame 
+                    decorations. 
+
   :setup          - a fn to be called once when setting the sketch up.
 
   :draw           - a fn to be repeatedly called at most n times per
