@@ -14,13 +14,15 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Installation
 
-Simply add Quil as a dependency in your `project.clj`:
+[Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
     [quil "1.0.0"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
     (:use quil.core)
+    
+For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing)    
 
 **Please Note:** In order to use the OpenGL features, you need to be using Leiningen 2.x.
 
