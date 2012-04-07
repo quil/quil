@@ -16,7 +16,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 Simply add Quil as a dependency in your `project.clj`:
 
-    [quil "1.0.0-SNAPSHOT"]
+    [quil "1.0.0"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
