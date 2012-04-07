@@ -22,7 +22,7 @@ Then to pull in all of Quil's silky goodness, just add the following to your `ns
 
     (:use quil.core)
     
-For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing)    
+For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing).  
 
 **Please Note:** In order to use the OpenGL features, you need to be using Leiningen 2.x.
 
