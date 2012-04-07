@@ -69,7 +69,9 @@
         [width height] (or (:size m) [800 600])
         close-op       JFrame/DISPOSE_ON_CLOSE
         title          (or (:title m) (str "Quil " (swap! untitled-applet-id* inc)))
-        f              (JFrame. title)]
+        f              (JFrame. title)
+        falsify        #(not (or (nil? %) (true? %)))
+        decor?         (falsify (:decor m))]
     (doto f
       (.addWindowListener  (reify WindowListener
                              (windowActivated [this e])
@@ -80,6 +82,7 @@
                              (windowIconified [this e])
                              (windowOpened [this e])
                              (windowClosed [this e])))
+      (.setUndecorated decor?)
       (.setDefaultCloseOperation close-op)
       (.setSize width height)
       (.add applet)
