@@ -135,13 +135,14 @@
 (defn applet
   "Create and start a new visualisation applet.
 
-  :size           - a vector of width, height and optional renderer
-                    (one of :p2d, :java2d, :opengl, :pdf or :dxf). i.e.
-                    [500 300] or [400 600 :opengl].
-                    Defaults to [500 300].
-
   :title          - a string which will be displayed at the top of
                     the applet window.
+
+  :size           - a vector of width and height. Defaults to
+                    [500 300].
+
+  :renderer       - The renderer to use. (one of :p2d, :java2d,
+                    :opengl, :pdf or :dxf). Defaults to :java2d.
 
   :setup          - a fn to be called once when setting the applet up.
 
