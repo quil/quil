@@ -138,50 +138,54 @@
 (defn applet
   "Create and start a new visualisation applet.
 
-  :title          - a string which will be displayed at the top of
-                    the applet window.
+   :size           - a vector of width and height for the sketch.
+                     Defaults to [500 300].
 
-  :size           - a vector of width and height. Defaults to
-                    [500 300].
+   :renderer       - Specify the renderer type. One of :p2d, :java2d,
+                     :opengl, :pdf or :dxf). Defaults to :java2d.
 
-  :renderer       - The renderer to use. (one of :p2d, :java2d,
-                    :opengl, :pdf or :dxf). Defaults to :java2d.
+   :title          - a string which will be displayed at the top of
+                     the sketch window.
 
-  :setup          - a fn to be called once when setting the applet up.
+   :keep-on-top    - Specify whether the window should be on top of
+                     all other OS windows.
 
-  :draw           - a fn to be repeatedly called at most n times per
-                    second where n is the target frame-rate set for
-                    the visualisation.
+   :decor          - Specify if the window should have OS frame
+                     decorations.
 
-  :target         - one of :frame, :perm-frame. Default :frame.
+   :setup          - a fn to be called once when setting the sketch up.
 
-  :focus-gained   - Called when the applet gains focus.
+   :draw           - a fn to be repeatedly called at most n times per
+                     second where n is the target frame-rate set for
+                     the visualisation.
 
-  :focus-lost     - Called when the applet loses focus.
+   :focus-gained   - Called when the sketch gains focus.
 
-  :mouse-entered  - Called when the mouse enters the applet window.
+   :focus-lost     - Called when the sketch loses focus.
 
-  :mouse-exited   - Called when the mouse leaves the applet window
+   :mouse-entered  - Called when the mouse enters the sketch window.
 
-  :mouse-pressed  - Called every time a mouse button is pressed.
+   :mouse-exited   - Called when the mouse leaves the sketch window
 
-  :mouse-released - Called every time a mouse button is released.
+   :mouse-pressed  - Called every time a mouse button is pressed.
 
-  :mouse-clicked  - called once after a mouse button has been pressed
-                    and then released.
+   :mouse-released - Called every time a mouse button is released.
 
-  :mouse-moved    - Called every time the mouse moves and a button is
-                    not pressed.
+   :mouse-clicked  - called once after a mouse button has been pressed
+                     and then released.
 
-  :mouse-dragged  - Called every time the mouse moves and a button is
-                    pressed.
+   :mouse-moved    - Called every time the mouse moves and a button is
+                     not pressed.
 
-  :key-pressed    - Called every time any key is pressed.
+   :mouse-dragged  - Called every time the mouse moves and a button is
+                     pressed.
 
-  :key-released   - Called every time any key is released.
+   :key-pressed    - Called every time any key is pressed.
 
-  :key-typed      - Called once every time non-modifier keys are
-                    pressed."
+   :key-released   - Called every time any key is released.
+
+   :key-typed      - Called once every time non-modifier keys are
+                     pressed."
   [& opts]
   (let [options           (merge {:size [500 300] :target :frame}
                                  (apply hash-map opts))
