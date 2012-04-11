@@ -6,7 +6,8 @@
            (javax.swing JFrame)
            (java.awt.event WindowListener))
   (:use [quil.util :only [resolve-constant-key]]
-        [quil.dynamics :only [*applet* *state*]]))
+        [quil.dynamics :only [*applet* *state*]]
+        [clojure.stacktrace :only [print-cause-trace]]))
 
 (defonce untitled-applet-id* (atom 0))
 (def ^ThreadLocal applet-tl (ThreadLocal.))
@@ -62,13 +63,12 @@
     :none       (applet-close-applet applet)))
 
 (defn- launch-applet-frame
-  [applet renderer keep-on-top?]
+  [applet title renderer keep-on-top?]
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
         m              (.meta applet)
         [width height] (or (:size m) [800 600])
         close-op       JFrame/DISPOSE_ON_CLOSE
-        title          (or (:title m) (str "Quil " (swap! untitled-applet-id* inc)))
         f              (JFrame. title)
         falsify        #(not (or (nil? %) (true? %)))
         decor?         (falsify (:decor m))]
@@ -96,11 +96,11 @@
 
 (defn- applet-run
   "Launches the applet to the specified target."
-  [applet renderer target]
+  [applet title renderer target]
   (.init applet)
   (case target
-    :frame (launch-applet-frame applet renderer false)
-    :perm-frame (launch-applet-frame applet renderer true)
+    :frame (launch-applet-frame applet title renderer false)
+    :perm-frame (launch-applet-frame applet title renderer true)
     :none applet))
 
 (def ^{:private true}
@@ -186,12 +186,18 @@
    :key-released   - Called every time any key is released.
 
    :key-typed      - Called once every time non-modifier keys are
-                     pressed."
+                     pressed.
+
+   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
+                     Default is true."
   [& opts]
-  (let [options           (merge {:size [500 300] :target :frame}
+  (let [options           (merge {:size [500 300]
+                                  :target :frame
+                                  :safe-draw-fn true}
                                  (apply hash-map opts))
         size              (validate-size! (:size options))
         target            (validate-target! (:target options))
+        title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
         setup-fn          (fn []
@@ -199,6 +205,13 @@
                               (apply applet-set-size size-vec))
                             (when-let [f (:setup options)]
                               (f)))
+        safe-draw-fn      (fn []
+                            (try
+                              (draw-fn)
+                              (catch Exception e
+                                (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
+                                (Thread/sleep 1000))))
+        draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
         key-typed-fn      (or (:key-typed options) (fn [] nil))
@@ -300,7 +313,7 @@
 
                             (draw
                               [] (draw-fn)))]
-    (applet-run prx-obj renderer target)
+    (applet-run prx-obj title renderer target)
     prx-obj))
 
 (defmacro defapplet

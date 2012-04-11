@@ -4347,7 +4347,10 @@
    :key-released   - Called every time any key is released.
 
    :key-typed      - Called once every time non-modifier keys are
-                     pressed."
+                     pressed.
+
+   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
+                     Default is true."
     [& opts]
     (apply applet opts))
 
