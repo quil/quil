@@ -59,7 +59,7 @@
   (case (:target (meta applet))
     :frame      (applet-close-frame applet)
     :perm-frame (applet-close-frame applet)
-    :applet     (applet-close-applet applet)))
+    :none       (applet-close-applet applet)))
 
 (defn- launch-applet-frame
   [applet renderer keep-on-top?]
@@ -101,7 +101,7 @@
   (case target
     :frame (launch-applet-frame applet renderer false)
     :perm-frame (launch-applet-frame applet renderer true)
-    :applet applet))
+    :none applet))
 
 (def ^{:private true}
   renderer-modes {:p2d    PApplet/P2D
@@ -125,11 +125,11 @@
     (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
   size)
 
-(def ^{:private true} VALID-TARGETS #{:frame :perm-frame :applet})
+(def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
-  targets: [:frame, :perm-frame :applet]."
+  targets: [:frame, :perm-frame :none]."
   [target]
   (when-not (some VALID-TARGETS [target])
     (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
@@ -147,11 +147,12 @@
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
-   :keep-on-top    - Specify whether the window should be on top of
-                     all other OS windows.
+   :target         - Specify the target. One of :frame, :perm-frame
+                     or :none.
 
    :decor          - Specify if the window should have OS frame
-                     decorations.
+                     decorations. Only honoured with :frame or
+                     :perm-frame targets.
 
    :setup          - a fn to be called once when setting the sketch up.
 

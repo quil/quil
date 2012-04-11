@@ -4297,56 +4297,57 @@
 
 
 (defn sketch
-  "Create and start a new sketch.
+  "Create and start a new visualisation applet.
 
-  :size           - a vector of width and height for the sketch.
-                    Defaults to [500 300].
+   :size           - a vector of width and height for the sketch.
+                     Defaults to [500 300].
 
-  :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                    :opengl, :pdf or :dxf). Defaults to :java2d.
+   :renderer       - Specify the renderer type. One of :p2d, :java2d,
+                     :opengl, :pdf or :dxf). Defaults to :java2d.
 
-  :title          - a string which will be displayed at the top of
-                    the sketch window.
+   :title          - a string which will be displayed at the top of
+                     the sketch window.
 
-  :keep-on-top    - Specify whether the window should be on top of
-                    all other OS windows.
+   :target         - Specify the target. One of :frame, :perm-frame
+                     or :none.
 
-  :decor          - Specify if the window should have OS frame 
-                    decorations. 
+   :decor          - Specify if the window should have OS frame
+                     decorations. Only honoured with :frame or
+                     :perm-frame targets.
 
-  :setup          - a fn to be called once when setting the sketch up.
+   :setup          - a fn to be called once when setting the sketch up.
 
-  :draw           - a fn to be repeatedly called at most n times per
-                    second where n is the target frame-rate set for
-                    the visualisation.
+   :draw           - a fn to be repeatedly called at most n times per
+                     second where n is the target frame-rate set for
+                     the visualisation.
 
-  :focus-gained   - Called when the sketch gains focus.
+   :focus-gained   - Called when the sketch gains focus.
 
-  :focus-lost     - Called when the sketch loses focus.
+   :focus-lost     - Called when the sketch loses focus.
 
-  :mouse-entered  - Called when the mouse enters the sketch window.
+   :mouse-entered  - Called when the mouse enters the sketch window.
 
-  :mouse-exited   - Called when the mouse leaves the sketch window
+   :mouse-exited   - Called when the mouse leaves the sketch window
 
-  :mouse-pressed  - Called every time a mouse button is pressed.
+   :mouse-pressed  - Called every time a mouse button is pressed.
 
-  :mouse-released - Called every time a mouse button is released.
+   :mouse-released - Called every time a mouse button is released.
 
-  :mouse-clicked  - called once after a mouse button has been pressed
-                    and then released.
+   :mouse-clicked  - called once after a mouse button has been pressed
+                     and then released.
 
-  :mouse-moved    - Called every time the mouse moves and a button is
-                    not pressed.
+   :mouse-moved    - Called every time the mouse moves and a button is
+                     not pressed.
 
-  :mouse-dragged  - Called every time the mouse moves and a button is
-                    pressed.
+   :mouse-dragged  - Called every time the mouse moves and a button is
+                     pressed.
 
-  :key-pressed    - Called every time any key is pressed.
+   :key-pressed    - Called every time any key is pressed.
 
-  :key-released   - Called every time any key is released.
+   :key-released   - Called every time any key is released.
 
-  :key-typed      - Called once every time non-modifier keys are
-                    pressed."
+   :key-typed      - Called once every time non-modifier keys are
+                     pressed."
     [& opts]
     (apply applet opts))
 
