@@ -10,7 +10,7 @@ _11th April 2012_
 
 Additions:
 
-* Added :decor sketch option to allow user to toggle frame decorations.
+* Added `:decor` sketch option to allow user to toggle frame decorations.
 
 Fixes:
 
