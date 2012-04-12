@@ -135,6 +135,14 @@ Head over to the [Gen Art Examples Page](https://github.com/quil/quil/blob/maste
 
 Quil provides support for the standard Processing API - currently version `1.5.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
+## Community
+
+You can ask questions, get support on our mailing list:
+
+https://groups.google.com/forum/?fromgroups#!forum/clj-processing
+
+There is also a small number of people that hang out in `#quil` on freenode.
+
 ## License
 
 Quil is distributed under Common Public License Version 1.0. See LICENSE for details.
