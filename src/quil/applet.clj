@@ -165,7 +165,7 @@
                      The return value of this function will become the new
                      :state, much like reduce. Takes precedence over :draw.
 
-   :state          - Initial value of the state passed to the :update fn.
+   :init           - Initial value of the state passed to the :update fn.
 
    :focus-gained   - Called when the sketch gains focus.
 
@@ -233,6 +233,7 @@
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         state             (atom (:state options))
+        init              (atom (:init options))
         target-obj        (atom nil)
         prx-obj           (proxy [processing.core.PApplet
                                   clojure.lang.IMeta] []
@@ -320,8 +321,8 @@
                                  (setup-fn)))
 
                             (draw
-                              ([] (swap! state (partial update-fn
-                                                        (.frameCount this))))))]
+                              ([] (swap! init (partial update-fn
+                                                       (.frameCount this))))))]
     (applet-run prx-obj title renderer target)
     prx-obj))
 
