@@ -156,9 +156,16 @@
 
    :setup          - a fn to be called once when setting the sketch up.
 
-   :draw           - a fn to be repeatedly called at most n times per
-                     second where n is the target frame-rate set for
-                     the visualisation.
+   :draw           - a fn of no args to be repeatedly called at most n
+                     times per second where n is the target frame-rate set
+                     for the visualisation. Cannot be used with :update.
+
+   :update         - a fn of to be repeatedly called like :draw, but accepting
+                     both the current frame count and the current :state value.
+                     The return value of this function will become the new
+                     :state, much like reduce. Takes precedence over :draw.
+
+   :init           - Initial value of the state passed to the :update fn.
 
    :focus-gained   - Called when the sketch gains focus.
 
@@ -212,6 +219,7 @@
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
+        update-fn         (or (:update options) (fn [_ _] (draw-fn)))
         key-pressed-fn    (or (:key-pressed options) (fn [] nil))
         key-released-fn   (or (:key-released options) (fn [] nil))
         key-typed-fn      (or (:key-typed options) (fn [] nil))
@@ -224,7 +232,8 @@
         mouse-clicked-fn  (or (:mouse-clicked options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
-        state             (atom nil)
+        state             (atom (:state options))
+        init              (atom (:init options))
         target-obj        (atom nil)
         prx-obj           (proxy [processing.core.PApplet
                                   clojure.lang.IMeta] []
@@ -312,7 +321,8 @@
                                  (setup-fn)))
 
                             (draw
-                              [] (draw-fn)))]
+                              ([] (swap! init (partial update-fn
+                                                       (.frameCount this))))))]
     (applet-run prx-obj title renderer target)
     prx-obj))
 
