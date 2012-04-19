@@ -1550,8 +1550,7 @@
     :added "1.0"}
   focused
   "Returns a boolean value representing whether the applet has focus."
-  []
-  (. (current-applet) :focused))
+  []  (.-focussed (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1645,7 +1644,7 @@
   the changes. Calls load-pixels before obtaining the pixel array."
   []
   (load-pixels)
-  (. (current-applet) :pixels))
+  (.-pixels (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1941,7 +1940,7 @@
   Macintosh. Check for both ENTER and RETURN to make sure your program
   will work for all platforms."
   []
-  (. (current-applet) :key))
+  (.-key (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1968,7 +1967,7 @@
   KeyEvent.VK_DOWN. Other keyCode values can be found in the Java
   KeyEvent reference."
   []
-  (. (current-applet) :keyCode))
+  (.-keyCode (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1979,7 +1978,7 @@
     key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
-  (. (current-applet) :keyPressed))
+  (.-keyPressed (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2324,7 +2323,7 @@
   "The value of the system variable mouseButton is either :left, :right,
   or :center depending on which button is pressed."
   []
-  (let [button-code   (. (current-applet) :mouseButton)]
+  (let [button-code   (.-mouseButton (current-applet))]
     (case button-code
       LEFT :left
       RIGHT :right
@@ -2341,7 +2340,7 @@
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
   []
-  (. (current-applet) :mousePressed))
+  (.-mousePressed (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2352,7 +2351,7 @@
   mouse-x
   "Current horizontal coordinate of the mouse."
   []
-  (. (current-applet) :mouseX))
+  (.-mouseX (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2363,7 +2362,7 @@
   mouse-y
   "Current vertical coordinate of the mouse."
   []
-  (. (current-applet) :mouseY))
+  (.-mouseY (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2374,7 +2373,7 @@
   pmouse-x
   "Horizontal coordinate of the mouse in the previous frame"
   []
-  (. (current-applet) :pmouseX))
+  (.-pmouseX (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2385,7 +2384,7 @@
   pmouse-y
   "Vertical coordinate of the mouse in the previous frame"
   []
-  (. (current-applet) :pmouseY))
+  (.-pmouseY (current-applet)))
 
 (defn
   ^{:requires-bindings true

@@ -1,4 +1,4 @@
-(defproject quil "1.2.0"
+(defproject quil "1.3.0"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
   :mailing-list {:name "Quil Mailing List"
@@ -6,7 +6,7 @@
                  :post "clj-processing@googlegroups.com"}
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojars.processing-core/org.processing.core "1.5.1"]
                  [org.clojars.processing-core/org.processing.gluegen-rt "1.5.1"]
                  [org.clojars.processing-core/org.processing.jogl "1.5.1"]
