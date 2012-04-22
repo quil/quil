@@ -234,7 +234,6 @@
         target            (if (empty? output-file) target :none)
         setup-fn          (fn []
                             (let [size-vec (concat size [renderer] output-file)]
-                              (println size-vec)
                               (apply applet-set-size size-vec))
                             (when-let [f (:setup options)]
                               (f)))
