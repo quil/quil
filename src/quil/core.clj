@@ -6,7 +6,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl]]))
+        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit]]))
 
 (defn
   ^{:requires-bindings true
@@ -1441,7 +1441,7 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (.exit (current-applet)))
+  (applet-safe-exit (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -4302,13 +4302,19 @@
                      Defaults to [500 300].
 
    :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                     :opengl, :pdf or :dxf). Defaults to :java2d.
+                     :opengl, :pdf or :dxf). Defaults to :java2d. If
+                     :pdf or :dxf is selected, :target is forced to
+                     :none.
+
+   :output-file    - Specify an output file path. Only used in :pdf
+                     and :dxf render modes.
 
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
    :target         - Specify the target. One of :frame, :perm-frame
-                     or :none.
+                     or :none. Ignored if :pdf or :dxf renderer is
+                     used.
 
    :decor          - Specify if the window should have OS frame
                      decorations. Only honoured with :frame or

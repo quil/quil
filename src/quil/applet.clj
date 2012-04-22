@@ -9,6 +9,18 @@
         [quil.dynamics :only [*applet* *state*]]
         [clojure.stacktrace :only [print-cause-trace]]))
 
+(defn applet-safe-exit
+  "Similar to the exit method on PApplet, but doesn't kill the current
+  process. Annoyingly, we don't have direct access to the looping
+  field as it isn't public. However, we now proxy the loop and
+  noLoop (the only places the field is modified) and keep a local copy
+  of that state. Unfortunate but functional."
+  [applet]
+  (let [looping? @(:looping? (meta applet))]
+    (if looping?
+      (set! (.-finished applet) true)
+      (.dispose applet))))
+
 (defonce untitled-applet-id* (atom 0))
 (def ^ThreadLocal applet-tl (ThreadLocal.))
 (def ^ThreadLocal state-tl (ThreadLocal.))
@@ -41,7 +53,7 @@
 
 (defn- applet-close-applet
   [applet]
-  (.stop applet))
+  (applet-safe-exit applet))
 
 (defn- applet-close-frame
   [applet]
@@ -115,7 +127,10 @@
   ([width height] (.size *applet* (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (current-applet) (int width) (int height) renderer))))
+       (.size (current-applet) (int width) (int height) renderer)))
+    ([width height renderer path]
+     (let [renderer (resolve-constant-key renderer renderer-modes)]
+       (.size (current-applet) (int width) (int height) renderer path))))
 
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws
@@ -126,6 +141,15 @@
   size)
 
 (def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
+
+(defn- validate-output-file!
+  "Checks to see whether the output file parameter is correct and that
+  the renderer mode is compatible. Returns a vector - either empty or
+  containing a file path if the renderer is compatible."
+  [renderer path]
+  (if (some #{renderer} #{:pdf :dxf})
+    [path]
+    []))
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
@@ -142,13 +166,19 @@
                      Defaults to [500 300].
 
    :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                     :opengl, :pdf or :dxf). Defaults to :java2d.
+                     :opengl, :pdf or :dxf). Defaults to :java2d. If
+                     :pdf or :dxf is selected, :target is forced to
+                     :none.
+
+   :output-file    - Specify an output file path. Only used in :pdf
+                     and :dxf render modes.
 
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
    :target         - Specify the target. One of :frame, :perm-frame
-                     or :none.
+                     or :none. Ignored if :pdf or :dxf renderer is
+                     used.
 
    :decor          - Specify if the window should have OS frame
                      decorations. Only honoured with :frame or
@@ -200,8 +230,11 @@
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
+        output-file       (validate-output-file! renderer (:output-file options))
+        target            (if (empty? output-file) target :none)
         setup-fn          (fn []
-                            (let [size-vec (concat size [renderer])]
+                            (let [size-vec (concat size [renderer] output-file)]
+                              (println size-vec)
                               (apply applet-set-size size-vec))
                             (when-let [f (:setup options)]
                               (f)))
@@ -226,12 +259,14 @@
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         state             (atom nil)
         target-obj        (atom nil)
+        looping?          (atom true)
         prx-obj           (proxy [processing.core.PApplet
                                   clojure.lang.IMeta] []
                             (meta [] (assoc options
                                        :state state
                                        :target-obj target-obj
-                                       :target target))
+                                       :target target
+                                       :looping? looping?))
                             (keyPressed
                               ([]
                                  (key-pressed-fn))
@@ -312,9 +347,20 @@
                                  (setup-fn)))
 
                             (draw
-                              [] (draw-fn)))]
+                              [] (draw-fn))
+
+                            (loop
+                              []
+                              (reset! looping? true)
+                              (proxy-super loop))
+
+                            (noLoop
+                              []
+                              (reset! looping? true)
+                              (proxy-super noLoop)))]
     (applet-run prx-obj title renderer target)
     prx-obj))
+
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
