@@ -12,7 +12,7 @@ In one hand Quil holds Processing, a carefully crafted API for making drawing an
 
 In one swift, skilled motion, Quil throws them both high into the air. In a dusty cloud of pixels, they bond instantly and fly off into the distance painting their way with immutable trails of brilliant colour. Moments later, you see them swiftly return and hover nearby. Your very own ride to Perlinwould awaits. Summon the winds and ride well, my friend.
 
-## Requirements 
+## Requirements
 
 Quil requires Clojure 1.4.0 or higher, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
 
@@ -20,7 +20,7 @@ Quil requires Clojure 1.4.0 or higher, and other dependencies described in `proj
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.4.0"]
+    [quil "1.4.1"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
