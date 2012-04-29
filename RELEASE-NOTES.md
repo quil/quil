@@ -1,3 +1,8 @@
+## 1.4.1
+_30th April 2012_
+
+* Bugfix - fixed bug with text-align throwing an exception
+
 ## 1.4.0
 _29th April 2012_
 
