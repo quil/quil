@@ -28,8 +28,6 @@ Then to pull in all of Quil's silky goodness, just add the following to your `ns
 
 For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing).
 
-**Please Note:** In order to use the OpenGL features, you need to be using Leiningen 2.x.
-
 ## Getting Started
 
 Using Quil is as easy as eating chocolate digestives. You just need to grok three basic concepts:
