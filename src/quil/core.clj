@@ -3694,7 +3694,7 @@
                               :center PApplet/CENTER
                               :right PApplet/RIGHT})
 
-(defn ^{:private true}
+(def ^{:private true}
   vertical-alignment-modes {:top PApplet/TOP
                             :bottom PApplet/BOTTOM
                             :center PApplet/CENTER
