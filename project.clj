@@ -1,4 +1,4 @@
-(defproject quil "1.3.0"
+(defproject quil "1.4.0"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
   :mailing-list {:name "Quil Mailing List"

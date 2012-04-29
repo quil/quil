@@ -1,3 +1,15 @@
+## 1.4.0
+_29th April 2012_
+
+* Allow pdf/dxf output file to be specified in sketch options :output-file
+* Override exit fn to not kill the current process.
+* Use exit to ensure pdf/dxf file is written.
+
+## 1.3.0
+_19th April 2012_
+
+Update for Clojure 1.4.0 compatibility
+
 ## 1.2.0
 _11th April 2012_
 
