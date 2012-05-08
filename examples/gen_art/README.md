@@ -126,7 +126,7 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ## 21. Squared 2D Noise Grid
 ![Squared 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-squared-2D-noise-grid.png)
 
-[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/21_squared_noise-grid.clj)
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/21_squared_noise_grid.clj)
 (p86 - Listing 5.2)
 
 ## 22. Rotating Lines 2D Noise Grid
