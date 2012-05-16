@@ -2110,7 +2110,7 @@
   The extension parameter is used to determine the image type in cases
   where the image filename does not end with a proper
   extension. Specify the extension as the second parameter to
-  load-image, as shown in the third example on this page.
+  load-image.
 
   If an image is not loaded successfully, the null value is returned
   and an error message will be printed to the console. The error
@@ -2215,10 +2215,7 @@
     :subcategory "Calculation"
     :added "1.0"}
   map-range
-  "Re-maps a number from one range to another. In the example above,
-  the number '25' is converted from a value in the range 0..100 into a
-  value that ranges from the left edge (0) to the right edge (width)
-  of the screen.
+  "Re-maps a number from one range to another.
 
   Numbers outside the range are not clamped to 0 and 1, because
   out-of-range values are often intentional and useful."
@@ -2251,7 +2248,7 @@
     :added "1.0"}
   millis
   "Returns the number of milliseconds (thousandths of a second) since
-  starting an applet. This information is often used for timing
+  starting the sketch. This information is often used for timing
   animation sequences."
   []
   (.millis (current-applet)))
@@ -2789,8 +2786,7 @@
   style settings and later return to what you had. When a new style is
   started with push-style, it builds on the current style
   information. The push-style and pop-style fns can be embedded to
-  provide more control (see the second example above for a
-  demonstration.)
+  provide more control.
 
   The style information controlled by the following functions are
   included in the style: fill, stroke, tint, stroke-weight,
@@ -3325,11 +3321,11 @@
   are always sheared around their relative position to the origin and
   positive numbers shear objects in a clockwise direction.
   Transformations apply to everything that happens after and
-  subsequent calls to the function accumulates the effect. Fora
+  subsequent calls to the function accumulates the effect. For
   example, calling (shear-x (/ PI 2)) and then (shear-x (/ PI 2)) is
   the same as (shear-x PI). If shear-x is called within the draw fn,
   the transformation is reset when the loop begins again. This
-  function works in P2D or JAVA2D mode as shown in the example above.
+  function works in P2D or JAVA2D mode.
 
   Technically, shear-x multiplies the current transformation matrix
   by a rotation matrix. This function can be further controlled by the
@@ -3350,11 +3346,11 @@
   are always sheared around their relative position to the origin and
   positive numbers shear objects in a clockwise direction.
   Transformations apply to everything that happens after and
-  subsequent calls to the function accumulates the effect. Fora
+  subsequent calls to the function accumulates the effect. For
   example, calling (shear-y (/ PI 2)) and then (shear-y (/ PI 2)) is
   the same as (shear-y PI). If shear-y is called within the draw fn,
   the transformation is reset when the loop begins again. This
-  function works in P2D or JAVA2D mode as shown in the example above.
+  function works in P2D or JAVA2D mode.
 
   Technically, shear-y multiplies the current transformation matrix
   by a rotation matrix. This function can be further controlled by the
