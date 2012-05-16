@@ -6,7 +6,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit]]))
+        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit target-frame-rate-tl]]))
 
 (defn
   ^{:requires-bindings true
@@ -1574,7 +1574,17 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  (.frameRate (current-applet))  )
+  (.frameRate (current-applet)))
+
+(defn
+  ^{:requires-bindings true
+    :category "Environment"
+    :subcategory nil
+    :added "1.5.0"}
+  target-frame-rate
+  "Returns the target framerate specified with the fn frame-rate"
+  []
+  (.get ^ThreadLocal target-frame-rate-tl))
 
 (defn
   ^{:requires-bindings true

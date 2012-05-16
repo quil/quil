@@ -24,6 +24,7 @@
 (defonce untitled-applet-id* (atom 0))
 (def ^ThreadLocal applet-tl (ThreadLocal.))
 (def ^ThreadLocal state-tl (ThreadLocal.))
+(def ^ThreadLocal target-frame-rate-tl (ThreadLocal.))
 
 (defn ^PApplet current-applet []
   (.get ^ThreadLocal applet-tl))
@@ -343,6 +344,7 @@
                               ([]
                                  (.set applet-tl this)
                                  (.set state-tl state)
+                                 (.set target-frame-rate-tl 60)
                                  (setup-fn)))
 
                             (draw
@@ -356,7 +358,13 @@
                             (noLoop
                               []
                               (reset! looping? true)
-                              (proxy-super noLoop)))]
+                              (proxy-super noLoop))
+
+                            (frameRate
+                              [new-rate-target]
+                              (.set target-frame-rate-tl new-rate-target)
+                              (proxy-super frameRate new-rate-target)))
+        ]
     (applet-run prx-obj title renderer target)
     prx-obj))
 
