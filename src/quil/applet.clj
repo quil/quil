@@ -1,6 +1,6 @@
 (ns
     ^{:doc "Functions and macros for initialising and controlling visualisation applets."
-      :author "Roland Sadowsky, Sam Aaron"}
+      :author "Roland Sadowski, Sam Aaron"}
   quil.applet
   (:import (processing.core PApplet)
            (javax.swing JFrame)

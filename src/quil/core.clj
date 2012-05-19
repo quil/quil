@@ -1,6 +1,6 @@
 (ns
     ^{:doc "Wrappers and extensions around the core Processing.org API."
-      :author "Roland Sadowsky, Sam Aaron"}
+      :author "Roland Sadowski, Sam Aaron"}
     quil.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
   (:require [clojure.set])
