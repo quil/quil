@@ -10,13 +10,14 @@
         (= java.lang.Integer t))))
 
 (defn resolve-constant-key
+  "Returns the val associated with key in mappings or key directly if it
+  is one of the vals in mappings. Otherwise throws an exception."
   [key mappings]
-  (when-not (keyword? key)
-    (throw (Exception. (str "Expecting a keyword, got: " key))))
-
-  (if-let [const (get mappings key)]
-    const
-    (throw (Exception. (str "Mode constant not found matching key: " key ". Expected one of: " (vec (sort (keys mappings))))))))
+  (cond
+    (get mappings key)            (get mappings key)
+    (some #{key} (vals mappings)) key
+    :else                         (throw (Exception.
+                                          (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
 
 (defn length-of-longest-key

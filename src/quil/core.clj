@@ -963,6 +963,10 @@
   ([name size smooth ^chars charset]
      (.createFont (current-applet) (str name) (float size) smooth charset)))
 
+(def  ^{:private true}
+  graphic-render-modes
+  (select-keys render-modes [:p2d :p3d :java2d :pdf]))
+
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
@@ -970,31 +974,27 @@
     :subcategory nil
     :added "1.0"}
   create-graphics
-  "Creates and returns a new PGraphics object of the types P2D, P3D,
-  and JAVA2D. Use this class if you need to draw into an off-screen
-  graphics buffer. It's not possible to use create-graphics with
-  the OPENGL renderer, because it doesn't allow offscreen use. The
-  PDF renderer requires the filename parameter. The DXF renderer
-  should not be used with create-graphics, it's only built for use
-  with begin-raw and end-raw.
+  "Creates and returns a new PGraphics object of the types :p2d, :p3d,
+  :java2d, :pdf. Use this class if you need to draw into an off-screen
+  graphics buffer. It's not possible to use create-graphics with the
+  :opengl renderer, because it doesn't allow offscreen use. The :pdf
+  renderer requires the filename parameter.
 
   It's important to call any drawing commands between begin-draw and
   end-draw statements. This is also true for any commands that affect
-  drawing, such as smooth or colorMode.
+  drawing, such as smooth or color-mode.
 
   Unlike the main drawing surface which is completely opaque, surfaces
   created with create-graphics can have transparency. This makes it
   possible to draw into a graphics and maintain the alpha channel. By
   using save to write a PNG or TGA file, the transparency of the
   graphics object will be honored. Note that transparency levels are
-  binary: pixels are either complete opaque or transparent. For the
-  time being (as of release 1.2.1), this means that text characters
-  will be opaque blocks. This will be fixed in a future release (Issue
-  80)."
+  binary: pixels are either complete opaque or transparent. This means
+  that text characters will be opaque blocks."
   ([w h renderer]
-     (.createGraphics (current-applet) (int w) (int h) renderer))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) renderer (str path))))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes) (str path))))
 
 (defn
   ^{:requires-bindings true
