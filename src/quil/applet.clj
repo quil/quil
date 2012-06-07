@@ -116,13 +116,12 @@
     :perm-frame (launch-applet-frame applet title renderer true)
     :none applet))
 
-(def ^{:private true}
-  renderer-modes {:p2d    PApplet/P2D
-                  :p3d    PApplet/P3D
-                  :java2d PApplet/JAVA2D
-                  :opengl PApplet/OPENGL
-                  :pdf    PApplet/PDF
-                  :dxf    PApplet/DXF})
+(def renderer-modes {:p2d    PApplet/P2D
+                     :p3d    PApplet/P3D
+                     :java2d PApplet/JAVA2D
+                     :opengl PApplet/OPENGL
+                     :pdf    PApplet/PDF
+                     :dxf    PApplet/DXF})
 
 (defn- applet-set-size
   ([width height] (.size *applet* (int width) (int height)))
