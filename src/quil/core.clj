@@ -6,7 +6,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit target-frame-rate-tl]]))
+        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit target-frame-rate-tl renderer-modes]]))
 
 (defn
   ^{:requires-bindings true
@@ -970,17 +970,17 @@
     :subcategory nil
     :added "1.0"}
   create-graphics
-  "Creates and returns a new PGraphics object of the types P2D, P3D,
-  and JAVA2D. Use this class if you need to draw into an off-screen
-  graphics buffer. It's not possible to use create-graphics with
-  the OPENGL renderer, because it doesn't allow offscreen use. The
-  PDF renderer requires the filename parameter. The DXF renderer
-  should not be used with create-graphics, it's only built for use
-  with begin-raw and end-raw.
+  "Creates and returns a new PGraphics object with a :p2d, :p3d,
+  :java2d, or :pdf renderer. Use this class if you need to draw into
+  an off-screen graphics buffer. It's not possible to use
+  create-graphics with the :opengl renderer, because it doesn't allow
+  offscreen use. The :pdf renderer requires the filename parameter.
+  The :dxf renderer should not be used with create-graphics, it's only
+  built for use with begin-raw and end-raw.
 
   It's important to call any drawing commands between begin-draw and
   end-draw statements. This is also true for any commands that affect
-  drawing, such as smooth or colorMode.
+  drawing, such as smooth or color-mode.
 
   Unlike the main drawing surface which is completely opaque, surfaces
   created with create-graphics can have transparency. This makes it
@@ -992,9 +992,15 @@
   will be opaque blocks. This will be fixed in a future release (Issue
   80)."
   ([w h renderer]
-     (.createGraphics (current-applet) (int w) (int h) renderer))
+     (let [renderer-constant (resolve-constant-key renderer renderer-modes)]
+       (.createGraphics (current-applet) (int w) (int h) renderer-constant)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) renderer (str path))))
+     (let [renderer-constant (resolve-constant-key renderer renderer-modes)]
+      (.createGraphics (current-applet)
+         (int w)
+         (int h)
+         renderer-constant
+         (str path)))))
 
 (defn
   ^{:requires-bindings true
