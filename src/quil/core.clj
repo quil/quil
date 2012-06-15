@@ -2331,10 +2331,10 @@
   or :center depending on which button is pressed."
   []
   (let [button-code   (.-mouseButton (current-applet))]
-    (case button-code
-      LEFT :left
-      RIGHT :right
-      CENTER :center)))
+    (condp = button-code
+      PConstants/LEFT :left
+      PConstants/RIGHT :right
+      PConstants/CENTER :center)))
 
 (defn
   ^{:requires-bindings true
