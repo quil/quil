@@ -1,3 +1,12 @@
+## 1.5.0
+_16th June 2012_
+
+* Add elementary cellular automata example by Andrew Cholakian
+* Add new fn: `target-frame-rate` which returns the target framerate specified with the fn `frame-rate`.
+* Add keyword render modes to `create-graphics`
+* Allow modes to be passed as constants in addition to their keyword shortcuts.
+* Bugfix: fix exception in `mouse-button` - thanks to Dan Lidral-Porter.
+
 ## 1.4.1
 _30th April 2012_
 
