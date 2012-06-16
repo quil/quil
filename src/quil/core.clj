@@ -2,7 +2,8 @@
     ^{:doc "Wrappers and extensions around the core Processing.org API."
       :author "Roland Sadowski, Sam Aaron"}
     quil.core
-  (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape])
+    (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+             [java.awt.event KeyEvent])
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
@@ -4373,3 +4374,54 @@
   the visualisation. See sketch for the available options."
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
+
+(defn key-coded?
+  "Returns true if char c is a 'coded' char i.e. it is necessary to fetch the key-code as an integer and use that to determine the specific key pressed. See key-keyword."
+  [c]
+  (= PConstants/CODED (int c)))
+
+(def  ^{:private true}
+  KEY-CODES {KeyEvent/VK_UP      :up
+             KeyEvent/VK_DOWN    :down
+             KeyEvent/VK_LEFT    :left
+             KeyEvent/VK_RIGHT   :right
+             KeyEvent/VK_ALT     :alt
+             KeyEvent/VK_CONTROL :control
+             KeyEvent/VK_SHIFT   :shift
+             KeyEvent/VK_WINDOWS :command
+             KeyEvent/VK_META    :command
+             KeyEvent/VK_F1      :f1
+             KeyEvent/VK_F2      :f2
+             KeyEvent/VK_F3      :f3
+             KeyEvent/VK_F4      :f4
+             KeyEvent/VK_F5      :f5
+             KeyEvent/VK_F6      :f6
+             KeyEvent/VK_F7      :f7
+             KeyEvent/VK_F8      :f8
+             KeyEvent/VK_F9      :f9
+             KeyEvent/VK_F10     :f10
+             KeyEvent/VK_F11     :f11
+             KeyEvent/VK_F12     :f12
+             KeyEvent/VK_F13     :f13
+             KeyEvent/VK_F14     :f14
+             KeyEvent/VK_F15     :f15
+             KeyEvent/VK_F16     :f16
+             KeyEvent/VK_F17     :f17
+             KeyEvent/VK_F18     :f18
+             KeyEvent/VK_F19     :f19
+             KeyEvent/VK_F20     :f20
+             KeyEvent/VK_F21     :f21
+             KeyEvent/VK_F22     :f22
+             KeyEvent/VK_F23     :f23
+             KeyEvent/VK_F24     :f24})
+
+(defn key-as-keyword
+  "Returns a keyword representing the currently pressed key. Modifier
+  keys are represented as: :up, :down, :left, :right, :alt, :control,
+  :shift, :command, :f1-24"
+  []
+  (let [key-char (raw-key)
+        code     (key-code)]
+    (if (key-coded? key-char)
+      (get KEY-CODES code :unknown-key)
+      (keyword (str key-char)))))
