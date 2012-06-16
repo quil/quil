@@ -20,7 +20,7 @@ Quil requires Clojure 1.4.0 or higher, and other dependencies described in `proj
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.4.1"]
+    [quil "1.5.0"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
