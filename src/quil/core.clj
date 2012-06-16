@@ -4375,8 +4375,15 @@
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
 
-(defn key-coded?
-  "Returns true if char c is a 'coded' char i.e. it is necessary to fetch the key-code as an integer and use that to determine the specific key pressed. See key-keyword."
+(defn ^{:requires-bindings false
+        :processing-name nil
+        :category "Input"
+        :subcategory "Keyboard"
+        :added "1.6"}
+  key-coded?
+  "Returns true if char c is a 'coded' char i.e. it is necessary to
+  fetch the key-code as an integer and use that to determine the
+  specific key pressed. See key-keyword."
   [c]
   (= PConstants/CODED (int c)))
 
@@ -4415,7 +4422,12 @@
              KeyEvent/VK_F23     :f23
              KeyEvent/VK_F24     :f24})
 
-(defn key-as-keyword
+(defn ^{:requires-bindings true
+        :processing-name nil
+        :category "Input"
+        :subcategory "Keyboard"
+        :added "1.6"}
+  key-as-keyword
   "Returns a keyword representing the currently pressed key. Modifier
   keys are represented as: :up, :down, :left, :right, :alt, :control,
   :shift, :command, :f1-24"
