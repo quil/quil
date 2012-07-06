@@ -1,3 +1,11 @@
+## 1.6.0
+_7th July 2012_
+
+* Add `debug` fn for printing and forcing the current thread to sleep.
+* Add `key-coded` for determining whether the currently pressed key is
+  _coded_ i.e. a special character.
+* Add `key-as-keyword` for returning the currently pressed key as a keyword.
+
 ## 1.5.0
 _16th June 2012_
 

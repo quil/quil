@@ -4437,3 +4437,16 @@
     (if (key-coded? key-char)
       (get KEY-CODES code :unknown-key)
       (keyword (str key-char)))))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name nil
+    :category "Debugging"
+    :added "1.6"}
+  debug
+  "Prints msg and then sleeps the current thread for delay-ms. Useful
+  for debugging live running sketches. delay-ms defaults to 300. "
+  ([msg] (debug msg 300))
+  ([msg delay-ms]
+     (println msg)
+     (Thread/sleep delay-ms)))
