@@ -4260,20 +4260,20 @@
   [q]
   (letfn [(show-fns-by-cat-idx [cat-idx]
             (let [res (get (all-category-map) (str cat-idx))]
-              (println (:name res))
+              (println cat-idx (:name res))
               (dorun
                (map #(println "  -" %) (:fns res)))))
           (show-fns-by-name-regex [re]
-            (doseq [[_ c] (all-category-map)]
+            (doseq [[cid c] (sort-by key (all-category-map))]
               (let [in-cat-name? (or (re-find re (.toLowerCase (:name c)))
                                      (re-find re (:name c)))
                     in-fn-names? (some #(re-find re (str %)) (:fns c))]
                 (cond
                  in-cat-name? (do   ;; print an entire category
-                                (println (:name c))
+                                (println cid (:name c))
                                 (doseq [f (:fns c)] (println "  -" f)))
                  in-fn-names? (do   ;; print only matching fns
-                                (println (:name c))
+                                (println cid (:name c))
                                 (doseq [f (:fns c)]
                                   (if (re-find re (str f))
                                     (println "  -" f))))))))]
