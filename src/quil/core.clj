@@ -4248,15 +4248,39 @@
           cats))))
 
 (defn show-fns
-  "Print all the functions within category or subcategory specified by
-  cat-idx (use print-cats to see a list of index nums). If a category is
-  specified, it will not print out the fns in any of cat's
-  subcategories. "
-  [cat-idx]
-  (let [res (get (all-category-map) (str cat-idx))]
-    (println (:name res))
-    (dorun
-     (map #(println "  -" %) (:fns res)))))
+  "If given a number, print all the functions within category or
+  subcategory specified by the category index (use show-cats to see a
+  list of index nums).
+
+  If given a string or a regular expression, print all the functions
+  whose name or category name contains that string.
+
+  If a category is specified, it will not print out the fns in any of
+  cat's subcategories."
+  [q]
+  (letfn [(show-fns-by-cat-idx [cat-idx]
+            (let [res (get (all-category-map) (str cat-idx))]
+              (println (:name res))
+              (dorun
+               (map #(println "  -" %) (:fns res)))))
+          (show-fns-by-name-regex [re]
+            (doseq [[_ c] (all-category-map)]
+              (let [in-cat-name? (or (re-find re (.toLowerCase (:name c)))
+                                     (re-find re (:name c)))
+                    in-fn-names? (some #(re-find re (str %)) (:fns c))]
+                (cond
+                 in-cat-name? (do   ;; print an entire category
+                                (println (:name c))
+                                (doseq [f (:fns c)] (println "  -" f)))
+                 in-fn-names? (do   ;; print only matching fns
+                                (println (:name c))
+                                (doseq [f (:fns c)]
+                                  (if (re-find re (str f))
+                                    (println "  -" f))))))))]
+    (cond
+     (string? q) (show-fns-by-name-regex (re-pattern q))
+     (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+     :else (show-fns-by-cat-idx q))))
 
 (defn show-meths
   "Takes a string representing the start of a method name in the
