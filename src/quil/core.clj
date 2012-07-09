@@ -4247,6 +4247,36 @@
                         (:subcategories cat))))
           cats))))
 
+(defn- wrap-lines
+  "Split a list of words in lists (lines) not longer than width chars each,
+   space between words included."
+  [width words]
+  (letfn [(wrap-lines-rec
+            [ws accum-lns]
+            (if (empty? ws)
+              accum-lns
+              (let [lens (map count ws)
+                    cumlens (reduce
+                             (fn [sums len]
+                               (conj sums
+                                     (if (empty? sums)
+                                       len
+                                       (+ (last sums) len 1))))
+                             [] lens)
+                    [line other] (split-with #(> width %) cumlens)
+                    [line other] (split-at (count line) ws)]
+                (recur other (conj accum-lns line)))))]
+    (wrap-lines-rec words [])))
+
+(defn- pprint-wrapped-lines
+  "Pretty print words across several lines by wrapping lines at word boundary."
+  [words & {:keys [fromcolumn width] :or {fromcolumn 0 width 80}}]
+  (let [w (- width fromcolumn)
+        wordss (wrap-lines w words)
+        indent (apply str (repeat fromcolumn \space))
+        lines (map #(apply str indent (interpose " " %)) wordss)]
+    (doseq [l lines] (println l))))
+
 (defn show-fns
   "If given a number, print all the functions within category or
   subcategory specified by the category index (use show-cats to see a
@@ -4268,7 +4298,7 @@
               (if (not (empty? names))
                 (do
                   (println cid (:name c))
-                  (println "   " (apply str (interpose " " names)))))))
+                  (pprint-wrapped-lines names :fromcolumn 4)))))
           (show-fns-by-cat-idx [cat-idx]
             (let [c (get (all-category-map) (str cat-idx))]
               (list-category cat-idx c)))
