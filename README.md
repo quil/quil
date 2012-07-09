@@ -99,17 +99,20 @@ Quil supports an explorable API. For a full list of API categories and subcatego
        .
        . etc
 
-In order to see the fns within a specific category use `(show-fns 10.1)` if `10.1` is the index of the category you wish to examine.
+In order to see the fns within a specific category use `(show-fns 11.1)` if `11.1` is the index of the category you wish to examine.
 
-    user=> (show-fns 10.1)
-    2D Primitives
-      - arc
-      - ellipse
-      - line
-      - point
-      - quad
-      - rect
-      - triangle
+    user=> (show-fns 11.1)
+    11.1 2D Primitives
+        arc ellipse line point quad rect triangle
+
+You can also lookup functions by name of the category or function name.
+
+    user=> (show-fns "trans")
+    14 Transform
+        apply-matrix pop-matrix print-matrix push-matrix reset-matrix rotate
+        rotate-x rotate-y rotate-z scale shear-x shear-y translate
+    14.1 Utility Macros
+        with-translation
 
 If you know the start of Processing API method name such as `bezier`, you can use `(show-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
 
