@@ -4247,16 +4247,73 @@
                         (:subcategories cat))))
           cats))))
 
+(defn- wrap-lines
+  "Split a list of words in lists (lines) not longer than width chars each,
+   space between words included."
+  [width words]
+  (letfn [(wrap-lines-rec
+            [ws accum-lns]
+            (if (empty? ws)
+              accum-lns
+              (let [lens (map count ws)
+                    cumlens (reduce
+                             (fn [sums len]
+                               (conj sums
+                                     (if (empty? sums)
+                                       len
+                                       (+ (last sums) len 1))))
+                             [] lens)
+                    [line other] (split-with #(> width %) cumlens)
+                    [line other] (split-at (count line) ws)]
+                (recur other (conj accum-lns line)))))]
+    (wrap-lines-rec words [])))
+
+(defn- pprint-wrapped-lines
+  "Pretty print words across several lines by wrapping lines at word boundary."
+  [words & {:keys [fromcolumn width] :or {fromcolumn 0 width 80}}]
+  (let [w (- width fromcolumn)
+        wordss (wrap-lines w words)
+        indent (apply str (repeat fromcolumn \space))
+        lines (map #(apply str indent (interpose " " %)) wordss)]
+    (doseq [l lines] (println l))))
+
 (defn show-fns
-  "Print all the functions within category or subcategory specified by
-  cat-idx (use print-cats to see a list of index nums). If a category is
-  specified, it will not print out the fns in any of cat's
-  subcategories. "
-  [cat-idx]
-  (let [res (get (all-category-map) (str cat-idx))]
-    (println (:name res))
-    (dorun
-     (map #(println "  -" %) (:fns res)))))
+  "If given a number, print all the functions within category or
+  subcategory specified by the category index (use show-cats to see a
+  list of index nums).
+
+  If given a string or a regular expression, print all the functions
+  whose name or category name contains that string.
+
+  If a category is specified, it will not print out the fns in any of
+  cat's subcategories."
+  [q]
+  (letfn [(list-category [cid c & {:keys [only]}]
+            (let [category-fns (:fns c)
+                  display-fns (if (nil? only)
+                                category-fns
+                                (clojure.set/intersection
+                                 (set only) (set category-fns)))
+                  names (sort (map str display-fns))]
+              (if (not (empty? names))
+                (do
+                  (println cid (:name c))
+                  (pprint-wrapped-lines names :fromcolumn 4)))))
+          (show-fns-by-cat-idx [cat-idx]
+            (let [c (get (all-category-map) (str cat-idx))]
+              (list-category cat-idx c)))
+          (show-fns-by-name-regex [re]
+            (doseq [[cid c] (sort-by key (all-category-map))]
+              (let [in-cat-name? (re-find re (:name c))
+                    matching-fns (filter #(re-find re (str %)) (:fns c))
+                    in-fn-names? (not (empty? matching-fns))]
+                (cond
+                 in-cat-name? (list-category cid c) ;; print an entire category
+                 in-fn-names? (list-category cid c :only matching-fns)))))]
+    (cond
+     (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
+     (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+     :else (show-fns-by-cat-idx q))))
 
 (defn show-meths
   "Takes a string representing the start of a method name in the
