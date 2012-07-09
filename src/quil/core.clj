@@ -4258,27 +4258,30 @@
   If a category is specified, it will not print out the fns in any of
   cat's subcategories."
   [q]
-  (letfn [(show-fns-by-cat-idx [cat-idx]
-            (let [res (get (all-category-map) (str cat-idx))]
-              (println cat-idx (:name res))
-              (dorun
-               (map #(println "  -" %) (:fns res)))))
+  (letfn [(list-category [cid c & {:keys [only]}]
+            (let [category-fns (:fns c)
+                  display-fns (if (nil? only)
+                                category-fns
+                                (clojure.set/intersection
+                                 (set only) (set category-fns)))
+                  names (sort (map str display-fns))]
+              (if (not (empty? names))
+                (do
+                  (println cid (:name c))
+                  (println "   " (apply str (interpose " " names)))))))
+          (show-fns-by-cat-idx [cat-idx]
+            (let [c (get (all-category-map) (str cat-idx))]
+              (list-category cat-idx c)))
           (show-fns-by-name-regex [re]
             (doseq [[cid c] (sort-by key (all-category-map))]
-              (let [in-cat-name? (or (re-find re (.toLowerCase (:name c)))
-                                     (re-find re (:name c)))
-                    in-fn-names? (some #(re-find re (str %)) (:fns c))]
+              (let [in-cat-name? (re-find re (:name c))
+                    matching-fns (filter #(re-find re (str %)) (:fns c))
+                    in-fn-names? (not (empty? matching-fns))]
                 (cond
-                 in-cat-name? (do   ;; print an entire category
-                                (println cid (:name c))
-                                (doseq [f (:fns c)] (println "  -" f)))
-                 in-fn-names? (do   ;; print only matching fns
-                                (println cid (:name c))
-                                (doseq [f (:fns c)]
-                                  (if (re-find re (str f))
-                                    (println "  -" f))))))))]
+                 in-cat-name? (list-category cid c) ;; print an entire category
+                 in-fn-names? (list-category cid c :only matching-fns)))))]
     (cond
-     (string? q) (show-fns-by-name-regex (re-pattern q))
+     (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
      :else (show-fns-by-cat-idx q))))
 
