@@ -4009,7 +4009,7 @@
   specifies translations toward/away from the screen.  Transformations
   apply to everything that happens after and subsequent calls to the
   function accumulates the effect. For example, calling (translate 50
-  0) and then (translate 20,h 0) is the same as (translate 70, 0). If
+  0) and then (translate 20, 0) is the same as (translate 70, 0). If
   translate is called within draw, the transformation is reset when
   the loop begins again. This function can be further controlled by
   the push-matrix and pop-matrix."
