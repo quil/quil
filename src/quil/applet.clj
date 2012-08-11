@@ -68,12 +68,13 @@
     (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
 
 (defn applet-close
-  "Stop the applet and close the window."
+  "Stop the applet and close the window. Call on-close function afterwards."
   [applet]
   (case (:target (meta applet))
     :frame      (applet-close-frame applet)
     :perm-frame (applet-close-frame applet)
-    :none       (applet-close-applet applet)))
+    :none       (applet-close-applet applet))
+  ((get (meta applet) :on-close)))
 
 (defn- launch-applet-frame
   [applet title renderer keep-on-top?]
@@ -220,7 +221,9 @@
                      pressed.
 
    :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true."
+                     Default is true.
+
+   :on-close       - Called once, when sketch is closed"
   [& opts]
   (let [options           (merge {:size [500 300]
                                   :target :frame
@@ -257,6 +260,7 @@
         mouse-clicked-fn  (or (:mouse-clicked options) (fn [] nil))
         focus-gained-fn   (or (:focus-gained options) (fn [] nil))
         focus-lost-fn     (or (:focus-lost options) (fn [] nil))
+        on-close-fn       (or (:on-close options) (fn [] nil))
         state             (atom nil)
         target-obj        (atom nil)
         looping?          (atom true)
@@ -266,7 +270,8 @@
                                        :state state
                                        :target-obj target-obj
                                        :target target
-                                       :looping? looping?))
+                                       :looping? looping?
+                                       :on-close on-close-fn))
                             (keyPressed
                               ([]
                                  (key-pressed-fn))

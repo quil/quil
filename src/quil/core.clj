@@ -4419,7 +4419,9 @@
                      pressed.
 
    :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true."
+                     Default is true.
+
+   :on-close       - Called once, when sketch is closed"
     [& opts]
     (apply applet opts))
 
