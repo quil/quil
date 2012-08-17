@@ -6,7 +6,6 @@
            (javax.swing JFrame)
            (java.awt.event WindowListener))
   (:use [quil.util :only [resolve-constant-key]]
-        [quil.dynamics :only [*applet* *state*]]
         [clojure.stacktrace :only [print-cause-trace]]))
 
 (defn applet-safe-exit
@@ -126,7 +125,7 @@
                   :dxf    PApplet/DXF})
 
 (defn- applet-set-size
-  ([width height] (.size *applet* (int width) (int height)))
+  ([width height] (.size (current-applet) (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
        (.size (current-applet) (int width) (int height) renderer)))
