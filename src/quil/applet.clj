@@ -24,12 +24,21 @@
 (def ^ThreadLocal applet-tl (ThreadLocal.))
 (def ^ThreadLocal state-tl (ThreadLocal.))
 (def ^ThreadLocal target-frame-rate-tl (ThreadLocal.))
+(def ^ThreadLocal current-graphics-tl (ThreadLocal.))
 
 (defn ^PApplet current-applet []
   (.get ^ThreadLocal applet-tl))
 
 (defn current-state []
   (.get ^ThreadLocal state-tl))
+
+(defn current-graphics []
+  (.get ^ThreadLocal current-graphics-tl))
+
+(defn set-current-graphics! [graphics]
+  (if (some nil? [(current-graphics) graphics])
+    (.set ^ThreadLocal current-graphics-tl graphics)
+    (throw (RuntimeException. "Nested with-graphics macros are not allowed"))))
 
 (defn applet-stop
   "Stop an applet"
