@@ -1,4 +1,4 @@
-﻿(ns
+(ns
     ^{:doc "Wrappers and extensions around the core Processing.org API."
       :author "Roland Sadowski, Sam Aaron"}
     quil.core
