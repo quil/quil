@@ -7,7 +7,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet current-state applet-stop applet-state applet-start applet-close applet defapplet applet-tl state-tl applet-safe-exit target-frame-rate-tl current-graphics set-current-graphics!]]))
+        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
 
 (defn- current-surface
   "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
@@ -26,7 +26,7 @@
   (set-state! :foo 1)
   (state :foo) ;=> 1 "
   [key]
-  (let [state* (current-state)]
+  (let [state* (:state (meta (current-applet)))]
     (when-not @state*
       (throw (Exception. "State not set - use set-state! before fetching state")))
 
@@ -47,7 +47,7 @@
   Example:
   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
   [& state-vals]
-  (let [state* (current-state)]
+  (let [state* (:state (meta (current-applet)))]
     (when-not @state*
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
@@ -1590,7 +1590,7 @@
   target-frame-rate
   "Returns the target framerate specified with the fn frame-rate"
   []
-  (.get ^ThreadLocal target-frame-rate-tl))
+  @(quil.applet/target-frame-rate))
 
 (defn
   ^{:requires-bindings true
@@ -4441,15 +4441,12 @@
 
 
 (defmacro with-graphics
-  "All subsequent calls of any drawing function will draw on given graphics.
-  'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
+  "All subsequent calls of any drawing function will draw on given graphics."
   [graphics & body]
-  `(let [gr# ~graphics]
-     (set-current-graphics! gr#)
-     (.beginDraw gr#)
+  `(binding [*graphics* ~graphics]
+     (.beginDraw ~graphics)
      ~@body
-     (.endDraw gr#)
-     (set-current-graphics! nil)))
+     (.endDraw ~graphics)))
 
 (defn ^{:requires-bindings false
         :processing-name nil

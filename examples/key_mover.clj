@@ -26,7 +26,8 @@
 
 (defn setup []
   (smooth)
-  (no-stroke))
+  (no-stroke)
+  (no-loop))
 
 (defn draw
   []
@@ -64,7 +65,8 @@
     the-key-pressed (if (= processing.core.PConstants/CODED (int raw-key)) the-key-code raw-key)
     move (moves (get valid-keys the-key-pressed :still))]
     (swap! blob-location (partial change-location move))
-    (swap! blob-location (partial normalise (params :screen-bounds)))))
+    (swap! blob-location (partial normalise (params :screen-bounds)))
+    (redraw)))
 
 (defsketch key-listener
   :title "Keyboard arrow keys demo"

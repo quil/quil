@@ -22,24 +22,17 @@
       (.dispose applet))))
 
 (defonce untitled-applet-id* (atom 0))
-(def ^ThreadLocal applet-tl (ThreadLocal.))
-(def ^ThreadLocal state-tl (ThreadLocal.))
-(def ^ThreadLocal target-frame-rate-tl (ThreadLocal.))
-(def ^ThreadLocal current-graphics-tl (ThreadLocal.))
+(def ^:dynamic *applet* nil)
+(def ^:dynamic *graphics* nil)
 
 (defn ^PApplet current-applet []
-  (.get ^ThreadLocal applet-tl))
-
-(defn current-state []
-  (.get ^ThreadLocal state-tl))
+  *applet*)
 
 (defn current-graphics []
-  (.get ^ThreadLocal current-graphics-tl))
+  *graphics*)
 
-(defn set-current-graphics! [graphics]
-  (if (some nil? [(current-graphics) graphics])
-    (.set ^ThreadLocal current-graphics-tl graphics)
-    (throw (RuntimeException. "Nested with-graphics macros are not allowed"))))
+(defn target-frame-rate []
+  (:target-frame-rate (meta (current-applet))))
 
 (defn applet-stop
   "Stop an applet"
@@ -171,6 +164,7 @@
   target)
 
 (defn- to-method-name [keyword]
+  "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
   (-> keyword
       name
       (string/replace
@@ -178,12 +172,14 @@
        #(-> % string/upper-case (subs 1)))
       symbol))
 
-(defn parent-method [method]
+(defn- parent-method [method]
+  "Appends string 'Parent' to given symbol"
   (symbol (str method "Parent")))
 
-(defn exposed-map [methods]
-  (into {} (for [method methods]
-             [method (parent-method method)])))
+(defmacro with-applet [applet & body]
+  "Binds dynamic var to current applet."
+  `(binding [*applet* ~applet]
+     ~@body))
 
 (def listeners [:key-pressed
                 :key-released
@@ -197,8 +193,6 @@
                 :mouse-clicked
                 :focus-gained
                 :focus-lost])
-
-(def exposed-methods )
 
 (gen-class
  :name "quil.Applet"
@@ -230,14 +224,12 @@
   (.state this))
 
 (defn -setup [this]
-  (println "Setup")
-  (.set applet-tl this)
-  (.set state-tl (:state (.state this)))
-  (.set target-frame-rate-tl 60)
-  ((:setup-fn (.state this))))
+  (with-applet this
+    ((:setup-fn (.state this)))))
 
 (defn -draw [this]
-  ((:draw-fn (.state this))))
+  (with-applet this
+    ((:draw-fn (.state this)))))
 
 (defn -noLoop [this]
   (reset! (:looping? (.state this)) false)
@@ -248,16 +240,17 @@
   (.loopParent this))
 
 (defn -frameRate [this new-rate-target]
-  (.set target-frame-rate-tl new-rate-target)
+  (reset! (target-frame-rate) new-rate-target)
   (.frameRateParent this new-rate-target))
 
 (defmacro generate-listeners []
+  "Generates all listeners like onKeyPress, onMouseClick and others."
   (letfn [(prefix [v method]
             (symbol (str v method)))]
     `(do ~@(for [listener listeners]
              (let [method (to-method-name listener)]
                `(defn ~(prefix "-" method)
-                  ([~'this] ((~listener (~'.state ~'this))))
+                  ([~'this] (with-applet ~'this ((~listener (~'.state ~'this)))))
                   ([~'this ~'evt] (~(prefix "." (parent-method method)) ~'this ~'evt))))))))
 
 (generate-listeners)
@@ -362,7 +355,8 @@
                                   :looping? looping?
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
-                                  :draw-fn draw-fn}
+                                  :draw-fn draw-fn
+                                  :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (applet-run prx-obj title renderer target)
