@@ -6,7 +6,8 @@
            (javax.swing JFrame)
            (java.awt.event WindowListener))
   (:use [quil.util :only [resolve-constant-key]]
-        [clojure.stacktrace :only [print-cause-trace]]))
+        [clojure.stacktrace :only [print-cause-trace]])
+  (:require [clojure.string :as string]))
 
 (defn applet-safe-exit
   "Similar to the exit method on PApplet, but doesn't kill the current
@@ -21,24 +22,17 @@
       (.dispose applet))))
 
 (defonce untitled-applet-id* (atom 0))
-(def ^ThreadLocal applet-tl (ThreadLocal.))
-(def ^ThreadLocal state-tl (ThreadLocal.))
-(def ^ThreadLocal target-frame-rate-tl (ThreadLocal.))
-(def ^ThreadLocal current-graphics-tl (ThreadLocal.))
+(def ^:dynamic *applet* nil)
+(def ^:dynamic *graphics* nil)
 
 (defn ^PApplet current-applet []
-  (.get ^ThreadLocal applet-tl))
-
-(defn current-state []
-  (.get ^ThreadLocal state-tl))
+  *applet*)
 
 (defn current-graphics []
-  (.get ^ThreadLocal current-graphics-tl))
+  *graphics*)
 
-(defn set-current-graphics! [graphics]
-  (if (some nil? [(current-graphics) graphics])
-    (.set ^ThreadLocal current-graphics-tl graphics)
-    (throw (RuntimeException. "Nested with-graphics macros are not allowed"))))
+(defn target-frame-rate []
+  (:target-frame-rate (meta (current-applet))))
 
 (defn applet-stop
   "Stop an applet"
@@ -169,6 +163,98 @@
     (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
   target)
 
+(defn- to-method-name [keyword]
+  "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
+  (-> keyword
+      name
+      (string/replace
+       #"-."
+       #(-> % string/upper-case (subs 1)))
+      symbol))
+
+(defn- parent-method [method]
+  "Appends string 'Parent' to given symbol"
+  (symbol (str method "Parent")))
+
+(defmacro with-applet [applet & body]
+  "Binds dynamic var to current applet."
+  `(binding [*applet* ~applet]
+     ~@body))
+
+(def listeners [:key-pressed
+                :key-released
+                :key-typed
+                :mouse-pressed
+                :mouse-released
+                :mouse-moved
+                :mouse-dragged
+                :mouse-entered
+                :mouse-exited
+                :mouse-clicked
+                :focus-gained
+                :focus-lost])
+
+(gen-class
+ :name "quil.Applet"
+ :implements [clojure.lang.IMeta]
+ :extends processing.core.PApplet
+ :state state
+ :init quil-init
+ :constructors {[java.util.Map] []}
+ :exposes-methods {keyTyped keyTypedParent
+                   loop loopParent
+                   mouseDragged mouseDraggedParent
+                   keyPressed keyPressedParent
+                   mouseExited mouseExitedParent
+                   mouseClicked mouseClickedParent
+                   mouseEntered mouseEnteredParent
+                   mouseMoved mouseMovedParent
+                   keyReleased keyReleasedParent
+                   mousePressed mousePressedParent
+                   focusGained focusGainedParent
+                   frameRate frameRateParent
+                   mouseReleased mouseReleasedParent
+                   focusLost focusLostParent
+                   noLoop noLoopParent})
+
+(defn -quil-init [state]
+  [[] state])
+
+(defn -meta [this]
+  (.state this))
+
+(defn -setup [this]
+  (with-applet this
+    ((:setup-fn (.state this)))))
+
+(defn -draw [this]
+  (with-applet this
+    ((:draw-fn (.state this)))))
+
+(defn -noLoop [this]
+  (reset! (:looping? (.state this)) false)
+  (.noLoopParent this))
+
+(defn -loop [this]
+  (reset! (:looping? (.state this)) true)
+  (.loopParent this))
+
+(defn -frameRate [this new-rate-target]
+  (reset! (target-frame-rate) new-rate-target)
+  (.frameRateParent this new-rate-target))
+
+(defmacro generate-listeners []
+  "Generates all listeners like onKeyPress, onMouseClick and others."
+  (letfn [(prefix [v method]
+            (symbol (str v method)))]
+    `(do ~@(for [listener listeners]
+             (let [method (to-method-name listener)]
+               `(defn ~(prefix "-" method)
+                  ([~'this] (with-applet ~'this ((~listener (~'.state ~'this)))))
+                  ([~'this ~'evt] (~(prefix "." (parent-method method)) ~'this ~'evt))))))))
+
+(generate-listeners)
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -256,128 +342,23 @@
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
-        key-pressed-fn    (or (:key-pressed options) (fn [] nil))
-        key-released-fn   (or (:key-released options) (fn [] nil))
-        key-typed-fn      (or (:key-typed options) (fn [] nil))
-        mouse-pressed-fn  (or (:mouse-pressed options) (fn [] nil))
-        mouse-released-fn (or (:mouse-released options) (fn [] nil))
-        mouse-moved-fn    (or (:mouse-moved options) (fn [] nil))
-        mouse-dragged-fn  (or (:mouse-dragged options) (fn [] nil))
-        mouse-entered-fn  (or (:mouse-entered options) (fn [] nil))
-        mouse-exited-fn   (or (:mouse-exited options) (fn [] nil))
-        mouse-clicked-fn  (or (:mouse-clicked options) (fn [] nil))
-        focus-gained-fn   (or (:focus-gained options) (fn [] nil))
-        focus-lost-fn     (or (:focus-lost options) (fn [] nil))
         on-close-fn       (or (:on-close options) (fn [] nil))
         state             (atom nil)
         target-obj        (atom nil)
         looping?          (atom true)
-        prx-obj           (proxy [processing.core.PApplet
-                                  clojure.lang.IMeta] []
-                            (meta [] (assoc options
-                                       :state state
-                                       :target-obj target-obj
-                                       :target target
-                                       :looping? looping?
-                                       :on-close on-close-fn))
-                            (keyPressed
-                              ([]
-                                 (key-pressed-fn))
-                              ([e]
-                                 (proxy-super keyPressed e)))
-
-                            (keyReleased
-                              ([]
-                                 (key-released-fn))
-                              ([e]
-                                 (proxy-super keyReleased e)))
-
-                            (keyTyped
-                              ([]
-                                 (key-typed-fn))
-                              ([e]
-                                 (proxy-super keyTyped e)))
-
-                            (mousePressed
-                              ([]
-                                 (mouse-pressed-fn))
-                              ([e]
-                                 (proxy-super mousePressed e)))
-
-                            (mouseReleased
-                              ([]
-                                 (mouse-released-fn))
-                              ([e]
-                                 (proxy-super mouseReleased e)))
-
-                            (mouseMoved
-                              ([]
-                                 (mouse-moved-fn))
-                              ([e]
-                                 (proxy-super mouseMoved e)))
-
-                            (mouseDragged
-                              ([]
-                                 (mouse-dragged-fn))
-                              ([e]
-                                 (proxy-super mouseDragged e)))
-
-                            (mouseClicked
-                              ([]
-                                 (mouse-clicked-fn))
-                              ([e]
-                                 (proxy-super mouseClicked e)))
-
-                            (focusGained
-                              ([] nil) ;;The no arg version of the focus
-                              ;;fns don't appear too be called
-                              ([e]
-                                 (proxy-super focusGained e)
-                                 (focus-gained-fn)))
-
-                            (focusLost
-                              ([] nil)
-                              ([e]
-                                 (proxy-super focusLost e)
-                                 (focus-lost-fn)))
-
-                            (mouseEntered
-                              ([] nil)
-                              ([e]
-                                 (proxy-super mouseEntered e)
-                                 (mouse-entered-fn)))
-
-                            (mouseExited
-                              ([] nil)
-                              ([e]
-                                 (proxy-super mouseExited e)
-                                 (mouse-exited-fn)))
-
-                            (setup
-                              ([]
-                                 (.set applet-tl this)
-                                 (.set state-tl state)
-                                 (.set target-frame-rate-tl 60)
-                                 (setup-fn)))
-
-                            (draw
-                              [] (draw-fn))
-
-                            (loop
-                              []
-                              (reset! looping? true)
-                              (proxy-super loop))
-
-                            (noLoop
-                              []
-                              (reset! looping? true)
-                              (proxy-super noLoop))
-
-                            (frameRate
-                              [new-rate-target]
-                              (.set target-frame-rate-tl new-rate-target)
-                              (proxy-super frameRate new-rate-target)))
-        ]
+        listeners         (into {} (for [name listeners]
+                                     [name (or (options name) (fn [] nil))]))
+        applet-state      (merge options
+                                 {:state state
+                                  :target-obj target-obj
+                                  :target target
+                                  :looping? looping?
+                                  :on-close on-close-fn
+                                  :setup-fn setup-fn
+                                  :draw-fn draw-fn
+                                  :target-frame-rate (atom 60)}
+                                 listeners)
+        prx-obj           (quil.Applet. applet-state)]
     (applet-run prx-obj title renderer target)
     prx-obj))
 
