@@ -1,4 +1,4 @@
-﻿(ns
+(ns
     ^{:doc "Wrappers and extensions around the core Processing.org API."
       :author "Roland Sadowski, Sam Aaron"}
     quil.core
@@ -4142,6 +4142,28 @@
   `(let [tr# ~rotation]
      (push-matrix)
      (apply rotate tr#)
+     ~@body
+     (pop-matrix)))
+
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Transform"
+    :subcategory "Utility Macros"}
+  with-scale
+  "Performs body with scale, restores current transformation on exit.
+  Accepts a vector [scalar] or [x-scalar y-scalar].
+
+  Examples:
+    (with-scale [2.5]
+      (rect 10 10 10 10))
+
+    (with-scale [1 -1]
+      (rect 10 10 10 10))"
+  [scale-vector & body]
+  `(let [tr# ~scale-vector]
+     (push-matrix)
+     (apply scale tr#)
      ~@body
      (pop-matrix)))
 

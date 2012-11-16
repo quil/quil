@@ -1,7 +1,7 @@
 (ns quil.version)
 
 (def QUIL-VERSION {:major 1
-                   :minor 0
+                   :minor 7
                    :patch 0
                    :snapshot true})
 
