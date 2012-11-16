@@ -36,3 +36,18 @@
   :setup setup
   :draw draw
   :size [200 200])
+
+(defn scaled-squares []
+  (background 200)
+  (fill 0 200 0)
+  (with-scale [2]
+    (rect 10 10 20 20))
+  (fill 0 0 200)
+  (rect 10 10 20 20)
+  )
+
+(defsketch scale-example
+  :title "An example of simple scaling."
+  :setup setup
+  :draw scaled-squares
+  :size [200 200])

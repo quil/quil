@@ -1,3 +1,8 @@
+## 1.7.0
+_16th November 2012_
+
+* Add `with-scale` macro, analogous to with-rotation and with-translation
+
 ## 1.6.0
 _7th July 2012_
 
