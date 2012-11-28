@@ -119,8 +119,7 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ## 20. 2D Noise Grid
 ![2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-2d-noise-grid.png)
 
-
-[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/20_noise-grid.clj)
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/20_noise_grid.clj)
 (p84 - Listing 5.1)
 
 ## 21. Squared 2D Noise Grid
@@ -132,13 +131,13 @@ Key examples from the book Generative Art by Matt Pearson translated from Proces
 ## 22. Rotating Lines 2D Noise Grid
 ![Rotating Lines 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-rotating-lines-2D-noise-grid.png)
 
-[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/22_rotating_lines_noise-grid.clj)
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/22_rotating_lines_noise_grid.clj)
 (p86 - Section 5.12 - Figure 5.3)
 
 ## 23. Fluffy Clouds 2D Noise Grid
 ![Fluffy Clouds 2D Noise Grid](https://github.com/downloads/quil/quil/gen-art-fluffy-clouds-2D-noise-grid.png)
 
-[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/23_fluffy_clouds_noise-grid.clj)
+[View Source](https://github.com/quil/quil/blob/master/examples/gen_art/23_fluffy_clouds_noise_grid.clj)
 (p88 - Section 5.12 - Figure 5.4)
 
 ## 24. Animated Fluffly Clouds
