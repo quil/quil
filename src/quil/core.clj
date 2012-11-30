@@ -1657,7 +1657,9 @@
   "Array containing the values for all the pixels in the display
   window. This array is therefore the size of the display window. If
   this array is modified, the update-pixels fn must be called to update
-  the changes. Calls load-pixels before obtaining the pixel array."
+  the changes. Calls load-pixels before obtaining the pixel array.
+  
+  Only works with P2D and P3D renderer."
   []
   (load-pixels)
   (.-pixels (current-surface)))
