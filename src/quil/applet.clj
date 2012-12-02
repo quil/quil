@@ -5,7 +5,7 @@
   (:import (processing.core PApplet)
            (javax.swing JFrame)
            (java.awt.event WindowListener))
-  (:use [quil.util :only [resolve-constant-key]]
+  (:use [quil.util :only [resolve-constant-key var-value]]
         [clojure.stacktrace :only [print-cause-trace]])
   (:require [clojure.string :as string]))
 
@@ -83,7 +83,7 @@
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
         m              (.meta applet)
-        [width height] (or (:size m) [800 600])
+        [width height] (or (var-value (:size m)) [800 600])
         close-op       JFrame/DISPOSE_ON_CLOSE
         f              (JFrame. title)
         falsify        #(not (or (nil? %) (true? %)))
@@ -140,7 +140,7 @@
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size]
-  (when-not (= 2 (count size))
+  (when-not (= 2 (count (var-value size)))
     (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
   size)
 
