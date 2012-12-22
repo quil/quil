@@ -7,12 +7,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
-
-(defn- current-surface
-  "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
-  []
-  (or (current-graphics) (current-applet)))
+        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit]]))
 
 (defn
   ^{:requires-bindings true
@@ -113,7 +108,7 @@
   alpha
   "Extracts the alpha value from a color."
   [color]
-  (.alpha (current-surface) (int color)))
+  (.alpha (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -129,8 +124,8 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([gray] (.ambient (current-surface) (float gray)))
-  ([x y z] (.ambient (current-surface) (float x) (float y) (float z))))
+  ([gray] (.ambient (current-applet) (float gray)))
+  ([x y z] (.ambient (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -146,7 +141,7 @@
   properties of shapes."
   [rgb]
   (.ambient
-   (current-surface) (int rgb)))
+   (current-applet) (int rgb)))
 
 (defn
   ^{:requires-bindings true
@@ -181,9 +176,9 @@
    effect the first time through the loop. The effect of the
    parameters is determined by the current color mode."
   ([red green blue]
-     (.ambientLight (current-surface) (float red) (float green) (float blue)))
+     (.ambientLight (current-applet) (float red) (float green) (float blue)))
   ([red green blue x y z]
-     (.ambientLight (current-surface) (float red) (float green) (float blue)
+     (.ambientLight (current-applet) (float red) (float green) (float blue)
                     (float x) (float y) (float z))))
 
 (defn
@@ -198,13 +193,13 @@
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
   ([n00 n01 n02 n10 n11 n12]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02)
+     (.applyMatrix (current-applet) (float n00) (float n01) (float n02)
                    (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
     n10 n11 n12 n13
     n20 n21 n22 n23
     n30 n31 n32 n33]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02) (float 03)
+     (.applyMatrix (current-applet) (float n00) (float n01) (float n02) (float 03)
                    (float n10) (float n11) (float n12) (float 13)
                    (float n20) (float n21) (float n22) (float 23)
                    (float n30) (float n31) (float n32) (float 33))))
@@ -222,7 +217,7 @@
   ellipseMode() function. The start and stop parameters specify the
   angles at which to draw the arc."
   [x y width height start stop]
-  (.arc (current-surface) (float x)(float y) (float width) (float height)
+  (.arc (current-applet) (float x)(float y) (float width) (float height)
         (float start) (float stop)))
 
 (defn
@@ -284,10 +279,10 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts args to floats."
-  ([gray] (.background (current-surface) (float gray)))
-  ([gray alpha] (.background (current-surface) (float gray) (float alpha)))
-  ([r g b] (.background (current-surface) (float r) (float g) (float b)))
-  ([r g b a] (.background (current-surface) (float r) (float g) (float b) (float a))))
+  ([gray] (.background (current-applet) (float gray)))
+  ([gray alpha] (.background (current-applet) (float gray) (float alpha)))
+  ([r g b] (.background (current-applet) (float r) (float g) (float b)))
+  ([r g b a] (.background (current-applet) (float r) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -304,8 +299,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (current-surface) (int rgb)))
-  ([rgb alpha] (.background (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.background (current-applet) (int rgb)))
+  ([rgb alpha] (.background (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -338,7 +333,7 @@
   width and height must be the same size as the sketch window. Images
   used as background will ignore the current tint setting."
   [^PImage img]
-  (.background (current-surface) img))
+  (.background (current-applet) img))
 
 (defn
   ^{:requires-bindings true
@@ -355,7 +350,7 @@
 
   For most situations the camera function will be sufficient."
   []
-  (.beginCamera (current-surface)))
+  (.beginCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -366,7 +361,7 @@
   end-camera
   "Unsets the matrix mode from the camera matrix. See begin-camera."
   []
-  (.endCamera (current-surface)))
+  (.endCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -383,7 +378,7 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([^PGraphics raw-gfx] (.beginRaw (current-surface) raw-gfx))
+  ([^PGraphics raw-gfx] (.beginRaw (current-applet) raw-gfx))
   ([^String renderer ^String filename]
      (.beginRaw (current-applet) renderer filename)))
 
@@ -465,10 +460,10 @@
   Transformations such as translate, rotate, and scale do not work
   within begin-shape. It is also not possible to use other shapes,
   such as ellipse or rect within begin-shape."
-  ([] (.beginShape (current-surface)))
+  ([] (.beginShape (current-applet)))
   ([mode]
      (let [mode (resolve-constant-key mode shape-modes)]
-       (.beginShape (current-surface) (int mode)))))
+       (.beginShape (current-applet) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -483,13 +478,13 @@
   the other anchor point. The middle parameters specify the control
   points which define the shape of the curve."
   ([x1 y1 cx1 cy1 cx2 cy2 x2 y2]
-     (.bezier (current-surface)
+     (.bezier (current-applet)
               (float x1) (float y1)
               (float cx1) (float cy1)
               (float cx2) (float cy2)
               (float x2) (float y2)))
   ([x1 y1 z1 cx1 cy1 cz1 cx2 cy2 cz2 x2 y2 z2]
-     (.bezier (current-surface)
+     (.bezier (current-applet)
               (float x1) (float y1) (float z1)
               (float cx1) (float cy1) (float cz1)
               (float cx2) (float cy2) (float cz2)
@@ -507,7 +502,7 @@
   renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
-  (.bezierDetail (current-surface) (int detail)))
+  (.bezierDetail (current-applet) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -522,7 +517,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a bezier curve at t."
   [a b c d t]
-  (.bezierPoint (current-surface) (float a) (float b) (float c)
+  (.bezierPoint (current-applet) (float a) (float b) (float c)
                 (float d) (float t)))
 
 (defn
@@ -535,7 +530,7 @@
   "Calculates the tangent of a point on a Bezier curve.
   (See http://en.wikipedia.org/wiki/Tangent)"
   [a b c d t]
-  (.bezierTangent (current-surface) (float a) (float b) (float c)
+  (.bezierTangent (current-applet) (float a) (float b) (float c)
                   (float d) (float t)))
 
 (defn
@@ -554,12 +549,12 @@
   end-shape and only when there is no parameter specified to
   begin-shape."
   ([cx1 cy1 cx2 cy2 x y]
-     (.bezierVertex (current-surface)
+     (.bezierVertex (current-applet)
                     (float cx1) (float cy1)
                     (float cx2) (float cy2)
                     (float x) (float y)))
   ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
-     (.bezierVertex (current-surface)
+     (.bezierVertex (current-applet)
                     (float cx1) (float cy1) (float cz1)
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
@@ -644,11 +639,11 @@
                 Photoshop."
   ([x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-surface) (int x) (int y) (int width) (int height)
+       (.blend (current-applet) (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
   ([^PImage src x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-surface) src (int x) (int y) (int width) (int height)
+       (.blend (current-applet) src (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
@@ -702,7 +697,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (current-surface) (int color)))
+  (.blue (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -712,8 +707,8 @@
     :added "1.0"}
   box
   "Creates an extruded rectangle."
-  ([size] (.box (current-surface) (float size)))
-  ([width height depth] (.box (current-surface) (float width) (float height) (float depth))))
+  ([size] (.box (current-applet) (float size)))
+  ([width height depth] (.box (current-applet) (float width) (float height) (float depth))))
 
 (defn
   ^{:requires-bindings true
@@ -724,7 +719,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (current-surface) (int color)))
+  (.brightness (current-applet) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -753,9 +748,9 @@
 
   Similar imilar to gluLookAt() in OpenGL, but it first clears the
   current camera settings."
-  ([] (.camera (current-surface)))
+  ([] (.camera (current-applet)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
-     (.camera (current-surface) (float eyeX) (float eyeY) (float eyeZ)
+     (.camera (current-applet) (float eyeX) (float eyeY) (float eyeZ)
               (float centerX) (float centerY) (float centerZ)
               (float upX) (float upY) (float upZ))))
 
@@ -789,10 +784,10 @@
   g - green or saturation value
   b - blue or brightness value
   a - alpha value"
-  ([gray] (.color (current-surface) (float gray)))
-  ([gray alpha] (.color (current-surface) (float gray) (float alpha)))
-  ([r g b] (.color (current-surface) (float r) (float g) (float b)))
-  ([r g b a] (.color (current-surface) (float r) (float g) (float b) (float a))))
+  ([gray] (.color (current-applet) (float gray)))
+  ([gray alpha] (.color (current-applet) (float gray) (float alpha)))
+  ([r g b] (.color (current-applet) (float r) (float g) (float b)))
+  ([r g b a] (.color (current-applet) (float r) (float g) (float b) (float a))))
 
 (def ^{:private true}
   color-modes {:rgb (int 1)
@@ -816,16 +811,16 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode))))
+       (.colorMode (current-applet) (int mode))))
   ([mode max]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max))))
+       (.colorMode (current-applet) (int mode) (float max))))
   ([mode max-x max-y max-z]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max-x) (float max-y) (float max-z))))
+       (.colorMode (current-applet) (int mode) (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
+       (.colorMode (current-applet) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 (defn
   ^{:requires-bindings false
@@ -879,10 +874,10 @@
   alpha information is used in the process, however if the source
   image has an alpha channel set, it will be copied as well. "
   ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-surface) (int sx1) (int sy1) (int sx2) (int sy2)
+     (.copy (current-applet) (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2)))
   ([^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-surface) img (int sx1) (int sy1) (int sx2) (int sy2)
+     (.copy (current-applet) img (int sx1) (int sy1) (int sx2) (int sy2)
             (int dx1) (int dy1) (int dx2) (int dy2))))
 
 (defn
@@ -1154,13 +1149,13 @@
   the curve. The curve fn is an implementation of Catmull-Rom
   splines."
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-     (.curve (current-surface)
+     (.curve (current-applet)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)
              (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-     (.curve (current-surface)
+     (.curve (current-applet)
              (float x1) (float y1) (float z1)
              (float x2) (float y2) (float z2)
              (float x3) (float y3) (float z3)
@@ -1178,7 +1173,7 @@
   renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
-  (.curveDetail (current-surface) (int detail)))
+  (.curveDetail (current-applet) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -1193,7 +1188,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a curve at t."
   [a b c d t]
-  (.bezierPoint (current-surface) (float a) (float b) (float c) (float d) (float t)))
+  (.bezierPoint (current-applet) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1205,7 +1200,7 @@
   "Calculates the tangent of a point on a curve.
   See: http://en.wikipedia.org/wiki/Tangent"
   [a b c d t]
-  (.curveTangent (current-surface) (float a) (float b) (float c) (float d) (float t)))
+  (.curveTangent (current-applet) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1223,7 +1218,7 @@
   but will leave them recognizable and as values increase in
   magnitude, they will continue to deform."
   [ti]
-  (.curveTightness (current-surface) (float ti)))
+  (.curveTightness (current-applet) (float ti)))
 
 (defn
   ^{:requires-bindings true
@@ -1241,8 +1236,8 @@
   with curveVertex will draw the curve between the second, third, and
   fourth points. The curveVertex function is an implementation of
   Catmull-Rom splines."
-  ([x y] (.curveVertex (current-surface) (float x) (float y)))
-  ([x y z] (.curveVertex (current-surface) (float x) (float y) (float z))))
+  ([x y] (.curveVertex (current-applet) (float x) (float y)))
+  ([x y z] (.curveVertex (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings false
@@ -1307,7 +1302,7 @@
   light is facing. For example, setting ny to -1 will cause the
   geometry to be lit from below (the light is facing directly upward)"
   [r g b nx ny nz]
-  (.directionalLight (current-surface) (float r) (float g) (float b)
+  (.directionalLight (current-applet) (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
 
 (defn
@@ -1333,7 +1328,7 @@
   equal width and height is a circle.  The origin may be changed with
   the ellipse-mode function"
   [x y width height]
-  (.ellipse (current-surface) (float x) (float y) (float width) (float height)))
+  (.ellipse (current-applet) (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
      ellipse-modes   {:center PApplet/CENTER
@@ -1361,7 +1356,7 @@
              corners of the ellipse's bounding box."
   [mode]
   (let [mode (resolve-constant-key mode ellipse-modes)]
-    (.ellipseMode (current-surface) (int mode))))
+    (.ellipseMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1374,8 +1369,8 @@
  drawn to the screen. Used in combination with ambient, specular, and
  shininess in setting the material properties of shapes. Converts all
  args to floats"
-  ([float-val] (.emissive (current-surface) (float float-val)))
-  ([r g b] (.emissive (current-surface) (float r) (float g) (float b))))
+  ([float-val] (.emissive (current-applet) (float float-val)))
+  ([r g b] (.emissive (current-applet) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -1388,7 +1383,7 @@
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes. Converts all
   args to ints"
-  [int-val] (.emissive (current-surface) (int int-val)))
+  [int-val] (.emissive (current-applet) (int int-val)))
 
 (defn
   ^{:requires-bindings true
@@ -1470,10 +1465,10 @@
   fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
   will specify that all subsequent shapes will be filled with orange."
-  ([gray] (.fill (current-surface) (float gray)))
-  ([gray alpha] (.fill (current-surface) (float gray) (float alpha)))
-  ([r g b] (.fill (current-surface) (float r) (float g) (float b)))
-  ([r g b alpha] (.fill (current-surface) (float r) (float g) (float b) (float alpha))))
+  ([gray] (.fill (current-applet) (float gray)))
+  ([gray alpha] (.fill (current-applet) (float gray) (float alpha)))
+  ([r g b] (.fill (current-applet) (float r) (float g) (float b)))
+  ([r g b alpha] (.fill (current-applet) (float r) (float g) (float b) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1483,8 +1478,8 @@
     :added "1.0"}
   fill-int
   "Sets the color used to fill shapes."
-  ([rgb] (.fill (current-surface) (int rgb)))
-  ([rgb alpha] (.fill (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.fill (current-applet) (int rgb)))
+  ([rgb alpha] (.fill (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1619,7 +1614,7 @@
   like glFrustum, except it wipes out the current perspective matrix
   rather than muliplying itself with it."
   [left right bottom top near far]
-  (.frustum (current-surface) (float left) (float right) (float bottom) (float top)
+  (.frustum (current-applet) (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
 (defn
@@ -1641,9 +1636,9 @@
 
   Getting the color of a single pixel with (get x y) is easy, but not
   as fast as grabbing the data directly using the pixels fn."
-  ([] (.get (current-surface)))
-  ([x y] (.get (current-surface) (int x) (int y)))
-  ([x y w h] (.get (current-surface) (int x) (int y) (int w) (int h))))
+  ([] (.get (current-applet)))
+  ([x y] (.get (current-applet) (int x) (int y)))
+  ([x y w h] (.get (current-applet) (int x) (int y) (int w) (int h))))
 
 (declare load-pixels)
 
@@ -1662,7 +1657,7 @@
   Only works with P2D and P3D renderer."
   []
   (load-pixels)
-  (.-pixels (current-surface)))
+  (.-pixels (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1675,7 +1670,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (current-surface) (int col)))
+  (.green (current-applet) (int col)))
 
 (defn
   ^{:require-binding false
@@ -1804,7 +1799,7 @@
   (let [hint-type (if (keyword? hint-type)
                     (get hint-options hint-type)
                     hint-type)]
-    (.hint (current-surface) (int hint-type))))
+    (.hint (current-applet) (int hint-type))))
 
 (defn
   ^{:requires-bindings false
@@ -1826,7 +1821,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (current-surface) (int col)))
+  (.hue (current-applet) (int col)))
 
 (defn
   ^{:requires-bindings true
@@ -1849,11 +1844,11 @@
   Starting with release 0124, when using the default (JAVA2D)
   renderer, smooth will also improve image quality of resized
   images."
-  ([^PImage img x y] (.image (current-surface) img (float x) (float y)))
-  ([^PImage img x y c d] (.image (current-surface) img (float x) (float y)
+  ([^PImage img x y] (.image (current-applet) img (float x) (float y)))
+  ([^PImage img x y c d] (.image (current-applet) img (float x) (float y)
                                   (float c) (float d)))
   ([^PImage img x y c d u1 v1 u2 v2]
-     (.image (current-surface) img (float x) (float y) (float c) (float d)
+     (.image (current-applet) img (float x) (float y) (float c) (float d)
              (float u1) (float v1) (float u2) (float v2))))
 
 (def ^{:private true}
@@ -1882,7 +1877,7 @@
   :center  - draw images centered at the given x and y position."
   [mode]
   (let [mode (resolve-constant-key mode image-modes)]
-    (.imageMode (current-surface) (int mode))))
+    (.imageMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1907,7 +1902,7 @@
   falloff. You can think of it as a point light that doesn't care
   which direction a surface is facing."
   [constant linear quadratic]
-  (.lightFalloff (current-surface) (float constant) (float linear) (float quadratic)))
+  (.lightFalloff (current-applet) (float constant) (float linear) (float quadratic)))
 
 (defn
   ^{:requires-bindings true
@@ -1921,7 +1916,7 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-surface) (int c1) (int c2) (float amt)))
+  (.lerpColor (current-applet) (int c1) (int c2) (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -2018,7 +2013,7 @@
   will cause them to only have an effect the first time through the
   loop."
   []
-  (.lights (current-surface)))
+  (.lights (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2035,7 +2030,7 @@
   with the specular material qualities set through the specular and
   shininess functions."
   [r g b]
-  (.lightSpecular (current-surface) (float r) (float g) (float b)))
+  (.lightSpecular (current-applet) (float r) (float g) (float b)))
 
 (defn
   ^{:requires-bindings true
@@ -2052,9 +2047,9 @@
   with the stroke-weight function. The version with six parameters
   allows the line to be placed anywhere within XYZ space. "
   ([p1 p2] (apply line (concat p1 p2)))
-  ([x1 y1 x2 y2] (.line (current-surface) (float x1) (float y1) (float x2) (float y2)))
+  ([x1 y1 x2 y2] (.line (current-applet) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
-     (.line (current-surface) (float x1) (float y1) (float z1)
+     (.line (current-applet) (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
 
 (defn
@@ -2153,7 +2148,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   []
-  (.loadPixels  (current-surface)))
+  (.loadPixels  (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2246,7 +2241,7 @@
    This method is useful for creating dynamically generated alpha
    masks."
   [^PImage img]
-  (.mask (current-surface) img))
+  (.mask (current-applet) img))
 
 (defn
   ^{:requires-bindings true
@@ -2285,7 +2280,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelX (current-surface) (float x) (float y) (float z)))
+  (.modelX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2300,7 +2295,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelY (current-surface) (float x) (float y) (float z)))
+  (.modelY (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2315,7 +2310,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelZ (current-surface) (float x) (float y) (float z)))
+  (.modelZ (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
@@ -2422,7 +2417,7 @@
   no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
- (.noFill (current-surface)))
+ (.noFill (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2517,7 +2512,7 @@
   that 2D geometry (which does not require lighting) can be drawn
   after a set of lighted 3D geometry."
   []
-  (.noLights (current-surface)))
+  (.noLights (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2571,7 +2566,7 @@
   but since that's imperfect, this is a better option when you want
   more control. This function is identical to glNormal3f() in OpenGL."
   [nx ny nz]
-  (.normal (current-surface) (float nx) (float ny) (float nz)))
+  (.normal (current-applet) (float nx) (float ny) (float nz)))
 
 (defn
   ^{:requires-bindings true
@@ -2581,7 +2576,7 @@
     :added "1.0"}
   no-smooth
   "Draws all geometry with jagged (aliased) edges."
-  [] (.noSmooth (current-surface)))
+  [] (.noSmooth (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2593,7 +2588,7 @@
   "Disables drawing the stroke (outline). If both no-stroke and
   no-fill are called, nothing will be drawn to the screen."
   []
-  (.noStroke (current-surface)))
+  (.noStroke (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2605,7 +2600,7 @@
   "Removes the current fill value for displaying images and reverts to
   displaying images with their original hues."
   []
-  (.noTint (current-surface)))
+  (.noTint (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2622,9 +2617,9 @@
   the minimum and maximum y values, and near and far are the minimum
   and maximum z values. If no parameters are given, the default is
   used: ortho(0, width, 0, height, -10, 10)."
-  ([] (.ortho (current-surface)))
+  ([] (.ortho (current-applet)))
   ([left right bottom top near far]
-     (.ortho (current-surface) (float left) (float right) (float bottom) (float top) (float near) (float far))))
+     (.ortho (current-applet) (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
 (defn
   ^{:requires-bindings true
@@ -2644,9 +2639,9 @@
   programmer to set the area precisely. The default values are:
   perspective(PI/3.0, width/height, cameraZ/10.0, cameraZ*10.0) where
   cameraZ is ((height/2.0) / tan(PI*60.0/360.0));"
-  ([] (.perspective (current-surface)))
+  ([] (.perspective (current-applet)))
   ([fovy aspect z-near z-far]
-     (.perspective (current-surface) (float fovy) (float aspect)
+     (.perspective (current-applet) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
 
 (defn
@@ -2662,8 +2657,8 @@
   optional third value is the depth value. Drawing this shape in 3D
   using the z parameter requires the :P3D or :opengl renderer to be
   used."
-  ([x y] (.point (current-surface) (float x)(float y)))
-  ([x y z] (.point (current-surface) (float x) (float y) (float z))))
+  ([x y] (.point (current-applet) (float x)(float y)))
+  ([x y z] (.point (current-applet) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -2679,7 +2674,7 @@
   parameters is determined by the current color mode. The x, y, and z
   parameters set the position of the light"
   [r g b x y z]
-  (.pointLight (current-surface) (float r) (float g) (float b) (float x) (float y) (float z)))
+  (.pointLight (current-applet) (float r) (float g) (float b) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2696,7 +2691,7 @@
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
-  (.popMatrix (current-surface)))
+  (.popMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2712,7 +2707,7 @@
   The push-style and pop-style functions can be nested to provide more
   control"
   []
-  (.popStyle (current-surface)))
+  (.popStyle (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -2738,7 +2733,7 @@
   print-camera
   "Prints the current camera matrix to std out. Useful for debugging."
   []
-  (.printCamera (current-surface)))
+  (.printCamera (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2749,7 +2744,7 @@
   print-matrix
   "Prints the current matrix to std out. Useful for debugging."
   []
-  (.printMatrix (current-surface)))
+  (.printMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2761,7 +2756,7 @@
   "Prints the current projection matrix to std out. Useful for
   debugging"
   []
-  (.printProjection (current-surface)))
+  (.printProjection (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2779,7 +2774,7 @@
   methods and may be embedded to control the scope of the
   transformations."
   []
-  (.pushMatrix (current-surface)))
+  (.pushMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2802,7 +2797,7 @@
   shape-mode, color-mode, text-align, text-font, text-mode, text-size,
   text-leading, emissive, specular, shininess, and ambient"
   []
-  (.pushStyle (current-surface)))
+  (.pushStyle (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2817,7 +2812,7 @@
   first vertex and the subsequent pairs should proceed clockwise or
   counter-clockwise around the defined shape."
   [x1 y1 x2 y2 x3 y3 x4 y4]
-  (.quad (current-surface)
+  (.quad (current-applet)
          (float x1) (float y1)
          (float x2) (float y2)
          (float x3) (float y3)
@@ -2886,7 +2881,7 @@
    sets the width, and the fourth sets the height. These parameters
    may be changed with rect-mode."
   [x y width height]
-  (.rect (current-surface) (float x) (float y) (float width) (float height)))
+  (.rect (current-applet) (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
   rect-modes {:corner PApplet/CORNER
@@ -2923,7 +2918,7 @@
 
   [mode]
   (let [mode (resolve-constant-key mode rect-modes)]
-    (.rectMode (current-surface) (int mode))))
+    (.rectMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -2934,7 +2929,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (current-surface) (int c)))
+  (.red (current-applet) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -2991,7 +2986,7 @@
   "Replaces the current matrix with the identity matrix. The
   equivalent function in OpenGL is glLoadIdentity()"
   []
-  (.resetMatrix (current-surface)))
+  (.resetMatrix (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3015,8 +3010,8 @@
   Technically, rotate multiplies the current transformation matrix by
   a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix."
-  ([angle] (.rotate (current-surface) (float angle)))
-  ([angle vx vy vz] (.rotate (current-surface) (float angle)
+  ([angle] (.rotate (current-applet) (float angle)))
+  ([angle vx vy vz] (.rotate (current-applet) (float angle)
                              (float vx) (float vy) (float vz))))
 
 (defn
@@ -3038,7 +3033,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateX (current-surface) (float angle)))
+  (.rotateX (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3059,7 +3054,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateY (current-surface) (float angle)))
+  (.rotateY (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3080,7 +3075,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateZ (current-surface) (float angle)))
+  (.rotateZ (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings false
@@ -3103,7 +3098,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (current-surface) (int c)))
+  (.saturation (current-applet) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3121,7 +3116,7 @@
   will be opaque. To save images without a background, use
   create-graphics."
   [filename]
-  (.save (current-surface) (str filename)))
+  (.save (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -3162,8 +3157,8 @@
   this fuction with the z parameter requires specfying :p3d or :opengl
   as the renderer. This function can be further controlled by
   push-matrix and pop-matrix."
-  ([s] (.scale (current-surface) (float s)))
-  ([sx sy] (.scale (current-surface) (float sx) (float sy))))
+  ([s] (.scale (current-applet) (float s)))
+  ([sx sy] (.scale (current-applet) (float sx) (float sy))))
 
 (defn- current-screen
   []
@@ -3211,7 +3206,7 @@
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
-  (.screenX (current-surface) (float x) (float y) (float z)))
+  (.screenX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -3224,7 +3219,7 @@
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
   [x y z]
-  (.screenY (current-surface) (float x) (float y) (float z)))
+  (.screenY (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -3240,7 +3235,7 @@
    'real'. They're only useful for in comparison to another value
    obtained from screen-z, or directly out of the zbuffer"
   [x y z]
-  (.screenX (current-surface) (float x) (float y) (float z)))
+  (.screenX (current-applet) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
@@ -3276,7 +3271,7 @@
   problem. Grouping many calls to point or set-pixel together can also
   help. (Bug 1094)"
   [x y c]
-  (.set (current-surface) (int x) (int y) (int c)))
+  (.set (current-applet) (int x) (int y) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3289,7 +3284,7 @@
   parameters define the coordinates for the upper-left corner of the
   image."
   [x y ^PImage src]
-  (.set (current-surface) (int x) (int y) src))
+  (.set (current-applet) (int x) (int y) src))
 
 (defn
   ^{:requires-bindings true
@@ -3312,9 +3307,9 @@
   Note complex shapes may draw awkwardly with the renderers :p2d, :p3d, and
   :opengl. Those renderers do not yet support shapes that have holes
   or complicated breaks."
-  ([^PShape sh] (.shape (current-surface) sh))
-  ([^PShape sh x y] (.shape (current-surface) sh (float x) (float y)))
-  ([^PShape sh x y width height] (.shape (current-surface) sh (float x) (float y) (float width) (float height))))
+  ([^PShape sh] (.shape (current-applet) sh))
+  ([^PShape sh x y] (.shape (current-applet) sh (float x) (float y)))
+  ([^PShape sh x y width height] (.shape (current-applet) sh (float x) (float y) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -3339,7 +3334,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearX (current-surface) (float angle)))
+  (.shearX (current-applet) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3364,7 +3359,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearY (current-surface) (float angle)))
+  (.shearY (current-applet) (float angle)))
 
 (def ^{:private true}
   p-shape-modes {:corner PApplet/CORNER
@@ -3393,7 +3388,7 @@
              height. "
   [mode]
   (let [mode (resolve-constant-key mode p-shape-modes)]
-    (.shapeMode (current-surface) (int mode))))
+    (.shapeMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3406,7 +3401,7 @@
   combination with ambient, specular, and emissive in setting
   the material properties of shapes."
   [shine]
-  (.shininess (current-surface) (float shine)))
+  (.shininess (current-applet) (float shine)))
 
 (defn
   ^{:requires-bindings false
@@ -3440,7 +3435,7 @@
 
   Note that smooth will also improve image quality of resized images."
   []
-  (.smooth (current-surface)))
+  (.smooth (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3455,10 +3450,10 @@
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
-  ([gray] (.specular (current-surface) (float gray)))
-  ([gray alpha] (.specular (current-surface) (float gray) (float alpha)))
-  ([x y z] (.specular (current-surface) (float x) (float y) (float z)))
-  ([x y z a] (.specular (current-surface) (float x) (float y) (float z) (float a))))
+  ([gray] (.specular (current-applet) (float gray)))
+  ([gray alpha] (.specular (current-applet) (float gray) (float alpha)))
+  ([x y z] (.specular (current-applet) (float x) (float y) (float z)))
+  ([x y z a] (.specular (current-applet) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3468,7 +3463,7 @@
     :added "1.0"}
   sphere
   "Genarates a hollow ball made from tessellated triangles."
-  [radius] (.sphere (current-surface) (float radius)))
+  [radius] (.sphere (current-applet) (float radius)))
 
 (defn
   ^{:requires-bindings true
@@ -3489,8 +3484,8 @@
   ones further away from the camera. To controla the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
-  ([res] (.sphereDetail (current-surface) (int res)))
-  ([ures vres] (.sphereDetail (current-surface) (int ures) (int vres))))
+  ([res] (.sphereDetail (current-applet) (int res)))
+  ([ures vres] (.sphereDetail (current-applet) (int ures) (int vres))))
 
 (defn
   ^{:requires-bindings true
@@ -3508,9 +3503,9 @@
   the direction or light. The angle parameter affects angle of the
   spotlight cone."
   ([r g b x y z nx ny nz angle concentration]
-     (.spotLight (current-surface) r g b x y z nx ny nz angle concentration))
+     (.spotLight (current-applet) r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
-     (.spotLight (current-surface) r g b x y z nx ny nz angle concentration)))
+     (.spotLight (current-applet) r g b x y z nx ny nz angle concentration)))
 
 (defn
   ^{:requires-bindings false
@@ -3548,10 +3543,10 @@
   stroke-float
   "Sets the color used to draw lines and borders around
   shapes. Converts all args to floats"
-  ([gray] (.stroke (current-surface) (float gray)))
-  ([gray alpha] (.stroke (current-surface) (float gray) (float alpha)))
-  ([x y z] (.stroke (current-surface) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (current-surface) (float x) (float y) (float z) (float a))))
+  ([gray] (.stroke (current-applet) (float gray)))
+  ([gray alpha] (.stroke (current-applet) (float gray) (float alpha)))
+  ([x y z] (.stroke (current-applet) (float x) (float y) (float z)))
+  ([x y z a] (.stroke (current-applet) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3562,8 +3557,8 @@
   stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (current-surface) (int rgb)))
-  ([rgb alpha] (.stroke (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.stroke (current-applet) (int rgb)))
+  ([rgb alpha] (.stroke (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -3600,7 +3595,7 @@
   parameters :square, :project, and :round. The default cap is :round."
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
-    (.strokeCap (current-surface) (int cap-mode))))
+    (.strokeCap (current-applet) (int cap-mode))))
 
 (def ^{:private true}
   stroke-join-modes {:miter PConstants/MITER
@@ -3623,7 +3618,7 @@
   renderers."
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
-    (.strokeJoin (current-surface) (int join-mode))))
+    (.strokeJoin (current-applet) (int join-mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3635,7 +3630,7 @@
   "Sets the width of the stroke used for lines, points, and the border
   around shapes. All widths are set in units of pixels. "
   [weight]
-  (.strokeWeight (current-surface) (float weight)))
+  (.strokeWeight (current-applet) (float weight)))
 
 (defn
   ^{:requires-bindings false
@@ -3660,9 +3655,9 @@
   text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
-  ([c] (.text (current-surface) (char c)))
-  ([c x y] (.text (current-surface) (char c) (float x) (float y)))
-  ([c x y z] (.text (current-surface) (char c) (float x) (float y) (float z))))
+  ([c] (.text (current-applet) (char c)))
+  ([c x y] (.text (current-applet) (char c) (float x) (float y)))
+  ([c x y z] (.text (current-applet) (char c) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3673,8 +3668,8 @@
   text-num
   "Draws a number to the screen in the specified position. See text fn
   for more details."
-  ([num x y] (.text (current-surface) (float num) (float x) (float y)))
-  ([num x y z] (.text (current-surface) (float num) (float x) (float y) (float z))))
+  ([num x y] (.text (current-applet) (float num) (float x) (float y)))
+  ([num x y z] (.text (current-applet) (float num) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3697,11 +3692,11 @@
 
   Use the text-mode function with the :screen parameter to display text
   in 2D at the surface of the window."
-  ([^String s] (.text (current-surface) s))
-  ([^String s x y] (.text (current-surface) s (float x) (float y)))
-  ([^String s x y z] (.text (current-surface) s (float x) (float y) (float z)))
-  ([^String s x1 y1 x2 y2] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2) (float z))))
+  ([^String s] (.text (current-applet) s))
+  ([^String s x y] (.text (current-applet) s (float x) (float y)))
+  ([^String s x y z] (.text (current-applet) s (float x) (float y) (float z)))
+  ([^String s x1 y1 x2 y2] (.text (current-applet) s (float x1) (float y1) (float x2) (float y2)))
+  ([^String s x1 y1 x2 y2 z] (.text (current-applet) s (float x1) (float y1) (float x2) (float y2) (float z))))
 
 (def ^{:private true}
   horizontal-alignment-modes {:left PApplet/LEFT
@@ -3745,11 +3740,11 @@
   change the size of the font."
   ([align]
      (let [align (resolve-constant-key align horizontal-alignment-modes)]
-       (.textAlign (current-surface) (int align))))
+       (.textAlign (current-applet) (int align))))
   ([align-x align-y]
      (let [align-x (resolve-constant-key align-x horizontal-alignment-modes)
            align-y (resolve-constant-key align-y vertical-alignment-modes)]
-       (.textAlign (current-surface) (int align-x) (int align-y)))))
+       (.textAlign (current-applet) (int align-x) (int align-y)))))
 
 (defn
   ^{:requires-bindings true
@@ -3763,7 +3758,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textAscent (current-surface)))
+  (.textAscent (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3777,7 +3772,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textDescent (current-surface)))
+  (.textDescent (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3802,8 +3797,8 @@
   sketches and PDF output in cases where the vector data is available:
   when the font is still installed, or the font is created via the
   create-font fn"
-  ([^PFont font] (.textFont (current-surface) font))
-  ([^PFont font size] (.textFont (current-surface) font (int size))))
+  ([^PFont font] (.textFont (current-applet) font))
+  ([^PFont font size] (.textFont (current-applet) font (int size))))
 
 (defn
   ^{:requires-bindings true
@@ -3815,7 +3810,7 @@
   "Sets the spacing between lines of text in units of pixels. This
   setting will be used in all subsequent calls to the text function."
   [leading]
-  (.textLeading (current-surface) (float leading)))
+  (.textLeading (current-applet) (float leading)))
 
 (def ^{:private true}
   text-modes {:model PConstants/MODEL
@@ -3860,7 +3855,7 @@
   geometry with begin-raw."
   [mode]
   (let [mode (resolve-constant-key mode text-modes)]
-    (.textMode (current-surface) (int mode))))
+    (.textMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3873,7 +3868,7 @@
   subsequent calls to the text fn. Font size is measured in
   units of pixels."
   [size]
-  (.textSize (current-surface) (float size)))
+  (.textSize (current-applet) (float size)))
 
 (defn
   ^{:requires-bindings true
@@ -3890,7 +3885,7 @@
   tint to specify the color of the texture as it is applied to the
   shape."
   [^PImage img]
-  (.texture (current-surface) img))
+  (.texture (current-applet) img))
 
 (def ^{:private true}
   texture-modes {:image PApplet/IMAGE
@@ -3914,7 +3909,7 @@
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
   [mode]
   (let [mode (resolve-constant-key mode texture-modes)]
-    (.textureMode (current-surface) (int mode))))
+    (.textureMode (current-applet) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3928,7 +3923,7 @@
   (let [data  (if (= (class data) (class \a))
                 (char data)
                 (str data))]
-    (.textWidth (current-surface) data)))
+    (.textWidth (current-applet) data)))
 
 (defn
   ^{:requires-bindings true
@@ -3950,10 +3945,10 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([gray] (.tint (current-surface) (float gray)))
-  ([gray alpha] (.tint (current-surface) (float gray) (float alpha)))
-  ([r g b] (.tint (current-surface) (float r)(float g) (float b)))
-  ([r g b a] (.tint (current-surface) (float g) (float g) (float b) (float a))))
+  ([gray] (.tint (current-applet) (float gray)))
+  ([gray alpha] (.tint (current-applet) (float gray) (float alpha)))
+  ([r g b] (.tint (current-applet) (float r)(float g) (float b)))
+  ([r g b a] (.tint (current-applet) (float g) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3975,8 +3970,8 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([rgb] (.tint (current-surface) (int rgb)))
-  ([rgb alpha] (.tint (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.tint (current-applet) (int rgb)))
+  ([rgb alpha] (.tint (current-applet) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -4021,8 +4016,8 @@
   the loop begins again. This function can be further controlled by
   the push-matrix and pop-matrix."
   ([v] (apply translate v))
-  ([tx ty] (.translate (current-surface) (float tx) (float ty)))
-  ([tx ty tz] (.translate (current-surface) (float tx) (float ty) (float tz))))
+  ([tx ty] (.translate (current-applet) (float tx) (float ty)))
+  ([tx ty tz] (.translate (current-applet) (float tx) (float ty) (float tz))))
 
 (defn
   ^{:requires-bindings true
@@ -4036,7 +4031,7 @@
   specify the second point, and the last two arguments specify the
   third point."
   [x1 y1 x2 y2 x3 y3]
-  (.triangle (current-surface)
+  (.triangle (current-applet)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)))
@@ -4061,7 +4056,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   []
-  (.updatePixels (current-surface)))
+  (.updatePixels (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -4084,11 +4079,11 @@
   form. By default, the coordinates used for u and v are specified in
   relation to the image's size in pixels, but this relation can be
   changed with texture-mode."
-  ([x y] (.vertex (current-surface) (float x) (float y)))
-  ([x y z] (.vertex (current-surface) (float x) (float y) (float z)))
-  ([x y u v] (.vertex (current-surface) (float x) (float y) (float u) (float v)))
+  ([x y] (.vertex (current-applet) (float x) (float y)))
+  ([x y z] (.vertex (current-applet) (float x) (float y) (float z)))
+  ([x y u v] (.vertex (current-applet) (float x) (float y) (float u) (float v)))
   ([x y z u v]
-     (.vertex (current-surface) (float x) (float y) (float z) (float u) (float v))))
+     (.vertex (current-applet) (float x) (float y) (float z) (float u) (float v))))
 
 (defn
   ^{:requires-bindings false
@@ -4440,15 +4435,6 @@
   the visualisation. See sketch for the available options."
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
-
-
-(defmacro with-graphics
-  "All subsequent calls of any drawing function will draw on given graphics."
-  [graphics & body]
-  `(binding [*graphics* ~graphics]
-     (.beginDraw ~graphics)
-     ~@body
-     (.endDraw ~graphics)))
 
 (defn ^{:requires-bindings false
         :processing-name nil
