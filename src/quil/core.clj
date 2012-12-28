@@ -7,7 +7,7 @@
   (:require [clojure.set])
   (:use [quil.version :only [QUIL-VERSION-STR]]
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics set-current-graphics!]]))
+        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
 
 (defn- current-surface
   "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
@@ -4446,12 +4446,10 @@
   "All subsequent calls of any drawing function will draw on given graphics.
   'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
   [graphics & body]
-  `(let [gr# ~graphics]
-     (set-current-graphics! gr#)
-     (.beginDraw gr#)
+  `(binding [*graphics* ~graphics]
+     (.beginDraw ~graphics)
      ~@body
-     (.endDraw gr#)
-     (set-current-graphics! nil)))
+     (.endDraw ~graphics)))
 
 (defn ^{:requires-bindings false
         :processing-name nil
