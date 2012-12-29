@@ -23,9 +23,13 @@
 
 (defonce untitled-applet-id* (atom 0))
 (def ^:dynamic *applet* nil)
+(def ^:dynamic *graphics* nil)
 
 (defn ^PApplet current-applet []
   *applet*)
+
+(defn current-graphics []
+  *graphics*)
 
 (defn target-frame-rate []
   (:target-frame-rate (meta (current-applet))))
