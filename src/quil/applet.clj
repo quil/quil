@@ -255,6 +255,16 @@
 
 (generate-listeners)
 
+(defn wrap-mouse-wheel
+  "Wraps callback to an instance of java.awt.event.MouseEventListener
+  or returns nil if given callback is nil."
+  [mouse-wheel applet]
+  (when mouse-wheel
+    (reify java.awt.event.MouseWheelListener
+      (mouseWheelMoved [this e]
+        (with-applet applet
+          (mouse-wheel (.getWheelRotation e)))))))
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -307,6 +317,12 @@
    :mouse-dragged  - Called every time the mouse moves and a button is
                      pressed.
 
+   :mouse-wheel    - Called every time mouse wheel is rotated.
+                     Takes 1 argument - wheel rotation, an int.
+                     Negative values if the mouse wheel was rotated
+                     up/away from the user, and positive values
+                     if the mouse wheel was rotated down/ towards the user
+
    :key-pressed    - Called every time any key is pressed.
 
    :key-released   - Called every time any key is released.
@@ -333,6 +349,9 @@
         setup-fn          (fn []
                             (let [size-vec (concat size [renderer] output-file)]
                               (apply applet-set-size size-vec))
+                            (when-let [wheel-listener (wrap-mouse-wheel (:mouse-wheel options)
+                                                                        (current-applet))]
+                              (.addMouseWheelListener (current-applet) wheel-listener))
                             (when-let [f (:setup options)]
                               (f)))
         safe-draw-fn      (fn []
