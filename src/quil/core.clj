@@ -1709,8 +1709,7 @@
     :added "1.0"}
   height
   "Height of the display window. The value of height is zero until
-  size is called.  Should not be called during setup because result may be incosistent: 
-  https://github.com/quil/quil/issues/50"
+  size is called."
   []
   (.getHeight (current-applet)))
 
@@ -4110,8 +4109,7 @@
     :added "1.0"}
   width
   "Width of the display window. The value of width is zero until size is
-  called. Should not be called during setup because result may be incosistent: 
-  https://github.com/quil/quil/issues/50"
+  called."
   []
   (.getWidth (current-applet)))
 
