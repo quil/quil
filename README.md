@@ -138,7 +138,7 @@ Head over to the [Gen Art Examples Page](https://github.com/quil/quil/blob/maste
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `1.6.0`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
+Quil provides support for the standard Processing API - currently version `1.5.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
 ## Community
 
