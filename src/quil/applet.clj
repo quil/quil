@@ -127,23 +127,15 @@
                   :pdf    PApplet/PDF
                   :dxf    PApplet/DXF})
 
-(defn- wait-event-dispatch-thread
-  "Blocks current thread until all events in AWT event dispatch thread are processed."
-  []
-  (javax.swing.SwingUtilities/invokeAndWait (fn [])))
-
 (defn- applet-set-size
   ([width height]
-     (.size (current-applet) (int width) (int height))
-     (wait-event-dispatch-thread))
+     (.size (current-applet) (int width) (int height)))
   ([width height renderer]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (current-applet) (int width) (int height) renderer))
-     (wait-event-dispatch-thread))
-    ([width height renderer path]
+       (.size (current-applet) (int width) (int height) renderer)))
+  ([width height renderer path]
      (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (current-applet) (int width) (int height) renderer path))
-     (wait-event-dispatch-thread)))
+       (.size (current-applet) (int width) (int height) renderer path))))
 
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws
