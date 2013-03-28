@@ -555,7 +555,7 @@
   begin-shape."
   ([cx1 cy1 cx2 cy2 x y]
      (.bezierVertex (current-surface)
-                    (float cx1) (float cx1)
+                    (float cx1) (float cy1)
                     (float cx2) (float cy2)
                     (float x) (float y)))
   ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
