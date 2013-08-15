@@ -4545,3 +4545,17 @@
      (fill ~@fill-args)
      ~@body
      (fill old-fill#)))
+
+(defn current-stroke
+  "Return the current stroke color."
+  []
+  (.strokeColor (current-surface)))
+
+(defmacro with-stroke
+  "Temporarily set the stroke color for the body of this macro.
+   The code outside of with-stroke form will have the previous stroke color set."
+  [stroke-args & body]
+  `(let [old-stroke# (current-stroke)]
+     (stroke ~@stroke-args)
+     ~@body
+     (stroke old-stroke#)))
