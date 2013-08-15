@@ -4447,7 +4447,6 @@
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
 
-
 (defmacro with-graphics
   "All subsequent calls of any drawing function will draw on given graphics.
   'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
@@ -4532,3 +4531,17 @@
   ([msg delay-ms]
      (println msg)
      (Thread/sleep delay-ms)))
+
+(defn current-fill
+  "Return the current fill color."
+  []
+  (.fillColor (current-surface)))
+
+(defmacro with-fill
+  "Temporarily set the fill color for the body of this macro.
+   The code outside of with-fill form will have the previous fill color set."
+  [fill-args & body]
+  `(let [old-fill# (current-fill)]
+     (fill ~@fill-args)
+     ~@body
+     (fill old-fill#)))
