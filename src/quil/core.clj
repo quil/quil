@@ -4447,6 +4447,7 @@
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
 
+
 (defmacro with-graphics
   "All subsequent calls of any drawing function will draw on given graphics.
   'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
@@ -4539,10 +4540,14 @@
 
 (defmacro with-fill
   "Temporarily set the fill color for the body of this macro.
-   The code outside of with-fill form will have the previous fill color set."
+   The code outside of with-fill form will have the previous fill color set.
+
+   The fill color has to be in a vector!
+   Example: (with-fill [255] ...)
+            (with-fill [10 80 98] ...)"
   [fill-args & body]
   `(let [old-fill# (current-fill)]
-     (fill ~@fill-args)
+     (apply fill ~fill-args)
      ~@body
      (fill old-fill#)))
 
@@ -4553,9 +4558,13 @@
 
 (defmacro with-stroke
   "Temporarily set the stroke color for the body of this macro.
-   The code outside of with-stroke form will have the previous stroke color set."
+   The code outside of with-stroke form will have the previous stroke color set.
+
+   The stroke color has to be in a vector!
+   Example: (with-fill [255] ...)
+            (with-fill [10 80 98] ...)"
   [stroke-args & body]
   `(let [old-stroke# (current-stroke)]
-     (stroke ~@stroke-args)
+     (apply stroke ~stroke-args)
      ~@body
      (stroke old-stroke#)))
