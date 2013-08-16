@@ -4561,8 +4561,8 @@
    The code outside of with-stroke form will have the previous stroke color set.
 
    The stroke color has to be in a vector!
-   Example: (with-fill [255] ...)
-            (with-fill [10 80 98] ...)"
+   Example: (with-stroke [255] ...)
+            (with-stroke [10 80 98] ...)"
   [stroke-args & body]
   `(let [old-stroke# (current-stroke)]
      (apply stroke ~stroke-args)
