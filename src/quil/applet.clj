@@ -195,9 +195,17 @@
                 :focus-gained
                 :focus-lost])
 
+(gen-interface
+:name quil.MovieI
+:methods [
+          [movieEvent [] quil.MovieI]
+          [movieEvent
+           [Object] quil.MovieI]
+          ])
+
 (gen-class
  :name "quil.Applet"
- :implements [clojure.lang.IMeta]
+ :implements [clojure.lang.IMeta quil.MovieI]
  :extends processing.core.PApplet
  :state state
  :init quil-init
@@ -218,9 +226,19 @@
                    focusLost focusLostParent
                    noLoop noLoopParent})
 
+(defn -buy [this]
+  (println "buying"))
+
 (defn -quil-init [state]
   [[] state])
-
+(defn -movieEvent
+  ([this]
+     (println "yaaaaaaaaaa"))
+  ([this movie]
+     (comment println "yaaaaaaaaaa event" movie)
+     (.read movie)
+     )
+  )
 (defn -meta [this]
   (.state this))
 
@@ -380,6 +398,7 @@
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (applet-run prx-obj title renderer target)
+    (println "eyyy2")
     prx-obj))
 
 

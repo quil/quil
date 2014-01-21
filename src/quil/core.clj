@@ -9,6 +9,11 @@
         [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
         [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
 
+(defn ^{:requires-bindings true
+  }
+  current-a []
+  (current-applet))
+
 (defn- ^PGraphics current-surface
   "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
   []
