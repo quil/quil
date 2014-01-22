@@ -358,7 +358,7 @@
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
-        movie-event-fn           (or (:movie-event options) (fn [ movie] (println "default movie-event") (.read movie)))
+        movie-event-fn           (or (:movie-event options) (fn [ movie] #_(println "default movie-event") (.read movie)))
         output-file       (validate-output-file! renderer (:output-file options))
         target            (if (empty? output-file) target :none)
         setup-fn          (fn []
@@ -397,7 +397,6 @@
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (applet-run prx-obj title renderer target)
-    (println "eyyy2")
     prx-obj))
 
 
