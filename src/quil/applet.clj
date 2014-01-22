@@ -230,6 +230,7 @@
   [[] state])
 (defn -movieEvent
   ([this movie]
+     (println "eventtt pre")
      (with-applet this
     ((:movie-event (.state this))  movie))
      )
