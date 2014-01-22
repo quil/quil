@@ -198,7 +198,6 @@
 (gen-interface
 :name quil.MovieI
 :methods [
-          [movieEvent [] quil.MovieI]
           [movieEvent
            [Object] quil.MovieI]
           ])
@@ -226,17 +225,13 @@
                    focusLost focusLostParent
                    noLoop noLoopParent})
 
-(defn -buy [this]
-  (println "buying"))
 
 (defn -quil-init [state]
   [[] state])
 (defn -movieEvent
-  ([this]
-     (println "yaaaaaaaaaa"))
   ([this movie]
-     (comment println "yaaaaaaaaaa event" movie)
-     (.read movie)
+     (with-applet this
+    ((:movie-event (.state this))  movie))
      )
   )
 (defn -meta [this]
@@ -363,6 +358,7 @@
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
+        movie-event-fn           (or (:movie-event options) (fn [ movie] (println "default movie-event")))
         output-file       (validate-output-file! renderer (:output-file options))
         target            (if (empty? output-file) target :none)
         setup-fn          (fn []
@@ -371,8 +367,10 @@
                             (when-let [wheel-listener (wrap-mouse-wheel (:mouse-wheel options)
                                                                         (current-applet))]
                               (.addMouseWheelListener (current-applet) wheel-listener))
+
                             (when-let [f (:setup options)]
                               (f)))
+
         safe-draw-fn      (fn []
                             (try
                               (draw-fn)
@@ -394,6 +392,7 @@
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
                                   :draw-fn draw-fn
+                                  :movie-event movie-event-fn
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
