@@ -41,31 +41,31 @@ If `setup` and `draw` are hard working *artistic gladiators*, `sketch` is the *a
 `setup` lays all the groundwork and is called only once at the start. `draw`, on the other hand, is called immediately after `setup` has completed, and then repeatedly until you summon it to stop. When you create a `sketch` and name your `setup` and `draw` fns, the fun automatically starts.
 
 A simple example is called for:
+```clojure
+(ns for-the-glory-of-art
+  (:use quil.core))
 
-    (ns for-the-glory-of-art
-      (:use quil.core))
+(defn setup []
+  (smooth)                          ;; Turn on anti-aliasing
+  (frame-rate 1)                    ;; Set framerate to 1 FPS
+  (background 200))                 ;; Set the background colour to
+                                    ;; a nice shade of grey.
+(defn draw []
+  (stroke (random 255))             ;; Set the stroke colour to a random grey
+  (stroke-weight (random 10))       ;; Set the stroke thickness randomly
+  (fill (random 255))               ;; Set the fill colour to a random grey
 
-    (defn setup []
-      (smooth)                          ;;Turn on anti-aliasing
-      (frame-rate 1)                    ;;Set framerate to 1 FPS
-      (background 200))                 ;;Set the background colour to
-                                        ;;  a nice shade of grey.
-    (defn draw []
-      (stroke (random 255))             ;;Set the stroke colour to a random grey
-      (stroke-weight (random 10))       ;;Set the stroke thickness randomly
-      (fill (random 255))               ;;Set the fill colour to a random grey
+  (let [diam (random 100)           ;; Set the diameter to a value between 0 and 100
+        x    (random (width))       ;; Set the x coord randomly within the sketch
+        y    (random (height))]     ;; Set the y coord randomly within the sketch
+    (ellipse x y diam diam)))       ;; Draw a circle at x y with the correct diameter
 
-      (let [diam (random 100)           ;;Set the diameter to a value between 0 and 100
-            x    (random (width))       ;;Set the x coord randomly within the sketch
-            y    (random (height))]     ;;Set the y coord randomly within the sketch
-        (ellipse x y diam diam)))       ;;Draw a circle at x y with the correct diameter
-
-    (defsketch example                  ;;Define a new sketch named example
-      :title "Oh so many grey circles"  ;;Set the title of the sketch
-      :setup setup                      ;;Specify the setup fn
-      :draw draw                        ;;Specify the draw fn
-      :size [323 200])                  ;;You struggle to beat the golden ratio
-
+(defsketch example                  ;; Define a new sketch named example
+  :title "Oh so many grey circles"  ;; Set the title of the sketch
+  :setup setup                      ;; Specify the setup fn
+  :draw draw                        ;; Specify the draw fn
+  :size [323 200])                  ;; You struggle to beat the golden ratio
+```
 <img src="https://github.com/downloads/quil/quil/readme-oh-so-many-grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
 Feast your eyes on this beauty.
