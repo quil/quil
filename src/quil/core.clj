@@ -1095,6 +1095,26 @@
   [filename]
   (.createOutput (current-applet) (str filename)))
 
+(defn
+  ^{:requires-bindings false
+    :processing-name nil
+    :category "Color"
+    :subcategory "Creating & Reading"}
+  current-fill
+  "Return the current fill color."
+  []
+  (.fillColor (current-surface)))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name nil
+    :category "Color"
+    :subcategory "Creating & Reading"}
+  current-stroke
+  "Return the current stroke color."
+  []
+  (.strokeColor (current-surface)))
+
 (def ^{:private true}
   cursor-modes {:arrow PConstants/ARROW
                 :cross PConstants/CROSS
@@ -4112,6 +4132,42 @@
   called."
   []
   (.getWidth (current-applet)))
+
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Color"
+    :subcategory "Utility Macros"}
+  with-fill
+  "Temporarily set the fill color for the body of this macro.
+   The code outside of with-fill form will have the previous fill color set.
+
+   The fill color has to be in a vector!
+   Example: (with-fill [255] ...)
+            (with-fill [10 80 98] ...)"
+  [fill-args & body]
+  `(let [old-fill# (current-fill)]
+     (apply fill ~fill-args)
+     ~@body
+     (fill old-fill#)))
+
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Color"
+    :subcategory "Utility Macros"}
+  with-stroke
+  "Temporarily set the stroke color for the body of this macro.
+   The code outside of with-stroke form will have the previous stroke color set.
+
+   The stroke color has to be in a vector!
+   Example: (with-stroke [255] ...)
+            (with-stroke [10 80 98] ...)"
+  [stroke-args & body]
+  `(let [old-stroke# (current-stroke)]
+     (apply stroke ~stroke-args)
+     ~@body
+     (stroke old-stroke#)))
 
 (defmacro
   ^{:requires-bindings true
