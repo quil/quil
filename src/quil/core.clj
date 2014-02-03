@@ -394,7 +394,7 @@
   as individual segments."
   ([^PGraphics raw-gfx] (.beginRaw (current-surface) raw-gfx))
   ([^String renderer ^String filename]
-     (.beginRaw (current-surface) renderer filename)))
+     (.beginRaw (current-applet) renderer filename)))
 
 (def ^{:private true}
   render-modes {:p2d PApplet/P2D
@@ -571,7 +571,7 @@
   "Returns a string representing the binary value of an int, char or
   byte. When converting an int to a string, it is possible to specify
   the number of digits used."
-  ([val] (PApplet/binary (if (number? val) (int val) val)))
+  ([val] (PApplet/binary (int val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
 
 (defn
@@ -1576,7 +1576,7 @@
     :added "1.0"}
   focused
   "Returns a boolean value representing whether the applet has focus."
-  []  (.-focussed (current-applet)))
+  []  (.-focused (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1697,7 +1697,7 @@
   equivalent hexadecimal notation. For example color(0, 102, 153) will
   convert to the String \"FF006699\". This function can help make your
   geeky debugging sessions much happier. "
-  ([val] (PApplet/hex val))
+  ([val] (PApplet/hex (int val)))
   ([val num-digits] (PApplet/hex (int val) (int num-digits))))
 
 (defn
@@ -3163,7 +3163,7 @@
   ([s] (.scale (current-surface) (float s)))
   ([sx sy] (.scale (current-surface) (float sx) (float sy))))
 
-(defn- current-screen
+(defn- ^java.awt.Dimension current-screen
   []
   (let [default-toolkit (java.awt.Toolkit/getDefaultToolkit)]
     (.getScreenSize default-toolkit)))
@@ -3454,9 +3454,7 @@
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
   ([gray] (.specular (current-surface) (float gray)))
-  ([gray alpha] (.specular (current-surface) (float gray) (float alpha)))
-  ([x y z] (.specular (current-surface) (float x) (float y) (float z)))
-  ([x y z a] (.specular (current-surface) (float x) (float y) (float z) (float a))))
+  ([x y z] (.specular (current-surface) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3943,12 +3941,9 @@
     :subcategory "Attributes"
     :added "1.0"}
   text-width
-  "Calculates and returns the width of any character or text string."
-  [data]
-  (let [data  (if (= (class data) (class \a))
-                (char data)
-                (str data))]
-    (.textWidth (current-surface) data)))
+  "Calculates and returns the width of any text string."
+  [^String data]
+  (.textWidth (current-surface) data))
 
 (defn
   ^{:requires-bindings true
