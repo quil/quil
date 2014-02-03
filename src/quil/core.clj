@@ -270,6 +270,26 @@
   (PApplet/atan2 (float y) (float x)))
 
 (defn
+  ^{:requires-bindings false
+    :processing-name "PFont.list()"
+    :category "Typography"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  available-fonts
+  "A sequence of strings representing the fonts on this system
+  available for use.
+
+  Because of limitations in Java, not all fonts can be used and some
+  might work with one operating system and not others. When sharing a
+  sketch with other people or posting it on the web, you may need to
+  include a .ttf or .otf version of your font in the data directory of
+  the sketch because other people might not have the font installed on
+  their computer. Only fonts that can legally be distributed should be
+  included with a sketch."
+  []
+  (seq (PFont/list)))
+
+(defn
   ^{:requires-bindings true
     :processing-name "background()"
     :category "Color"
@@ -359,17 +379,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "endCamera()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  end-camera
-  "Unsets the matrix mode from the camera matrix. See begin-camera."
-  []
-  (.endCamera (current-surface)))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "beginRaw()"
     :category "Output"
     :subcategory "Files"
@@ -385,7 +394,7 @@
   as individual segments."
   ([^PGraphics raw-gfx] (.beginRaw (current-surface) raw-gfx))
   ([^String renderer ^String filename]
-     (.beginRaw (current-applet) renderer filename)))
+     (.beginRaw (current-surface) renderer filename)))
 
 (def ^{:private true}
   render-modes {:p2d PApplet/P2D
@@ -416,18 +425,6 @@
   (let [renderer (resolve-constant-key renderer render-modes)]
     (println "renderer: " renderer)
     (.beginRecord (current-applet) (str renderer) (str filename))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "endRecord()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  end-record
-  "Stops the recording process started by begin-record and closes the
-  file."
-  []
-  (.endRecord (current-applet)))
 
 (def ^{:private true}
      shape-modes {:points PApplet/POINTS
@@ -900,26 +897,6 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name "PFont.list()"
-    :category "Typography"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  available-fonts
-  "A sequence of strings representing the fonts on this system
-  available for use.
-
-  Because of limitations in Java, not all fonts can be used and some
-  might work with one operating system and not others. When sharing a
-  sketch with other people or posting it on the web, you may need to
-  include a .ttf or .otf version of your font in the data directory of
-  the sketch because other people might not have the font installed on
-  their computer. Only fonts that can legally be distributed should be
-  included with a sketch."
-  []
-  (seq (PFont/list)))
-
-(defn
-  ^{:requires-bindings false
     :processing-name nil
     :category "Typography"
     :subcategory "Loading & Displaying"
@@ -1096,8 +1073,8 @@
   (.createOutput (current-applet) (str filename)))
 
 (defn
-  ^{:requires-bindings false
-    :processing-name nil
+  ^{:requires-bindings true
+    :processing-name "fillColor()"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-fill
@@ -1106,8 +1083,8 @@
   (.fillColor (current-surface)))
 
 (defn
-  ^{:requires-bindings false
-    :processing-name nil
+  ^{:requires-bindings true
+    :processing-name "strokeColor()"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-stroke
@@ -1428,6 +1405,17 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "endCamera()"
+    :category "Lights, Camera"
+    :subcategory "Camera"
+    :added "1.0"}
+  end-camera
+  "Unsets the matrix mode from the camera matrix. See begin-camera."
+  []
+  (.endCamera (current-surface)))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "endRaw()"
     :category "Output"
     :subcategory "Files"
@@ -1436,7 +1424,19 @@
   "Complement to begin-raw; they must always be used together. See
   the begin-raw docstring for details."
   []
-  (.endRaw (current-applet)))
+  (.endRaw (current-surface)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "endRecord()"
+    :category "Output"
+    :subcategory "Files"
+    :added "1.0"}
+  end-record
+  "Stops the recording process started by begin-record and closes the
+  file."
+  []
+  (.endRecord (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1461,7 +1461,7 @@
     :category "Structure"
     :subcategory nil
     :added "1.0"}
-    exit
+  exit
   "Quits/stops/exits the program.  Rather than terminating
   immediately, exit will cause the sketch to exit after draw has
   completed (or after setup completes if called during the setup
@@ -1601,16 +1601,6 @@
   "Returns the current framerate"
   []
   (.frameRate (current-applet)))
-
-(defn
-  ^{:requires-bindings true
-    :category "Environment"
-    :subcategory nil
-    :added "1.5.0"}
-  target-frame-rate
-  "Returns the target framerate specified with the fn frame-rate"
-  []
-  @(quil.applet/target-frame-rate))
 
 (defn
   ^{:requires-bindings true
@@ -1906,6 +1896,44 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "keyCode"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  key-code
+  "The variable keyCode is used to detect special keys such as the UP,
+  DOWN, LEFT, RIGHT arrow keys and ALT, CONTROL, SHIFT. When checking
+  for these keys, it's first necessary to check and see if the key is
+  coded. This is done with the conditional (= (key) CODED).
+
+  The keys included in the ASCII specification (BACKSPACE, TAB, ENTER,
+  RETURN, ESC, and DELETE) do not require checking to see if they key
+  is coded, and you should simply use the key variable instead of
+  key-code If you're making cross-platform projects, note that the
+  ENTER key is commonly used on PCs and Unix and the RETURN key is
+  used instead on Macintosh. Check for both ENTER and RETURN to make
+  sure your program will work for all platforms.
+
+  For users familiar with Java, the values for UP and DOWN are simply
+  shorter versions of Java's KeyEvent.VK_UP and
+  KeyEvent.VK_DOWN. Other keyCode values can be found in the Java
+  KeyEvent reference."
+  []
+  (.-keyCode (current-applet)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "keyPressed"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  key-pressed?
+  "true if any key is currently pressed, false otherwise."
+  []
+  (.-keyPressed (current-applet)))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "lightFalloff()"
     :category "Lights, Camera"
     :subcategory "Lights"
@@ -1958,65 +1986,6 @@
   drawing dotted lines."
   [start stop amt]
   (PApplet/lerp (float start) (float stop) (float amt)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "key"
-    :category "Input"
-    :subcategory "Keyboard"
-    :added "1.0"}
-  raw-key
-  "Contains the value of the most recent key on the keyboard that was
-  used (either pressed or released).
-
-  For non-ASCII keys, use the keyCode variable. The keys included in
-  the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
-  DELETE) do not require checking to see if they key is coded, and you
-  should simply use the key variable instead of keyCode If you're
-  making cross-platform projects, note that the ENTER key is commonly
-  used on PCs and Unix and the RETURN key is used instead on
-  Macintosh. Check for both ENTER and RETURN to make sure your program
-  will work for all platforms."
-  []
-  (.-key (current-applet)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "keyCode"
-    :category "Input"
-    :subcategory "Keyboard"
-    :added "1.0"}
-  key-code
-  "The variable keyCode is used to detect special keys such as the UP,
-  DOWN, LEFT, RIGHT arrow keys and ALT, CONTROL, SHIFT. When checking
-  for these keys, it's first necessary to check and see if the key is
-  coded. This is done with the conditional (= (key) CODED).
-
-  The keys included in the ASCII specification (BACKSPACE, TAB, ENTER,
-  RETURN, ESC, and DELETE) do not require checking to see if they key
-  is coded, and you should simply use the key variable instead of
-  key-code If you're making cross-platform projects, note that the
-  ENTER key is commonly used on PCs and Unix and the RETURN key is
-  used instead on Macintosh. Check for both ENTER and RETURN to make
-  sure your program will work for all platforms.
-
-  For users familiar with Java, the values for UP and DOWN are simply
-  shorter versions of Java's KeyEvent.VK_UP and
-  KeyEvent.VK_DOWN. Other keyCode values can be found in the Java
-  KeyEvent reference."
-  []
-  (.-keyCode (current-applet)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "keyPressed"
-    :category "Input"
-    :subcategory "Keyboard"
-    :added "1.0"}
-    key-pressed?
-  "true if any key is currently pressed, false otherwise."
-  []
-  (.-keyPressed (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2210,18 +2179,6 @@
   (PApplet/log (float val)))
 
 (defn
-  ^{:requires-bindings true
-    :processing-name "loop()"
-    :category "Structure"
-    :subcategory nil
-    :added "1.0"}
-    start-loop
-  "Causes Processing to continuously execute the code within
-  draw. If no-loop is called, the code in draw stops executing."
-  []
-  (.loop (current-applet)))
-
-(defn
   ^{:requires-bindings false
     :processing-name "mag()"
     :category "Math"
@@ -2398,28 +2355,6 @@
   "Current vertical coordinate of the mouse."
   []
   (.-mouseY (current-applet)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "pmouseX"
-    :category "Input"
-    :subcategory "Mouse"
-    :added "1.0"}
-  pmouse-x
-  "Horizontal coordinate of the mouse in the previous frame"
-  []
-  (.-pmouseX (current-applet)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "pmouseY"
-    :category "Input"
-    :subcategory "Mouse"
-    :added "1.0"}
-  pmouse-y
-  "Vertical coordinate of the mouse in the previous frame"
-  []
-  (.-pmouseY (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2671,6 +2606,28 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "pmouseX"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  pmouse-x
+  "Horizontal coordinate of the mouse in the previous frame"
+  []
+  (.-pmouseX (current-applet)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "pmouseY"
+    :category "Input"
+    :subcategory "Mouse"
+    :added "1.0"}
+  pmouse-y
+  "Vertical coordinate of the mouse in the previous frame"
+  []
+  (.-pmouseY (current-applet)))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "point()"
     :category "Shape"
     :subcategory "2D Primitives"
@@ -2892,6 +2849,27 @@
   each time the software is run."
   [w]
   (.randomSeed (current-applet) (float w)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "key"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  raw-key
+  "Contains the value of the most recent key on the keyboard that was
+  used (either pressed or released).
+
+  For non-ASCII keys, use the keyCode variable. The keys included in
+  the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
+  DELETE) do not require checking to see if they key is coded, and you
+  should simply use the key variable instead of keyCode If you're
+  making cross-platform projects, note that the ENTER key is commonly
+  used on PCs and Unix and the RETURN key is used instead on
+  Macintosh. Check for both ENTER and RETURN to make sure your program
+  will work for all platforms."
+  []
+  (.-key (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3561,6 +3539,18 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "loop()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
+  start-loop
+  "Causes Processing to continuously execute the code within
+  draw. If no-loop is called, the code in draw stops executing."
+  []
+  (.loop (current-applet)))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "stroke()"
     :category "Color"
     :subcategory "Setting"
@@ -3670,6 +3660,16 @@
   infinity to -infinity."
   [angle]
   (PApplet/tan (float angle)))
+
+(defn
+  ^{:requires-bindings true
+    :category "Environment"
+    :subcategory nil
+    :added "1.5.0"}
+  target-frame-rate
+  "Returns the target framerate specified with the fn frame-rate"
+  []
+  @(quil.applet/target-frame-rate))
 
 (defn
   ^{:requires-bindings true
@@ -4203,6 +4203,15 @@
      ~@body
      (pop-matrix)))
 
+(defmacro with-graphics
+  "All subsequent calls of any drawing function will draw on given graphics.
+  'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
+  [graphics & body]
+  `(binding [*graphics* ~graphics]
+     (.beginDraw ~graphics)
+     ~@body
+     (.endDraw ~graphics)))
+
 ;;; version number
 
 (defn quil-version
@@ -4502,16 +4511,6 @@
   the visualisation. See sketch for the available options."
   [app-name & opts]
   `(defapplet ~app-name ~@opts))
-
-
-(defmacro with-graphics
-  "All subsequent calls of any drawing function will draw on given graphics.
-  'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
-  [graphics & body]
-  `(binding [*graphics* ~graphics]
-     (.beginDraw ~graphics)
-     ~@body
-     (.endDraw ~graphics)))
 
 (defn ^{:requires-bindings false
         :processing-name nil

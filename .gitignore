@@ -9,3 +9,4 @@ native
 .cake
 .lein-deps-sum
 target
+.lein-repl-history
