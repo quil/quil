@@ -11,4 +11,4 @@
                  [org.clojars.originalsurfmex.processing/core "2.1"]
                  [org.jogamp.jogl/jogl-all-main "2.1.2-rc-20131025"]
                  [org.jogamp.gluegen/gluegen-rt-main "2.1.2-rc-20131025"]]
-  :aot [quil.applet])
+  :aot [quil.helpers.applet-listener quil.applet])

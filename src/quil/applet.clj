@@ -11,16 +11,10 @@
   (:require [clojure.string :as string]))
 
 (defn applet-safe-exit
-  "Similar to the exit method on PApplet, but doesn't kill the current
-  process. Annoyingly, we don't have direct access to the looping
-  field as it isn't public. However, we now proxy the loop and
-  noLoop (the only places the field is modified) and keep a local copy
-  of that state. Unfortunate but functional."
+  "Sets 'finished' field in applet to true. Main run loop in applet
+   should stop as soon as finished == true and then call dispose."
   [applet]
-  (let [looping? @(:looping? (meta applet))]
-    (if looping?
-      (set! (.-finished applet) true)
-      (.dispose applet))))
+  (set! (.-finished applet) true))
 
 (defonce untitled-applet-id* (atom 0))
 (def ^:dynamic *applet* nil)
@@ -38,6 +32,15 @@
 
 (defn target-frame-rate []
   (:target-frame-rate (meta (current-applet))))
+
+(defn applet-disposed
+  "This function is called when PApplet executes 'dispose' method.
+  It means we can dispose frame, call on-close function and perform other
+  clean ups."
+  [applet]
+  (when-let [frame @(:target-obj (meta applet))]
+    (.dispose frame))
+  ((:on-close (meta applet))))
 
 (defn applet-stop
   "Stop an applet"
@@ -59,36 +62,21 @@
   [applet]
   (.exit applet))
 
-(defn- applet-close-applet
-  [applet]
-  (applet-safe-exit applet))
-
-(defn- applet-close-frame
-  [applet]
-  (let [closing-fn (fn []
-                     (let [frame @(:target-obj (meta applet))]
-                       (applet-close-applet applet)
-                       ;;.destroy appears to kill the process too
-                       (doto frame
-                         (.hide)
-                         (.dispose))))]
-    (javax.swing.SwingUtilities/invokeAndWait closing-fn)))
-
 (defn applet-close
   "Stop the applet and close the window. Call on-close function afterwards."
   [applet]
-  (case (:target (meta applet))
-    :frame      (applet-close-frame applet)
-    :perm-frame (applet-close-frame applet)
-    :none       (applet-close-applet applet))
-  ((get (meta applet) :on-close)))
+  (javax.swing.SwingUtilities/invokeAndWait
+    (fn []
+      (when-let [frame @(:target-obj (meta applet))]
+        (.hide frame))
+      (applet-safe-exit applet))))
 
 (defn- launch-applet-frame
   [applet title renderer keep-on-top?]
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
         m              (.meta applet)
-        close-op       JFrame/DISPOSE_ON_CLOSE
+        close-op       JFrame/DO_NOTHING_ON_CLOSE
         f              (JFrame. title)
         falsify        #(not (or (nil? %) (true? %)))
         decor?         (falsify (:decor m))]
@@ -265,6 +253,12 @@
     (when-let [mouse-wheel (:mouse-wheel (.state this))]
       (mouse-wheel (.getCount evt)))))
 
+(defn attach-applet-listeners [applet]
+  (let [listeners {:on-dispose #(applet-disposed applet)}
+        listener-obj (quil.helpers.AppletListener. listeners)]
+    (.registerMethod applet "dispose" listener-obj)
+    applet))
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -371,10 +365,12 @@
                                   :renderer renderer
                                   :target-frame-rate (atom 60)}
                                  listeners)
-        prx-obj           (quil.Applet. applet-state)]
-    (applet-run prx-obj title renderer target)
-    prx-obj))
-
+        prx-obj           (quil.Applet. applet-state)
+        applet-listener (quil.helpers.AppletListener. {:on-dispose #(println "Hello!")})
+        ]
+    (doto prx-obj
+      (applet-run title renderer target)
+      (attach-applet-listeners))))
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
