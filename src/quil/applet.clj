@@ -26,6 +26,10 @@
 (def ^:dynamic *applet* nil)
 (def ^:dynamic *graphics* nil)
 
+(defn- no-fn
+  "Function that does nothing."
+  [])
+
 (defn ^PApplet current-applet []
   *applet*)
 
@@ -256,15 +260,10 @@
 
 (generate-listeners)
 
-(defn wrap-mouse-wheel
-  "Wraps callback to an instance of java.awt.event.MouseEventListener
-  or returns nil if given callback is nil."
-  [mouse-wheel applet]
-  (when mouse-wheel
-    (reify java.awt.event.MouseWheelListener
-      (mouseWheelMoved [this e]
-        (with-applet applet
-          (mouse-wheel (.getWheelRotation e)))))))
+(defn -mouseWheel [this evt]
+  (with-applet this
+    (when-let [mouse-wheel (:mouse-wheel (.state this))]
+      (mouse-wheel (.getCount evt)))))
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -344,15 +343,10 @@
         target            (validate-target! (:target options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
-        draw-fn           (or (:draw options) (fn [] nil))
+        draw-fn           (or (:draw options) no-fn)
         output-file       (validate-output-file! renderer (:output-file options))
         target            (if (empty? output-file) target :none)
-        setup-fn          (fn []
-                            (when-let [wheel-listener (wrap-mouse-wheel (:mouse-wheel options)
-                                                                        (current-applet))]
-                              (.addMouseWheelListener (current-applet) wheel-listener))
-                            (when-let [f (:setup options)]
-                              (f)))
+        setup-fn          (or (:setup options) no-fn)
         safe-draw-fn      (fn []
                             (try
                               (draw-fn)
@@ -360,12 +354,12 @@
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
-        on-close-fn       (or (:on-close options) (fn [] nil))
+        on-close-fn       (or (:on-close options) no-fn)
         state             (atom nil)
         target-obj        (atom nil)
         looping?          (atom true)
         listeners         (into {} (for [name listeners]
-                                     [name (or (options name) (fn [] nil))]))
+                                     [name (or (options name) no-fn)]))
         applet-state      (merge options
                                  {:state state
                                   :target-obj target-obj
