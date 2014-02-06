@@ -1724,20 +1724,27 @@
   (.getHeight (current-applet)))
 
 (def ^{:private true}
-  hint-options {:enable-opengl-4x-smooth PConstants/ENABLE_OPENGL_4X_SMOOTH
-                :enable-opengl-2x-smooth PConstants/ENABLE_OPENGL_2X_SMOOTH
-                :enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
+  hint-options {:enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
                 :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
                 :enable-depth-test PConstants/ENABLE_DEPTH_TEST
                 :disable-depth-test PConstants/DISABLE_DEPTH_TEST
                 :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
                 :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
-                :disable-opengl-error-report PConstants/DISABLE_OPENGL_ERROR_REPORT
-                :enable-opengl-error-report PConstants/ENABLE_OPENGL_ERROR_REPORT
-                :enable-accurate-textures PConstants/ENABLE_ACCURATE_TEXTURES
-                :disable-accurate-textures PConstants/DISABLE_ACCURATE_TEXTURES
+                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK
                 :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
-                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK})
+                :disable-opengl-errors PConstants/DISABLE_OPENGL_ERRORS
+                :enable-opengl-errors PConstants/ENABLE_OPENGL_ERRORS
+                :enable-optimized-stroke PConstants/ENABLE_OPTIMIZED_STROKE
+                :disable-optimized-stroke PConstants/DISABLE_OPTIMIZED_STROKE
+                :enable-retina-pixels PConstants/ENABLE_RETINA_PIXELS
+                :disable-retina-pixels PConstants/DISABLE_RETINA_PIXELS
+                :enable-stroke-perspective PConstants/ENABLE_STROKE_PERSPECTIVE
+                :disable-stroke-perspective PConstants/DISABLE_STROKE_PERSPECTIVE
+                :enable-stroke-pure PConstants/ENABLE_STROKE_PURE
+                :disable-stroke-pure PConstants/DISABLE_STROKE_PURE
+                :enable-texture-mipmaps PConstants/ENABLE_TEXTURE_MIPMAPS
+                :disable-texture-mipmaps PConstants/DISABLE_TEXTURE_MIPMAPS
+                })
 
 (defn
   ^{:requires-bindings true
@@ -1752,24 +1759,6 @@
   to standard features instead of hints over time.
 
   Options:
-
-  :enable-opengl-4x-smooth - Enable 4x anti-aliasing for OpenGL. This
-     can help force anti-aliasing if it has not been enabled by the
-     user. On some graphics cards, this can also be set by the
-     graphics driver's control panel, however not all cards make this
-     available. This hint must be called immediately after the size
-     command because it resets the renderer, obliterating any settings
-     and anything drawn (and like size(), re-running the code that
-     came before it again).
-
-  :disable-opengl-2x-smooth - In Processing 1.0, Processing always
-    enables 2x smoothing when the OpenGL renderer is used. This hint
-    disables the default 2x smoothing and returns the smoothing
-    behavior found in earlier releases, where smooth and no-smooth
-    could be used to enable and disable smoothing, though the quality
-    was inferior.
-
-  :enable-opengl-2x-smooth - Enables default OpenGL smoothing.
 
   :enable-native-fonts - Use the native version fonts when they are
     installed, rather than the bitmapped version from a .vlw
@@ -1801,15 +1790,25 @@
 
   :disable-depth-sort - Disables hint :enable-depth-sort
 
-  :disable-opengl-error-report - Speeds up the OPENGL renderer setting
+  :disable-opengl-errors - Speeds up the OPENGL renderer setting
      by not checking for errors while running.
 
-  :enable-opengl-error-report - Turns on OpenGL error checking
+  :enable-opengl-errors - Turns on OpenGL error checking
 
-  :enable-accurate-textures
-  :disable-accurate-textures
   :enable-depth-mask
-  :disable-depth-mask"
+  :disable-depth-mask
+
+  :enable-optimized-stroke
+  :disable-optimized-stroke
+  :enable-retina-pixels
+  :disable-retina-pixels
+  :enable-stroke-perspective
+  :disable-stroke-perspective
+  :enable-stroke-pure
+  :disable-stroke-pure
+  :enable-texture-mipmaps
+  :disable-texture-mipmaps
+"
   [hint-type]
   (let [hint-type (if (keyword? hint-type)
                     (get hint-options hint-type)
@@ -3912,7 +3911,7 @@
 
 (def ^{:private true}
   texture-modes {:image PApplet/IMAGE
-                 :normalized PApplet/NORMALIZED})
+                 :normal PApplet/NORMAL})
 
 (defn
     ^{:requires-bindings true
@@ -3922,7 +3921,7 @@
     :added "1.0"}
   texture-mode
   "Sets the coordinate space for texture mapping. There are two
-  options, :image and :normalized.
+  options, :image and :normal.
 
   :image refers to the actual coordinates of the image and :normalized
   refers to a normalized space of values ranging from 0 to 1. The

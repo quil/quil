@@ -1,4 +1,4 @@
-(defproject quil "1.7.0-SNAPSHOT"
+(defproject quil "2.0.0-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
   :mailing-list {:name "Quil Mailing List"
@@ -6,11 +6,9 @@
                  :post "clj-processing@googlegroups.com"}
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
+  :repositories [["jogamp" "http://www.jogamp.org/deployment/maven/"]]
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojars.processing-core/org.processing.core "1.5.1"]
-                 [org.clojars.processing-core/org.processing.gluegen-rt "1.5.1"]
-                 [org.clojars.processing-core/org.processing.jogl "1.5.1"]
-                 [org.clojars.processing-core/org.processing.opengl "1.5.1"]
-                 [org.clojars.processing-core/org.processing.itext "1.5.1"]
-                 [org.clojars.processing-core/org.processing.pdf "1.5.1"]]
+                 [org.clojars.originalsurfmex.processing/core "2.1"]
+                 [org.jogamp.jogl/jogl-all-main "2.1.2-rc-20131025"]
+                 [org.jogamp.gluegen/gluegen-rt-main "2.1.2-rc-20131025"]]
   :aot [quil.applet])

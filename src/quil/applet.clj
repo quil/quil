@@ -4,6 +4,7 @@
   quil.applet
   (:import (processing.core PApplet)
            (javax.swing JFrame)
+           (java.awt Dimension)
            (java.awt.event WindowListener))
   (:use [quil.util :only [resolve-constant-key]]
         [clojure.stacktrace :only [print-cause-trace]])
@@ -83,7 +84,6 @@
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
         m              (.meta applet)
-        [width height] (or (:size m) [800 600])
         close-op       JFrame/DISPOSE_ON_CLOSE
         f              (JFrame. title)
         falsify        #(not (or (nil? %) (true? %)))
@@ -100,7 +100,6 @@
                              (windowClosed [this e])))
       (.setUndecorated decor?)
       (.setDefaultCloseOperation close-op)
-      (.setSize width height)
       (.add applet)
       (.pack))
     (when (= renderer :opengl)
@@ -113,11 +112,11 @@
 (defn- applet-run
   "Launches the applet to the specified target."
   [applet title renderer target]
-  (.init applet)
   (case target
     :frame (launch-applet-frame applet title renderer false)
     :perm-frame (launch-applet-frame applet title renderer true)
-    :none applet))
+    :none applet)
+  (.init applet))
 
 (def ^{:private true}
   renderer-modes {:p2d    PApplet/P2D
@@ -126,16 +125,6 @@
                   :opengl PApplet/OPENGL
                   :pdf    PApplet/PDF
                   :dxf    PApplet/DXF})
-
-(defn- applet-set-size
-  ([width height]
-     (.size (current-applet) (int width) (int height)))
-  ([width height renderer]
-     (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (current-applet) (int width) (int height) renderer)))
-  ([width height renderer path]
-     (let [renderer (resolve-constant-key renderer renderer-modes)]
-       (.size (current-applet) (int width) (int height) renderer path))))
 
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws
@@ -196,30 +185,35 @@
                 :focus-lost])
 
 (gen-class
- :name "quil.Applet"
- :implements [clojure.lang.IMeta]
- :extends processing.core.PApplet
- :state state
- :init quil-init
- :constructors {[java.util.Map] []}
- :exposes-methods {keyTyped keyTypedParent
-                   loop loopParent
-                   mouseDragged mouseDraggedParent
-                   keyPressed keyPressedParent
-                   mouseExited mouseExitedParent
-                   mouseClicked mouseClickedParent
-                   mouseEntered mouseEnteredParent
-                   mouseMoved mouseMovedParent
-                   keyReleased keyReleasedParent
-                   mousePressed mousePressedParent
-                   focusGained focusGainedParent
-                   frameRate frameRateParent
-                   mouseReleased mouseReleasedParent
-                   focusLost focusLostParent
-                   noLoop noLoopParent})
+  :name "quil.Applet"
+  :implements [clojure.lang.IMeta]
+  :extends processing.core.PApplet
+  :state state
+  :init quil-applet-init
+  :post-init quil-applet-post-init
+  :constructors {[java.util.Map] []}
+  :exposes-methods {keyTyped keyTypedParent
+                    loop loopParent
+                    mouseDragged mouseDraggedParent
+                    keyPressed keyPressedParent
+                    mouseExited mouseExitedParent
+                    mouseClicked mouseClickedParent
+                    mouseEntered mouseEnteredParent
+                    mouseMoved mouseMovedParent
+                    keyReleased keyReleasedParent
+                    mousePressed mousePressedParent
+                    focusGained focusGainedParent
+                    frameRate frameRateParent
+                    mouseReleased mouseReleasedParent
+                    focusLost focusLostParent
+                    noLoop noLoopParent})
 
-(defn -quil-init [state]
+(defn -quil-applet-init [state]
   [[] state])
+
+(defn -quil-applet-post-init [this _]
+  (let [[width height] (:size (.state this))]
+    (.setPreferredSize this (Dimension. width height))))
 
 (defn -meta [this]
   (.state this))
@@ -244,8 +238,14 @@
   (reset! (target-frame-rate) new-rate-target)
   (.frameRateParent this new-rate-target))
 
-(defmacro generate-listeners []
+(defn -sketchRenderer [this]
+  (-> (.state this)
+      :renderer
+      (resolve-constant-key renderer-modes)))
+
+(defmacro generate-listeners
   "Generates all listeners like onKeyPress, onMouseClick and others."
+  []
   (letfn [(prefix [v method]
             (symbol (str v method)))]
     `(do ~@(for [listener listeners]
@@ -348,8 +348,6 @@
         output-file       (validate-output-file! renderer (:output-file options))
         target            (if (empty? output-file) target :none)
         setup-fn          (fn []
-                            (let [size-vec (concat size [renderer] output-file)]
-                              (apply applet-set-size size-vec))
                             (when-let [wheel-listener (wrap-mouse-wheel (:mouse-wheel options)
                                                                         (current-applet))]
                               (.addMouseWheelListener (current-applet) wheel-listener))
@@ -376,6 +374,7 @@
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
                                   :draw-fn draw-fn
+                                  :renderer renderer
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
