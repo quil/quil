@@ -14,13 +14,13 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil requires Clojure 1.4.0 or higher, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
+Quil requires Clojure 1.5.1, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
 
 ## Installation
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.6.0"]
+    [quil "1.7.0"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
@@ -156,13 +156,4 @@ The official Processing.org's jars, used as dependencies, are distributed under 
 
 ## Contributors ##
 
-* Roland Sadowski
-* Phil Hagelberg
-* Vilson Vieira
-* Marshall T. Vandegrift
-* Ilya Epifanov
-* Sam Aaron
-* David Nolen
-* Tyler Green
-* Franco Lazzarino
-* Zach Tellman
+See [list](https://github.com/quil/quil/graphs/contributors) of contributors.

@@ -1,3 +1,12 @@
+## 1.7.0
+_12th February 2014_
+
+* New [with-graphics](https://github.com/quil/quil/issues/25), [with-fill](https://github.com/quil/quil/pull/80), [with-stroke](https://github.com/quil/quil/pull/80) macros.
+* New [on-close](https://github.com/quil/quil/issues/30) and [mouse-wheel](https://github.com/quil/quil/pull/62) handlers.
+* Fixed bugs: [bezier-vertex](https://github.com/quil/quil/pull/40), [focused](https://github.com/quil/quil/commit/c469c2ba14b40d3ce0f243e1f5f3428de76e0b3e), [no-loop](https://github.com/quil/quil/issues/45).
+* Removed `(specular gray alpha)` and `(specular x y z a)` functions: doesn't exist in Processing 1.5.1. Removed `(text-width ch)` function: doesn't work in Processing 1.5.1 correctly.
+
+
 ## 1.6.0
 _7th July 2012_
 
