@@ -1,6 +1,6 @@
-<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
-
 # Quil
+
+<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
 
 Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling paws a distant shepherd called his scribbly sheep in for re-sketching. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
@@ -14,13 +14,13 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil requires Clojure 1.4.0 or higher, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
+Quil requires Clojure 1.5.1, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
 
 ## Installation
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.6.0"]
+    [quil "1.7.0"]
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
@@ -81,7 +81,7 @@ When getting started with Quil, it's always useful to have the [Cheatsheet](http
 
 If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
 
-The full [Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
+Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
 ## API Exploration
 
@@ -156,13 +156,4 @@ The official Processing.org's jars, used as dependencies, are distributed under 
 
 ## Contributors ##
 
-* Roland Sadowski
-* Phil Hagelberg
-* Vilson Vieira
-* Marshall T. Vandegrift
-* Ilya Epifanov
-* Sam Aaron
-* David Nolen
-* Tyler Green
-* Franco Lazzarino
-* Zach Tellman
+See [list](https://github.com/quil/quil/graphs/contributors) of contributors.
