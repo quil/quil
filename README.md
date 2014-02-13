@@ -1,6 +1,6 @@
-<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
-
 # Quil
+
+<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
 
 Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling paws a distant shepherd called his scribbly sheep in for re-sketching. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
@@ -81,7 +81,7 @@ When getting started with Quil, it's always useful to have the [Cheatsheet](http
 
 If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
 
-The full [Quil API](https://github.com/quil/quil/wiki/API) and [Installation Intructions](https://github.com/quil/quil/wiki/Installing) are also available on the wiki.
+Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
 ## API Exploration
 
