@@ -3677,7 +3677,6 @@
   text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
-  ([c] (.text (current-surface) (char c)))
   ([c x y] (.text (current-surface) (char c) (float x) (float y)))
   ([c x y z] (.text (current-surface) (char c) (float x) (float y) (float z))))
 
@@ -3714,7 +3713,6 @@
 
   Use the text-mode function with the :screen parameter to display text
   in 2D at the surface of the window."
-  ([^String s] (.text (current-surface) s))
   ([^String s x y] (.text (current-surface) s (float x) (float y)))
   ([^String s x y z] (.text (current-surface) s (float x) (float y) (float z)))
   ([^String s x1 y1 x2 y2] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2)))
@@ -4232,7 +4230,7 @@
   original Processing API and returns a map of orig/new-name pairs"
   [orig-name]
   (let [metas   (processing-fn-metas-with-orig-method-name)
-        matches (filter #(.startsWith (:processing-name %) orig-name) metas)]
+        matches (filter #(.startsWith (str (:processing-name %)) orig-name) metas)]
     (into {} (map (fn [{:keys [name processing-name]}]
                     [(str processing-name) (str name)])
                   matches))))
