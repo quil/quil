@@ -145,8 +145,7 @@
   with emissive, specular, and shininess in setting the material
   properties of shapes."
   [rgb]
-  (.ambient
-   (current-surface) (int rgb)))
+  (.ambient (current-surface) (int rgb)))
 
 (defn
   ^{:requires-bindings true
@@ -198,16 +197,23 @@
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
   ([n00 n01 n02 n10 n11 n12]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02)
+     (.applyMatrix (current-surface)
+                   (float n00) (float n01) (float n02)
                    (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
     n10 n11 n12 n13
     n20 n21 n22 n23
     n30 n31 n32 n33]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02) (float 03)
+     (.applyMatrix (current-surface)
+                   (float n00) (float n01) (float n02) (float 03)
                    (float n10) (float n11) (float n12) (float 13)
                    (float n20) (float n21) (float n22) (float 23)
                    (float n30) (float n31) (float n32) (float 33))))
+
+(def ^{:private true}
+  arc-modes {:open PConstants/OPEN
+             :chord PConstants/CHORD
+             :pie PConstants/PIE})
 
 (defn
   ^{:requires-bindings true
@@ -220,10 +226,14 @@
   edge of an ellipse defined by the x, y, width and height
   parameters. The origin or the arc's ellipse may be changed with the
   ellipseMode() function. The start and stop parameters specify the
-  angles at which to draw the arc."
-  [x y width height start stop]
-  (.arc (current-surface) (float x)(float y) (float width) (float height)
+  angles at which to draw the arc. The mode is either :open, :chord or :pie."
+  ([x y width height start stop]
+    (.arc (current-applet) (float x) (float y) (float width) (float height)
         (float start) (float stop)))
+  ([x y width height start stop mode]
+    (let [arc-mode (resolve-constant-key mode arc-modes)]
+      (.arc (current-applet) (float x) (float y) (float width) (float height)
+        (float start) (float stop) (int arc-mode)))))
 
 (defn
   ^{:requires-bindings false
