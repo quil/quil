@@ -584,18 +584,6 @@
   ([val] (PApplet/binary (int val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
 
-(defn
-  ^{:require-binding false
-    :processing-name "unbinary()"
-    :category "Data"
-    :subcategory "Conversion"
-    :added "1.0"}
-    unbinary
-  "Unpack a binary string to an integer. See binary for converting
-  integers to strings."
-  [str-val]
-  (PApplet/unbinary (str str-val)))
-
 (def ^{:private true}
   blend-modes {:blend PApplet/BLEND
                :add PApplet/ADD
@@ -607,6 +595,7 @@
                :multiply PApplet/MULTIPLY
                :screen PApplet/SCREEN
                :overlay PApplet/OVERLAY
+               :replace PApplet/REPLACE
                :hard-light PApplet/HARD_LIGHT
                :soft-light PApplet/SOFT_LIGHT
                :dodge PApplet/DODGE
@@ -621,6 +610,8 @@
   blend
   "Blends a region of pixels from one image into another (or in itself
   again) with full alpha channel support.
+
+  Note: (blend-mode) function is recommended to use instead of this one.
 
   Available blend modes are:
 
@@ -698,6 +689,46 @@
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
     (PApplet/blendColor (int c1) (int c2) (int mode))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "blendMOde()"
+    :category "Color"
+    :subcategory "Pixels"
+    :added "2.0"}
+  blend-mode
+  "Blends the pixels in the display window according to the defined mode.
+  There is a choice of the following modes to blend the source pixels (A)
+  with the ones of pixels already in the display window (B):
+
+  Available blend modes are:
+
+  :blend      - linear interpolation of colours: C = A*factor + B
+  :add        - additive blending with white clip:
+                                            C = min(A*factor + B, 255)
+  :subtract   - subtractive blending with black clip:
+                                            C = max(B - A*factor, 0)
+  :darkest    - only the darkest colour succeeds:
+                                            C = min(A*factor, B)
+  :lightest   - only the lightest colour succeeds:
+                                            C = max(A*factor, B)
+  :difference - subtract colors from underlying image.
+  :exclusion  - similar to :difference, but less extreme.
+  :multiply   - Multiply the colors, result will always be darker.
+  :screen     - Opposite multiply, uses inverse values of the colors.
+  :replace    - the pixels entirely replace the others and don't utilize
+                alpha (transparency) values
+
+  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn modes
+  are not supported by this function."
+  ([x y width height dx dy dwidth dheight mode]
+     (let [mode (resolve-constant-key mode blend-modes)]
+       (.blend (current-surface) (int x) (int y) (int width) (int height)
+               (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
+  ([^PImage src x y width height dx dy dwidth dheight mode]
+     (let [mode (resolve-constant-key mode blend-modes)]
+       (.blend (current-surface) src (int x) (int y) (int width) (int height)
+               (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -4063,6 +4094,17 @@
              (float x2) (float y2)
              (float x3) (float y3)))
 
+(defn
+  ^{:require-binding false
+    :processing-name "unbinary()"
+    :category "Data"
+    :subcategory "Conversion"
+    :added "1.0"}
+    unbinary
+  "Unpack a binary string to an integer. See binary for converting
+  integers to strings."
+  [str-val]
+  (PApplet/unbinary (str str-val)))
 
 (defn
   ^{:requires-bindings true
