@@ -999,10 +999,10 @@
     :added "1.0"}
   create-graphics
   "Creates and returns a new PGraphics object of the types :p2d, :p3d,
-  :java2d, :pdf. Use this class if you need to draw into an off-screen
-  graphics buffer. It's not possible to use create-graphics with the
-  :opengl renderer, because it doesn't allow offscreen use. The :pdf
-  renderer requires the filename parameter.
+  :java2d, :pdf. By default :java2d is used. Use this class if you
+  need to draw into an off-screen graphics buffer. It's not possible
+  to use create-graphics with the :opengl renderer, because it doesn't
+  allow offscreen use. The :pdf renderer requires the filename parameter.
 
   It's important to call any drawing commands between begin-draw and
   end-draw statements. This is also true for any commands that affect
@@ -1015,6 +1015,8 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
+  ([w h]
+     (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes)))
   ([w h renderer path]
@@ -1508,7 +1510,7 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (applet-safe-exit (current-applet)))
+  (applet-close (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -1604,10 +1606,10 @@
                the level parameter."
   ([mode]
      (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (current-applet) (int mode))))
+       (.filter (current-surface) (int mode))))
   ([mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (current-applet) (int mode) (float level)))))
+       (.filter (current-surface) (int mode) (float level)))))
 
 (defn
   ^{:requires-bindings true
@@ -1696,25 +1698,6 @@
   ([x y] (.get (current-surface) (int x) (int y)))
   ([x y w h] (.get (current-surface) (int x) (int y) (int w) (int h))))
 
-(declare load-pixels)
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "pixels[]"
-    :category "Image"
-    :subcategory "Pixels"
-    :added "1.0"}
-  pixels
-  "Array containing the values for all the pixels in the display
-  window. This array is therefore the size of the display window. If
-  this array is modified, the update-pixels fn must be called to update
-  the changes. Calls load-pixels before obtaining the pixel array.
-
-  Only works with P2D and P3D renderer."
-  []
-  (load-pixels)
-  (.-pixels (current-surface)))
-
 (defn
   ^{:requires-bindings true
     :processing-name "green()"
@@ -1740,17 +1723,6 @@
   geeky debugging sessions much happier. "
   ([val] (PApplet/hex (int val)))
   ([val num-digits] (PApplet/hex (int val) (int num-digits))))
-
-(defn
-  ^{:require-binding false
-    :processing-name "hex()"
-    :category "Data"
-    :subcategory "Conversion"}
-  unhex
-  "Converts a String representation of a hexadecimal number to its
-  equivalent integer value."
-  [hex-str]
-  (PApplet/unhex (str hex-str)))
 
 (defn
   ^{:requires-bindings true
@@ -2088,19 +2060,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "loadBytes()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  load-bytes
-  "Reads the contents of a file or url and places it in a byte
-  array. The filename parameter can also be a URL to a file found
-  online."
-  [filename]
-  (.loadBytes (current-applet) (str filename)))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "loadFont()"
     :category "Typography"
     :subcategory "Loading & Displaying"
@@ -2194,17 +2153,6 @@
   "Load a geometry from a file as a PShape."
   [filename]
   (.loadShape (current-applet) filename))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "loadStrings()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  load-strings
-  "Load data from a file and shove it into a String array."
-  [filename]
-  (.loadStrings (current-applet) filename))
 
 (defn
   ^{:requires-bindings false
@@ -2616,8 +2564,10 @@
   and right are the minimum and maximum x values, top and bottom are
   the minimum and maximum y values, and near and far are the minimum
   and maximum z values. If no parameters are given, the default is
-  used: ortho(0, width, 0, height, -10, 10)."
+  used: (ortho 0 width 0 height -10 10)"
   ([] (.ortho (current-surface)))
+  ([left right bottom top]
+   (.ortho (current-surface) (float left) (float right) (float bottom) (float top)))
   ([left right bottom top near far]
      (.ortho (current-surface) (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
@@ -2643,6 +2593,23 @@
   ([fovy aspect z-near z-far]
      (.perspective (current-surface) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixels[]"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  pixels
+  "Array containing the values for all the pixels in the display
+  window. This array is therefore the size of the display window. If
+  this array is modified, the update-pixels fn must be called to update
+  the changes. Calls load-pixels before obtaining the pixel array.
+
+  Only works with P2D and P3D renderer."
+  []
+  (load-pixels)
+  (.-pixels (current-surface)))
 
 (defn
   ^{:requires-bindings true
@@ -2875,6 +2842,22 @@
   ([max] (.random (current-applet) (float max)))
   ([min max] (.random (current-applet) (float min) (float max))))
 
+(defn
+  ^{:requires-bindings true
+    :processing-name "randomGaussian()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.0"}
+  random-gaussian
+  "Returns a float from a random series of numbers having a mean of 0 and
+  standard deviation of 1. Each time the randomGaussian() function is called,
+  it returns a number fitting a Gaussian, or normal, distribution.
+  There is theoretically no minimum or maximum value that randomGaussian()
+  might return. Rather, there is just a very low probability that values far
+  from the mean will be returned; and a higher probability that numbers near
+  the mean will be returned. ."
+  []
+  (.randomGaussian (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2923,8 +2906,13 @@
    parameters set the location of the upper-left corner, the third
    sets the width, and the fourth sets the height. These parameters
    may be changed with rect-mode."
-  [x y width height]
-  (.rect (current-surface) (float x) (float y) (float width) (float height)))
+  ([x y width height]
+     (.rect (current-surface) (float x) (float y) (float width) (float height)))
+  ([x y width height r]
+     (.rect (current-surface) (float x) (float y) (float width) (float height) (float r)))
+  ([x y width height top-left-r top-right-r bottom-right-r bottom-left-r]
+     (.rect (current-surface) (float x) (float y) (float width) (float height)
+            (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
 (def ^{:private true}
   rect-modes {:corner PApplet/CORNER
@@ -3201,7 +3189,8 @@
   as the renderer. This function can be further controlled by
   push-matrix and pop-matrix."
   ([s] (.scale (current-surface) (float s)))
-  ([sx sy] (.scale (current-surface) (float sx) (float sy))))
+  ([sx sy] (.scale (current-surface) (float sx) (float sy)))
+  ([sx sy sz] (.scale (current-surface) (float sx) (float sy) (float sz))))
 
 (defn- ^java.awt.Dimension current-screen
   []
@@ -3282,7 +3271,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name "seconds()"
+    :processing-name "second()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -3459,12 +3448,6 @@
   [angle]
   (PApplet/sin (float angle)))
 
-(defn size
-  "Not supported. Use :size key in applet or defapplet"
-  [& args]
-  (println "Deprecated - size should be specified as a :size key to applet or defapplet")
-  nil)
-
 (defn
   ^{:requires-bindings true
     :processing-name "smooth()"
@@ -3476,9 +3459,18 @@
   down the frame rate of the application, but will enhance the visual
   refinement.
 
+  The level parameter (int) increases the level of smoothness with the P2D and P3D
+  renderers. This is the level of over sampling applied to the graphics buffer.
+  The value '2' will double the rendering size before scaling it down to the
+  display size. This is called '2x anti-aliasing.' The value 4 is used for 4x
+  anti-aliasing and 8 is specified for 8x anti-aliasing. If level is set to 0,
+  it will disable all smoothing; it's the equivalent of the function noSmooth().
+  The maximum anti-aliasing level is determined by the hardware of the machine
+  that is running the software.
+
   Note that smooth will also improve image quality of resized images."
-  []
-  (.smooth (current-surface)))
+  ([] (.smooth (current-surface)))
+  ([level] (.smooth (current-surface) (int level))))
 
 (defn
   ^{:requires-bindings true
@@ -3503,7 +3495,7 @@
     :subcategory "3D Primitives"
     :added "1.0"}
   sphere
-  "Genarates a hollow ball made from tessellated triangles."
+  "Generates a hollow ball made from tessellated triangles."
   [radius] (.sphere (current-surface) (float radius)))
 
 (defn
@@ -3747,7 +3739,7 @@
   text-align fn, which gives the option to draw to the left, right, and
   center of the coordinates.
 
-  The x1, y1, x2 and y2 (and optional z) parameters define a
+  The x1, y1, x2 and y2 parameters define a
   rectangular area to display within and may only be used with string
   data. For text drawn inside a rectangle, the coordinates are
   interpreted based on the current rect-mode setting.
@@ -3756,8 +3748,7 @@
   in 2D at the surface of the window."
   ([^String s x y] (.text (current-surface) s (float x) (float y)))
   ([^String s x y z] (.text (current-surface) s (float x) (float y) (float z)))
-  ([^String s x1 y1 x2 y2] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2) (float z))))
+  ([^String s x1 y1 x2 y2] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2))))
 
 (def ^{:private true}
   horizontal-alignment-modes {:left PApplet/LEFT
@@ -3875,8 +3866,7 @@
 
 (def ^{:private true}
   text-modes {:model PConstants/MODEL
-              :shape PConstants/SHAPE
-              :screen PConstants/SCREEN})
+              :shape PConstants/SHAPE})
 
 (defn
   ^{:requires-bindings true
@@ -3886,21 +3876,10 @@
     :added "1.0"}
   text-mode
   "Sets the way text draws to the screen - available modes
-  are :model, :shape and :screen
+  are :model and :shape
 
   In the default configuration (the :model mode), it's possible to
   rotate, scale, and place letters in two and three dimensional space.
-
-  Changing to :screen mode draws letters directly to the front of the
-  window and greatly increases rendering quality and speed when used
-  with the :p2d and :p3d renderers. :screen with :opengl
-  and :java2d (the default) renderers will generally be slower, though
-  pixel accurate with :p2d and :p3d. With :screen, the letters draw at
-  the actual size of the font (in pixels) and therefore calls to
-  text-size will not affect the size of the letters. To create a font
-  at the size you desire, use create-font. When using :screen, any
-  z-coordinate passed to a text command will be ignored, because your
-  computer screen is...flat!
 
   The :shape mode draws text using the the glyph outlines of
   individual characters rather than as textures. This mode is only
@@ -4100,11 +4079,22 @@
     :category "Data"
     :subcategory "Conversion"
     :added "1.0"}
-    unbinary
+  unbinary
   "Unpack a binary string to an integer. See binary for converting
   integers to strings."
   [str-val]
   (PApplet/unbinary (str str-val)))
+
+(defn
+  ^{:require-binding false
+    :processing-name "hex()"
+    :category "Data"
+    :subcategory "Conversion"}
+  unhex
+  "Converts a String representation of a hexadecimal number to its
+  equivalent integer value."
+  [hex-str]
+  (PApplet/unhex (str hex-str)))
 
 (defn
   ^{:requires-bindings true
