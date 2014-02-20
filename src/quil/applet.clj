@@ -65,7 +65,7 @@
 (defn applet-close
   "Stop the applet and close the window. Call on-close function afterwards."
   [applet]
-  (javax.swing.SwingUtilities/invokeAndWait
+  (javax.swing.SwingUtilities/invokeLater
     (fn []
       (when-let [frame @(:target-obj (meta applet))]
         (.hide frame))
@@ -84,7 +84,7 @@
       (.addWindowListener  (reify WindowListener
                              (windowActivated [this e])
                              (windowClosing [this e]
-                               (future (applet-close applet)))
+                               (applet-close applet))
                              (windowDeactivated [this e])
                              (windowDeiconified [this e])
                              (windowIconified [this e])
@@ -128,14 +128,10 @@
 
 (def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
 
-(defn- validate-output-file!
-  "Checks to see whether the output file parameter is correct and that
-  the renderer mode is compatible. Returns a vector - either empty or
-  containing a file path if the renderer is compatible."
-  [renderer path]
-  (if (some #{renderer} #{:pdf :dxf})
-    [path]
-    []))
+(defn- renderer-has-output-file?
+  "Checks whether selected renderer has output file (PDF or DXF) or not."
+  [renderer]
+  (contains? #{:pdf :dxf} renderer))
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
@@ -211,6 +207,15 @@
   (.state this))
 
 (defn -setup [this]
+  ; If renderer has output file - we need to set it via size method.
+  ; And size method call must be FIRST in setup function
+  ; (don't know why, but let's trust Processing guys).
+  ; Technically it's not first (there are 'when' and 'let' before 'size'),
+  ; but hopefully it will work fine.
+  (when (renderer-has-output-file? (:renderer (meta this)))
+    (let [[width height] (:size (meta this))
+          renderer (resolve-constant-key (:renderer (meta this)) renderer-modes)]
+    (.size this (int width) (int height) renderer (:output-file (meta this)))))
   (with-applet this
     ((:setup-fn (.state this)))))
 
@@ -231,9 +236,13 @@
   (.frameRateParent this new-rate-target))
 
 (defn -sketchRenderer [this]
-  (-> (.state this)
-      :renderer
-      (resolve-constant-key renderer-modes)))
+  (let [renderer (:renderer (meta this))
+        ; If renderer :pdf or :dxf we can't use it as initial renderer
+        ; as path to output file is not set and path can be set only set
+        ; via .size(width, height, renderer, path) method in setup function.
+        ; Set :java2d renderer instead and call size method in setup later.
+        initial-renderer (if (renderer-has-output-file? renderer) :java2d renderer)]
+      (resolve-constant-key initial-renderer renderer-modes)))
 
 (defmacro generate-listeners
   "Generates all listeners like onKeyPress, onMouseClick and others."
@@ -338,8 +347,6 @@
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) no-fn)
-        output-file       (validate-output-file! renderer (:output-file options))
-        target            (if (empty? output-file) target :none)
         setup-fn          (or (:setup options) no-fn)
         safe-draw-fn      (fn []
                             (try
@@ -366,7 +373,6 @@
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)
-        applet-listener (quil.helpers.AppletListener. {:on-dispose #(println "Hello!")})
         ]
     (doto prx-obj
       (applet-run title renderer target)
