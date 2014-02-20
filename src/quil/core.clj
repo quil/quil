@@ -1,13 +1,12 @@
-(ns
-    ^{:doc "Wrappers and extensions around the core Processing.org API."
-      :author "Roland Sadowski, Sam Aaron"}
-    quil.core
-    (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
-             [java.awt.event KeyEvent])
-  (:require [clojure.set])
-  (:use [quil.version :only [QUIL-VERSION-STR]]
-        [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
+(ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
+  quil.core
+  (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+           [java.awt.event KeyEvent])
+  (:require [clojure.set]
+            [quil.version :refer [QUIL-VERSION-STR]]
+            [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
+            [quil.applet :refer [current-applet applet-stop applet-state applet-start applet-close
+                                 applet defapplet applet-safe-exit current-graphics *graphics* resolve-renderer]]))
 
 (defn- ^PGraphics current-surface
   "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
@@ -402,17 +401,9 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([^PGraphics raw-gfx] (.beginRaw (current-surface) raw-gfx))
-  ([^String renderer ^String filename]
-     (.beginRaw (current-applet) renderer filename)))
-
-(def ^{:private true}
-  render-modes {:p2d PApplet/P2D
-                :p3d PApplet/P3D
-                :java2d PApplet/JAVA2D
-                :opengl PApplet/OPENGL
-                :pdf PApplet/PDF
-                :dxf PApplet/DXF})
+  ([^PGraphics graphics] (.beginRaw (current-surface) graphics))
+  ([renderer ^String filename]
+     (.beginRaw (current-applet) (resolve-renderer renderer) filename)))
 
 (defn
   ^{:requires-bindings true
@@ -432,8 +423,7 @@
   before begin-record, then that font will not be set for the file
   that you're recording to."
   [renderer filename]
-  (let [renderer (resolve-constant-key renderer render-modes)]
-    (println "renderer: " renderer)
+  (let [renderer (resolve-renderer renderer)]
     (.beginRecord (current-applet) (str renderer) (str filename))))
 
 (def ^{:private true}
@@ -987,10 +977,6 @@
   ([name size smooth ^chars charset]
      (.createFont (current-applet) (str name) (float size) smooth charset)))
 
-(def  ^{:private true}
-  graphic-render-modes
-  (select-keys render-modes [:p2d :p3d :java2d :pdf]))
-
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
@@ -1018,9 +1004,9 @@
   ([w h]
      (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes)))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes) (str path))))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer) (str path))))
 
 (defn
   ^{:requires-bindings true
@@ -4427,8 +4413,7 @@
   Processing-core equivalent."
   [orig-name]
   (let [res (matching-processing-methods orig-name)]
-    (print-definition-list res))
-  nil)
+    (print-definition-list res)))
 
 ;;; Useful trig constants
 (def PI  (float Math/PI))
@@ -4471,24 +4456,21 @@
    :size           - a vector of width and height for the sketch.
                      Defaults to [500 300].
 
-   :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                     :opengl, :pdf or :dxf). Defaults to :java2d. If
-                     :pdf or :dxf is selected, :target is forced to
-                     :none.
+   :renderer       - Specify the renderer type. One of :p2d, :p3d,
+                     :java2d, :opengl, :pdf). Defaults to :java2d.
+                     :dxf renderer can't be used as sketch renderer.
+                     Use begin-raw method for :dxf instead.
 
    :output-file    - Specify an output file path. Only used in :pdf
-                     and :dxf render modes.
+                     mode.
 
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
-   :target         - Specify the target. One of :frame, :perm-frame
-                     or :none. Ignored if :pdf or :dxf renderer is
-                     used.
+   :target         - Specify the target. One of :frame, :perm-frame.
 
    :decor          - Specify if the window should have OS frame
-                     decorations. Only honoured with :frame or
-                     :perm-frame targets.
+                     decorations.
 
    :setup          - a fn to be called once when setting the sketch up.
 

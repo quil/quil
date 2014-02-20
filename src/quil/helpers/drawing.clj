@@ -1,5 +1,4 @@
-(ns quil.helpers.drawing
-  (:use [quil.core]))
+(ns quil.helpers.drawing)
 
 (defn line-join-points
   "Takes either a seq of x y (and z) point coords tuples or two

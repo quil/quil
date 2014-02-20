@@ -1,14 +1,12 @@
-(ns
-    ^{:doc "Functions and macros for initialising and controlling visualisation applets."
-      :author "Roland Sadowski, Sam Aaron"}
+(ns ^{:doc "Functions and macros for initialising and controlling visualisation applets."}
   quil.applet
-  (:import (processing.core PApplet)
-           (javax.swing JFrame)
-           (java.awt Dimension)
-           (java.awt.event WindowListener))
-  (:use [quil.util :only [resolve-constant-key]]
-        [clojure.stacktrace :only [print-cause-trace]])
-  (:require [clojure.string :as string]))
+  (:import [processing.core PApplet]
+           [javax.swing JFrame]
+           [java.awt Dimension]
+           [java.awt.event WindowListener])
+  (:require [quil.util :refer [resolve-constant-key]]
+            [clojure.stacktrace :refer [print-cause-trace]]
+            [clojure.string :as string]))
 
 (defn applet-safe-exit
   "Sets 'finished' field in applet to true. Main run loop in applet
@@ -118,6 +116,12 @@
                   :pdf    PApplet/PDF
                   :dxf    PApplet/DXF})
 
+(defn resolve-renderer
+  "Converts keyword to Processing renderer string constant.
+  This string can be passed to native Processing methods."
+  [renderer]
+  (resolve-constant-key renderer renderer-modes))
+
 (defn- validate-size!
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
@@ -127,11 +131,6 @@
   size)
 
 (def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
-
-(defn- renderer-has-output-file?
-  "Checks whether selected renderer has output file (PDF or DXF) or not."
-  [renderer]
-  (contains? #{:pdf :dxf} renderer))
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
@@ -207,28 +206,29 @@
   (.state this))
 
 (defn -setup [this]
-  ; If renderer has output file - we need to set it via size method.
+  ; If renderer is :pdf - we need to set it via size method,
+  ; as there is no other way to set file path for renderer.
   ; And size method call must be FIRST in setup function
   ; (don't know why, but let's trust Processing guys).
   ; Technically it's not first (there are 'when' and 'let' before 'size'),
   ; but hopefully it will work fine.
-  (when (renderer-has-output-file? (:renderer (meta this)))
+  (when (= (:renderer (meta this)) :pdf)
     (let [[width height] (:size (meta this))
-          renderer (resolve-constant-key (:renderer (meta this)) renderer-modes)]
+          renderer (resolve-renderer (:renderer (meta this)))]
     (.size this (int width) (int height) renderer (:output-file (meta this)))))
   (with-applet this
-    ((:setup-fn (.state this)))))
+    ((:setup-fn (meta this)))))
 
 (defn -draw [this]
   (with-applet this
-    ((:draw-fn (.state this)))))
+    ((:draw-fn (meta this)))))
 
 (defn -noLoop [this]
-  (reset! (:looping? (.state this)) false)
+  (reset! (:looping? (meta this)) false)
   (.noLoopParent this))
 
 (defn -loop [this]
-  (reset! (:looping? (.state this)) true)
+  (reset! (:looping? (meta this)) true)
   (.loopParent this))
 
 (defn -frameRate [this new-rate-target]
@@ -237,23 +237,25 @@
 
 (defn -sketchRenderer [this]
   (let [renderer (:renderer (meta this))
-        ; If renderer :pdf or :dxf we can't use it as initial renderer
-        ; as path to output file is not set and path can be set only set
+        ; If renderer :pdf we can't use it as initial renderer
+        ; as path to output file is not set and path can be set only
         ; via .size(width, height, renderer, path) method in setup function.
         ; Set :java2d renderer instead and call size method in setup later.
-        initial-renderer (if (renderer-has-output-file? renderer) :java2d renderer)]
-      (resolve-constant-key initial-renderer renderer-modes)))
+        initial-renderer (if (= renderer :pdf) :java2d renderer)]
+      (resolve-renderer initial-renderer)))
 
 (defmacro generate-listeners
   "Generates all listeners like onKeyPress, onMouseClick and others."
   []
   (letfn [(prefix [v method]
-            (symbol (str v method)))]
-    `(do ~@(for [listener listeners]
-             (let [method (to-method-name listener)]
+            (symbol (str v method)))
+          (generate-listener [listener]
+            (let [method (to-method-name listener)
+                  parent-method-name (prefix "." (parent-method method))]
                `(defn ~(prefix "-" method)
-                  ([~'this] (with-applet ~'this ((~listener (~'.state ~'this)))))
-                  ([~'this ~'evt] (~(prefix "." (parent-method method)) ~'this ~'evt))))))))
+                  ([this#] (with-applet this# ((~listener (meta this#)))))
+                  ([this# evt#] (~parent-method-name this# evt#)))))]
+    `(do ~@(map generate-listener listeners))))
 
 (generate-listeners)
 
@@ -274,24 +276,20 @@
    :size           - a vector of width and height for the sketch.
                      Defaults to [500 300].
 
-   :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                     :opengl, :pdf or :dxf). Defaults to :java2d. If
-                     :pdf or :dxf is selected, :target is forced to
-                     :none.
+   :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
+                     :opengl, :pdf). Defaults to :java2d. :dxf renderer
+                     can't be used as sketch renderer. Use begin-raw method
+                     instead.
 
-   :output-file    - Specify an output file path. Only used in :pdf
-                     and :dxf render modes.
+   :output-file    - Specify an output file path. Only used in :pdf mode.
 
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
-   :target         - Specify the target. One of :frame, :perm-frame
-                     or :none. Ignored if :pdf or :dxf renderer is
-                     used.
+   :target         - Specify the target. One of :frame, :perm-frame.
 
    :decor          - Specify if the window should have OS frame
-                     decorations. Only honoured with :frame or
-                     :perm-frame targets.
+                     decorations.
 
    :setup          - a fn to be called once when setting the sketch up.
 

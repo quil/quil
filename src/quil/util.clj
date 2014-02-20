@@ -1,7 +1,5 @@
-(ns
-    ^{:doc "Utility fns"
-      :author "Roland Sadowski, Sam Aaron"}
-    quil.util)
+(ns ^{:doc "Utility fns"}
+  quil.util)
 
 (defn int-like?
   [val]

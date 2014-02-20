@@ -10,6 +10,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [quil/processing-core "2.1.1"]
                  [quil/processing-pdf "2.1.1"]
+                 [quil/processing-dxf "2.1.1"]
                  [org.jogamp.jogl/jogl-all-main "2.1.4-rc-20140113"]
                  [org.jogamp.gluegen/gluegen-rt-main "2.1.4-rc-20140113"]]
   :aot [quil.helpers.applet-listener quil.applet])
