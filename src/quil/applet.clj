@@ -205,6 +205,18 @@
 (defn -meta [this]
   (.state this))
 
+(defn- reset-shared-opengl-context
+  "Processing 2.1.1 shares opengl context between windows. It means that when
+  one sketch is closed and new one is starting it will use context from closed
+  one. But the context was already 'cleared' and nothing is drawn on in new sketch.
+  Currently (23.02.2014) processing guys removed context sharing but it is not
+  released yet. That's why we do it manually by setting shared context to null
+  on each sketch 'setup' phase."
+  []
+  (let [field (.getDeclaredField processing.opengl.PJOGL "sharedCanvasAWT")]
+    (.setAccessible field true)
+    (.set field nil nil)))
+
 (defn -setup [this]
   ; If renderer is :pdf - we need to set it via size method,
   ; as there is no other way to set file path for renderer.
@@ -216,6 +228,7 @@
     (let [[width height] (:size (meta this))
           renderer (resolve-renderer (:renderer (meta this)))]
     (.size this (int width) (int height) renderer (:output-file (meta this)))))
+  (reset-shared-opengl-context)
   (with-applet this
     ((:setup-fn (meta this)))))
 
