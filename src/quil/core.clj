@@ -12,7 +12,13 @@
        :private true}
   *graphics* nil)
 
-(defn- ^PGraphics current-graphics
+(defn
+  ^{:requires-bindings true
+    :category "Environment"
+    :subcategory nil
+    :added "2.0"
+    :tag PGraphics}
+  current-graphics
   "Graphics currently used for drawing. By default it is sketch graphics,
   but if called inside with-graphics macro - graphics passed to the macro
   is returned. This method should be used if you need to call some methods
