@@ -51,3 +51,7 @@
                   pad (gen-padding diff)]
               (println k pad "- " v)))
           definitions))))
+
+(defmacro var-value [v]
+  `(let [vv# ~v]
+     (if (var? vv#) (var-get vv#) vv#)))
