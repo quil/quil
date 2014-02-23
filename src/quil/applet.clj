@@ -118,13 +118,25 @@
   [renderer]
   (resolve-constant-key renderer renderer-modes))
 
-(defn- validate-size!
+
+(defn- display-size
+  "Returns size of screen. If there are 2 or more screens it probably return size of
+  default one whatever it means."
+  []
+  (let [bounds (.. (java.awt.GraphicsEnvironment/getLocalGraphicsEnvironment)
+                   getDefaultScreenDevice
+                   getDefaultConfiguration
+                   getBounds)]
+    [(.-width bounds) (.-height bounds)]))
+
+(defn- process-size
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size]
-  (when-not (= 2 (count size))
-    (throw (IllegalArgumentException. (str "Invalid size vector:" size ". Was expecting only 2 elements: [x-size y-size]. To specify renderer, use :renderer key."))))
-  size)
+  (cond (= size :fullscreen) (display-size)
+        (and (coll? size) (= 2 (count size))) size
+        :else (throw (IllegalArgumentException.
+                      (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
 
 (def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
 
@@ -349,7 +361,7 @@
                                   :target :frame
                                   :safe-draw-fn true}
                                  (apply hash-map opts))
-        size              (validate-size! (:size options))
+        size              (process-size (:size options))
         target            (validate-target! (:target options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
@@ -377,6 +389,7 @@
                                   :setup-fn setup-fn
                                   :draw-fn draw-fn
                                   :renderer renderer
+                                  :size size
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)
