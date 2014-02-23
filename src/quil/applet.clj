@@ -294,7 +294,7 @@
 (defn applet
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch.
+   :size           - a vector of width and height for the sketch or :fullscreen.
                      Defaults to [500 300].
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
@@ -398,6 +398,10 @@
       (applet-run title renderer target)
       (attach-applet-listeners))))
 
+(def ^{:private true}
+  non-fn-applet-params
+  #{:size :renderer :output-file :title :target :decor})
+
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
@@ -405,5 +409,11 @@
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See applet for the available options."
   [app-name & opts]
-  (let [opts  (mapcat (fn [[k v]] [k (if (symbol? v) `(var ~v) v)]) (partition 2 opts))]
+  (let [fn-param? #(not (contains? non-fn-applet-params %))
+        opts  (mapcat (fn [[k v]]
+                        [k (if (and (symbol? v)
+                                    (fn-param? k))
+                             `(var ~v)
+                             v)])
+                      (partition 2 opts))]
     `(def ~app-name (applet ~@opts))))

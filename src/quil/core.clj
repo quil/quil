@@ -4592,7 +4592,7 @@
 (defn sketch
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch.
+   :size           - a vector of width and height for the sketch or :fullscreen.
                      Defaults to [500 300].
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d,
