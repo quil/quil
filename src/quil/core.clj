@@ -1004,8 +1004,8 @@
   to use create-graphics with the :opengl renderer, because it doesn't
   allow offscreen use. The :pdf renderer requires the filename parameter.
 
-  It's important to call any drawing commands between begin-draw and
-  end-draw statements. This is also true for any commands that affect
+  It's important to call any drawing commands between (.beginDraw graphics) and
+  (.endDraw graphics) statements. This is also true for any commands that affect
   drawing, such as smooth or color-mode.
 
   Unlike the main drawing surface which is completely opaque, surfaces
@@ -1471,7 +1471,6 @@
   renderers."
   []
   (.endContour (current-surface)))
-
 
 (defn
   ^{:requires-bindings true
@@ -2843,6 +2842,25 @@
          (float x2) (float y2)
          (float x3) (float y3)
          (float x4) (float y4)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "quadraticVertex()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
+  quadratic-vertex
+  "Specifies vertex coordinates for quadratic Bezier curves. Each call to
+  quadratic-vertex defines the position of one control points and one anchor
+  point of a Bezier curve, adding a new segment to a line or shape. The first
+  time quadratic-vertex is used within a begin-shape call, it must be prefaced
+  with a call to vertex to set the first anchor point. This function must be
+  used between begin-shape and end-shape and only when there is no MODE parameter
+  specified to begin-shape. Using the 3D version requires rendering with :p3d."
+  ([cx cy x3 y3]
+    (.quadraticVertex (current-surface) (float cx) (float cy) (float x3) (float y3)))
+  ([cx cy cz x3 y3 z3]
+   (.quadraticVertex (current-surface) (float cx) (float cy) (float cz) (float x3) (float y3) (float z3))))
 
 (defn
   ^{:requires-bindings false
