@@ -388,6 +388,20 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "beginContour()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "2.0"}
+  begin-contour
+  "Use the begin-contour and end-contour function to create negative
+  shapes within shapes. These functions can only be within a
+  begin-shape/end-shape pair and they only work with the :p2d and :p3d
+  renderers."
+  []
+  (.beginContour (current-surface)))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "beginRaw()"
     :category "Output"
     :subcategory "Files"
@@ -1442,6 +1456,22 @@
   "Unsets the matrix mode from the camera matrix. See begin-camera."
   []
   (.endCamera (current-surface)))
+
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "endContour()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "2.0"}
+  end-contour
+  "Use the begin-contour and end-contour function to create negative
+  shapes within shapes. These functions can only be within a
+  begin-shape/end-shape pair and they only work with the :p2d and :p3d
+  renderers."
+  []
+  (.endContour (current-surface)))
+
 
 (defn
   ^{:requires-bindings true
