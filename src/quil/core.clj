@@ -1566,9 +1566,9 @@
     :added "1.0"}
   display-filter
   "Originally named filter in Processing Language.
-  Filters the display window with the specified mode and level. Level
-  defines the quality of the filter and mode may be one of the
-  following keywords:
+  Filters the display window with the specified mode and level or using
+  given shader (only in :p2d and :p3d modes). Level defines the quality
+  of the filter and mode may be one of the following keywords:
 
   :threshold - converts the image to black and white pixels depending
                if they are above or below the threshold defined by
@@ -1590,9 +1590,16 @@
                level parameter.
   :dilate    - increases the light areas with the amount defined by
                the level parameter."
-  ([mode]
-     (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (current-surface) (int mode))))
+  ([mode-or-shader]
+    (cond (keyword? mode-or-shader)
+          (let [mode (resolve-constant-key mode-or-shader filter-modes)]
+            (.filter (current-surface) (int mode)))
+
+          (instance? processing.opengl.PShader mode-or-shader)
+          (.filter (current-surface) ^processing.opengl.PShader mode-or-shader)
+
+          :else
+          (throw (IllegalArgumentException. "(filter mode-or-shader) takes only keyword or PShader"))))
   ([mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter (current-surface) (int mode) (float level)))))
@@ -2128,6 +2135,20 @@
   release, this will always be subject to change."
   []
   (.loadPixels  (current-surface)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "loadShader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  load-shader
+  "Loads a shader into the PShader object. Shaders are compatible with the
+  P2D and P3D renderers, but not with the default renderer."
+  ([fragment-filename]
+    (.loadShader (current-surface) fragment-filename))
+  ([fragment-filename vertex-filename]
+    (.loadShader (current-surface) fragment-filename vertex-filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2888,10 +2909,14 @@
     :added "1.0"}
   rect
   "Draws a rectangle to the screen. A rectangle is a four-sided shape
-   with every angle at ninety degrees. By default, the first two
-   parameters set the location of the upper-left corner, the third
-   sets the width, and the fourth sets the height. These parameters
-   may be changed with rect-mode."
+  with every angle at ninety degrees. By default, the first two
+  parameters set the location of the upper-left corner, the third
+  sets the width, and the fourth sets the height. These parameters
+  may be changed with rect-mode.
+
+  To draw a rounded rectangle, add a fifth parameter, which is used as
+  the radius value for all four corners. To use a different radius value
+  for each corner, include eight parameters."
   ([x y width height]
      (.rect (current-surface) (float x) (float y) (float width) (float height)))
   ([x y width height r]
@@ -3004,6 +3029,26 @@
   equivalent function in OpenGL is glLoadIdentity()"
   []
   (.resetMatrix (current-surface)))
+
+(def ^{:private true}
+     shader-modes {:points PApplet/POINTS
+                   :lines PApplet/LINES
+                   :triangles PApplet/TRIANGLES})
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "resetShader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  reset-shader
+  "Restores the default shaders. Code that runs after (reset-shader) will
+  not be affected by previously defined shaders. Optional 'kind' parameter -
+  type of shader, either :points, :lines, or :triangles"
+  ([] (.resetShader (current-surface)))
+  ([kind]
+    (let [mode (resolve-constant-key kind shader-modes)]
+      (.resetShader (current-surface) mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3303,6 +3348,21 @@
   image."
   [x y ^PImage src]
   (.set (current-surface) (int x) (int y) src))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "shader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  shader
+  "Applies the shader specified by the parameters. It's compatible with the :p2d
+  and :p3drenderers, but not with the default :java2d renderer. Optional 'kind'
+  parameter - type of shader, either :points, :lines, or :triangles"
+  ([shader] (.shader (current-surface) shader))
+  ([shader kind]
+    (let [mode (resolve-constant-key kind shader-modes)]
+      (.shader (current-surface) shader mode))))
 
 (defn
   ^{:requires-bindings true
