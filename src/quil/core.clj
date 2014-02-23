@@ -2848,7 +2848,7 @@
     :processing-name "quadraticVertex()"
     :category "Shape"
     :subcategory "Vertex"
-    :added "1.0"}
+    :added "2.0"}
   quadratic-vertex
   "Specifies vertex coordinates for quadratic Bezier curves. Each call to
   quadratic-vertex defines the position of one control points and one anchor
@@ -4027,10 +4027,10 @@
 
 (defn
     ^{:requires-bindings true
-    :processing-name "textureMode()"
-    :category "Shape"
-    :subcategory "Vertex"
-    :added "1.0"}
+     :processing-name "textureMode()"
+     :category "Shape"
+     :subcategory "Vertex"
+     :added "1.0"}
   texture-mode
   "Sets the coordinate space for texture mapping. There are two
   options, :image and :normal.
@@ -4044,6 +4044,24 @@
   [mode]
   (let [mode (resolve-constant-key mode texture-modes)]
     (.textureMode (current-surface) (int mode))))
+
+(def ^{:private true}
+  texture-wrap-modes {:clamp PApplet/CLAMP
+                      :repeat PApplet/REPEAT})
+
+(defn
+    ^{:requires-bindings true
+     :processing-name "textureWrap()"
+     :category "Shape"
+     :subcategory "Vertex"
+     :added "2.0"}
+  texture-wrap
+  "Defines if textures repeat or draw once within a texture map. The two
+  parameters are :clamp (the default behavior) and :repeat. This function
+  only works with the :p2d and :p3d renderers."
+  [mode]
+  (let [mode (resolve-constant-key mode texture-wrap-modes)]
+    (.textureWrap (current-surface) mode)))
 
 (defn
   ^{:requires-bindings true
