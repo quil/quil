@@ -5,7 +5,7 @@
     :init init
     :state listeners
     :constructors {[java.util.Map] []}
-    :methods [["dispose" [] java.lang.Void]]))
+    :methods [["dispose" [] java.lang.Object]]))
 
 (defn safe-call [fn]
   (when fn (fn)))
