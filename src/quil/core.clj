@@ -4296,7 +4296,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Color"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.7"}
   with-fill
   "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
@@ -4314,7 +4315,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Color"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.7"}
   with-stroke
   "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
@@ -4332,7 +4334,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Transform"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.0"}
   with-translation
   "Performs body with translation, restores current transformation on
   exit."
@@ -4347,7 +4350,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Transform"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.0"}
   with-rotation
   "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
@@ -4362,7 +4366,12 @@
      ~@body
      (pop-matrix)))
 
-(defmacro with-graphics
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Rendering"
+    :added "1.7"}
+  with-graphics
   "All subsequent calls of any drawing function will draw on given graphics.
   'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
   [graphics & body]
