@@ -3,6 +3,7 @@
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
            [java.awt.event KeyEvent])
   (:require [clojure.set]
+            [quil.helpers.docs :as docs]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
             [quil.applet :refer [current-applet applet-stop applet-state applet-start applet-close
                                  applet defapplet applet-safe-exit resolve-renderer]]))
@@ -4383,132 +4384,19 @@
 ;;; doc utils
 
 (def ^{:private true}
-  processing-fn-metas
+  fn-metas
   "Returns a seq of metadata maps for all fns related to the original
   Processing API (but may not have a direct Processing API equivalent)."
-  (map #(-> % second meta) (ns-publics *ns*)))
-
-(defn- processing-fn-metas-with-orig-method-name
-  "Returns a seq of metadata maps for all fns with a corresponding
-  Processing API method."
-  []
-  (filter :processing-name processing-fn-metas))
-
-(defn- matching-processing-methods
-  "Takes a string representing the start of a method name in the
-  original Processing API and returns a map of orig/new-name pairs"
-  [orig-name]
-  (let [metas   (processing-fn-metas-with-orig-method-name)
-        matches (filter #(.startsWith (str (:processing-name %)) orig-name) metas)]
-    (into {} (map (fn [{:keys [name processing-name]}]
-                    [(str processing-name) (str name)])
-                  matches))))
-
-(defn- find-categories
-  []
-  (let [metas processing-fn-metas
-        cats  (into (sorted-set) (map :category metas))]
-    (clojure.set/difference cats #{nil})))
-
-(defn- find-subcategories
-  [category]
-  (let [metas  processing-fn-metas
-        in-cat (filter #(= category (:category %)) metas)
-        res    (into (sorted-set) (map :subcategory in-cat))]
-    (clojure.set/difference res #{nil})))
-
-(defn- find-fns
-  "Find the names of fns in category cat that don't also belong to a
-  subcategory"
-  [cat subcat]
-  (let [metas processing-fn-metas
-        res   (filter (fn [m]
-                        (and (= cat (:category m))
-                             (= subcat (:subcategory m))))
-                      metas)]
-    (sort (map :name res))))
-
-(defn- subcategory-map
-  [cat cat-idx]
-  (let [subcats (find-subcategories cat)
-        idxs    (map inc (range))
-        idxd-subcats (map (fn [idx subcat]
-                            [(str cat-idx "." idx) subcat])
-                          idxs subcats)]
-    (into {}
-          (map (fn [[idx subcat]]
-                 [idx {:name subcat
-                       :fns (find-fns cat subcat)}])
-               idxd-subcats))))
-
-(defn- sorted-category-map
-  []
-  (let [cats      (find-categories)
-        idxs      (map inc (range))
-        idxd-cats (into {} (map (fn [idx cat] [idx cat]) idxs cats))]
-    (into (sorted-map)
-          (map (fn [[idx cat]]
-                 [idx  {:name cat
-                        :fns (find-fns cat nil)
-                        :subcategories (subcategory-map cat idx)}])
-               idxd-cats))))
-
-(defn- all-category-map
-  []
-  (reduce (fn [sum [k v]]
-            (merge sum (:subcategories v)))
-          (into {} (map (fn [[k v]] [(str k) v]) (sorted-category-map)))
-          (sorted-category-map)))
-
-
+  (->> *ns* ns-publics vals (map meta)))
 
 (defn show-cats
   "Print out a list of all the categories and subcategories,
   associated index nums and fn count (in parens)."
   []
-  (let [cats (sorted-category-map)]
-    (dorun
-     (map (fn [[cat-idx cat]]
-            (println cat-idx
-                     (:name cat)
-                     (str "(" (count (find-fns (:name cat) nil)) ")"))
-            (dorun (map (fn [[subcat-idx subcat]]
-                          (println "  "
-                                   subcat-idx
-                                   (:name subcat)
-                                   (str "(" (count (find-fns (:name cat) (:name subcat))) ")")))
-                        (:subcategories cat))))
-          cats))))
-
-(defn- wrap-lines
-  "Split a list of words in lists (lines) not longer than width chars each,
-   space between words included."
-  [width words]
-  (letfn [(wrap-lines-rec
-            [ws accum-lns]
-            (if (empty? ws)
-              accum-lns
-              (let [lens (map count ws)
-                    cumlens (reduce
-                             (fn [sums len]
-                               (conj sums
-                                     (if (empty? sums)
-                                       len
-                                       (+ (last sums) len 1))))
-                             [] lens)
-                    [line other] (split-with #(> width %) cumlens)
-                    [line other] (split-at (count line) ws)]
-                (recur other (conj accum-lns line)))))]
-    (wrap-lines-rec words [])))
-
-(defn- pprint-wrapped-lines
-  "Pretty print words across several lines by wrapping lines at word boundary."
-  [words & {:keys [fromcolumn width] :or {fromcolumn 0 width 80}}]
-  (let [w (- width fromcolumn)
-        wordss (wrap-lines w words)
-        indent (apply str (repeat fromcolumn \space))
-        lines (map #(apply str indent (interpose " " %)) wordss)]
-    (doseq [l lines] (println l))))
+  (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
+    (println cat-idx (:name cat))
+    (doseq [[subcat-idx subcat] (:subcategories cat)]
+      (println "  " subcat-idx (:name subcat)))))
 
 (defn show-fns
   "If given a number, print all the functions within category or
@@ -4528,15 +4416,14 @@
                                 (clojure.set/intersection
                                  (set only) (set category-fns)))
                   names (sort (map str display-fns))]
-              (if (not (empty? names))
-                (do
-                  (println cid (:name c))
-                  (pprint-wrapped-lines names :fromcolumn 4)))))
+              (when-not (empty? names))
+                (println cid (:name c))
+                (docs/pprint-wrapped-lines names :fromcolumn 4)))
           (show-fns-by-cat-idx [cat-idx]
-            (let [c (get (all-category-map) (str cat-idx))]
+            (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
               (list-category cat-idx c)))
           (show-fns-by-name-regex [re]
-            (doseq [[cid c] (sort-by key (all-category-map))]
+            (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
               (let [in-cat-name? (re-find re (:name c))
                     matching-fns (filter #(re-find re (str %)) (:fns c))
                     in-fn-names? (not (empty? matching-fns))]
@@ -4544,16 +4431,16 @@
                  in-cat-name? (list-category cid c) ;; print an entire category
                  in-fn-names? (list-category cid c :only matching-fns)))))]
     (cond
-     (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
-     (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
-     :else (show-fns-by-cat-idx q))))
+      (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
+      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+      :else (show-fns-by-cat-idx q))))
 
 (defn show-meths
   "Takes a string representing the start of a method name in the
   original Processing API and prints out all matches alongside the
   Processing-core equivalent."
   [orig-name]
-  (let [res (matching-processing-methods orig-name)]
+  (let [res (docs/matching-processing-methods fn-metas orig-name)]
     (print-definition-list res)))
 
 ;;; Useful trig constants
