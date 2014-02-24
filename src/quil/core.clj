@@ -3,7 +3,6 @@
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
            [java.awt.event KeyEvent])
   (:require [clojure.set]
-            [quil.version :refer [QUIL-VERSION-STR]]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
             [quil.applet :refer [current-applet applet-stop applet-state applet-start applet-close
                                  applet defapplet applet-safe-exit resolve-renderer]]))
@@ -4379,12 +4378,6 @@
      (.beginDraw ~graphics)
      ~@body
      (.endDraw ~graphics)))
-
-;;; version number
-
-(defn quil-version
-  []
-  QUIL-VERSION-STR)
 
 
 ;;; doc utils
