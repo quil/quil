@@ -150,7 +150,7 @@
         bold #(str "**" % "**")
         lines [(str "## " name)
                (bold "Arguments") (map #(str "`" (pr-str %) "`  ") arglists)
-               (bold "Docstring") doc
+               (bold "Docstring") (str "```text\n" doc "\n```")
                (bold "Category") (link category)
                (if subcategory
                  [(bold "Subcategory") "" (format "[[%s|%s#%s]]"
