@@ -59,11 +59,11 @@
 (defn applet-close
   "Stop the applet and close the window. Call on-close function afterwards."
   [applet]
+  (applet-safe-exit applet)
   (javax.swing.SwingUtilities/invokeLater
     (fn []
       (when-let [frame @(:target-obj (meta applet))]
-        (.hide frame))
-      (applet-safe-exit applet))))
+        (.hide frame)))))
 
 (defn- launch-applet-frame
   [applet title renderer keep-on-top?]
