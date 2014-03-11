@@ -4,8 +4,6 @@
 
 (def default-size [500 500])
 
-(def snippets (atom #{}))
-
 (defmacro snippet-as-test [& draw-fn-body]
   `(let [result# (promise)]
      (q/sketch
@@ -22,17 +20,11 @@
      (is (nil? @result#))))
 
 (defmacro defsnippet [name opts & body]
-  `(let [full-name# (symbol (str *ns* "/" '~name))
-         snippet# (assoc ~opts
-                    :name '~name
-                    :draw-fn (fn [] ~@body))]
+  `(let [full-name# (symbol (str *ns* "/" '~name))]
      (def ~(vary-meta name assoc
                       :test `(fn [] (snippet-as-test ~@body)))
-       snippet#)
-     (swap! snippets conj full-name#)))
-
-(defn show-snippet [snippet]
-  (q/sketch
-    :title (str (:name snippet))
-    :size default-size
-    :draw (:draw-fn snippet)))
+       (fn []
+         (q/sketch
+          :title (str ~name)
+          :size ~default-size
+          :draw (fn [] ~@body))))))
