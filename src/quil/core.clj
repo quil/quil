@@ -621,7 +621,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "blend()"
-    :category "Color"
+    :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
   blend
@@ -709,9 +709,9 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "blendMOde()"
-    :category "Color"
-    :subcategory "Pixels"
+    :processing-name "blendMode()"
+    :category "Image"
+    :subcategory "Rendering"
     :added "2.0"}
   blend-mode
   "Blends the pixels in the display window according to the defined mode.
@@ -1007,8 +1007,8 @@
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
-    :category "Rendering"
-    :subcategory nil
+    :category "Image"
+    :subcategory "Rendering"
     :added "1.0"}
   create-graphics
   "Creates and returns a new PGraphics object of the types :p2d, :p3d,
