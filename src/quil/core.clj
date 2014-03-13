@@ -2590,7 +2590,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noTint()"
-    :category "Color"
+    :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
   no-tint
