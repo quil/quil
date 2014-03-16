@@ -1163,16 +1163,10 @@
     :subcategory nil
     :added "1.0"}
   cursor
-  "Sets the cursor to a predefined symbol, an image, or makes it
-  visible if already hidden. If you are trying to set an image as the
-  cursor, it is recommended to make the size 16x16 or 32x32 pixels.
-  The values for parameters x and y must be less than the dimensions
-  of the image.
+  "Sets the cursor to a predefined symbol or makes it
+  visible if already hidden (after no-cursor was called).
 
   Available modes: :arrow, :cross, :hand, :move, :text, :wait
-
-  Setting or hiding the cursor generally does not work with 'Present'
-  mode (when running full-screen).
 
   See cursor-image for specifying a generic image as the cursor
   symbol."
@@ -1187,7 +1181,8 @@
     :added "1.0"}
     cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
-  active spots of the cursor may be specified with hx and hy"
+  active spots of the cursor may be specified with hx and hy.
+  It is recommended to make the size 16x16 or 32x32 pixels."
   ([^PImage img] (.cursor (current-applet) img))
   ([^PImage img hx hy] (.cursor (current-applet) img (int hx) (int hy))))
 
@@ -1761,7 +1756,7 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "height"
+    :processing-name "getHeight()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -4282,7 +4277,7 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "width"
+    :processing-name "getWidth()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
