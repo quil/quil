@@ -625,10 +625,11 @@
     :subcategory "Pixels"
     :added "1.0"}
   blend
-  "Blends a region of pixels from one image into another (or in itself
-  again) with full alpha channel support.
+  "Blends a region of pixels from one image into another with full alpha
+  channel support. If src is not specified it defaults to current-graphics.
+  If dest is not specified it defaults to current-graphics.
 
-  Note: (blend-mode) function is recommended to use instead of this one.
+  Note: blend-mode function is recommended to use instead of this one.
 
   Available blend modes are:
 
@@ -658,12 +659,12 @@
                 lights. Called \"Color Burn\" in Illustrator and
                 Photoshop."
   ([x y width height dx dy dwidth dheight mode]
+   (blend (current-graphics) (current-graphics) x y width height dx dy dwidth dheight mode))
+  ([^PImage src-img x y width height dx dy dwidth dheight mode]
+   (blend src-img (current-graphics) x y width height dx dy dwidth dheight mode))
+  ([^PImage src-img ^PImage dest-img x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-graphics) (int x) (int y) (int width) (int height)
-               (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
-  ([^PImage src x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-graphics) src (int x) (int y) (int width) (int height)
+       (.blend dest-img src-img (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
@@ -718,8 +719,6 @@
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
-  Available blend modes are:
-
   :blend      - linear interpolation of colours: C = A*factor + B
   :add        - additive blending with white clip:
                                             C = min(A*factor + B, 255)
@@ -729,23 +728,19 @@
                                             C = min(A*factor, B)
   :lightest   - only the lightest colour succeeds:
                                             C = max(A*factor, B)
-  :difference - subtract colors from underlying image.
   :exclusion  - similar to :difference, but less extreme.
   :multiply   - Multiply the colors, result will always be darker.
   :screen     - Opposite multiply, uses inverse values of the colors.
   :replace    - the pixels entirely replace the others and don't utilize
                 alpha (transparency) values
 
-  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn modes
-  are not supported by this function."
-  ([x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-graphics) (int x) (int y) (int width) (int height)
-               (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
-  ([^PImage src x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-graphics) src (int x) (int y) (int width) (int height)
-               (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
+  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn, :difference
+  modes are not supported by this function.
+
+  factor is alpha value of pixel being drawed"
+  ([mode]
+    (let [mode (resolve-constant-key mode blend-modes)]
+      (.blendMode (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
@@ -926,19 +921,20 @@
     :subcategory "Pixels"
     :added "1.0"}
   copy
-  "Copies a region of pixels from the display window to another area
-  of the display window and copies a region of pixels from an image
-  used as the src-img parameter into the display window. If the source
+  "Copies a region of pixels from the one image to another. If src-img
+  is not specified it defaults to current-graphics. If dest-img is not
+  specified - it defaults to current-graphics. If the source
   and destination regions aren't the same size, it will automatically
   resize the source pixels to fit the specified target region. No
   alpha information is used in the process, however if the source
   image has an alpha channel set, it will be copied as well. "
-  ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-graphics) (int sx1) (int sy1) (int sx2) (int sy2)
-            (int dx1) (int dy1) (int dx2) (int dy2)))
-  ([^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-graphics) img (int sx1) (int sy1) (int sx2) (int sy2)
-            (int dx1) (int dy1) (int dx2) (int dy2))))
+  ([[sx sy swidth sheight] [dx dy dwidth dheight]]
+     (copy (current-graphics) (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+  ([^PImage src-img [sx sy swidth sheight] [dx dy dwidth dheight]]
+     (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+  ([^PImage src-img ^PImage dest-img [sx sy swidth sheight] [dx dy dwidth dheight]]
+     (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
+            (int dx) (int dy) (int dwidth) (int dheight))))
 
 (defn
   ^{:requires-bindings false
@@ -1035,6 +1031,11 @@
   ([w h renderer path]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer) (str path))))
 
+(def ^{:private true}
+  image-formats {:rgb PApplet/RGB
+                :argb PApplet/ARGB
+                :alpha PApplet/ALPHA})
+
 (defn
   ^{:requires-bindings true
     :processing-name "createImage()"
@@ -1048,13 +1049,13 @@
   defines how the pixels are stored. See the PImage reference for more
   information.
 
-  Be sure to include all three parameters, specifying only the width
-  and height (but no format) will produce a strange error.
+  Possible formats: :rgb, :argb, :alpha (grayscale alpha channel)
 
   Prefer using create-image over initialising new PImage instances
   directly."
   [w h format]
-  (.createImage (current-applet) (int w) (int h) (int format)))
+  (let [format (resolve-constant-key format image-formats)]
+    (.createImage (current-applet) (int w) (int h) (int format))))
 
 (defn
   ^{:requires-bindings true
@@ -1613,20 +1614,19 @@
                0.0 (black) and 1.0 (white). If no level is specified,
                0.5 is used.
   :gray      - converts any colors in the image to grayscale
-               equivalents
-  :invert    - sets each pixel to its inverse value
+               equivalents. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with level.
   :posterize - limits each channel of the image to the number of
-               colors specified as the level parameter. The level
-               parameter
+               colors specified as the level parameter. The parameter can
+               be set to values between 2 and 255, but results are most
+               noticeable in the lower ranges.
   :blur      - executes a Guassian blur with the level parameter
                specifying the extent of the blurring. If no level
                parameter is used, the blur is equivalent to Guassian
                blur of radius 1.
-  :opaque    - sets the alpha channel to entirely opaque.
-  :erode     - reduces the light areas with the amount defined by the
-               level parameter.
-  :dilate    - increases the light areas with the amount defined by
-               the level parameter."
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :erode     - reduces the light areas. Doesn't work with level.
+  :dilate    - increases the light areas.  Doesn't work with level."
   ([mode-or-shader]
     (cond (keyword? mode-or-shader)
           (let [mode (resolve-constant-key mode-or-shader filter-modes)]
@@ -1713,20 +1713,25 @@
     :added "1.0"}
   get-pixel
   "Reads the color of any pixel or grabs a section of an image. If no
-  parameters are specified, the entire image is returned. Get the
+  parameters are specified, a copy of entire image is returned. Get the
   value of one pixel by specifying an x,y coordinate. Get a section of
-  the display window by specifying an additional width and height
-  parameter. If the pixel requested is outside of the image window,
-  black is returned. The numbers returned are scaled according to the
-  current color ranges, but only RGB values are returned by this
-  function. For example, even though you may have drawn a shape with
-  colorMode(HSB), the numbers returned will be in RGB.
+  the image by specifying an additional width and height parameter.
+  If the pixel requested is outside of the image window, black is returned.
+  The numbers returned are scaled according to the current color ranges,
+  but only RGB values are returned by this function. For example, even though
+  you may have drawn a shape with (color-mode :hsb), the numbers returned
+  will be in RGB.
 
   Getting the color of a single pixel with (get x y) is easy, but not
-  as fast as grabbing the data directly using the pixels fn."
-  ([] (.get (current-graphics)))
-  ([x y] (.get (current-graphics) (int x) (int y)))
-  ([x y w h] (.get (current-graphics) (int x) (int y) (int w) (int h))))
+  as fast as grabbing the data directly using the pixels fn.
+
+  If no img specified - current-graphics is used."
+  ([] (get-pixel (current-graphics)))
+  ([^PImage img] (.get img))
+  ([x y] (get-pixel (current-graphics) x y))
+  ([^PImage img x y] (.get img (int x) (int y)))
+  ([x y w h] (get-pixel (current-graphics) x y w h))
+  ([^PImage img x y w h] (.get img (int x) (int y) (int w) (int h))))
 
 (defn
   ^{:requires-bindings true
@@ -1904,6 +1909,44 @@
   ([^PImage img x y] (.image (current-graphics) img (float x) (float y)))
   ([^PImage img x y c d] (.image (current-graphics) img (float x) (float y)
                                   (float c) (float d))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "PImage.filter()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "2.0"}
+  image-filter
+  "Originally named filter in Processing Language.
+  Filters given image with the specified mode and level.
+  Level defines the quality of the filter and mode may be one of
+  the following keywords:
+
+  :threshold - converts the image to black and white pixels depending
+               if they are above or below the threshold defined by
+               the level parameter. The level must be between
+               0.0 (black) and 1.0 (white). If no level is specified,
+               0.5 is used.
+  :gray      - converts any colors in the image to grayscale
+               equivalents. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with level.
+  :posterize - limits each channel of the image to the number of
+               colors specified as the level parameter. The parameter can
+               be set to values between 2 and 255, but results are most
+               noticeable in the lower ranges.
+  :blur      - executes a Guassian blur with the level parameter
+               specifying the extent of the blurring. If no level
+               parameter is used, the blur is equivalent to Guassian
+               blur of radius 1.
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :erode     - reduces the light areas. Doesn't work with level.
+  :dilate    - increases the light areas.  Doesn't work with level."
+  ([^PImage img mode]
+    (let [mode (resolve-constant-key mode filter-modes)]
+      (.filter img (int mode))))
+  ([^PImage img mode level]
+     (let [mode (resolve-constant-key mode filter-modes)]
+       (.filter img (int mode) (float level)))))
 
 (def ^{:private true}
   image-modes {:corner PApplet/CORNER
@@ -2144,26 +2187,6 @@
   will attempt to interpret the HTML as image data."
   [filename]
   (.loadImage (current-applet) (str filename)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "loadPixels()"
-    :category "Image"
-    :subcategory "Pixels"
-    :added "1.0"}
-  load-pixels
-  "Loads the pixel data for the display window into the pixels[]
-  array. This function must always be called before reading from or
-  writing to pixels.
-
-  Certain renderers may or may not seem to require load-pixels or
-  update-pixels. However, the rule is that any time you want to
-  manipulate the pixels array, you must first call load-pixels, and
-  after changes have been made, call updatePixels. Even if the
-  renderer may not seem to use this function in the current Processing
-  release, this will always be subject to change."
-  []
-  (.loadPixels  (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2519,8 +2542,7 @@
   key-pressed. Instead, use those functions to call redraw or
   loop which will run draw, which can update the screen
   properly. This means that when no-loop has been called, no drawing
-  can happen, and functions like save-frame or load-pixels may not
-  be used.
+  can happen, and functions like save-frame may not be used.
 
   Note that if the sketch is resized, redraw will be called to
   update the sketch, even after no-oop has been
@@ -2642,14 +2664,15 @@
     :added "1.0"}
   pixels
   "Array containing the values for all the pixels in the display
-  window. This array is therefore the size of the display window. If
+  window or image. This array is therefore the size of the display window. If
   this array is modified, the update-pixels fn must be called to update
-  the changes. Calls load-pixels before obtaining the pixel array.
+  the changes. Calls .loadPixels before obtaining the pixel array.
 
-  Only works with P2D and P3D renderer."
-  []
-  (load-pixels)
-  (.-pixels (current-graphics)))
+  Only works with P2D and P3D renderer if used without arguments."
+  ([] (pixels (current-graphics)))
+  ([^PImage img]
+    (.loadPixels img)
+    (.-pixels img)))
 
 (defn
   ^{:requires-bindings true
@@ -3379,8 +3402,9 @@
   when used with the default renderer. Using :p2d or :p3d will fix the
   problem. Grouping many calls to point or set-pixel together can also
   help. (Bug 1094)"
-  [x y c]
-  (.set (current-graphics) (int x) (int y) (int c)))
+  ([x y c] (set-pixel (current-graphics) x y c))
+  ([^PImage img x y c]
+    (.set img (int x) (int y) (int c))))
 
 (defn
   ^{:requires-bindings true
@@ -4213,19 +4237,19 @@
     :subcategory "Pixels"
     :added "1.0"}
   update-pixels
-  "Updates the display window with the data in the pixels array. Use
-  in conjunction with load-pixels. If you're only reading pixels from
+  "Updates the display window or image with the data in the pixels array.
+  Use in conjunction with (pixels). If you're only reading pixels from
   the array, there's no need to call update-pixels unless there are
   changes.
 
-  Certain renderers may or may not seem to require load-pixels or
+  Certain renderers may or may not seem to require pixels or
   update-pixels. However, the rule is that any time you want to
-  manipulate the pixels array, you must first call load-pixels, and
+  manipulate the pixels array, you must first call pixels, and
   after changes have been made, call update-pixels. Even if the
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
-  []
-  (.updatePixels (current-graphics)))
+  ([] (update-pixels (current-graphics)))
+  ([^PImage img] (.updatePixels img)))
 
 (defn
   ^{:requires-bindings true
