@@ -1,6 +1,10 @@
 (ns ^{:doc "Utility fns"}
   quil.util)
 
+(defn no-fn
+  "Function that does nothing."
+  [])
+
 (defn int-like?
   [val]
   (let [t (type val)]

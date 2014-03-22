@@ -1903,10 +1903,7 @@
   images."
   ([^PImage img x y] (.image (current-graphics) img (float x) (float y)))
   ([^PImage img x y c d] (.image (current-graphics) img (float x) (float y)
-                                  (float c) (float d)))
-  ([^PImage img x y c d u1 v1 u2 v2]
-     (.image (current-graphics) img (float x) (float y) (float c) (float d)
-             (float u1) (float v1) (float u2) (float v2))))
+                                  (float c) (float d))))
 
 (def ^{:private true}
   image-modes {:corner PApplet/CORNER
@@ -2133,11 +2130,6 @@
 
   The filename parameter can also be a URL to a file found online.
 
-  The extension parameter is used to determine the image type in cases
-  where the image filename does not end with a proper
-  extension. Specify the extension as the second parameter to
-  load-image.
-
   If an image is not loaded successfully, the null value is returned
   and an error message will be printed to the console. The error
   message does not halt the program, however the null value may cause
@@ -2241,7 +2233,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name nil
+    :processing-name "PImage.mask()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2252,10 +2244,14 @@
   image needs to be the same size as the image to which it is
   applied.
 
-   This method is useful for creating dynamically generated alpha
-   masks."
-  [^PImage img]
-  (.mask (current-graphics) img))
+  If single argument function is used - masked image is sketch itself
+  or graphics if used inside with-graphics macro. If you're passing
+  graphics to this function - it works only with :p3d and :opengl renderers.
+
+  This method is useful for creating dynamically generated alpha
+  masks."
+  ([^PImage mask] (mask-image (current-graphics) mask))
+  ([^PImage img ^PImage mask] (.mask img mask)))
 
 (defn
   ^{:requires-bindings true
@@ -3065,14 +3061,8 @@
   know when the image has loaded properly because its width and height
   will be greater than 0. Asynchronous image loading (particularly
   when downloading from a server) can dramatically improve
-  performance.
-
-  The extension parameter is used to determine the image type in cases
-  where the image filename does not end with a proper
-  extension. Specify the extension as the second parameter to
-  request-image."
-  ([filename] (.requestImage (current-applet) (str filename)))
-  ([filename extension] (.requestImage (current-applet) (str filename) (str extension))))
+  performance."
+  [filename] (.requestImage (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true

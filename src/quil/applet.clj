@@ -4,7 +4,7 @@
            [javax.swing JFrame]
            [java.awt Dimension]
            [java.awt.event WindowListener])
-  (:require [quil.util :refer [resolve-constant-key]]
+  (:require [quil.util :refer [resolve-constant-key no-fn]]
             [clojure.stacktrace :refer [print-cause-trace]]
             [clojure.string :as string]))
 
@@ -16,10 +16,6 @@
 
 (defonce untitled-applet-id* (atom 0))
 (def ^:dynamic *applet* nil)
-
-(defn- no-fn
-  "Function that does nothing."
-  [])
 
 (defn ^PApplet current-applet []
   *applet*)
