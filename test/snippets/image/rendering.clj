@@ -31,5 +31,10 @@
     (with-graphics gr
       (background 127)
       (ellipse 50 50 80 40))
-    (image gr 0 0)
-    (image gr 120 120)))
+    (image gr 0 0))
+  (let [gr (create-graphics 100 100 :java2d)]
+    (with-graphics gr
+      (background 127)
+      (ellipse 50 50 40 80))
+    (image gr 100 100)))
+
