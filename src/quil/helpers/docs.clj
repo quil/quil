@@ -63,7 +63,7 @@
   See subcategory-map for format of subcategory."
   [fn-metas]
   (let [cats (fields-as-sorted-set fn-metas :category)
-        idxs (map str (rest (range)))
+        idxs (rest (range))
         idxd-cats (zipmap idxs cats)]
     (into (sorted-map)
       (for [[idx cat] idxd-cats]
@@ -174,4 +174,4 @@
   (doseq [fn-meta (filter :category fn-metas)]
     (generate-function-page fn-meta folder)))
 
-;(generate-all quil.core/fn-metas "../wiki")
+;(generate-all @(resolve 'quil.core/fn-metas) "../wiki")
