@@ -1059,52 +1059,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "createInput()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  create-input
-  "This is a method for advanced programmers to open a Java
-  InputStream. The method is useful if you want to use the facilities
-  provided by PApplet to easily open files from the data folder or
-  from a URL, but want an InputStream object so that you can use other
-  Java methods to take more control of how the stream is read.
-
-  If the requested item doesn't exist, null is returned.
-
-  If not online, this will also check to see if the user is asking for
-  a file whose name isn't properly capitalized. If capitalization is
-  different an error will be printed to the console. This helps
-  prevent issues that appear when a sketch is exported to the web,
-  where case sensitivity matters, as opposed to running from inside
-  the Processing Development Environment on Windows or Mac OS, where
-  case sensitivity is preserved but ignored.
-
-  The filename passed in can be:
-  - A URL, for instance (open-stream \"http://processing.org/\";
-  - A file in the sketch's data folder
-  - The full path to a file to be opened locally (when running as an
-    application)
-
-  If the file ends with .gz, the stream will automatically be gzip
-  decompressed. If you don't want the automatic decompression, use the
-  related function create-input-raw."
-  [filename]
-  (.createInput (current-applet) (str filename)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "createInputRaw()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  create-input-raw
-  "Call create-input without automatic gzip decompression."
-  [filename]
-  (.createInputRaw (current-applet) filename))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "createOutput()"
     :category "Output"
     :subcategory "Files"
