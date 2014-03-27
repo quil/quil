@@ -1,4 +1,4 @@
-(ns snippets.image
+(ns snippets.input
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :refer :all]))
 
