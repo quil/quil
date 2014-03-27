@@ -2318,13 +2318,14 @@
     :added "1.0"}
   mouse-button
   "The value of the system variable mouseButton is either :left, :right,
-  or :center depending on which button is pressed."
+  or :center depending on which button is pressed. nil if no button pressed"
   []
   (let [button-code   (.-mouseButton (current-applet))]
     (condp = button-code
       PConstants/LEFT :left
       PConstants/RIGHT :right
-      PConstants/CENTER :center)))
+      PConstants/CENTER :center
+      nil)))
 
 (defn
   ^{:requires-bindings true
@@ -2332,7 +2333,7 @@
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
-  mouse-state
+  mouse-pressed?
   "Variable storing if a mouse button is pressed. The value of the
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
