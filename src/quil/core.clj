@@ -3292,8 +3292,8 @@
   "Takes a three-dimensional x, y, z position and returns the x value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
-  [x y z]
-  (.screenX (current-graphics) (float x) (float y) (float z)))
+  ([x y]  (.screenX (current-graphics) (float x) (float y)))
+  ([x y z]  (.screenX (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3305,8 +3305,8 @@
   "Takes a three-dimensional x, y, z position and returns the y value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
-  [x y z]
-  (.screenY (current-graphics) (float x) (float y) (float z)))
+  ([x y]  (.screenY (current-graphics) (float x) (float y)))
+  ([x y z]  (.screenY (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3322,7 +3322,7 @@
    'real'. They're only useful for in comparison to another value
    obtained from screen-z, or directly out of the zbuffer"
   [x y z]
-  (.screenX (current-graphics) (float x) (float y) (float z)))
+  (.screenZ (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
