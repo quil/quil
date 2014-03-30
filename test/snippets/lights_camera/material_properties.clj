@@ -43,7 +43,7 @@
   (fill 0 51 102)
   (light-specular  255 255 255)
   (directional-light 204 204 204 -1 -1 -1)
-  (specular 255 255 255)
+  (specular 255)
   (sphere 50)
   (translate 0 100 0)
   (specular 204 102 0)
