@@ -3171,7 +3171,7 @@
     :added "1.0"}
   round
   "Calculates the integer closest to the value parameter. For example,
-  round(9.2) returns the value 9."
+  (round 9.2) returns the value 9."
   [val]
   (PApplet/round (float val)))
 
