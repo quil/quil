@@ -428,30 +428,8 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([^PGraphics graphics] (.beginRaw (current-graphics) graphics))
   ([renderer ^String filename]
      (.beginRaw (current-applet) (resolve-renderer renderer) filename)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "beginRecord()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  begin-record
-  "Opens a new file and all subsequent drawing functions are echoed to
-  this file as well as the display window. The begin-record fn
-  requires two parameters, the first is the renderer and the second is
-  the file name. This function is always used with end-record to stop
-  the recording process and close the file.
-
-  Note that begin-record will only pick up any settings that happen
-  after it has been called. For instance, if you call text-font
-  before begin-record, then that font will not be set for the file
-  that you're recording to."
-  [renderer filename]
-  (let [renderer (resolve-renderer renderer)]
-    (.beginRecord (current-applet) (str renderer) (str filename))))
 
 (def ^{:private true}
      shape-modes {:points PApplet/POINTS
@@ -1059,32 +1037,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "createOutput()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  create-output
-  "Similar to create-input, this creates a Java OutputStream for a
-  given filename or path. The file will be created in the sketch
-  folder, or in the same folder as an exported application.
-
-  If the path does not exist, intermediate folders will be created. If
-  an exception occurs, it will be printed to the console, and null
-  will be returned.
-
-  This method is a convenience over the Java approach that requires
-  you to 1) create a FileOutputStream object, 2) determine the exact
-  file location, and 3) handle exceptions. Exceptions are handled
-  internally by the function, which is more appropriate for sketch
-  projects.
-
-  If the output filename ends with .gz, the output will be
-  automatically GZIP compressed as it is written."
-  [filename]
-  (.createOutput (current-applet) (str filename)))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "fillColor()"
     :category "Color"
     :subcategory "Creating & Reading"}
@@ -1446,18 +1398,6 @@
   the begin-raw docstring for details."
   []
   (.endRaw (current-graphics)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "endRecord()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  end-record
-  "Stops the recording process started by begin-record and closes the
-  file."
-  []
-  (.endRecord (current-applet)))
 
 (defn
   ^{:requires-bindings true
