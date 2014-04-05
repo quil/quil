@@ -237,7 +237,7 @@
   "Draws an arc in the display window. Arcs are drawn along the outer
   edge of an ellipse defined by the x, y, width and height
   parameters. The origin or the arc's ellipse may be changed with the
-  ellipseMode() function. The start and stop parameters specify the
+  ellipse-mode function. The start and stop parameters specify the
   angles at which to draw the arc. The mode is either :open, :chord or :pie."
   ([x y width height start stop]
     (.arc (current-applet) (float x) (float y) (float width) (float height)
