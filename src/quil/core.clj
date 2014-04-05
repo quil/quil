@@ -992,8 +992,12 @@
   allow offscreen use. The :pdf renderer requires the filename parameter.
 
   It's important to call any drawing commands between (.beginDraw graphics) and
-  (.endDraw graphics) statements. This is also true for any commands that affect
-  drawing, such as smooth or color-mode.
+  (.endDraw graphics) statements or use with-graphics macro. This is also true
+  for any commands that affect drawing, such as smooth or color-mode.
+
+  If you're using :pdf renderer - don't forget to call (.dispose graphics)
+  as last command inside with-graphics macro, otherwise graphics won't be
+  saved.
 
   Unlike the main drawing surface which is completely opaque, surfaces
   created with create-graphics can have transparency. This makes it

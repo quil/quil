@@ -36,5 +36,9 @@
     (with-graphics gr
       (background 127)
       (ellipse 50 50 40 80))
-    (image gr 100 100)))
-
+    (image gr 100 100))
+  (let [gr (create-graphics 100 100 :pdf "create-graphics.pdf")]
+    (with-graphics gr
+      (background 127)
+      (ellipse 50 50 80 40)
+      (.dispose gr))))
