@@ -3,7 +3,7 @@
             [quil.core :refer :all]))
 
 (defsnippet begin-raw-end-raw-s {:renderer :p3d}
-  (begin-raw :dxf "dxf.txt")
+  (begin-raw :dxf "generated/dxf.txt")
   (camera 150 150 150 0 0 0 0 0 1)
   (box 100)
   (end-raw))
@@ -11,7 +11,7 @@
 (defsnippet save-s {:renderer :p3d}
   (camera 150 150 150 0 0 0 0 0 1)
   (box 100)
-  (save "box.png"))
+  (save "generated/box.png"))
 
 (defsnippet save-frame-s {:renderer :p3d}
   (camera 150 150 150 0 0 0 0 0 1)
@@ -19,4 +19,4 @@
   (with-rotation [(/ (frame-count) 10)]
    (box 100))
   (save-frame)
-  (save-frame "rotating-box-####.png"))
+  (save-frame "generated/rotating-box-####.png"))

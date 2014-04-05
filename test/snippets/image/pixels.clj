@@ -137,7 +137,7 @@
 
 (defsnippet pixels-update-pixels-s {:renderer :p2d}
   (background 255)
-  (let [size 100
+  (let [size 50
         gr (create-graphics size size :p2d)]
     (with-graphics gr
       (background 255)
@@ -153,7 +153,7 @@
     (image gr (+ size 20) 0)
 
     (let [px (pixels)
-          half (/ (* (width) (height)) 2)]
+          half (/ (* (width) (height)) 10)]
       (dotimes [i half]
         (aset-int px (+ i half) (aget px i))))
     (update-pixels)))
