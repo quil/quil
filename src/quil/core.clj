@@ -1152,7 +1152,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a curve at t."
   [a b c d t]
-  (.bezierPoint (current-graphics) (float a) (float b) (float c) (float d) (float t)))
+  (.curvePoint (current-graphics) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
