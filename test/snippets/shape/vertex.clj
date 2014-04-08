@@ -17,18 +17,20 @@
 
 (defsnippet begin-shape-end-shape-s {:renderer :p2d}
   (stroke 255 0 0)
-  (doseq [[ind mode] [[0 nil]
-                      [1 :points]
-                      [2 :lines]
-                      [3 :triangles]
-                      [4 :triangle-fan]
-                      [5 :triangle-strip]
-                      [6 :quads]
-                      [7 :quad-strip]]
+  (doseq [[ind begin-mode close-mode]
+          [[0 nil nil]
+           [1 nil :close]
+           [2 :points]
+           [3 :lines]
+           [4 :triangles]
+           [5 :triangle-fan]
+           [6 :triangle-strip]
+           [7 :quads]
+           [8 :quad-strip]]
           :let [base-x (* 150 (mod ind 3))
                 base-y (* 150 (quot ind 3))]]
-    (if mode
-      (begin-shape mode)
+    (if begin-mode
+      (begin-shape begin-mode)
       (begin-shape))
     (vertex (+ base-x 50) (+ base-y 10))
     (vertex (+ base-x 80) (+ base-y 30))
@@ -36,7 +38,9 @@
     (vertex (+ base-x 50) (+ base-y 90))
     (vertex (+ base-x 20) (+ base-y 70))
     (vertex (+ base-x 20) (+ base-y 30))
-    (end-shape :close)))
+    (if close-mode
+      (end-shape close-mode)
+      (end-shape))))
 
 (defsnippet bezier-vertex-s {:renderer :p3d}
   (camera -400 250 -100 500 250 0 0 0 1)
@@ -53,7 +57,6 @@
   (end-shape :close))
 
 (defsnippet curve-vertex-s {:renderer :p3d}
-
   (camera 50 200 50 50 0 0 0 0 1)
   (begin-shape)
   (curve-vertex 0 0)
