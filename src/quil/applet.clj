@@ -195,9 +195,16 @@
                 :focus-gained
                 :focus-lost])
 
+(gen-interface
+:name quil.MovieI
+:methods [
+          [movieEvent
+           [Object] quil.MovieI]
+          ])
+
 (gen-class
  :name "quil.Applet"
- :implements [clojure.lang.IMeta]
+ :implements [clojure.lang.IMeta quil.MovieI]
  :extends processing.core.PApplet
  :state state
  :init quil-init
@@ -218,9 +225,16 @@
                    focusLost focusLostParent
                    noLoop noLoopParent})
 
+
 (defn -quil-init [state]
   [[] state])
-
+(defn -movieEvent
+  ([this movie]
+     (println "eventtt pre")
+     (with-applet this
+    ((:movie-event (.state this))  movie))
+     )
+  )
 (defn -meta [this]
   (.state this))
 
@@ -345,6 +359,7 @@
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) (fn [] nil))
+        movie-event-fn           (or (:movie-event options) (fn [ movie] #_(println "default movie-event") (.read movie)))
         output-file       (validate-output-file! renderer (:output-file options))
         target            (if (empty? output-file) target :none)
         setup-fn          (fn []
@@ -353,8 +368,10 @@
                             (when-let [wheel-listener (wrap-mouse-wheel (:mouse-wheel options)
                                                                         (current-applet))]
                               (.addMouseWheelListener (current-applet) wheel-listener))
+
                             (when-let [f (:setup options)]
                               (f)))
+
         safe-draw-fn      (fn []
                             (try
                               (draw-fn)
@@ -376,6 +393,7 @@
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
                                   :draw-fn draw-fn
+                                  :movie-event movie-event-fn
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
