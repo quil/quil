@@ -466,7 +466,10 @@
 
   Transformations such as translate, rotate, and scale do not work
   within begin-shape. It is also not possible to use other shapes,
-  such as ellipse or rect within begin-shape."
+  such as ellipse or rect within begin-shape.
+
+  Doesn't work inside with-graphics macro: shape is not drawn on
+  provided graphics."
   ([] (.beginShape (current-graphics)))
   ([mode]
      (let [mode (resolve-constant-key mode shape-modes)]
@@ -3956,7 +3959,7 @@
   "Sets the coordinate space for texture mapping. There are two
   options, :image and :normal.
 
-  :image refers to the actual coordinates of the image and :normalized
+  :image refers to the actual coordinates of the image and :normal
   refers to a normalized space of values ranging from 0 to 1. The
   default mode is :image. In :image, if an image is 100 x 200 pixels,
   mapping the image onto the entire size of a quad would require the
