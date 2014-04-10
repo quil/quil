@@ -7,7 +7,7 @@
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
   :repositories [["jogamp" "http://www.jogamp.org/deployment/maven/"]]
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [quil/processing-core "2.1.1"]
                  [quil/processing-pdf "2.1.1"]
                  [quil/processing-dxf "2.1.1"]
