@@ -129,7 +129,10 @@
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size]
-  (cond (= size :fullscreen) (display-size)
+  (cond (= size :fullscreen)
+        (do
+          ; (japplemenubar.JAppleMenuBar/hide) on os x???
+          (display-size))
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
                       (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
@@ -357,6 +360,7 @@
                                   :target :frame
                                   :safe-draw-fn true}
                                  (apply hash-map opts))
+        decor             (:decor opts (not= :fullscreen (:size options)))
         size              (process-size (:size options))
         target            (validate-target! (:target options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
@@ -388,8 +392,7 @@
                                   :size size
                                   :target-frame-rate (atom 60)}
                                  listeners)
-        prx-obj           (quil.Applet. applet-state)
-        ]
+        prx-obj           (quil.Applet. applet-state)]
     (doto prx-obj
       (applet-run title renderer target)
       (attach-applet-listeners))))
