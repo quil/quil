@@ -33,19 +33,20 @@
     :added "1.0"}
   state
   "Retrieve sketch-specific state by key. Must initially call
-  set-state! to store state.
+  set-state! to store state. If no parameter passed whole
+  state map is returned.
 
   (set-state! :foo 1)
-  (state :foo) ;=> 1 "
-  [key]
-  (let [state* (:state (meta (current-applet)))]
-    (when-not @state*
-      (throw (Exception. "State not set - use set-state! before fetching state")))
-
-    (let [state @state*]
-      (when-not (contains? state key)
-        (throw (Exception. (str "Unable to find state with key: " key))))
-      (get state key))))
+  (state :foo) ;=> 1
+  (state) ;=> {:foo 1}"
+  ([] (let [state* (:state (meta (current-applet)))]
+        (when-not @state*
+          (throw (Exception. "State not set - use set-state! before fetching state")))
+        @state*))
+  ([key] (let [state (state)]
+           (when-not (contains? state key)
+             (throw (Exception. (str "Unable to find state with key: " key))))
+           (get state key))))
 
 (defn
   ^{:requires-bindings true
