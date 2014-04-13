@@ -1544,6 +1544,18 @@
        (.filter (current-graphics) (int mode) (float level)))))
 
 (defn
+  ^{:requires-bindings false
+    :processing-name "floor()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "2.0"}
+  floor
+  "Calculates the closest int value that is less than or equal to the valu  e of the parameter. For example, (floor 9.03) returns the
+  value 9."
+  [n]
+  (PApplet/floor (float n)))
+
+(defn
   ^{:requires-bindings true
     :processing-name "focused"
     :category "Environment"

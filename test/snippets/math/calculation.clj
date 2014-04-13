@@ -30,6 +30,11 @@
   (fill 0)
   (text (str "(exp 2) = " (exp 2)) 10 20))
 
+(defsnippet floor-s {}
+  (background 255)
+  (fill 0)
+  (text (str "(floor 9.03) = " (floor 9.03)) 10 20))
+
 (defsnippet lerp-s {}
   (background 255)
   (fill 0)
