@@ -3773,10 +3773,7 @@
   The x1, y1, x2 and y2 parameters define a
   rectangular area to display within and may only be used with string
   data. For text drawn inside a rectangle, the coordinates are
-  interpreted based on the current rect-mode setting.
-
-  Use the text-mode function with the :screen parameter to display text
-  in 2D at the surface of the window."
+  interpreted based on the current rect-mode setting."
   ([^String s x y] (.text (current-graphics) s (float x) (float y)))
   ([^String s x y z] (.text (current-graphics) s (float x) (float y) (float z)))
   ([^String s x1 y1 x2 y2] (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2))))
