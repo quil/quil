@@ -1,4 +1,4 @@
-(ns snippets.displaying.metrics
+(ns snippets.typography.metrics
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :refer :all]))
 

@@ -1,6 +1,7 @@
-(ns snippets.displaying.loading-and-displaying
+(ns snippets.typography.loading-and-displaying
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :refer :all]
+            clojure.java.io))
 
 (defsnippet available-fonts-s {}
   (background 255)
@@ -32,6 +33,15 @@
         20 20)
   (text (str "'My Custom Font' available: " (font-available? "My Custom Font"))
         20 40))
+
+(defsnippet load-font-s {}
+  (background 255)
+  (fill 0)
+  (let [font (load-font (clojure.java.io/resource "ComicSansMS-48.vlw"))]
+    (->> (clojure.java.io/resource "ComicSansMS-48.vlw")
+         (load-font)
+         (text-font))
+    (text "CoMiC SaNs HeRe" 20 100)))
 
 (defsnippet text-s {:renderer :p3d}
   (background 255)
