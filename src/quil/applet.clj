@@ -113,7 +113,11 @@
   This string can be passed to native Processing methods."
   [renderer]
   (resolve-constant-key renderer renderer-modes))
-
+(defn- hide-menu-bar-if-macos []
+  (when (= PApplet/platform PApplet/MACOSX)
+    (.. (Class/forName "japplemenubar.JAppleMenuBar")
+        (getDeclaredMethod "hide" (into-array Class []))
+        (invoke nil (into-array Object [])))))
 
 (defn- display-size
   "Returns size of screen. If there are 2 or more screens it probably return size of
@@ -129,10 +133,7 @@
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size]
-  (cond (= size :fullscreen)
-        (do
-          ; (japplemenubar.JAppleMenuBar/hide) on os x???
-          (display-size))
+  (cond (= size :fullscreen) (display-size)
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
                       (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
@@ -356,6 +357,8 @@
 
    :on-close       - Called once, when sketch is closed"
   [& opts]
+  (when (= :fullscreen (:size opts))
+    (hide-menu-bar-if-macos))
   (let [options           (merge {:size [500 300]
                                   :target :frame
                                   :safe-draw-fn true}
@@ -390,7 +393,8 @@
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size
-                                  :target-frame-rate (atom 60)}
+                                  :target-frame-rate (atom 60)
+                                  :decor decor}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (doto prx-obj
