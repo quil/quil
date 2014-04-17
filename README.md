@@ -20,11 +20,15 @@ Quil requires Clojure 1.5.1, and other dependencies described in `project.clj` w
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.7.0"]
+```clojure
+[quil "1.7.0"]
+```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
-    (:use quil.core)
+```clojure
+(:require [quil.core :refer :all])
+```
 
 For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing).
 
