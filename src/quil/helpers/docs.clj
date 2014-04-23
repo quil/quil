@@ -63,7 +63,7 @@
   See subcategory-map for format of subcategory."
   [fn-metas]
   (let [cats (fields-as-sorted-set fn-metas :category)
-        idxs (rest (range))
+        idxs (map #(format "%2d" %) (rest (range)))
         idxd-cats (zipmap idxs cats)]
     (into (sorted-map)
       (for [[idx cat] idxd-cats]
