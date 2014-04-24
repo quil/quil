@@ -5,6 +5,11 @@
   "Function that does nothing."
   [])
 
+(defn absolute-path [path]
+  (-> (str path)
+      (java.io.File.)
+      (.getAbsolutePath)))
+
 (defn int-like?
   [val]
   (let [t (type val)]

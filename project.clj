@@ -6,11 +6,11 @@
                  :post "clj-processing@googlegroups.com"}
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
-  :repositories [["jogamp" "http://www.jogamp.org/deployment/maven/"]]
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [quil/processing-core "2.1.1"]
-                 [quil/processing-pdf "2.1.1"]
-                 [quil/processing-dxf "2.1.1"]
-                 [org.jogamp.jogl/jogl-all-main "2.1.4-rc-20140113"]
-                 [org.jogamp.gluegen/gluegen-rt-main "2.1.4-rc-20140113"]]
+                 [quil/processing-core "2.1.2"]
+                 [quil/processing-pdf "2.1.2"]
+                 [quil/processing-dxf "2.1.2"]
+                 [org.jogamp.jogl/jogl-all-main "2.1.5-01"]
+                 [org.jogamp.gluegen/gluegen-rt-main "2.1.5-01"]
+                 [com.lowagie/itext "2.1.7"]]
   :aot [quil.helpers.applet-listener quil.applet])

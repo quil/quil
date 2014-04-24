@@ -4,7 +4,8 @@
            [java.awt.event KeyEvent])
   (:require [clojure.set]
             [quil.helpers.docs :as docs]
-            [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
+            [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
+                               absolute-path]]
             [quil.applet :refer [current-applet applet-stop applet-state applet-start applet-close
                                  applet defapplet applet-safe-exit resolve-renderer]]))
 
@@ -429,8 +430,8 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([renderer ^String filename]
-     (.beginRaw (current-applet) (resolve-renderer renderer) filename)))
+  ([renderer filename]
+     (.beginRaw (current-applet) (resolve-renderer renderer) (absolute-path filename))))
 
 (def ^{:private true}
      shape-modes {:points PApplet/POINTS
@@ -1015,7 +1016,8 @@
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer) (str path))))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
+                      (absolute-path path))))
 
 (def ^{:private true}
   image-formats {:rgb PApplet/RGB
