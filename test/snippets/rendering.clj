@@ -37,3 +37,18 @@
     (image gr 250 0)
     (image gr 0 250)
     (image gr 250 250)))
+
+(defsnippet load-shader-s {:renderer :p2d}
+  (let [gr (create-graphics 250 250)
+        path (clojure.java.io/resource "SimpleShader.glsl")
+        shd (load-shader (str path))]
+    (with-graphics gr
+      (background 255)
+      (fill 255 0 0)
+      (triangle 50 30 220 120 20 180))
+    (image gr 0 0)
+    (image gr 250 0)
+    (shader shd)
+    (image gr 0 250)
+    (reset-shader)
+    (image gr 250 250)))
