@@ -365,7 +365,14 @@
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
-        on-close-fn       (or (:on-close options) no-fn)
+
+        on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
+                            (if (true? (:exit-on-close options))
+                              (fn []
+                                  (close-fn)
+                                  (System/exit 0))
+                              close-fn))
+
         state             (atom nil)
         target-obj        (atom nil)
         looping?          (atom true)
