@@ -115,6 +115,24 @@
             (apply display-filter mode))
           (image dest (* col 120) (* 120 (inc row))))))))
 
+(defsnippet filter-shader-s {:renderer :p2d}
+  (background 255)
+  (let [orig (create-graphics 100 100)
+        shd (load-shader (str (clojure.java.io/resource "SimpleShader.glsl")))]
+    (with-graphics orig
+      (color-mode :rgb 1.0)
+      (background 1)
+      (no-stroke)
+      (ellipse-mode :corner)
+      (doseq [r (range 0 1 0.1)
+              b (range 0 1 0.1)]
+        (fill r 0 b)
+        (ellipse (* r 100) (* b 100) 10 10)))
+    (image orig 0 0)
+
+    (filter-shader shd)
+    (image orig 100 100)))
+
 (defsnippet get-pixel-s {}
   (background 255)
   (let [gr (create-graphics 100 100)]
