@@ -47,7 +47,7 @@ If `setup` and `draw` are hard working *artistic gladiators*, `sketch` is the *a
 A simple example is called for:
 ```clojure
 (ns for-the-glory-of-art
-  (:use quil.core))
+  (:require [quil.core :refer :all]))
 
 (defn setup []
   (smooth)                          ;; Turn on anti-aliasing
