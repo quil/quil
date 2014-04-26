@@ -118,7 +118,6 @@
 (defsnippet filter-shader-s {:renderer :p2d}
   (background 255)
   (let [orig (create-graphics 100 100)
-        dest (create-graphics 100 100)
         shd (load-shader (str (clojure.java.io/resource "SimpleShader.glsl")))]
     (with-graphics orig
       (color-mode :rgb 1.0)
@@ -131,9 +130,8 @@
         (ellipse (* r 100) (* b 100) 10 10)))
     (image orig 0 0)
 
-    (copy orig dest [0 0 100 100] [0 0 100 100])
     (filter-shader shd)
-    (image dest 100 100)))
+    (image orig 100 100)))
 
 (defsnippet get-pixel-s {}
   (background 255)
