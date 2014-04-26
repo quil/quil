@@ -10,7 +10,7 @@
                  [quil/processing-core "2.1.2"]
                  [quil/processing-pdf "2.1.2"]
                  [quil/processing-dxf "2.1.2"]
-                 [quil/jogl-fat "2.1.5"]
+                 [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]]
   :aot [quil.helpers.applet-listener quil.applet])
