@@ -1,6 +1,7 @@
 (ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
   quil.core
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+           [processing.opengl PShader]
            [java.awt.event KeyEvent])
   (:require [clojure.set]
             [quil.helpers.docs :as docs]
@@ -1508,9 +1509,8 @@
     :added "1.0"}
   display-filter
   "Originally named filter in Processing Language.
-  Filters the display window with the specified mode and level or using
-  given shader (only in :p2d and :p3d modes). Level defines the quality
-  of the filter and mode may be one of the following keywords:
+  Filters the display window with the specified mode and level.
+  Level defines the quality of the filter and mode may be one of the following keywords:
 
   :threshold - converts the image to black and white pixels depending
                if they are above or below the threshold defined by
@@ -1531,19 +1531,24 @@
   :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
   :erode     - reduces the light areas. Doesn't work with level.
   :dilate    - increases the light areas.  Doesn't work with level."
-  ([mode-or-shader]
-    (cond (keyword? mode-or-shader)
-          (let [mode (resolve-constant-key mode-or-shader filter-modes)]
-            (.filter (current-graphics) (int mode)))
+  ([mode]
+   (.filter (current-graphics)
+            (int (resolve-constant-key mode filter-modes))))
 
-          (instance? processing.opengl.PShader mode-or-shader)
-          (.filter (current-graphics) ^processing.opengl.PShader mode-or-shader)
-
-          :else
-          (throw (IllegalArgumentException. "(filter mode-or-shader) takes only keyword or PShader"))))
   ([mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter (current-graphics) (int mode) (float level)))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "filter()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "2.0"}
+  filter-shader
+  "Originally named filter in Processing Language.
+  Filters the display window with given shader (only in :p2d and :p3d modes)."
+  [^PShader shader-obj] (.filter (current-graphics) shader-obj))
 
 (defn
   ^{:requires-bindings false
