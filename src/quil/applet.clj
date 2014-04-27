@@ -28,8 +28,6 @@
   It means we can dispose frame, call on-close function and perform other
   clean ups."
   [applet]
-  (when-let [frame @(:target-obj (meta applet))]
-    (.dispose frame))
   ((:on-close (meta applet))))
 
 (defn applet-stop
@@ -58,18 +56,22 @@
   (applet-safe-exit applet)
   (javax.swing.SwingUtilities/invokeLater
     (fn []
-      (when-let [frame @(:target-obj (meta applet))]
-        (.hide frame)))))
+      (when-let [frame (. applet frame)]
+        (.setVisible frame false)))))
 
-(defn- launch-applet-frame
+
+(defn- prepare-applet-frame
   [applet title renderer keep-on-top?]
   (let [truthify       #(not (or (nil? %) (false? %)))
         keep-on-top?   (truthify keep-on-top?)
         m              (.meta applet)
         close-op       JFrame/DO_NOTHING_ON_CLOSE
-        f              (JFrame. title)
-        falsify        #(not (or (nil? %) (true? %)))
-        decor?         (falsify (:decor m))]
+        f              (. applet frame)
+        falsify        #(not (or (nil? %) (true? %)))]
+
+    (doseq [listener (.getWindowListeners f)]
+      (.removeWindowListener f listener))
+
     (doto f
       (.addWindowListener  (reify WindowListener
                              (windowActivated [this e])
@@ -80,25 +82,28 @@
                              (windowIconified [this e])
                              (windowOpened [this e])
                              (windowClosed [this e])))
-      (.setUndecorated decor?)
-      (.setDefaultCloseOperation close-op)
-      (.add applet)
-      (.pack))
+      (.setDefaultCloseOperation close-op))
+
+    (javax.swing.SwingUtilities/invokeLater
+     (fn []
+       (.setResizable f true)
+       (.setAlwaysOnTop f keep-on-top?)))
+
     (when (= renderer :opengl)
       (.setResizable f false))
-    (.show f)
-    (.setAlwaysOnTop f keep-on-top?)
     (reset! (:target-obj (meta applet)) f)
     applet))
+
 
 (defn- applet-run
   "Launches the applet to the specified target."
   [applet title renderer target]
+  (PApplet/runSketch (into-array String ["--hide-stop" title]) applet)
   (case target
-    :frame (launch-applet-frame applet title renderer false)
-    :perm-frame (launch-applet-frame applet title renderer true)
-    :none applet)
-  (.init applet))
+    :frame (prepare-applet-frame applet title renderer false)
+    :perm-frame (prepare-applet-frame applet title renderer true)
+    :none (prepare-applet-frame applet title renderer false)))
+
 
 (def ^{:private true}
   renderer-modes {:p2d    PApplet/P2D
@@ -113,11 +118,6 @@
   This string can be passed to native Processing methods."
   [renderer]
   (resolve-constant-key renderer renderer-modes))
-(defn- hide-menu-bar-if-macos []
-  (when (= PApplet/platform PApplet/MACOSX)
-    (.. (Class/forName "japplemenubar.JAppleMenuBar")
-        (getDeclaredMethod "hide" (into-array Class []))
-        (invoke nil (into-array Object [])))))
 
 (defn- display-size
   "Returns size of screen. If there are 2 or more screens it probably return size of
@@ -201,14 +201,17 @@
                     frameRate frameRateParent
                     mouseReleased mouseReleasedParent
                     focusLost focusLostParent
-                    noLoop noLoopParent})
+                    noLoop noLoopParent
+                    sketchFullScreen sketchFullScreenParent})
+
+(defn -sketchFullScreen [this] false)
 
 (defn -quil-applet-init [state]
   [[] state])
 
 (defn -quil-applet-post-init [this _]
-  (let [[width height] (:size (.state this))]
-    (.setPreferredSize this (Dimension. width height))))
+  (let [[width height] (:size (meta this))]
+    (.resize this width height)))
 
 (defn -meta [this]
   (.state this))
@@ -220,10 +223,10 @@
   ; (don't know why, but let's trust Processing guys).
   ; Technically it's not first (there are 'when' and 'let' before 'size'),
   ; but hopefully it will work fine.
-  (when (= (:renderer (meta this)) :pdf)
-    (let [[width height] (:size (meta this))
+  (let [[width height] (:size (meta this))
           renderer (resolve-renderer (:renderer (meta this)))
           file (-> this meta :output-file absolute-path)]
+    (when (= (:renderer (meta this)) :pdf)
       (.size this (int width) (int height) renderer file)))
   (with-applet this
     ((:setup-fn (meta this)))))
@@ -345,13 +348,11 @@
 
    :on-close       - Called once, when sketch is closed"
   [& opts]
-  (when (= :fullscreen (:size opts))
-    (hide-menu-bar-if-macos))
   (let [options           (merge {:size [500 300]
                                   :target :frame
                                   :safe-draw-fn true}
                                  (apply hash-map opts))
-        decor             (:decor opts (not= :fullscreen (:size options)))
+
         size              (process-size (:size options))
         target            (validate-target! (:target options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
@@ -366,12 +367,7 @@
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
 
-        on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
-                            (if (true? (:exit-on-close options))
-                              (fn []
-                                  (close-fn)
-                                  (System/exit 0))
-                              close-fn))
+        on-close-fn       (or (:on-close options) no-fn)
 
         state             (atom nil)
         target-obj        (atom nil)
@@ -388,8 +384,7 @@
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size
-                                  :target-frame-rate (atom 60)
-                                  :decor decor}
+                                  :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (doto prx-obj
