@@ -6,7 +6,8 @@
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
             [clojure.stacktrace :refer [print-cause-trace]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.set :as clj-set]))
 
 (defn applet-safe-exit
   "Sets 'finished' field in applet to true. Main run loop in applet
@@ -279,6 +280,14 @@
     (.registerMethod applet "dispose" listener-obj)
     applet))
 
+(def ^{:private true}
+  opts-applet-params
+  #{})
+
+
+(defn make-hmap [lst key-val]
+  (reduce #(assoc %1 %2 key-val) {} (filter keyword? lst)))
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -351,6 +360,11 @@
                                   :target :frame
                                   :safe-draw-fn true}
                                  (apply hash-map opts))
+
+        opts              (make-hmap (filter opts-applet-params (:opts options)) true)
+
+        options           (merge (dissoc options :opts) opts)
+
         decor             (:decor opts (not= :fullscreen (:size options)))
         size              (process-size (:size options))
         target            (validate-target! (:target options))
@@ -378,6 +392,8 @@
         looping?          (atom true)
         listeners         (into {} (for [name listeners]
                                      [name (or (options name) no-fn)]))
+
+
         applet-state      (merge options
                                  {:state state
                                   :target-obj target-obj
