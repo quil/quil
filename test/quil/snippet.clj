@@ -11,7 +11,9 @@
       :title (str '~name)
       :size default-size
       :renderer ~(:renderer opts :java2d)
-      :setup (fn [] ~(:setup opts))
+      :setup (fn []
+               ~(:setup opts)
+               (q/frame-rate 5))
       :draw (fn []
               (try
                 ~@draw-fn-body
@@ -19,7 +21,9 @@
                   (println "Error" e#)
                   (.printStackTrace e#)
                   (deliver result# e#))
-                (finally (q/exit))))
+                (finally
+                  (delay 100)
+                  (q/exit))))
       :on-close #(deliver result# nil))
      (is (nil? @result#))))
 

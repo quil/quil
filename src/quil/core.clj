@@ -7,7 +7,7 @@
             [quil.helpers.docs :as docs]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
                                absolute-path]]
-            [quil.applet :refer [current-applet applet-state applet-close applet defapplet applet-safe-exit resolve-renderer]]))
+            [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
 (def ^{:dynamic true
        :private true}

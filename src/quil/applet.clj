@@ -8,12 +8,6 @@
             [clojure.stacktrace :refer [print-cause-trace]]
             [clojure.string :as string]))
 
-(defn applet-safe-exit
-  "Sets 'finished' field in applet to true. Main run loop in applet
-   should stop as soon as finished == true and then call dispose."
-  [applet]
-  (set! (.-finished applet) true))
-
 (defonce untitled-applet-id* (atom 0))
 (def ^:dynamic *applet* nil)
 
@@ -28,6 +22,7 @@
   It means we can dispose frame, call on-close function and perform other
   clean ups."
   [applet]
+  (-> applet meta :target-obj deref .dispose)
   ((:on-close (meta applet))))
 
 (defn applet-state
@@ -36,28 +31,18 @@
   (get @(:state (meta applet)) k))
 
 (defn applet-close
-  "Stop the applet and close the window. Call on-close function afterwards."
+  "Sets 'finished' field in applet to true. Main run loop in applet
+   should stop as soon as finished == true and then call dispose."
   [applet]
-  (applet-safe-exit applet)
-  (javax.swing.SwingUtilities/invokeLater
-    (fn []
-      (when-let [frame (. applet frame)]
-        (.setVisible frame false)))))
-
+  (set! (.finished applet) true))
 
 (defn- prepare-applet-frame
   [applet title renderer keep-on-top?]
-  (let [truthify       #(not (or (nil? %) (false? %)))
-        keep-on-top?   (truthify keep-on-top?)
-        m              (.meta applet)
-        close-op       JFrame/DO_NOTHING_ON_CLOSE
-        f              (. applet frame)
-        falsify        #(not (or (nil? %) (true? %)))]
-
-    (doseq [listener (.getWindowListeners f)]
-      (.removeWindowListener f listener))
-
-    (doto f
+  (let [keep-on-top?   (boolean keep-on-top?)
+        frame          (.frame applet)]
+    (doseq [listener (.getWindowListeners frame)]
+      (.removeWindowListener frame listener))
+    (doto frame
       (.addWindowListener  (reify WindowListener
                              (windowActivated [this e])
                              (windowClosing [this e]
@@ -67,16 +52,12 @@
                              (windowIconified [this e])
                              (windowOpened [this e])
                              (windowClosed [this e])))
-      (.setDefaultCloseOperation close-op))
-
+      (.setDefaultCloseOperation JFrame/DO_NOTHING_ON_CLOSE))
     (javax.swing.SwingUtilities/invokeLater
      (fn []
-       (.setResizable f true)
-       (.setAlwaysOnTop f keep-on-top?)))
-
-    (when (= renderer :opengl)
-      (.setResizable f false))
-    (reset! (:target-obj (meta applet)) f)
+       (.setResizable frame true)
+       (.setAlwaysOnTop frame keep-on-top?)))
+    (reset! (:target-obj (meta applet)) frame)
     applet))
 
 
@@ -86,8 +67,7 @@
   (PApplet/runSketch (into-array String ["--hide-stop" title]) applet)
   (case target
     :frame (prepare-applet-frame applet title renderer false)
-    :perm-frame (prepare-applet-frame applet title renderer true)
-    :none (prepare-applet-frame applet title renderer false)))
+    :perm-frame (prepare-applet-frame applet title renderer true)))
 
 
 (def ^{:private true}
@@ -123,11 +103,11 @@
         :else (throw (IllegalArgumentException.
                       (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
 
-(def ^{:private true} VALID-TARGETS #{:frame :perm-frame :none})
+(def ^{:private true} VALID-TARGETS #{:frame :perm-frame})
 
 (defn- validate-target!
   "Checks that the target option is one of the following allowed
-  targets: [:frame, :perm-frame :none]."
+  targets: [:frame, :perm-frame]."
   [target]
   (when-not (some VALID-TARGETS [target])
     (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
@@ -285,9 +265,6 @@
 
    :target         - Specify the target. One of :frame, :perm-frame.
 
-   :decor          - Specify if the window should have OS frame
-                     decorations.
-
    :setup          - a fn to be called once when setting the sketch up.
 
    :draw           - a fn to be repeatedly called at most n times per
@@ -378,7 +355,7 @@
 
 (def ^{:private true}
   non-fn-applet-params
-  #{:size :renderer :output-file :title :target :decor})
+  #{:size :renderer :output-file :title :target})
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
