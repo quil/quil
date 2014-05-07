@@ -30,25 +30,10 @@
   [applet]
   ((:on-close (meta applet))))
 
-(defn applet-stop
-  "Stop an applet"
-  [applet]
-  (.stop applet))
-
 (defn applet-state
   "Fetch an element of state from within the applet"
   [applet k]
   (get @(:state (meta applet)) k))
-
-(defn applet-start
-  "Start an applet"
-  [applet]
-  (.start applet))
-
-(defn applet-exit
-  "Exit the applet (may kill JVM process)"
-  [applet]
-  (.exit applet))
 
 (defn applet-close
   "Stop the applet and close the window. Call on-close function afterwards."
@@ -223,10 +208,10 @@
   ; (don't know why, but let's trust Processing guys).
   ; Technically it's not first (there are 'when' and 'let' before 'size'),
   ; but hopefully it will work fine.
-  (let [[width height] (:size (meta this))
+  (when (= (:renderer (meta this)) :pdf)
+    (let [[width height] (:size (meta this))
           renderer (resolve-renderer (:renderer (meta this)))
           file (-> this meta :output-file absolute-path)]
-    (when (= (:renderer (meta this)) :pdf)
       (.size this (int width) (int height) renderer file)))
   (with-applet this
     ((:setup-fn (meta this)))))

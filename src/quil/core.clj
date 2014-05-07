@@ -7,8 +7,7 @@
             [quil.helpers.docs :as docs]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
                                absolute-path]]
-            [quil.applet :refer [current-applet applet-stop applet-state applet-start applet-close
-                                 applet defapplet applet-safe-exit resolve-renderer]]))
+            [quil.applet :refer [current-applet applet-state applet-close applet defapplet applet-safe-exit resolve-renderer]]))
 
 (def ^{:dynamic true
        :private true}
@@ -4381,30 +4380,7 @@
 (def DEG-TO-RAD (/ PI (float 180.0)))
 (def RAD-TO-DEG (/ (float 180.0) PI))
 
-;; Sketch control
-
-(defn sketch-stop
-  "Stop/pause the sketch (restart with sketch-start)"
-  [sketch]
-  (applet-stop sketch))
-
-(defn sketch-state
-  "Fetch an element of state from within the sketch"
-  [sketch k]
-  (applet-state sketch k))
-
-(defn sketch-start
-  "Restart the sketch (if it has been stopped with sketch-stop)"
-  [sketch]
-  (applet-start sketch))
-
-(defn sketch-close
-  "Stop the sketch and close the window"
-  [sketch]
-  (applet-close sketch))
-
 ;; Sketch creation
-
 
 (defn sketch
   "Create and start a new visualisation applet.
