@@ -7,6 +7,7 @@
 
 (defmacro snippet-as-test [name opts & draw-fn-body]
   `(let [result# (promise)]
+     (Thread/sleep 100)
      (q/sketch
       :title (str '~name)
       :size default-size
@@ -21,9 +22,7 @@
                   (println "Error" e#)
                   (.printStackTrace e#)
                   (deliver result# e#))
-                (finally
-                  (delay 100)
-                  (q/exit))))
+                (finally (q/exit))))
       :on-close #(deliver result# nil))
      (is (nil? @result#))))
 
