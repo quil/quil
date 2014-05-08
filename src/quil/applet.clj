@@ -57,7 +57,8 @@
       (.setDefaultCloseOperation JFrame/DO_NOTHING_ON_CLOSE))
     (javax.swing.SwingUtilities/invokeLater
      (fn []
-       (.setResizable frame resizable?)
+       (when resizable?
+         (.setResizable frame resizable?))
        (.setAlwaysOnTop frame keep-on-top?)))
     applet))
 
