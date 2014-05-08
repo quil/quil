@@ -40,7 +40,8 @@
   [applet title renderer]
   (let [m              (meta applet)
         keep-on-top?   (true? (:keep-on-top m))
-        frame          (.frame applet)]
+        frame          (.frame applet)
+        resizable?     (:resizable m)]
     (doseq [listener (.getWindowListeners frame)]
       (.removeWindowListener frame listener))
     (doto frame
@@ -56,7 +57,8 @@
       (.setDefaultCloseOperation JFrame/DO_NOTHING_ON_CLOSE))
     (javax.swing.SwingUtilities/invokeLater
      (fn []
-       (.setResizable frame true)
+       (when resizable?
+         (.setResizable frame resizable?))
        (.setAlwaysOnTop frame keep-on-top?)))
     applet))
 
@@ -254,6 +256,8 @@
    :keep-on-top    - Sets whether sketch window should always be above other windows.
                      Note: some platforms might not support always-on-top windows.
 
+   :resizable      - Sets whether sketch is resizable by the user.
+
    :setup          - a fn to be called once when setting the sketch up.
 
    :draw           - a fn to be repeatedly called at most n times per
@@ -307,6 +311,7 @@
         size              (process-size (:size options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
+        resizable         (not (false? (:resizable options)))
         draw-fn           (or (:draw options) no-fn)
         setup-fn          (or (:setup options) no-fn)
         safe-draw-fn      (fn []
@@ -331,6 +336,7 @@
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size
+                                  :resizable resizable
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
