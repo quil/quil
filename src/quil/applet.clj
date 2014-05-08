@@ -22,7 +22,7 @@
   It means we can dispose frame, call on-close function and perform other
   clean ups."
   [applet]
-  (-> applet meta :target-obj deref .dispose)
+  (.dispose (. applet frame))
   ((:on-close (meta applet))))
 
 (defn applet-state
@@ -57,7 +57,6 @@
      (fn []
        (.setResizable frame true)
        (.setAlwaysOnTop frame keep-on-top?)))
-    (reset! (:target-obj (meta applet)) frame)
     applet))
 
 
@@ -332,13 +331,11 @@
         on-close-fn       (or (:on-close options) no-fn)
 
         state             (atom nil)
-        target-obj        (atom nil)
         looping?          (atom true)
         listeners         (into {} (for [name listeners]
                                      [name (or (options name) no-fn)]))
         applet-state      (merge options
                                  {:state state
-                                  :target-obj target-obj
                                   :target target
                                   :looping? looping?
                                   :on-close on-close-fn
