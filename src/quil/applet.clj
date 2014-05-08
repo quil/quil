@@ -37,8 +37,9 @@
   (set! (.finished applet) true))
 
 (defn- prepare-applet-frame
-  [applet title renderer keep-on-top?]
-  (let [keep-on-top?   (boolean keep-on-top?)
+  [applet title renderer]
+  (let [m              (meta applet)
+        keep-on-top?   (true? (:keep-on-top m))
         frame          (.frame applet)]
     (doseq [listener (.getWindowListeners frame)]
       (.removeWindowListener frame listener))
@@ -62,11 +63,9 @@
 
 (defn- applet-run
   "Launches the applet to the specified target."
-  [applet title renderer target]
+  [applet title renderer]
   (PApplet/runSketch (into-array String ["--hide-stop" title]) applet)
-  (case target
-    :frame (prepare-applet-frame applet title renderer false)
-    :perm-frame (prepare-applet-frame applet title renderer true)))
+  (prepare-applet-frame applet title renderer))
 
 
 (def ^{:private true}
@@ -101,16 +100,6 @@
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
                       (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
-
-(def ^{:private true} VALID-TARGETS #{:frame :perm-frame})
-
-(defn- validate-target!
-  "Checks that the target option is one of the following allowed
-  targets: [:frame, :perm-frame]."
-  [target]
-  (when-not (some VALID-TARGETS [target])
-    (throw (IllegalArgumentException. (str "Invalid target:" target". Was expecting one of: " (vec VALID-TARGETS)))))
-  target)
 
 (defn- to-method-name [keyword]
   "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
@@ -262,7 +251,8 @@
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
-   :target         - Specify the target. One of :frame, :perm-frame.
+   :keep-on-top    - Sets whether sketch window should always be above other windows.
+                     Note: some platforms might not support always-on-top windows.
 
    :setup          - a fn to be called once when setting the sketch up.
 
@@ -315,7 +305,6 @@
                                  (apply hash-map opts))
 
         size              (process-size (:size options))
-        target            (validate-target! (:target options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) no-fn)
@@ -336,7 +325,6 @@
                                      [name (or (options name) no-fn)]))
         applet-state      (merge options
                                  {:state state
-                                  :target target
                                   :looping? looping?
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
@@ -347,7 +335,7 @@
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (doto prx-obj
-      (applet-run title renderer target)
+      (applet-run title renderer)
       (attach-applet-listeners))))
 
 (def ^{:private true}
