@@ -6,7 +6,8 @@
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
             [clojure.stacktrace :refer [print-cause-trace]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [clojure.set :as clj-set]))
 
 (defonce untitled-applet-id* (atom 0))
 (def ^:dynamic *applet* nil)
@@ -237,6 +238,13 @@
     (.registerMethod applet "dispose" listener-obj)
     applet))
 
+(def ^{:private true}
+  opts-applet-params
+  #{})
+
+(defn make-hmap [lst key-val]
+  (reduce #(assoc %1 %2 key-val) {} (filter keyword? lst)))
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -308,6 +316,10 @@
                                   :safe-draw-fn true}
                                  (apply hash-map opts))
 
+        opts              (make-hmap (filter opts-applet-params (:opts options)) true)
+
+        options           (merge (dissoc options :opts) opts)
+
         size              (process-size (:size options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
@@ -328,6 +340,8 @@
         looping?          (atom true)
         listeners         (into {} (for [name listeners]
                                      [name (or (options name) no-fn)]))
+
+
         applet-state      (merge options
                                  {:state state
                                   :looping? looping?
