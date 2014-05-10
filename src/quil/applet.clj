@@ -359,8 +359,11 @@
       (attach-applet-listeners))))
 
 (def ^{:private true}
-  non-fn-applet-params
-  #{:size :renderer :output-file :title :target})
+  fn-applet-params
+  #{:setup :draw :focus-gained :focus-lost :mouse-entered
+    :mouse-exited :mouse-pressed :mouse-released :mouse-clicked
+    :mouse-moved :mouse-dragged :mouse-wheel :key-pressed
+    :key-typed :safe-draw-fn :on-close})
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
@@ -369,7 +372,7 @@
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See applet for the available options."
   [app-name & opts]
-  (let [fn-param? #(not (contains? non-fn-applet-params %))
+  (let [fn-param? #(contains? fn-applet-params %)
         opts  (mapcat (fn [[k v]]
                         [k (if (and (symbol? v)
                                     (fn-param? k))
