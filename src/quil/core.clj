@@ -186,13 +186,13 @@
     :added "1.0"}
   ambient-light
   "Adds an ambient light. Ambient light doesn't come from a specific direction,
-   the rays have light have bounced around so much that objects are
-   evenly lit from all sides. Ambient lights are almost always used in
-   combination with other types of lights. Lights need to be included
-   in the draw to remain persistent in a looping program. Placing them
-   in the setup of a looping program will cause them to only have an
-   effect the first time through the loop. The effect of the
-   parameters is determined by the current color mode."
+  the rays have light have bounced around so much that objects are
+  evenly lit from all sides. Ambient lights are almost always used in
+  combination with other types of lights. Lights need to be included
+  in the draw to remain persistent in a looping program. Placing them
+  in the setup of a looping program will cause them to only have an
+  effect the first time through the loop. The effect of the
+  parameters is determined by the current color mode."
   ([red green blue]
      (.ambientLight (current-graphics) (float red) (float green) (float blue)))
   ([red green blue x y z]
@@ -4382,7 +4382,11 @@
 
 ;; Sketch creation
 
-(defn sketch
+(defn ^{:requires-bindings false
+        :category "Environment"
+        :subcategory nil
+        :added "1.0"}
+  sketch
   "Create and start a new visualisation applet.
 
    :size           - a vector of width and height for the sketch or :fullscreen.
@@ -4451,7 +4455,11 @@
     [& opts]
     (apply applet opts))
 
-(defmacro defsketch
+(defmacro ^{:requires-bindings false
+            :category "Environment"
+            :subcategory nil
+            :added "1.0"}
+  defsketch
   "Define and start a sketch and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
   symbols, it wraps them in a call to var to ensure they aren't
