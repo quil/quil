@@ -13,7 +13,7 @@
 
 (def fn-width (px 700))
 (def gray-background "#FAFAFA")
-(def column-width (px 170))
+(def column-width (px 200))
 
 (def index-page-columns [["Color" "Data" "Environment"]
                          ["Image" "Transform" "Output" "Rendering" ]
@@ -25,7 +25,15 @@
   (garden.core/css
 
    [[:body {:color "#333"}]
+    [:a {:color "#333"}]
     [:p {:margin "0px"}]
+
+    [:.category-div :#toc
+     [:.category {:margin "0px 0px 7px 0px"}
+      [:a {:color "#990099"}]]
+     [:.subcategory {:margin "15px 0px 0px 0px"}
+      [:a {:color "#009900"}]]
+     [:.function {:margin-top "2px"}]]
 
     [:.index-page
      [:.wrapper {:margin "auto"
@@ -38,31 +46,33 @@
                 :float "left"}]
      [:.category-div {:background gray-background
                       :margin "10px"
-                      :padding "10px"}
-      [:.category {:margin "0px 0px 7px 0px"}]
-      [:.subcategory {:margin "7px 0px 0px 0px"}]
-      [:.function {:margin-top "2px"}]
-      [:a {:color "#333"}]]]
+                      :padding "10px"}]]
 
     [:.fn-page
      [:.fns-wrapper {:width fn-width
-                     :margin "auto"}]
+                     :margin "auto"}
 
-     [:h2 {:margin "10px 0px"}]
+      [:h2 {:margin "10px 0px"}]
 
-     [:div.function {:background gray-background
-                     :margin "10px auto"
-                     :padding "10px"}
-      [:code {:margin-right "10px"}]
-      [:h3 {:margin "2px 0px"}]]
+      [:div.function {:background gray-background
+                      :margin "10px auto"
+                      :padding "10px"}
+       [:code {:margin-right "10px"}]
+       [:h3 {:margin "2px 0px"}]]
 
-     [:pre {:margin "0px"}]
+      [:pre {:margin "0px"}]
 
-     [:dt {:margin-top "10px"}]
+      [:dt {:margin-top "10px"}]
 
-     [:dl {:margin "0px"}]
+      [:dl {:margin "0px"}]
 
-     [:.subcategory {:margin "30px auto 0px auto"}]]]))
+      [:.subcategory {:margin "30px auto 0px auto"}]]
+
+     [:#toc {:position "fixed"
+             :width column-width
+             :overflow-y "scroll"
+             :bottom "20px"
+             :top "0px"}]]]))
 
 (defn- get-page
   "Converts hiccup-style body to full-blown page and returns it as string. class is string that will be used as class of body element in the page."
@@ -91,10 +101,11 @@
   ([text to]
      (link text to nil))
   ([text to anchor]
-     (e/link-to (if anchor
-                  (str (as-filename-ext to) "#" (as-url anchor))
-                  (as-filename-ext to))
-                text)))
+     (let [page (if to (as-filename-ext to) "")]
+      (e/link-to (if anchor
+                   (str page "#" (as-url anchor))
+                   page)
+                 text))))
 
 (defn trim-docstring
   "Removes extra spaces in the begginning of dostringing lines."
@@ -127,11 +138,21 @@
                        (cons [:h3.subcategory
                               {:id (as-url (:name subcat))}
                               (:name subcat)]
-                             (map function->html (:fns subcat))))]
-    [:div.fns-wrapper
-     [:h2 name]
-     (map function->html fns)
-     (mapcat subcat->html (vals subcategories))]))
+                             (map function->html (:fns subcat))))
+        subcat->toc (fn [subcat]
+                      (cons [:h4.subcategory (link (:name subcat) nil (:name subcat))]
+                            (map #(vector :p.function (link % nil %)) (:fns subcat))))]
+    (list
+     [:div#toc
+      [:h3 (link "Back to index" "index")]
+      [:h3.category (link name name)]
+      (map #(vector :p.function (link % nil %)) fns)
+      (map subcat->toc (vals subcategories))]
+
+     [:div.fns-wrapper
+      [:h2 name]
+      (map function->html fns)
+      (mapcat subcat->html (vals subcategories))])))
 
 (defn generate-index-page [categories-map]
   (letfn [(fns->html [fns linkify]
@@ -171,4 +192,5 @@
          (spit (as-filename-ext folder "index")))))
 
 ;(generate-all @(resolve 'quil.core/fn-metas) "out")
+
 
