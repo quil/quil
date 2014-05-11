@@ -19,7 +19,7 @@
                     [(str processing-name) (str name)])
                   matches))))
 
-(defn- fields-as-sorted-set
+(defn fields-as-sorted-set
   "Make sorted set of all possible values for given field from metas.
   Example: metas [{:name 1} {:name 2} {:name nil} {:name 2} {:name 3}], field :name
   will return #{1 2 3}."

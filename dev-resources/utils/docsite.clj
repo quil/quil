@@ -1,94 +1,174 @@
 (ns utils.docsite
   (:require [quil.helpers.docs :refer :all]
             quil.core
-            [hiccup.core :as h]
-            [hiccup.page :as p]
-            [clojure.string :as cstr]
+            [hiccup
+             [core :as h]
+             [page :as p]
+             [element :as e]]
+            garden.core
+            [garden.units :refer [px]]
+            [garden.arithmetic :as ga]
+            [clojure.string :as string]
             [clojure.java.io :as io]))
 
-;;; wiki generation
+(def fn-width (px 700))
+(def gray-background "#FAFAFA")
+(def column-width (px 170))
+
+(def index-page-columns [["Color" "Data" "Environment"]
+                         ["Image" "Transform" "Output" "Rendering" ]
+                         ["Math" "Typography"]
+                         ["Shape" "State" "Structure"]
+                         ["Lights, Camera" "Input"]])
+
+(def css
+  (garden.core/css
+
+   [[:body {:color "#333"}]
+    [:p {:margin "0px"}]
+
+    [:.index-page
+     [:.wrapper {:margin "auto"
+                 :width (ga/* (count index-page-columns) column-width)}]
+
+     [:#title {:text-align "center"}]
+
+     [:.column {:display "inline-block"
+                :width column-width
+                :float "left"}]
+     [:.category-div {:background gray-background
+                      :margin "10px"
+                      :padding "10px"}
+      [:.category {:margin "0px 0px 7px 0px"}]
+      [:.subcategory {:margin "7px 0px 0px 0px"}]
+      [:.function {:margin-top "2px"}]
+      [:a {:color "#333"}]]]
+
+    [:.fn-page
+     [:.fns-wrapper {:width fn-width
+                     :margin "auto"}]
+
+     [:h2 {:margin "10px 0px"}]
+
+     [:div.function {:background gray-background
+                     :margin "10px auto"
+                     :padding "10px"}
+      [:code {:margin-right "10px"}]
+      [:h3 {:margin "2px 0px"}]]
+
+     [:pre {:margin "0px"}]
+
+     [:dt {:margin-top "10px"}]
+
+     [:dl {:margin "0px"}]
+
+     [:.subcategory {:margin "30px auto 0px auto"}]]]))
+
+(defn- get-page
+  "Converts hiccup-style body to full-blown page and returns it as string. class is string that will be used as class of body element in the page."
+  [class body]
+ (let [head [:head
+             [:style css]]]
+   (p/html5 (list head [:body {:class class}
+                        body]))))
 
 (defn- as-url [str]
-  (cstr/replace str " " "-"))
+  (-> str
+      (string/lower-case)
+      (string/replace  #"[ &,]" {" " "-"
+                                 "," ""
+                                 "&" "and"})))
 
 (defn- as-filename [& path]
-  (->> path (map as-url) (cstr/join "/")))
+  (->> path (map as-url) (string/join "/")))
 
 (defn- as-filename-ext [& path]
   (str (apply as-filename path) ".html"))
 
-(defn- write-lines [file lines]
-  (io/make-parents file)
-  (spit file (cstr/join \newline lines)))
-
 (defn- link
   ([to]
-    (link to (as-filename to)))
+    (link to to))
   ([text to]
-    (format "[[%s|%s]]" text to)))
+     (link text to nil))
+  ([text to anchor]
+     (e/link-to (if anchor
+                  (str (as-filename-ext to) "#" (as-url anchor))
+                  (as-filename-ext to))
+                text)))
 
-(defn- generate-all-categories-page [fn-metas folder]
-  (let [cats (sort (fields-as-sorted-set fn-metas :category))
-        lines (map #(str "* " (link %)) cats)]
-    (write-lines (as-filename-ext folder "all_categories") lines)))
+(defn trim-docstring
+  "Removes extra spaces in the begginning of dostringing lines."
+  [dostringing]
+  (->> (string/split dostringing #"\n")
+       (map #(string/replace % #"^  " ""))
+       (string/join "\n")))
 
-(defn- generate-category-page [category folder]
-  (let [{:keys [name fns subcategories]} category
-        fn-line (fn [fn-name]
-                  (str "* " (link fn-name (as-filename name fn-name))))
-        subcat-lines (fn [subcat]
-                       (concat [""
-                                (str "## " (:name subcat))]
-                               (map fn-line (:fns subcat))
-                               []))
-        lines (flatten (concat (map fn-line fns)
-                               (map subcat-lines (vals subcategories))))]
-    (write-lines (as-filename-ext folder name) lines)))
-
-(defn- generate-function-page [fn-meta folder]
+(defn- function->html [fn-meta]
   (let [{:keys [name arglists subcategory added doc
                 processing-name requires-bindings category]} fn-meta
-        bold #(str "**" % "**")
-        content [:div
-                 [:p [:strong "Arguments"]]
-                 [:p (map #(vector :code (pr-str %)) arglists)]
-                 [:p [:strong "Docstring"]]
-                 [:p [:pre doc]]
-                 [:p "Category"]
-                 []
-                 
-                 ]
-        lines [(str "## " name)
-               
+        fields (array-map
+                "Arguments" (map #(vector :code (pr-str %)) arglists)
+                "Docstring" [:pre (trim-docstring doc)]
+                "Works only inside sketch functions?" (if requires-bindings "Yes" "No")
+                "Original Processing method" (if processing-name
+                                               [:code processing-name]
+                                               "None. It is present only in Quil.")
+                "Added in" added)]
+    [:div.function {:id name}
+     [:h3 name]
+     [:dl (for [[key val] fields]
+            (list [:dt key] [:dd val]))]]))
 
-               (bold "Docstring") (str "```text\n" doc "\n```")
-               (bold "Category") (link category)
-               (if subcategory
-                 [(bold "Subcategory") "" (format "[[%s|%s#%s]]"
-                                                  subcategory
-                                                  (as-filename category)
-                                                  (as-filename subcategory))]
-                 nil)
-               (bold "Works only inside sketch functions?") (if requires-bindings "Yes" "No")
-               (bold "Original Processing method") (if processing-name
-                                                     (str "`" processing-name "`")
-                                                     "None. It is present only in Quil.")
-               (bold "Added in") added]
-        content (p/html5 content)]
-    (spit (as-filename-ext name) content)
-))
+(defn- category->html [category fn-metas]
+  (let [{:keys [name fns subcategories]} category
+        fn-metas (reduce #(assoc %1 (:name %2) %2) {} fn-metas)
+        function->html (comp function->html fn-metas)
+        subcat->html (fn [subcat]
+                       (cons [:h3.subcategory
+                              {:id (as-url (:name subcat))}
+                              (:name subcat)]
+                             (map function->html (:fns subcat))))]
+    [:div.fns-wrapper
+     [:h2 name]
+     (map function->html fns)
+     (mapcat subcat->html (vals subcategories))]))
 
-(-> @(resolve 'quil.core/fn-metas) first (generate-function-page ""))
+(defn generate-index-page [categories-map]
+  (letfn [(fns->html [fns linkify]
+            (map #(vector :p.function (linkify %)) fns))
 
+          (subcat->html [subcat linkify]
+            (cons [:h4.subcategory (linkify (:name subcat))]
+                  (fns->html (:fns subcat) linkify)))
 
+          (category->html [category]
+            (let [{:keys [name fns subcategories]} category
+                  linkify #(link % name %)]
+              [:div.category-div
+               [:h3.category (link name)]
+               (fns->html fns linkify)
+               (map #(subcat->html % linkify) (vals subcategories))]))
+
+          (find-category [name]
+            (->> (vals categories-map)
+                 (filter #(= (:name %) name))
+                 (first)))
+
+          (column->html [column]
+            [:div.column (map (comp category->html find-category) column)])]
+    [:div.wrapper
+     [:h1#title "Quil 2.0 API"]
+     (map column->html index-page-columns)]))
 
 (defn- generate-all [fn-metas folder]
-  (generate-all-categories-page fn-metas folder)
   (let [category-map (sorted-category-map fn-metas)]
     (doseq [category (vals category-map)]
-      (generate-category-page category folder)))
-  (doseq [fn-meta (filter :category fn-metas)]
-    (generate-function-page fn-meta folder)))
+      (let [html (get-page "fn-page" (category->html category fn-metas))
+            file (as-filename-ext folder (:name category))]
+        (spit file html)))
+    (->> (generate-index-page category-map)
+         (get-page "index-page")
+         (spit (as-filename-ext folder "index")))))
 
-;(generate-all @(resolve 'quil.core/fn-metas) "../wiki")
+;(generate-all @(resolve 'quil.core/fn-metas) "out")
 
