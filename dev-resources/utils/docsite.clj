@@ -30,7 +30,7 @@
 
     [:.category-div :#toc
      [:.category {:margin "0px 0px 7px 0px"}
-      [:a {:color "#990099"}]]
+      [:a {:color "#D53E07"}]]
      [:.subcategory {:margin "15px 0px 0px 0px"}
       [:a {:color "#009900"}]]
      [:.function {:margin-top "2px"}]]
@@ -46,7 +46,9 @@
                 :float "left"}]
      [:.category-div {:background gray-background
                       :margin "10px"
-                      :padding "10px"}]]
+                      :padding "10px"}]
+     [:#description {:font-size "18px"
+                     :text-align "center"}]]
 
     [:.fn-page
      [:.fns-wrapper {:width fn-width
@@ -179,6 +181,11 @@
             [:div.column (map (comp category->html find-category) column)])]
     [:div.wrapper
      [:h1#title "Quil 2.0 API"]
+     [:div#description
+      [:p "Quil is clojure animation library for creating interactive sketches. "]
+      [:p
+       "Quil is based on " (e/link-to "http://processing.org" "Processing")
+       ". Check " (e/link-to "https://github.com/quil/quil" "Github repo") "."]]
      (map column->html index-page-columns)]))
 
 (defn- generate-all [fn-metas folder]
@@ -191,6 +198,6 @@
          (get-page "index-page")
          (spit (as-filename-ext folder "index")))))
 
-;(generate-all @(resolve 'quil.core/fn-metas) "out")
+(generate-all @(resolve 'quil.core/fn-metas) "out")
 
 

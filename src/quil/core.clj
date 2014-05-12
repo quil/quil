@@ -4307,69 +4307,6 @@
      ~@body
      (.endDraw ~graphics)))
 
-
-;;; doc utils
-
-(def ^{:private true}
-  fn-metas
-  "Returns a seq of metadata maps for all fns related to the original
-  Processing API (but may not have a direct Processing API equivalent)."
-  (->> *ns* ns-publics vals (map meta)))
-
-(defn show-cats
-  "Print out a list of all the categories and subcategories,
-  associated index nums and fn count (in parens)."
-  []
-  (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
-    (println cat-idx (:name cat))
-    (doseq [[subcat-idx subcat] (:subcategories cat)]
-      (println "  " subcat-idx (:name subcat)))))
-
-(defn show-fns
-  "If given a number, print all the functions within category or
-  subcategory specified by the category index (use show-cats to see a
-  list of index nums).
-
-  If given a string or a regular expression, print all the functions
-  whose name or category name contains that string.
-
-  If a category is specified, it will not print out the fns in any of
-  cat's subcategories."
-  [q]
-  (letfn [(list-category [cid c & {:keys [only]}]
-            (let [category-fns (:fns c)
-                  display-fns (if (nil? only)
-                                category-fns
-                                (clojure.set/intersection
-                                 (set only) (set category-fns)))
-                  names (sort (map str display-fns))]
-              (when-not (empty? names))
-                (println cid (:name c))
-                (docs/pprint-wrapped-lines names :fromcolumn 4)))
-          (show-fns-by-cat-idx [cat-idx]
-            (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
-              (list-category cat-idx c)))
-          (show-fns-by-name-regex [re]
-            (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
-              (let [in-cat-name? (re-find re (:name c))
-                    matching-fns (filter #(re-find re (str %)) (:fns c))
-                    in-fn-names? (not (empty? matching-fns))]
-                (cond
-                 in-cat-name? (list-category cid c) ;; print an entire category
-                 in-fn-names? (list-category cid c :only matching-fns)))))]
-    (cond
-      (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
-      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
-      :else (show-fns-by-cat-idx q))))
-
-(defn show-meths
-  "Takes a string representing the start of a method name in the
-  original Processing API and prints out all matches alongside the
-  Processing-core equivalent."
-  [orig-name]
-  (let [res (docs/matching-processing-methods fn-metas orig-name)]
-    (print-definition-list res)))
-
 ;;; Useful trig constants
 (def PI  (float Math/PI))
 (def HALF-PI    (/ PI (float 2.0)))
@@ -4543,3 +4480,65 @@
   ([msg delay-ms]
      (println msg)
      (Thread/sleep delay-ms)))
+
+;;; doc utils
+
+(def ^{:private true}
+  fn-metas
+  "Returns a seq of metadata maps for all fns related to the original
+  Processing API (but may not have a direct Processing API equivalent)."
+  (->> *ns* ns-publics vals (map meta)))
+
+(defn show-cats
+  "Print out a list of all the categories and subcategories,
+  associated index nums and fn count (in parens)."
+  []
+  (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
+    (println cat-idx (:name cat))
+    (doseq [[subcat-idx subcat] (:subcategories cat)]
+      (println "  " subcat-idx (:name subcat)))))
+
+(defn show-fns
+  "If given a number, print all the functions within category or
+  subcategory specified by the category index (use show-cats to see a
+  list of index nums).
+
+  If given a string or a regular expression, print all the functions
+  whose name or category name contains that string.
+
+  If a category is specified, it will not print out the fns in any of
+  cat's subcategories."
+  [q]
+  (letfn [(list-category [cid c & {:keys [only]}]
+            (let [category-fns (:fns c)
+                  display-fns (if (nil? only)
+                                category-fns
+                                (clojure.set/intersection
+                                 (set only) (set category-fns)))
+                  names (sort (map str display-fns))]
+              (when-not (empty? names))
+                (println cid (:name c))
+                (docs/pprint-wrapped-lines names :fromcolumn 4)))
+          (show-fns-by-cat-idx [cat-idx]
+            (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
+              (list-category cat-idx c)))
+          (show-fns-by-name-regex [re]
+            (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
+              (let [in-cat-name? (re-find re (:name c))
+                    matching-fns (filter #(re-find re (str %)) (:fns c))
+                    in-fn-names? (not (empty? matching-fns))]
+                (cond
+                 in-cat-name? (list-category cid c) ;; print an entire category
+                 in-fn-names? (list-category cid c :only matching-fns)))))]
+    (cond
+      (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
+      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+      :else (show-fns-by-cat-idx q))))
+
+(defn show-meths
+  "Takes a string representing the start of a method name in the
+  original Processing API and prints out all matches alongside the
+  Processing-core equivalent."
+  [orig-name]
+  (let [res (docs/matching-processing-methods fn-metas orig-name)]
+    (print-definition-list res)))
