@@ -39,7 +39,7 @@
 (defn- prepare-applet-frame
   [applet title renderer]
   (let [m              (meta applet)
-        keep-on-top?   (true? (:keep-on-top m))
+        keep-on-top?   (:keep-on-top m)
         frame          (.frame applet)
         resizable?     (:resizable m)]
     (doseq [listener (.getWindowListeners frame)]
@@ -237,6 +237,10 @@
     (.registerMethod applet "dispose" listener-obj)
     applet))
 
+(def ^{:private true}
+  opts-applet-params
+  #{:resizable :exit-on-close :keep-on-top})
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -253,8 +257,15 @@
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
+   :opts           - Short form for true\false options. Sets added parameters in true.
+                     You can use supported parameters without :opts but :opts has a higher priority.
+                     Example: :opts [:keep-on-top]
+                     Supported parameters: :keep-on-top, :exit-on-close, :resizable
+
    :keep-on-top    - Sets whether sketch window should always be above other windows.
                      Note: some platforms might not support always-on-top windows.
+
+   :exit-on-close  - Sets behavior of JVM when sketch is closed.
 
    :resizable      - Sets whether sketch is resizable by the user.
 
@@ -303,15 +314,21 @@
 
    :on-close       - Called once, when sketch is closed"
   [& opts]
-  (let [options           (merge {:size [500 300]
-                                  :target :frame
-                                  :safe-draw-fn true}
-                                 (apply hash-map opts))
+  (let [raw-options      (merge {:size [500 300]
+                                 :target :frame
+                                 :safe-draw-fn true}
+                                (apply hash-map opts))
+
+        prepare-opts     (let [user-opts (set (:opts raw-options))]
+                           (reduce #(assoc %1 %2 (contains? user-opts %2)) {}
+                                   opts-applet-params))
+
+
+        options           (merge (dissoc raw-options :opts) prepare-opts)
 
         size              (process-size (:size options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
-        resizable         (not (false? (:resizable options)))
         draw-fn           (or (:draw options) no-fn)
         setup-fn          (or (:setup options) no-fn)
         safe-draw-fn      (fn []
@@ -322,12 +339,18 @@
                                 (Thread/sleep 1000))))
         draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
 
-        on-close-fn       (or (:on-close options) no-fn)
+        on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
+                            (if (:exit-on-close options)
+                              (fn []
+                                (close-fn)
+                                (System/exit 0))
+                              close-fn))
 
         state             (atom nil)
         looping?          (atom true)
         listeners         (into {} (for [name listeners]
                                      [name (or (options name) no-fn)]))
+
         applet-state      (merge options
                                  {:state state
                                   :looping? looping?
@@ -336,7 +359,6 @@
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size
-                                  :resizable resizable
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
