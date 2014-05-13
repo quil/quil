@@ -242,7 +242,7 @@
 
 (def ^{:private true}
   opts-applet-params
-  #{:resizable :exit-on-close :keep-on-top})
+  #{:resizable :exit-on-close :keep-on-top :no-safe-draw})
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -263,7 +263,7 @@
    :opts           - Short form for true\false options. Sets added parameters in true.
                      You can use supported parameters without :opts but :opts has a higher priority.
                      Example: :opts [:keep-on-top]
-                     Supported parameters: :keep-on-top, :exit-on-close, :resizable
+                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :no-safe-draw
 
    :keep-on-top    - Sets whether sketch window should always be above other windows.
                      Note: some platforms might not support always-on-top windows.
@@ -271,6 +271,9 @@
    :exit-on-close  - Sets behavior of JVM when sketch is closed.
 
    :resizable      - Sets whether sketch is resizable by the user.
+
+   :no-safe-draw   - Catches and prints exceptions in the draw fn.
+                     Default is false (using safe draw).
 
    :setup          - a fn to be called once when setting the sketch up.
 
@@ -312,20 +315,15 @@
    :key-typed      - Called once every time non-modifier keys are
                      pressed.
 
-   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true.
-
    :on-close       - Called once, when sketch is closed"
   [& opts]
   (let [raw-options      (merge {:size [500 300]
-                                 :target :frame
-                                 :safe-draw-fn true}
+                                 :target :frame}
                                 (apply hash-map opts))
 
         prepare-opts     (let [user-opts (set (:opts raw-options))]
                            (reduce #(assoc %1 %2 (contains? user-opts %2)) {}
                                    opts-applet-params))
-
 
         options           (merge (dissoc raw-options :opts) prepare-opts)
 
@@ -340,7 +338,7 @@
                               (catch Exception e
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
-        draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
+        draw-fn           (if (not (:no-safe-draw options)) safe-draw-fn draw-fn)
 
         on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
                             (if (:exit-on-close options)
