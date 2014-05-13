@@ -66,7 +66,14 @@
 (defn- applet-run
   "Launches the applet to the specified target."
   [applet title renderer]
-  (PApplet/runSketch (into-array String ["--hide-stop" title]) applet)
+  (PApplet/runSketch
+   (into-array String
+               (vec (filter string?
+                   [(when (and (:bgcolor (meta applet))
+                               (:present (meta applet)))
+                     (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
+                    "--hide-stop" title])))
+   applet)
   (prepare-applet-frame applet title renderer))
 
 
@@ -273,6 +280,9 @@
    :resizable      - Sets whether sketch is resizable by the user.
 
    :present        - Switch to sketch present mode (fullscreen without borders, OS panels).
+
+   :bgcolor        - Sets background color for unused space in present mode.
+                     Example: :bgcolor 200
 
    :setup          - a fn to be called once when setting the sketch up.
 
