@@ -363,7 +363,7 @@
   #{:setup :draw :focus-gained :focus-lost :mouse-entered
     :mouse-exited :mouse-pressed :mouse-released :mouse-clicked
     :mouse-moved :mouse-dragged :mouse-wheel :key-pressed
-    :key-typed :safe-draw-fn :on-close})
+    :key-typed :on-close})
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
