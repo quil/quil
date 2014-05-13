@@ -263,7 +263,7 @@
    :opts           - Short form for true\false options. Sets added parameters in true.
                      You can use supported parameters without :opts but :opts has a higher priority.
                      Example: :opts [:keep-on-top]
-                     Supported parameters: :keep-on-top, :exit-on-close, :resizable
+                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :present
 
    :keep-on-top    - Sets whether sketch window should always be above other windows.
                      Note: some platforms might not support always-on-top windows.
@@ -271,6 +271,8 @@
    :exit-on-close  - Sets behavior of JVM when sketch is closed.
 
    :resizable      - Sets whether sketch is resizable by the user.
+
+   :present        - Switch to sketch present mode (fullscreen without borders, OS panels).
 
    :setup          - a fn to be called once when setting the sketch up.
 
