@@ -7,9 +7,9 @@
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [quil/processing-core "2.1.2"]
-                 [quil/processing-pdf "2.1.2"]
-                 [quil/processing-dxf "2.1.2"]
+                 [quil/processing-core "2.2.0"]
+                 [quil/processing-pdf "2.2.0"]
+                 [quil/processing-dxf "2.2.0"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]]
