@@ -162,7 +162,7 @@
 
 (defn -exit [this] (.dispose this))
 
-(defn -sketchFullScreen [this] false)
+(defn -sketchFullScreen [this] (:present (meta this)))
 
 (defn -quil-applet-init [state]
   [[] state])
@@ -242,7 +242,7 @@
 
 (def ^{:private true}
   opts-applet-params
-  #{:resizable :exit-on-close :keep-on-top})
+  #{:resizable :exit-on-close :keep-on-top :present})
 
 (defn applet
   "Create and start a new visualisation applet.
