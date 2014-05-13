@@ -157,7 +157,10 @@
                     mouseReleased mouseReleasedParent
                     focusLost focusLostParent
                     noLoop noLoopParent
-                    sketchFullScreen sketchFullScreenParent})
+                    sketchFullScreen sketchFullScreenParent
+                    exit exitParent})
+
+(defn -exit [this] (.dispose this))
 
 (defn -sketchFullScreen [this] false)
 
