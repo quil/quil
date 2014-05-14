@@ -4340,16 +4340,31 @@
    :title          - a string which will be displayed at the top of
                      the sketch window.
 
-   :target         - Specify the target. One of :frame, :perm-frame.
-
-   :decor          - Specify if the window should have OS frame
-                     decorations.
-
    :setup          - a fn to be called once when setting the sketch up.
 
    :draw           - a fn to be repeatedly called at most n times per
                      second where n is the target frame-rate set for
                      the visualisation.
+
+   :features       - A vector of keywords customizing sketch behaviour.
+                     Supported features:
+
+                     :keep-on-top - Sketch window will always be above other windows.
+                                    Note: some platforms might not support
+                                    always-on-top windows.
+
+                     :exit-on-close - Shutdown JVM  when sketch is closed.
+
+                     :resizable - Makes sketch resizable.
+
+                     :no-safe-draw - Do not catche and print exception in the draw fn.
+                                     By default all exceptions thrown inside draw function are
+                                     catched so sketch doesn't break if something goes wrong.
+
+                     :present - Switch to present mode (fullscreen without borders, OS panels). You may
+                                want to use this feature together with :size :fullscreen.
+
+                     Usage example: :features [:keep-on-top :present]
 
    :focus-gained   - Called when the sketch gains focus.
 
@@ -4384,9 +4399,6 @@
 
    :key-typed      - Called once every time non-modifier keys are
                      pressed.
-
-   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true.
 
    :on-close       - Called once, when sketch is closed"
     [& opts]

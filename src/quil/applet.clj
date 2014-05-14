@@ -279,7 +279,7 @@
 
                      :resizable - Makes sketch resizable.
 
-                     :no-safe-draw - Do not catches and prints exception in the draw fn.
+                     :no-safe-draw - Do not catch and print exception in the draw fn.
                                      By default all exceptions thrown inside draw function are catched
                                      so sketch doesn't break if something goes wrong.
 
