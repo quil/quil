@@ -66,10 +66,10 @@
   (let [lock (promise)]
     (sketch
      :title "Present and bgcolor"
-     :draw (draw-text-fn "Sketch should in present mode with black background around sketch.")
+     :draw (draw-text-fn "Sketch should in present mode with cyan background around sketch.")
      :size [500 500]
      :features [:present]
-     :bgcolor 0
+     :bgcolor "#00FFFF"
      :on-close #(deliver lock true))
     @lock))
 

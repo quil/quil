@@ -251,6 +251,17 @@
   supported-features
   #{:resizable :exit-on-close :keep-on-top :present :no-safe-draw})
 
+(defn- check-for-removed-opts
+  "Checks if opts map contains options which were removed in Quil 2.0.
+  Prints messages how it could be potentially fixed."
+  [opts]
+  (let [messages {:decor "Try :features [:present] for similar effect"
+                  :target "Use :features [:keep-on-top] instead."
+                  :safe-draw-fn "Use :features [:no-safe-draw] instead."}]
+    (doseq [key (keys opts)]
+      (when-let [text (messages key)]
+        (println key "option was removed in Quil 2.0. " text)))))
+
 (defn applet
   "Create and start a new visualisation applet.
 
@@ -289,7 +300,8 @@
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
-                     Example: :bgcolor 200
+                     Color is specified in hex format: #AABBCC.
+                     Example: :bgcolor #00FFFF (cyan background)
 
    :setup          - a fn to be called once when setting the sketch up.
 
@@ -333,6 +345,7 @@
 
    :on-close       - Called once, when sketch is closed"
   [& opts]
+  (check-for-removed-opts (apply hash-map opts))
   (let [options      (merge {:size [500 300]
                              :target :frame}
                             (apply hash-map opts))
