@@ -248,14 +248,15 @@
     applet))
 
 (def ^{:private true}
-  opts-applet-params
+  supported-features
   #{:resizable :exit-on-close :keep-on-top :present :no-safe-draw})
 
 (defn applet
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch or :fullscreen.
-                     Defaults to [500 300].
+   :size           - A vector of width and height for the sketch or :fullscreen.
+                     Defaults to [500 300]. If you're using :fullscreen you may
+                     want to enable :present feature - :features [:present]
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
                      :opengl, :pdf). Defaults to :java2d. :dxf renderer
@@ -264,25 +265,28 @@
 
    :output-file    - Specify an output file path. Only used in :pdf mode.
 
-   :title          - a string which will be displayed at the top of
+   :title          - A string which will be displayed at the top of
                      the sketch window.
 
-   :opts           - Short form for true\false options. Sets added parameters in true.
-                     You can use supported parameters without :opts but :opts has a higher priority.
-                     Example: :opts [:keep-on-top]
-                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :present, :no-safe-draw
+   :features       - A vector of keywords customizing sketch behaviour.
+                     Supported features:
 
-   :keep-on-top    - Sets whether sketch window should always be above other windows.
-                     Note: some platforms might not support always-on-top windows.
+                     :keep-on-top - Sketch window will always be above other windows.
+                                    Note: some platforms might not support
+                                    always-on-top windows.
 
-   :exit-on-close  - Sets behavior of JVM when sketch is closed.
+                     :exit-on-close - Shutdown JVM  when sketch is closed.
 
-   :resizable      - Sets whether sketch is resizable by the user.
+                     :resizable - Makes sketch resizable.
 
-   :no-safe-draw   - Catches and prints exceptions in the draw fn.
-                     Default is false (using safe draw).
+                     :no-safe-draw - Do not catches and prints exception in the draw fn.
+                                     By default all exceptions thrown inside draw function are catched
+                                     so sketch doesn't break if something goes wrong.
 
-   :present        - Switch to sketch present mode (fullscreen without borders, OS panels).
+                     :present - Switch to present mode (fullscreen without borders, OS panels). You may
+                                want to use this feature together with :size :fullscreen.
+
+                     Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
                      Example: :bgcolor 200
@@ -329,15 +333,16 @@
 
    :on-close       - Called once, when sketch is closed"
   [& opts]
-  (let [raw-options      (merge {:size [500 300]
-                                 :target :frame}
-                                (apply hash-map opts))
+  (let [options      (merge {:size [500 300]
+                             :target :frame}
+                            (apply hash-map opts))
 
-        prepare-opts     (let [user-opts (set (:opts raw-options))]
-                           (reduce #(assoc %1 %2 (contains? user-opts %2)) {}
-                                   opts-applet-params))
+        features     (let [user-features (set (:features options))]
+                       (reduce #(assoc %1 %2 (contains? user-features %2)) {}
+                               supported-features))
 
-        options           (merge (dissoc raw-options :opts) prepare-opts)
+        options           (merge (dissoc options :features)
+                                 features)
 
         size              (process-size (:size options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
