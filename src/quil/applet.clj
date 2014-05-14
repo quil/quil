@@ -66,7 +66,14 @@
 (defn- applet-run
   "Launches the applet to the specified target."
   [applet title renderer]
-  (PApplet/runSketch (into-array String ["--hide-stop" title]) applet)
+  (PApplet/runSketch
+   (into-array String
+               (vec (filter string?
+                   [(when (and (:bgcolor (meta applet))
+                               (:present (meta applet)))
+                     (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
+                    "--hide-stop" title])))
+   applet)
   (prepare-applet-frame applet title renderer))
 
 
@@ -162,7 +169,7 @@
 
 (defn -exit [this] (.dispose this))
 
-(defn -sketchFullScreen [this] false)
+(defn -sketchFullScreen [this] (:present (meta this)))
 
 (defn -quil-applet-init [state]
   [[] state])
@@ -242,7 +249,7 @@
 
 (def ^{:private true}
   opts-applet-params
-  #{:resizable :exit-on-close :keep-on-top :no-safe-draw})
+  #{:resizable :exit-on-close :keep-on-top :present :no-safe-draw})
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -263,7 +270,7 @@
    :opts           - Short form for true\false options. Sets added parameters in true.
                      You can use supported parameters without :opts but :opts has a higher priority.
                      Example: :opts [:keep-on-top]
-                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :no-safe-draw
+                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :present, :no-safe-draw
 
    :keep-on-top    - Sets whether sketch window should always be above other windows.
                      Note: some platforms might not support always-on-top windows.
@@ -274,6 +281,11 @@
 
    :no-safe-draw   - Catches and prints exceptions in the draw fn.
                      Default is false (using safe draw).
+
+   :present        - Switch to sketch present mode (fullscreen without borders, OS panels).
+
+   :bgcolor        - Sets background color for unused space in present mode.
+                     Example: :bgcolor 200
 
    :setup          - a fn to be called once when setting the sketch up.
 
