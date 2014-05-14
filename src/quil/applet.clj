@@ -350,7 +350,7 @@
                               (catch Exception e
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
-        draw-fn           (if (not (:no-safe-draw options)) safe-draw-fn draw-fn)
+        draw-fn           (if (:no-safe-draw options) draw-fn safe-draw-fn)
 
         on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
                             (if (:exit-on-close options)
