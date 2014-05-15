@@ -7,7 +7,7 @@
   *surface* nil)
 
 
-(defn current-surface [] *surface*)
+(defn current-graphics [] *surface*)
 
 
 (defn sketch [draw-fn]

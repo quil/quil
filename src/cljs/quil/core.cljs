@@ -1,7 +1,7 @@
 (ns cljs.quil.core
   (:require [cljs.quil.applet :as applet])
   (:use-macros [cljs.quil.helpers.tools :only [defapplet]])
-  (:use [cljs.quil.applet :only [current-surface]]))
+  (:use [cljs.quil.applet :only [current-graphics]]))
 
 
 (defn int-like? [val] (integer? val))
@@ -22,10 +22,10 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts args to floats."
-  ([gray] (.background (current-surface) (float gray)))
-  ([gray alpha] (.background (current-surface) (float gray) (float alpha)))
-  ([r g b] (.background (current-surface) (float r) (float g) (float b)))
-  ([r g b a] (.background (current-surface) (float r) (float g) (float b) (float a))))
+  ([gray] (.background (current-graphics) (float gray)))
+  ([gray alpha] (.background (current-graphics) (float gray) (float alpha)))
+  ([r g b] (.background (current-graphics) (float r) (float g) (float b)))
+  ([r g b a] (.background (current-graphics) (float r) (float g) (float b) (float a))))
 
 
 (defn
@@ -43,8 +43,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (current-surface) (int rgb)))
-  ([rgb alpha] (.background (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.background (current-graphics) (int rgb)))
+  ([rgb alpha] (.background (current-graphics) (int rgb) (float alpha))))
 
 
 (defn
@@ -78,10 +78,10 @@
   stroke-float
   "Sets the color used to draw lines and borders around
   shapes. Converts all args to floats"
-  ([gray] (.stroke (current-surface) (float gray)))
-  ([gray alpha] (.stroke (current-surface) (float gray) (float alpha)))
-  ([x y z] (.stroke (current-surface) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (current-surface) (float x) (float y) (float z) (float a))))
+  ([gray] (.stroke (current-graphics) (float gray)))
+  ([gray alpha] (.stroke (current-graphics) (float gray) (float alpha)))
+  ([x y z] (.stroke (current-graphics) (float x) (float y) (float z)))
+  ([x y z a] (.stroke (current-graphics) (float x) (float y) (float z) (float a))))
 
 
 (defn
@@ -93,8 +93,8 @@
   stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (current-surface) (int rgb)))
-  ([rgb alpha] (.stroke (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.stroke (current-graphics) (int rgb)))
+  ([rgb alpha] (.stroke (current-graphics) (int rgb) (float alpha))))
 
 
 (defn
@@ -131,14 +131,35 @@
   the curve. The curve fn is an implementation of Catmull-Rom
   splines."
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-     (.curve (current-surface)
+     (.curve (current-graphics)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)
              (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-     (.curve (current-surface)
+     (.curve (current-graphics)
              (float x1) (float y1) (float z1)
              (float x2) (float y2) (float z2)
              (float x3) (float y3) (float z3)
              (float x4) (float y4) (float z4))))
+
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "line()"
+    :category "Shape"
+    :subcategory "2D Primitives"
+    :added "1.0"}
+  line
+  "Draws a line (a direct path between two points) to the screen. The
+  version of line with four parameters draws the line in 2D. To color
+  a line, use the stroke function. A line cannot be filled, therefore
+  the fill method will not affect the color of a line. 2D lines are
+  drawn with a width of one pixel by default, but this can be changed
+  with the stroke-weight function. The version with six parameters
+  allows the line to be placed anywhere within XYZ space. "
+  ([p1 p2] (apply line (concat p1 p2)))
+  ([x1 y1 x2 y2] (.line (current-graphics) (float x1) (float y1) (float x2) (float y2)))
+  ([x1 y1 z1 x2 y2 z2]
+     (.line (current-graphics) (float x1) (float y1) (float z1)
+            (float x2) (float y2) (float z2))))
