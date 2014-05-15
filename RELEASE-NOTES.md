@@ -3,7 +3,7 @@ _SOME DATE HERE_
 
 #### General changes
 
-* Updated to Processing 2.1.2! Fixes OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24)
+* Updated to Processing 2.1.2! Fixes OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24).
 * New `:features` option to specify features for sketch. It replaces some options: `:target`, `:decor`, `:safe-draw-fn`. Check documentation for [sketch](http://quil.info/environment.html#sketch) to see list of supported features.
 * Fullscreen support using Processing present mode.
 * DXF renderer can be used only in `(begin-raw)`.
