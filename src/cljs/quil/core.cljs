@@ -1,10 +1,15 @@
 (ns cljs.quil.core
-  (:require [cljs.quil.applet :as applet])
+  (:require [cljs.quil.applet :as applet]
+            [clojure.browser.dom  :as dom])
   (:use-macros [cljs.quil.helpers.tools :only [defapplet]])
   (:use [cljs.quil.applet :only [current-graphics]]))
 
 
 (defn int-like? [val] (integer? val))
+
+
+(defn get-sketch-by-id [id]
+  id)
 
 
 (defn width []
@@ -14,7 +19,7 @@
   (.-height (current-graphics)))
 
 
-(defn size [widht height]
+(defn size [width height]
   (.size (current-graphics) (int width) (int height)))
 
 

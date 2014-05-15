@@ -23,6 +23,8 @@
       (set! (.-setup prc)
             (fn []
               (with-applet prc
+                (when (:size opts)
+                  (apply cljs.quil.core/size (:size opts)))
                 (setup-fn)))))))
 
 
