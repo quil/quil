@@ -12,8 +12,10 @@
 
 
 (defn sketch [opts]
-  (let [draw-fn   (or (:draw opts) no-fn)
-        setup-fn  (or (:setup opts) no-fn)]
+  (let [draw-fn       (or (:draw opts) no-fn)
+        setup-fn      (or (:setup opts) no-fn)
+        key-pressed   (or (:key-pressed opts) no-fn)
+        key-released  (or (:key-released opts) no-fn)]
     (fn [prc]
       (set! (.-draw prc)
             (fn []
@@ -25,7 +27,19 @@
               (with-applet prc
                 (when (:size opts)
                   (apply cljs.quil.core/size (:size opts)))
-                (setup-fn)))))))
+                (setup-fn))))
+
+      (set! (.-keyPressed prc)
+            (fn []
+              (with-applet prc
+                (key-pressed))))
+
+      (set! (.-keyReleased prc)
+            (fn []
+              (with-applet prc
+                (key-released))))
+      )
+    ))
 
 
 (defn ^:export make-processing
