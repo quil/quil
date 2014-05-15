@@ -53,7 +53,7 @@ _SOME DATE HERE_
 * `(text-char ch)` - removed from Processing.
 * `(size)` - was deprecated in 1.7.0, removed.
 * `(text s x1 y1 x2 y2 z)` - removed from Processing.
-* `(quil-version)` - didn't work correctly since 1.0, remove, we have `project.clj` for that.
+* `(quil-version)` - didn't work correctly since 1.0, removed. We have `project.clj` for that.
 * `(image img x y c d u1 v1 u2 v2)` - not an official processing API.
 * `(request-image path ext)` - version without ext should be sufficient.
 * `(load-pixels)` - reduntant because of `(pixels)`.
