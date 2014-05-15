@@ -4326,8 +4326,8 @@
   sketch
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch or :fullscreen.
-                     Defaults to [500 300].
+   :size           - a vector of width and height for the sketch or
+                     :fullscreen. Defaults to [500 300].
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d,
                      :java2d, :opengl, :pdf). Defaults to :java2d.
@@ -4349,20 +4349,22 @@
    :features       - A vector of keywords customizing sketch behaviour.
                      Supported features:
 
-                     :keep-on-top - Sketch window will always be above other windows.
-                                    Note: some platforms might not support
-                                    always-on-top windows.
+                     :keep-on-top - Sketch window will always be above other
+                                    windows. Note: some platforms might not
+                                    support always-on-top windows.
 
                      :exit-on-close - Shutdown JVM  when sketch is closed.
 
                      :resizable - Makes sketch resizable.
 
-                     :no-safe-draw - Do not catche and print exception in the draw fn.
-                                     By default all exceptions thrown inside draw function are
-                                     catched so sketch doesn't break if something goes wrong.
+                     :no-safe-draw - Do not catch and print exception in the
+                                     draw fn. By default all exceptions thrown
+                                     inside draw function are catched so sketch
+                                     doesn't break if something goes wrong.
 
-                     :present - Switch to present mode (fullscreen without borders, OS panels). You may
-                                want to use this feature together with :size :fullscreen.
+                     :present - Switch to present mode (fullscreen without
+                                borders, OS panels). You may want to use this
+                                feature together with :size :fullscreen.
 
                      Usage example: :features [:keep-on-top :present]
 
@@ -4391,7 +4393,7 @@
                      Takes 1 argument - wheel rotation, an int.
                      Negative values if the mouse wheel was rotated
                      up/away from the user, and positive values
-                     if the mouse wheel was rotated down/ towards the user
+                     if the mouse wheel was rotated down/towards the user
 
    :key-pressed    - Called every time any key is pressed.
 
