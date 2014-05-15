@@ -1,6 +1,6 @@
 (ns cljs.quil.applet
   (:require [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.helpers.tools :only [with-applet bind-handler]]))
+  (:use-macros [cljs.quil.helpers.tools :only [with-applet bind-handlers]]))
 
 (defn no-fn [])
 
@@ -17,14 +17,13 @@
         key-pressed   (or (:key-pressed opts) no-fn)
         key-released  (or (:key-released opts) no-fn)]
     (fn [prc]
-      (bind-handler prc
-                    .-setup  (do (when (:size opts)
+      (bind-handlers prc
+                     .-setup  (do (when (:size opts)
                                    (apply cljs.quil.core/size (:size opts)))
-                               (setup-fn)))
-      (bind-handler prc .-draw draw-fn)
-      (bind-handler prc .-keyPressed key-pressed)
-      (bind-handler prc .-keyReleased key-released))
-    ))
+                               (setup-fn))
+                     .-draw draw-fn
+                     .-keyPressed key-pressed
+                     .-keyReleased key-released))))
 
 
 (defn ^:export make-processing
