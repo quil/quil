@@ -7,6 +7,17 @@
 (defn int-like? [val] (integer? val))
 
 
+(defn width []
+  (.-width (current-graphics)))
+
+(defn height []
+  (.-height (current-graphics)))
+
+
+(defn size [widht height]
+  (.size (current-graphics) (int width) (int height)))
+
+
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
