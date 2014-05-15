@@ -9,7 +9,7 @@
 
 
 (defn get-sketch-by-id [id]
-  id)
+  (.getInstanceById js/Processing id))
 
 
 (defn width []
