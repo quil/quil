@@ -13,3 +13,12 @@
   [app-name & options]
   `(defn ^:export ~app-name []
      (cljs.quil.applet/make-processing ~@options)))
+
+
+(defmacro bind-handler [prc processing-name handler]
+  `(set!
+    (~processing-name ~prc)
+    (fn []
+      (~'with-applet ~prc
+        (~@(if (list? handler) handler (list handler)))))))
+
