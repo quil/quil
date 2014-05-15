@@ -26,7 +26,7 @@
   {:builds [{
              :source-paths ["src/cljs"]
              :compiler
-             {:output-to "target/js/main.js"
+             {:output-to "resources/js/main.js"
               :optimizations :whitespace
               :libs ["resources/js/processing-1.4.1.js"]
               :pretty-print true}}]})
