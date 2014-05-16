@@ -28,5 +28,5 @@
              :compiler
              {:output-to "resources/js/main.js"
               :optimizations :whitespace
-              :libs ["resources/js/processing-1.4.1.js"]
+              :libs ["resources/js/processing.js"]
               :pretty-print true}}]})

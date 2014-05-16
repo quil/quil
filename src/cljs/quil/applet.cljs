@@ -27,7 +27,8 @@
         mouse-moved     (or (:mouse-moved opts) no-fn)
         mouse-pressed   (or (:mouse-pressed opts) no-fn)
         mouse-released  (or (:mouse-released opts) no-fn)
-        ]
+        mouse-out       (or (:mouse-out opts) no-fn)
+        mouse-over      (or (:mouse-over opts) no-fn)]
     (fn [prc]
       (bind-handlers prc
                      .-setup  (do
@@ -47,6 +48,8 @@
                      .-mouseMoved mouse-moved
                      .-mousePressed mouse-pressed
                      .-mouseReleased mouse-released
+                     .-mouseOut mouse-out
+                     .-mouseOver mouse-over
                      ))))
 
 
