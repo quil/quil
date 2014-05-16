@@ -14,18 +14,39 @@
 
 
 (defn sketch [opts]
-  (let [draw-fn       (or (:draw opts) no-fn)
-        setup-fn      (or (:setup opts) no-fn)
-        key-pressed   (or (:key-pressed opts) no-fn)
-        key-released  (or (:key-released opts) no-fn)]
+  (let [draw-fn         (or (:draw opts) no-fn)
+        setup-fn        (or (:setup opts) no-fn)
+
+        key-pressed     (or (:key-pressed opts) no-fn)
+        key-released    (or (:key-released opts) no-fn)
+        key-typed       (or (:key-typed opts) no-fn)
+
+        mouse-clicked   (or (:mouse-clicked opts) no-fn)
+        mouse-dragged   (or (:mouse-dragged opts) no-fn)
+        mouse-moved     (or (:mouse-moved opts) no-fn)
+        mouse-pressed   (or (:mouse-pressed opts) no-fn)
+        mouse-released  (or (:mouse-released opts) no-fn)
+        ]
     (fn [prc]
       (bind-handlers prc
-                     .-setup  (do (when (:size opts)
-                                   (apply cljs.quil.core/size (:size opts)))
-                               (setup-fn))
+                     .-setup  (do
+                                (when (:size opts)
+                                  (apply cljs.quil.core/size (:size opts)))
+                                (setup-fn)
+                                (when (= true (:no-loop opts))
+                                  (cljs.quil.core/no-loop)))
                      .-draw draw-fn
+
                      .-keyPressed key-pressed
-                     .-keyReleased key-released))))
+                     .-keyReleased key-released
+                     .-keyTyped key-typed
+
+                     .-mouseClicked mouse-clicked
+                     .-mouseDragged mouse-dragged
+                     .-mouseMoved mouse-moved
+                     .-mousePressed mouse-pressed
+                     .-mouseReleased mouse-released
+                     ))))
 
 
 (defn ^:export make-processing

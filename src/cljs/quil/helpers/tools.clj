@@ -1,13 +1,10 @@
-(ns cljs.quil.helpers.tools)
+(ns cljs.quil.helpers.tools
+  (:require [clojure.string :as string]))
 
 
 (defmacro with-applet [applet & body]
   `(binding [cljs.quil.applet/*surface* ~applet]
      ~@body))
-
-
-(def ^{:private true} fn-applet-params
-  #{:draw})
 
 
 (defmacro defapplet

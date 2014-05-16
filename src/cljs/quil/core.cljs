@@ -12,6 +12,8 @@
   (.getInstanceById js/Processing id))
 
 
+;; Applet size
+
 (defn width []
   (.-width (current-graphics)))
 
@@ -22,6 +24,41 @@
 
 (defn size [width height]
   (.size (current-graphics) (int width) (int height)))
+
+
+;; Keys
+
+(defn key-code []
+  (.-keyCode (current-graphics)))
+
+
+(defn key-pressed? []
+  (.-keyPressed (current-graphics)))
+
+
+(defn get-key []
+  (.-key (current-graphics)))
+
+
+;; Loop
+
+(defn no-loop []
+  (.noLoop (current-graphics)))
+
+
+(defn loop []
+  (.loop (current-graphics)))
+
+
+;; Mouse
+
+
+
+;; Time
+
+
+(defn millis []
+  (.millis (current-graphics)))
 
 
 (defn
