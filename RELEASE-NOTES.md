@@ -3,9 +3,9 @@ _SOME DATE HERE_
 
 #### General changes
 
-* Updated to Processing 2.1.2! Fixes OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24)
+* Updated to Processing 2.1.2!
 * New `:features` option to specify features for sketch. It replaces some options: `:target`, `:decor`, `:safe-draw-fn`. Check documentation for [sketch](http://quil.info/environment.html#sketch) to see list of supported features.
-* Fullscreen support using Processing present mode.
+* Fullscreen support using Processing present mode. Check documentation for `:size` in [sketch](http://quil.info/environment.html#sketch).
 * DXF renderer can be used only in `(begin-raw)`.
 * Texture mode `:normalized` renamed to `:normalize`.
 * Added and removed bunch of hint options. Check documentation for [hint](http://quil.info/rendering.html#hint) function.
@@ -13,6 +13,7 @@ _SOME DATE HERE_
 
 #### Fixed
 
+* OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24).
 * `(screen-z x y z)`: [commit](https://github.com/quil/quil/commit/8848af1a49fcafbbbaadc631af4b7a00ef74b733).
 * `(curve-point a b c d t)`: [commit](https://github.com/quil/quil/commit/ce59e05dd3f59d946b90e5042e058cd751a3b164).
 * `(apply-matrix ...)`: [commit](https://github.com/quil/quil/commit/fa87c4b056901bb2807b46c0524029f825686d8a).
@@ -53,7 +54,7 @@ _SOME DATE HERE_
 * `(text-char ch)` - removed from Processing.
 * `(size)` - was deprecated in 1.7.0, removed.
 * `(text s x1 y1 x2 y2 z)` - removed from Processing.
-* `(quil-version)` - didn't work correctly since 1.0, remove, we have `project.clj` for that.
+* `(quil-version)` - didn't work correctly since 1.0, removed. We have `project.clj` for that.
 * `(image img x y c d u1 v1 u2 v2)` - not an official processing API.
 * `(request-image path ext)` - version without ext should be sufficient.
 * `(load-pixels)` - reduntant because of `(pixels)`.
