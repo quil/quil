@@ -5,7 +5,7 @@ _SOME DATE HERE_
 
 * Updated to Processing 2.1.2!
 * New `:features` option to specify features for sketch. It replaces some options: `:target`, `:decor`, `:safe-draw-fn`. Check documentation for [sketch](http://quil.info/environment.html#sketch) to see list of supported features.
-* Fullscreen support using Processing present mode.
+* Fullscreen support using Processing present mode. Check documentation for `:size` in [sketch](http://quil.info/environment.html#sketch).
 * DXF renderer can be used only in `(begin-raw)`.
 * Texture mode `:normalized` renamed to `:normalize`.
 * Added and removed bunch of hint options. Check documentation for [hint](http://quil.info/rendering.html#hint) function.
