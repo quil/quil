@@ -1,3 +1,69 @@
+## 2.0.0
+_SOME DATE HERE_
+
+#### General changes
+
+* Updated to Processing 2.1.2!
+* New `:features` option to specify features for sketch. It replaces some options: `:target`, `:decor`, `:safe-draw-fn`. Check documentation for [sketch](http://quil.info/environment.html#sketch) to see list of supported features.
+* Fullscreen support using Processing present mode. Check documentation for `:size` in [sketch](http://quil.info/environment.html#sketch).
+* DXF renderer can be used only in `(begin-raw)`.
+* Texture mode `:normalized` renamed to `:normalize`.
+* Added and removed bunch of hint options. Check documentation for [hint](http://quil.info/rendering.html#hint) function.
+* `mouse-state` renamed to `mouse-pressed?`.
+
+#### Fixed
+
+* OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24).
+* `(screen-z x y z)`: [commit](https://github.com/quil/quil/commit/8848af1a49fcafbbbaadc631af4b7a00ef74b733).
+* `(curve-point a b c d t)`: [commit](https://github.com/quil/quil/commit/ce59e05dd3f59d946b90e5042e058cd751a3b164).
+* `(apply-matrix ...)`: [commit](https://github.com/quil/quil/commit/fa87c4b056901bb2807b46c0524029f825686d8a).
+* Calling `(width)` or `(height)` in setup returns 100: [#50](https://github.com/quil/quil/issues/50).
+* Tinting doesn't work in `with-graphics`: [#83](https://github.com/quil/quil/issues/83).
+* Wrong size after closing the window in REPL: [#31](https://github.com/quil/quil/issues/31).
+
+#### Functions added
+
+* [(arc x y width height start stop mode)](http://quil.info/shape.html#arc)
+* [(random-gaussian)](http://quil.info/math.html#random-gaussian)
+* [(rect width height r), (rect width height top-left-r top-right-r bottom-right-r bottom-left-r)](http://quil.info/shape.html#rect)
+* [(scale x y z)](http://quil.info/transform.html#scale)
+* [(smooth level)](http://quil.info/shape.html#smooth)
+* [(filter-shader shader)](http://quil.info/image.html#filter-shader)
+* [(load-shader)](http://quil.info/rendering.html#load-shader)
+* [(reset-shader)](http://quil.info/rendering.html#reset-shader)
+* [(shader)](http://quil.info/rendering.html#shader)
+* [(blend-mode)](http://quil.info/image.html#blend-mode)
+* [(begin-contour)](http://quil.info/shape.html#begin-contour)/[(end-contour)](http://quil.info/shape.html#end-contour)
+* [(quadratic-vertex)](http://quil.info/shape.html#quadratic-vertex)
+* [(texture-wrap)](http://quil.info/shape.html#texture-wrap)
+* [(current-graphics)](http://quil.info/environment.html#current-graphics)
+* [(blend src dest x y width height dx dy dwidth dheight mode)](http://quil.info/image.html#blend)
+* [(copy src-img dest-img [sx sy swidth sheight] [dx dy dwidth dheight])](http://quil.info/image.html#copy)
+* [(image-filter mode), (image-filter mode level)](http://quil.info/image.html#image-filter)
+* [(get-pixel img), (get-pixel img x y), (get-pixel img x y w h)](http://quil.info/image.html#get-pixel)
+* [(pixels img)](http://quil.info/image.html#pixels)
+* [(update-pixels img)](http://quil.info/image.html#update-pixels)
+* [(set-pixel img x y c)](http://quil.info/image.html#set-pixel)
+* [(screen-x x y)](http://quil.info/lights-camera.html#screen-x), [(screen-y x y)](http://quil.info/lights-camera.html#screen-y)
+* [(state)](http://quil.info/state.html#state)
+* [(floor n)](http://quil.info/math.html#floor)
+
+#### Functions removed
+
+* `(text s)` - removed from Processing.
+* `(text-char ch)` - removed from Processing.
+* `(size)` - was deprecated in 1.7.0, removed.
+* `(text s x1 y1 x2 y2 z)` - removed from Processing.
+* `(quil-version)` - didn't work correctly since 1.0, removed. We have `project.clj` for that.
+* `(image img x y c d u1 v1 u2 v2)` - not an official processing API.
+* `(request-image path ext)` - version without ext should be sufficient.
+* `(load-pixels)` - reduntant because of `(pixels)`.
+* `(create-input)`, `(create-input-raw)` - use `clojure.java.io/input-stream` instead.
+* `(create-output)` - use `clojure.java.io/output-stream` instead.
+* `(begin-raw graphics)` - not an official processing API.
+* `(begin-record)`, `(end-record)` - not compatible with current architecture: everything is drawn on graphics instead of applet.
+
+
 ## 1.7.0
 _12th February 2014_
 

@@ -15,7 +15,7 @@
      :title "Resizable and keep-on-top"
      :draw (draw-text-fn "Sketch should be resizable and keep-on-top.")
      :size [500 500]
-     :opts [:resizable :keep-on-top]
+     :features [:resizable :keep-on-top]
      :on-close #(deliver lock true))
     @lock))
 
@@ -66,10 +66,10 @@
   (let [lock (promise)]
     (sketch
      :title "Present and bgcolor"
-     :draw (draw-text-fn "Sketch should in present mode with black background around sketch.")
+     :draw (draw-text-fn "Sketch should in present mode with cyan background around sketch.")
      :size [500 500]
-     :opts [:present]
-     :bgcolor 0
+     :features [:present]
+     :bgcolor "#00FFFF"
      :on-close #(deliver lock true))
     @lock))
 
@@ -80,7 +80,7 @@
      :draw (draw-text-fn "This is last test. When you close sketch JVM should shut down \nand you won't see tests summary.\n"
                          "Also you should see 'on-close called' message in console.")
      :on-close (fn [] (println "on-close called"))
-     :opts [:exit-on-close])
+     :features [:exit-on-close])
     @lock))
 
 (deftest run-all

@@ -248,14 +248,26 @@
     applet))
 
 (def ^{:private true}
-  opts-applet-params
-  #{:resizable :exit-on-close :keep-on-top :present})
+  supported-features
+  #{:resizable :exit-on-close :keep-on-top :present :no-safe-draw})
+
+(defn- check-for-removed-opts
+  "Checks if opts map contains options which were removed in Quil 2.0.
+  Prints messages how it could be potentially fixed."
+  [opts]
+  (let [messages {:decor "Try :features [:present] for similar effect"
+                  :target "Use :features [:keep-on-top] instead."
+                  :safe-draw-fn "Use :features [:no-safe-draw] instead."}]
+    (doseq [key (keys opts)]
+      (when-let [text (messages key)]
+        (println key "option was removed in Quil 2.0. " text)))))
 
 (defn applet
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch or :fullscreen.
-                     Defaults to [500 300].
+   :size           - A vector of width and height for the sketch or :fullscreen.
+                     Defaults to [500 300]. If you're using :fullscreen you may
+                     want to enable :present feature - :features [:present]
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
                      :opengl, :pdf). Defaults to :java2d. :dxf renderer
@@ -264,25 +276,32 @@
 
    :output-file    - Specify an output file path. Only used in :pdf mode.
 
-   :title          - a string which will be displayed at the top of
+   :title          - A string which will be displayed at the top of
                      the sketch window.
 
-   :opts           - Short form for true\false options. Sets added parameters in true.
-                     You can use supported parameters without :opts but :opts has a higher priority.
-                     Example: :opts [:keep-on-top]
-                     Supported parameters: :keep-on-top, :exit-on-close, :resizable, :present
+   :features       - A vector of keywords customizing sketch behaviour.
+                     Supported features:
 
-   :keep-on-top    - Sets whether sketch window should always be above other windows.
-                     Note: some platforms might not support always-on-top windows.
+                     :keep-on-top - Sketch window will always be above other windows.
+                                    Note: some platforms might not support
+                                    always-on-top windows.
 
-   :exit-on-close  - Sets behavior of JVM when sketch is closed.
+                     :exit-on-close - Shutdown JVM  when sketch is closed.
 
-   :resizable      - Sets whether sketch is resizable by the user.
+                     :resizable - Makes sketch resizable.
 
-   :present        - Switch to sketch present mode (fullscreen without borders, OS panels).
+                     :no-safe-draw - Do not catch and print exception in the draw fn.
+                                     By default all exceptions thrown inside draw function are catched
+                                     so sketch doesn't break if something goes wrong.
+
+                     :present - Switch to present mode (fullscreen without borders, OS panels). You may
+                                want to use this feature together with :size :fullscreen.
+
+                     Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
-                     Example: :bgcolor 200
+                     Color is specified in hex format: #AABBCC.
+                     Example: :bgcolor #00FFFF (cyan background)
 
    :setup          - a fn to be called once when setting the sketch up.
 
@@ -324,22 +343,19 @@
    :key-typed      - Called once every time non-modifier keys are
                      pressed.
 
-   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true.
-
    :on-close       - Called once, when sketch is closed"
   [& opts]
-  (let [raw-options      (merge {:size [500 300]
-                                 :target :frame
-                                 :safe-draw-fn true}
-                                (apply hash-map opts))
+  (check-for-removed-opts (apply hash-map opts))
+  (let [options      (merge {:size [500 300]
+                             :target :frame}
+                            (apply hash-map opts))
 
-        prepare-opts     (let [user-opts (set (:opts raw-options))]
-                           (reduce #(assoc %1 %2 (contains? user-opts %2)) {}
-                                   opts-applet-params))
+        features     (let [user-features (set (:features options))]
+                       (reduce #(assoc %1 %2 (contains? user-features %2)) {}
+                               supported-features))
 
-
-        options           (merge (dissoc raw-options :opts) prepare-opts)
+        options           (merge (dissoc options :features)
+                                 features)
 
         size              (process-size (:size options))
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
@@ -352,7 +368,7 @@
                               (catch Exception e
                                 (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
                                 (Thread/sleep 1000))))
-        draw-fn           (if (:safe-draw-fn options) safe-draw-fn draw-fn)
+        draw-fn           (if (:no-safe-draw options) draw-fn safe-draw-fn)
 
         on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
                             (if (:exit-on-close options)
@@ -382,8 +398,11 @@
       (attach-applet-listeners))))
 
 (def ^{:private true}
-  non-fn-applet-params
-  #{:size :renderer :output-file :title :target})
+  fn-applet-params
+  #{:setup :draw :focus-gained :focus-lost :mouse-entered
+    :mouse-exited :mouse-pressed :mouse-released :mouse-clicked
+    :mouse-moved :mouse-dragged :mouse-wheel :key-pressed
+    :key-typed :on-close})
 
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
@@ -392,7 +411,7 @@
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See applet for the available options."
   [app-name & opts]
-  (let [fn-param? #(not (contains? non-fn-applet-params %))
+  (let [fn-param? #(contains? fn-applet-params %)
         opts  (mapcat (fn [[k v]]
                         [k (if (and (symbol? v)
                                     (fn-param? k))
