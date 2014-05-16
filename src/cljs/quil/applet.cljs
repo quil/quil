@@ -1,6 +1,7 @@
 (ns cljs.quil.applet
   (:require [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.helpers.tools :only [with-applet bind-handlers]]))
+  (:use-macros [cljs.quil.applet :only [with-applet]]
+               [cljs.quil.helpers.tools :only [bind-handlers]]))
 
 
 (defn no-fn [])

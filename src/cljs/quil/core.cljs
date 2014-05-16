@@ -1,7 +1,7 @@
 (ns cljs.quil.core
   (:require [cljs.quil.applet :as applet]
             [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.helpers.tools :only [defapplet]])
+  (:use-macros [cljs.quil.applet :only [defsketch]])
   (:use [cljs.quil.applet :only [current-graphics]]))
 
 
