@@ -4326,8 +4326,9 @@
   sketch
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch or
-                     :fullscreen. Defaults to [500 300].
+   :size           - A vector of width and height for the sketch or :fullscreen.
+                     Defaults to [500 300]. If you're using :fullscreen you may
+                     want to enable present mode - :features [:present].
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d,
                      :java2d, :opengl, :pdf). Defaults to :java2d.
