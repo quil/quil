@@ -2,7 +2,9 @@
   (:require [clojure.browser.dom  :as dom])
   (:use-macros [cljs.quil.helpers.tools :only [with-applet bind-handlers]]))
 
+
 (defn no-fn [])
+
 
 (def ^:dynamic
   *surface* nil)

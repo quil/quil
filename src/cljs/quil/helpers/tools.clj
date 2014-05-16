@@ -1,5 +1,6 @@
 (ns cljs.quil.helpers.tools)
 
+
 (defmacro with-applet [applet & body]
   `(binding [cljs.quil.applet/*surface* ~applet]
      ~@body))
