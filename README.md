@@ -20,11 +20,15 @@ Quil requires Clojure 1.5.1, and other dependencies described in `project.clj` w
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-    [quil "1.7.0"]
+```clojure
+[quil "1.7.0"]
+```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
-    (:use quil.core)
+```clojure
+(:require [quil.core :refer :all])
+```
 
 For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing).
 
@@ -43,7 +47,7 @@ If `setup` and `draw` are hard working *artistic gladiators*, `sketch` is the *a
 A simple example is called for:
 ```clojure
 (ns for-the-glory-of-art
-  (:use quil.core))
+  (:require [quil.core :refer :all]))
 
 (defn setup []
   (smooth)                          ;; Turn on anti-aliasing
@@ -134,7 +138,7 @@ If you know the start of Processing API method name such as `bezier`, you can us
 
 Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author.
 
-Head over to the [Gen Art Examples Page](https://github.com/quil/quil/blob/master/examples/gen_art/README.md).
+Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/blob/master/examples/gen_art/README.md). Instructions of how to run examples you can find in [Quil examples](https://github.com/quil/quil-examples) repo.
 
 ## Processing Compatibility
 
