@@ -14,14 +14,14 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil requires Clojure 1.5.1, and other dependencies described in `project.clj` which are automatically pulled with leiningen. For the OpenGL support you need to use leiningen 2.0 or higher.
+Quil works with Clojure 1.5.1 and 1.6.0.
 
 ## Installation
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
 ```clojure
-[quil "1.7.0"]
+[quil "2.0.0"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -81,7 +81,9 @@ You're witnessing `setup`, `draw` and `sketch` working in complete harmony. See 
 
 <a href="https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf"><img src="http://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy.
+When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
+
+For up-to-date documentation please check [quil.info](http://quil.info).
 
 If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
 
@@ -142,7 +144,7 @@ Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/t
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `1.5.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
+Quil provides support for the standard Processing API - currently version `2.2.0`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
 ## Community
 
