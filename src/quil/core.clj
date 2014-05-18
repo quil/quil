@@ -4369,6 +4369,10 @@
 
                      Usage example: :features [:keep-on-top :present]
 
+   :bgcolor        - Sets background color for unused space in present mode.
+                     Color is specified in hex format: #XXXXXX.
+                     Example: :bgcolor \"#00FFFF\" (cyan background)
+
    :focus-gained   - Called when the sketch gains focus.
 
    :focus-lost     - Called when the sketch loses focus.

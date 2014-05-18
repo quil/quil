@@ -303,8 +303,8 @@
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
-                     Color is specified in hex format: #AABBCC.
-                     Example: :bgcolor #00FFFF (cyan background)
+                     Color is specified in hex format: #XXXXXX.
+                     Example: :bgcolor \"#00FFFF\" (cyan background)
 
    :setup          - a fn to be called once when setting the sketch up.
 
