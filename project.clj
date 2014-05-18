@@ -21,7 +21,7 @@
   :plugins [[com.keminglabs/cljx "0.3.2"]
             [lein-cljsbuild "1.0.2"]]
 
-  ;:hooks [cljx.hooks leiningen.cljsbuild]
+  :hooks [cljx.hooks leiningen.cljsbuild]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
@@ -30,11 +30,8 @@
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
-  ;:prep-tasks ["javac" "compile"]
-  ;:source-paths ["src" "target/classes" "target/classes/quil/helpers"]
-
   :cljx {:builds [{:source-paths ["src"]
-                   :output-path "target/classes"
+                   :output-path "src/gen/clj"
                    :rules :clj}
                   {:source-paths ["src"]
                    :output-path "src/gen/cljs"
