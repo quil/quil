@@ -1,7 +1,14 @@
-(ns
-    ^{:doc "Utility fns"
-      :author "Roland Sadowski, Sam Aaron"}
-    quil.util)
+(ns ^{:doc "Utility fns"}
+  quil.util)
+
+(defn no-fn
+  "Function that does nothing."
+  [])
+
+(defn absolute-path [path]
+  (-> (str path)
+      (java.io.File.)
+      (.getAbsolutePath)))
 
 (defn int-like?
   [val]

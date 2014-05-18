@@ -1,18 +1,31 @@
-(ns
-    ^{:doc "Wrappers and extensions around the core Processing.org API."
-      :author "Roland Sadowski, Sam Aaron"}
-    quil.core
-    (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
-             [java.awt.event KeyEvent])
-  (:require [clojure.set])
-  (:use [quil.version :only [QUIL-VERSION-STR]]
-        [quil.util :only [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list]]
-        [quil.applet :only [current-applet applet-stop applet-state applet-start applet-close applet defapplet applet-safe-exit current-graphics *graphics*]]))
+(ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
+  quil.core
+  (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+           [processing.opengl PShader]
+           [java.awt.event KeyEvent])
+  (:require [clojure.set]
+            [quil.helpers.docs :as docs]
+            [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
+                               absolute-path]]
+            [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
-(defn- ^PGraphics current-surface
-  "Retrieves current drawing surface. It's either current graphics or current applet if graphics is nil"
+(def ^{:dynamic true
+       :private true}
+  *graphics* nil)
+
+(defn
+  ^{:requires-bindings true
+    :category "Environment"
+    :subcategory nil
+    :added "2.0"
+    :tag PGraphics}
+  current-graphics
+  "Graphics currently used for drawing. By default it is sketch graphics,
+  but if called inside with-graphics macro - graphics passed to the macro
+  is returned. This method should be used if you need to call some methods
+  that are not implemented by quil. Example (.beginDraw (current-graphics))."
   []
-  (or (current-graphics) (.-g (current-applet))))
+  (or *graphics* (.-g (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -21,19 +34,20 @@
     :added "1.0"}
   state
   "Retrieve sketch-specific state by key. Must initially call
-  set-state! to store state.
+  set-state! to store state. If no parameter passed whole
+  state map is returned.
 
   (set-state! :foo 1)
-  (state :foo) ;=> 1 "
-  [key]
-  (let [state* (:state (meta (current-applet)))]
-    (when-not @state*
-      (throw (Exception. "State not set - use set-state! before fetching state")))
-
-    (let [state @state*]
-      (when-not (contains? state key)
-        (throw (Exception. (str "Unable to find state with key: " key))))
-      (get state key))))
+  (state :foo) ;=> 1
+  (state) ;=> {:foo 1}"
+  ([] (let [state* (:state (meta (current-applet)))]
+        (when-not @state*
+          (throw (Exception. "State not set - use set-state! before fetching state")))
+        @state*))
+  ([key] (let [state (state)]
+           (when-not (contains? state key)
+             (throw (Exception. (str "Unable to find state with key: " key))))
+           (get state key))))
 
 (defn
   ^{:requires-bindings true
@@ -113,7 +127,7 @@
   alpha
   "Extracts the alpha value from a color."
   [color]
-  (.alpha (current-surface) (int color)))
+  (.alpha (current-graphics) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -129,8 +143,8 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([gray] (.ambient (current-surface) (float gray)))
-  ([x y z] (.ambient (current-surface) (float x) (float y) (float z))))
+  ([gray] (.ambient (current-graphics) (float gray)))
+  ([x y z] (.ambient (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -145,8 +159,7 @@
   with emissive, specular, and shininess in setting the material
   properties of shapes."
   [rgb]
-  (.ambient
-   (current-surface) (int rgb)))
+  (.ambient (current-graphics) (int rgb)))
 
 (defn
   ^{:requires-bindings true
@@ -173,17 +186,17 @@
     :added "1.0"}
   ambient-light
   "Adds an ambient light. Ambient light doesn't come from a specific direction,
-   the rays have light have bounced around so much that objects are
-   evenly lit from all sides. Ambient lights are almost always used in
-   combination with other types of lights. Lights need to be included
-   in the draw to remain persistent in a looping program. Placing them
-   in the setup of a looping program will cause them to only have an
-   effect the first time through the loop. The effect of the
-   parameters is determined by the current color mode."
+  the rays have light have bounced around so much that objects are
+  evenly lit from all sides. Ambient lights are almost always used in
+  combination with other types of lights. Lights need to be included
+  in the draw to remain persistent in a looping program. Placing them
+  in the setup of a looping program will cause them to only have an
+  effect the first time through the loop. The effect of the
+  parameters is determined by the current color mode."
   ([red green blue]
-     (.ambientLight (current-surface) (float red) (float green) (float blue)))
+     (.ambientLight (current-graphics) (float red) (float green) (float blue)))
   ([red green blue x y z]
-     (.ambientLight (current-surface) (float red) (float green) (float blue)
+     (.ambientLight (current-graphics) (float red) (float green) (float blue)
                     (float x) (float y) (float z))))
 
 (defn
@@ -198,16 +211,23 @@
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
   ([n00 n01 n02 n10 n11 n12]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02)
+     (.applyMatrix (current-graphics)
+                   (float n00) (float n01) (float n02)
                    (float n10) (float n11) (float n12)))
   ([n00 n01 n02 n03
     n10 n11 n12 n13
     n20 n21 n22 n23
     n30 n31 n32 n33]
-     (.applyMatrix (current-surface) (float n00) (float n01) (float n02) (float 03)
-                   (float n10) (float n11) (float n12) (float 13)
-                   (float n20) (float n21) (float n22) (float 23)
-                   (float n30) (float n31) (float n32) (float 33))))
+     (.applyMatrix (current-graphics)
+                   (float n00) (float n01) (float n02) (float n03)
+                   (float n10) (float n11) (float n12) (float n13)
+                   (float n20) (float n21) (float n22) (float n23)
+                   (float n30) (float n31) (float n32) (float n33))))
+
+(def ^{:private true}
+  arc-modes {:open PConstants/OPEN
+             :chord PConstants/CHORD
+             :pie PConstants/PIE})
 
 (defn
   ^{:requires-bindings true
@@ -219,11 +239,15 @@
   "Draws an arc in the display window. Arcs are drawn along the outer
   edge of an ellipse defined by the x, y, width and height
   parameters. The origin or the arc's ellipse may be changed with the
-  ellipseMode() function. The start and stop parameters specify the
-  angles at which to draw the arc."
-  [x y width height start stop]
-  (.arc (current-surface) (float x)(float y) (float width) (float height)
+  ellipse-mode function. The start and stop parameters specify the
+  angles at which to draw the arc. The mode is either :open, :chord or :pie."
+  ([x y width height start stop]
+    (.arc (current-applet) (float x) (float y) (float width) (float height)
         (float start) (float stop)))
+  ([x y width height start stop mode]
+    (let [arc-mode (resolve-constant-key mode arc-modes)]
+      (.arc (current-applet) (float x) (float y) (float width) (float height)
+        (float start) (float stop) (int arc-mode)))))
 
 (defn
   ^{:requires-bindings false
@@ -304,10 +328,10 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts args to floats."
-  ([gray] (.background (current-surface) (float gray)))
-  ([gray alpha] (.background (current-surface) (float gray) (float alpha)))
-  ([r g b] (.background (current-surface) (float r) (float g) (float b)))
-  ([r g b a] (.background (current-surface) (float r) (float g) (float b) (float a))))
+  ([gray] (.background (current-graphics) (float gray)))
+  ([gray alpha] (.background (current-graphics) (float gray) (float alpha)))
+  ([r g b] (.background (current-graphics) (float r) (float g) (float b)))
+  ([r g b a] (.background (current-graphics) (float r) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -324,8 +348,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (current-surface) (int rgb)))
-  ([rgb alpha] (.background (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.background (current-graphics) (int rgb)))
+  ([rgb alpha] (.background (current-graphics) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -358,7 +382,7 @@
   width and height must be the same size as the sketch window. Images
   used as background will ignore the current tint setting."
   [^PImage img]
-  (.background (current-surface) img))
+  (.background (current-graphics) img))
 
 (defn
   ^{:requires-bindings true
@@ -375,7 +399,21 @@
 
   For most situations the camera function will be sufficient."
   []
-  (.beginCamera (current-surface)))
+  (.beginCamera (current-graphics)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "beginContour()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "2.0"}
+  begin-contour
+  "Use the begin-contour and end-contour function to create negative
+  shapes within shapes. These functions can only be within a
+  begin-shape/end-shape pair and they only work with the :p2d and :p3d
+  renderers."
+  []
+  (.beginContour (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -392,39 +430,8 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([^PGraphics raw-gfx] (.beginRaw (current-surface) raw-gfx))
-  ([^String renderer ^String filename]
-     (.beginRaw (current-applet) renderer filename)))
-
-(def ^{:private true}
-  render-modes {:p2d PApplet/P2D
-                :p3d PApplet/P3D
-                :java2d PApplet/JAVA2D
-                :opengl PApplet/OPENGL
-                :pdf PApplet/PDF
-                :dxf PApplet/DXF})
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "beginRecord()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  begin-record
-  "Opens a new file and all subsequent drawing functions are echoed to
-  this file as well as the display window. The begin-record fn
-  requires two parameters, the first is the renderer and the second is
-  the file name. This function is always used with end-record to stop
-  the recording process and close the file.
-
-  Note that begin-record will only pick up any settings that happen
-  after it has been called. For instance, if you call text-font
-  before begin-record, then that font will not be set for the file
-  that you're recording to."
-  [renderer filename]
-  (let [renderer (resolve-constant-key renderer render-modes)]
-    (println "renderer: " renderer)
-    (.beginRecord (current-applet) (str renderer) (str filename))))
+  ([renderer filename]
+     (.beginRaw (current-applet) (resolve-renderer renderer) (absolute-path filename))))
 
 (def ^{:private true}
      shape-modes {:points PApplet/POINTS
@@ -461,11 +468,14 @@
 
   Transformations such as translate, rotate, and scale do not work
   within begin-shape. It is also not possible to use other shapes,
-  such as ellipse or rect within begin-shape."
-  ([] (.beginShape (current-surface)))
+  such as ellipse or rect within begin-shape.
+
+  Doesn't work inside with-graphics macro: shape is not drawn on
+  provided graphics."
+  ([] (.beginShape (current-graphics)))
   ([mode]
      (let [mode (resolve-constant-key mode shape-modes)]
-       (.beginShape (current-surface) (int mode)))))
+       (.beginShape (current-graphics) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -480,13 +490,13 @@
   the other anchor point. The middle parameters specify the control
   points which define the shape of the curve."
   ([x1 y1 cx1 cy1 cx2 cy2 x2 y2]
-     (.bezier (current-surface)
+     (.bezier (current-graphics)
               (float x1) (float y1)
               (float cx1) (float cy1)
               (float cx2) (float cy2)
               (float x2) (float y2)))
   ([x1 y1 z1 cx1 cy1 cz1 cx2 cy2 cz2 x2 y2 z2]
-     (.bezier (current-surface)
+     (.bezier (current-graphics)
               (float x1) (float y1) (float z1)
               (float cx1) (float cy1) (float cz1)
               (float cx2) (float cy2) (float cz2)
@@ -504,7 +514,7 @@
   renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
-  (.bezierDetail (current-surface) (int detail)))
+  (.bezierDetail (current-graphics) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -519,7 +529,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a bezier curve at t."
   [a b c d t]
-  (.bezierPoint (current-surface) (float a) (float b) (float c)
+  (.bezierPoint (current-graphics) (float a) (float b) (float c)
                 (float d) (float t)))
 
 (defn
@@ -532,7 +542,7 @@
   "Calculates the tangent of a point on a Bezier curve.
   (See http://en.wikipedia.org/wiki/Tangent)"
   [a b c d t]
-  (.bezierTangent (current-surface) (float a) (float b) (float c)
+  (.bezierTangent (current-graphics) (float a) (float b) (float c)
                   (float d) (float t)))
 
 (defn
@@ -551,12 +561,12 @@
   end-shape and only when there is no parameter specified to
   begin-shape."
   ([cx1 cy1 cx2 cy2 x y]
-     (.bezierVertex (current-surface)
+     (.bezierVertex (current-graphics)
                     (float cx1) (float cy1)
                     (float cx2) (float cy2)
                     (float x) (float y)))
   ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
-     (.bezierVertex (current-surface)
+     (.bezierVertex (current-graphics)
                     (float cx1) (float cy1) (float cz1)
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
@@ -574,18 +584,6 @@
   ([val] (PApplet/binary (int val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
 
-(defn
-  ^{:require-binding false
-    :processing-name "unbinary()"
-    :category "Data"
-    :subcategory "Conversion"
-    :added "1.0"}
-    unbinary
-  "Unpack a binary string to an integer. See binary for converting
-  integers to strings."
-  [str-val]
-  (PApplet/unbinary (str str-val)))
-
 (def ^{:private true}
   blend-modes {:blend PApplet/BLEND
                :add PApplet/ADD
@@ -597,6 +595,7 @@
                :multiply PApplet/MULTIPLY
                :screen PApplet/SCREEN
                :overlay PApplet/OVERLAY
+               :replace PApplet/REPLACE
                :hard-light PApplet/HARD_LIGHT
                :soft-light PApplet/SOFT_LIGHT
                :dodge PApplet/DODGE
@@ -605,12 +604,15 @@
 (defn
   ^{:requires-bindings true
     :processing-name "blend()"
-    :category "Color"
+    :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
   blend
-  "Blends a region of pixels from one image into another (or in itself
-  again) with full alpha channel support.
+  "Blends a region of pixels from one image into another with full alpha
+  channel support. If src is not specified it defaults to current-graphics.
+  If dest is not specified it defaults to current-graphics.
+
+  Note: blend-mode function is recommended to use instead of this one.
 
   Available blend modes are:
 
@@ -640,12 +642,12 @@
                 lights. Called \"Color Burn\" in Illustrator and
                 Photoshop."
   ([x y width height dx dy dwidth dheight mode]
+   (blend (current-graphics) (current-graphics) x y width height dx dy dwidth dheight mode))
+  ([^PImage src-img x y width height dx dy dwidth dheight mode]
+   (blend src-img (current-graphics) x y width height dx dy dwidth dheight mode))
+  ([^PImage src-img ^PImage dest-img x y width height dx dy dwidth dheight mode]
      (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-surface) (int x) (int y) (int width) (int height)
-               (int dx) (int dy) (int dwidth) (int dheight) (int mode))))
-  ([^PImage src x y width height dx dy dwidth dheight mode]
-     (let [mode (resolve-constant-key mode blend-modes)]
-       (.blend (current-surface) src (int x) (int y) (int width) (int height)
+       (.blend dest-img src-img (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
@@ -691,6 +693,40 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "blendMode()"
+    :category "Image"
+    :subcategory "Rendering"
+    :added "2.0"}
+  blend-mode
+  "Blends the pixels in the display window according to the defined mode.
+  There is a choice of the following modes to blend the source pixels (A)
+  with the ones of pixels already in the display window (B):
+
+  :blend      - linear interpolation of colours: C = A*factor + B
+  :add        - additive blending with white clip:
+                                            C = min(A*factor + B, 255)
+  :subtract   - subtractive blending with black clip:
+                                            C = max(B - A*factor, 0)
+  :darkest    - only the darkest colour succeeds:
+                                            C = min(A*factor, B)
+  :lightest   - only the lightest colour succeeds:
+                                            C = max(A*factor, B)
+  :exclusion  - similar to :difference, but less extreme.
+  :multiply   - Multiply the colors, result will always be darker.
+  :screen     - Opposite multiply, uses inverse values of the colors.
+  :replace    - the pixels entirely replace the others and don't utilize
+                alpha (transparency) values
+
+  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn, :difference
+  modes are not supported by this function.
+
+  factor is alpha value of pixel being drawed"
+  ([mode]
+    (let [mode (resolve-constant-key mode blend-modes)]
+      (.blendMode (current-graphics) mode))))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "blue()"
     :category "Color"
     :subcategory "Creating & Reading"
@@ -699,7 +735,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (current-surface) (int color)))
+  (.blue (current-graphics) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -709,8 +745,8 @@
     :added "1.0"}
   box
   "Creates an extruded rectangle."
-  ([size] (.box (current-surface) (float size)))
-  ([width height depth] (.box (current-surface) (float width) (float height) (float depth))))
+  ([size] (.box (current-graphics) (float size)))
+  ([width height depth] (.box (current-graphics) (float width) (float height) (float depth))))
 
 (defn
   ^{:requires-bindings true
@@ -721,7 +757,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (current-surface) (int color)))
+  (.brightness (current-graphics) (int color)))
 
 (defn
   ^{:requires-bindings true
@@ -750,9 +786,9 @@
 
   Similar imilar to gluLookAt() in OpenGL, but it first clears the
   current camera settings."
-  ([] (.camera (current-surface)))
+  ([] (.camera (current-graphics)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
-     (.camera (current-surface) (float eyeX) (float eyeY) (float eyeZ)
+     (.camera (current-graphics) (float eyeX) (float eyeY) (float eyeZ)
               (float centerX) (float centerY) (float centerZ)
               (float upX) (float upY) (float upZ))))
 
@@ -786,10 +822,10 @@
   g - green or saturation value
   b - blue or brightness value
   a - alpha value"
-  ([gray] (.color (current-surface) (float gray)))
-  ([gray alpha] (.color (current-surface) (float gray) (float alpha)))
-  ([r g b] (.color (current-surface) (float r) (float g) (float b)))
-  ([r g b a] (.color (current-surface) (float r) (float g) (float b) (float a))))
+  ([gray] (.color (current-graphics) (float gray)))
+  ([gray alpha] (.color (current-graphics) (float gray) (float alpha)))
+  ([r g b] (.color (current-graphics) (float r) (float g) (float b)))
+  ([r g b a] (.color (current-graphics) (float r) (float g) (float b) (float a))))
 
 (def ^{:private true}
   color-modes {:rgb (int 1)
@@ -813,16 +849,16 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode))))
+       (.colorMode (current-graphics) (int mode))))
   ([mode max]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max))))
+       (.colorMode (current-graphics) (int mode) (float max))))
   ([mode max-x max-y max-z]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max-x) (float max-y) (float max-z))))
+       (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
      (let [mode (resolve-constant-key mode color-modes)]
-       (.colorMode (current-surface) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
+       (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 (defn
   ^{:requires-bindings false
@@ -868,19 +904,20 @@
     :subcategory "Pixels"
     :added "1.0"}
   copy
-  "Copies a region of pixels from the display window to another area
-  of the display window and copies a region of pixels from an image
-  used as the src-img parameter into the display window. If the source
+  "Copies a region of pixels from the one image to another. If src-img
+  is not specified it defaults to current-graphics. If dest-img is not
+  specified - it defaults to current-graphics. If the source
   and destination regions aren't the same size, it will automatically
   resize the source pixels to fit the specified target region. No
   alpha information is used in the process, however if the source
   image has an alpha channel set, it will be copied as well. "
-  ([[sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-surface) (int sx1) (int sy1) (int sx2) (int sy2)
-            (int dx1) (int dy1) (int dx2) (int dy2)))
-  ([^PImage img [sx1 sy1 sx2 sy2] [dx1 dy1 dx2 dy2]]
-     (.copy (current-surface) img (int sx1) (int sy1) (int sx2) (int sy2)
-            (int dx1) (int dy1) (int dx2) (int dy2))))
+  ([[sx sy swidth sheight] [dx dy dwidth dheight]]
+     (copy (current-graphics) (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+  ([^PImage src-img [sx sy swidth sheight] [dx dy dwidth dheight]]
+     (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+  ([^PImage src-img ^PImage dest-img [sx sy swidth sheight] [dx dy dwidth dheight]]
+     (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
+            (int dx) (int dy) (int dwidth) (int dheight))))
 
 (defn
   ^{:requires-bindings false
@@ -946,26 +983,26 @@
   ([name size smooth ^chars charset]
      (.createFont (current-applet) (str name) (float size) smooth charset)))
 
-(def  ^{:private true}
-  graphic-render-modes
-  (select-keys render-modes [:p2d :p3d :java2d :pdf]))
-
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
-    :category "Rendering"
-    :subcategory nil
+    :category "Image"
+    :subcategory "Rendering"
     :added "1.0"}
   create-graphics
   "Creates and returns a new PGraphics object of the types :p2d, :p3d,
-  :java2d, :pdf. Use this class if you need to draw into an off-screen
-  graphics buffer. It's not possible to use create-graphics with the
-  :opengl renderer, because it doesn't allow offscreen use. The :pdf
-  renderer requires the filename parameter.
+  :java2d, :pdf. By default :java2d is used. Use this class if you
+  need to draw into an off-screen graphics buffer. It's not possible
+  to use create-graphics with the :opengl renderer, because it doesn't
+  allow offscreen use. The :pdf renderer requires the filename parameter.
 
-  It's important to call any drawing commands between begin-draw and
-  end-draw statements. This is also true for any commands that affect
-  drawing, such as smooth or color-mode.
+  It's important to call any drawing commands between (.beginDraw graphics) and
+  (.endDraw graphics) statements or use with-graphics macro. This is also true
+  for any commands that affect drawing, such as smooth or color-mode.
+
+  If you're using :pdf renderer - don't forget to call (.dispose graphics)
+  as last command inside with-graphics macro, otherwise graphics won't be
+  saved.
 
   Unlike the main drawing surface which is completely opaque, surfaces
   created with create-graphics can have transparency. This makes it
@@ -974,10 +1011,18 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
+  ([w h]
+     (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes)))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-constant-key renderer graphic-render-modes) (str path))))
+     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
+                      (absolute-path path))))
+
+(def ^{:private true}
+  image-formats {:rgb PApplet/RGB
+                :argb PApplet/ARGB
+                :alpha PApplet/ALPHA})
 
 (defn
   ^{:requires-bindings true
@@ -992,85 +1037,13 @@
   defines how the pixels are stored. See the PImage reference for more
   information.
 
-  Be sure to include all three parameters, specifying only the width
-  and height (but no format) will produce a strange error.
+  Possible formats: :rgb, :argb, :alpha (grayscale alpha channel)
 
   Prefer using create-image over initialising new PImage instances
   directly."
   [w h format]
-  (.createImage (current-applet) (int w) (int h) (int format)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "createInput()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  create-input
-  "This is a method for advanced programmers to open a Java
-  InputStream. The method is useful if you want to use the facilities
-  provided by PApplet to easily open files from the data folder or
-  from a URL, but want an InputStream object so that you can use other
-  Java methods to take more control of how the stream is read.
-
-  If the requested item doesn't exist, null is returned.
-
-  If not online, this will also check to see if the user is asking for
-  a file whose name isn't properly capitalized. If capitalization is
-  different an error will be printed to the console. This helps
-  prevent issues that appear when a sketch is exported to the web,
-  where case sensitivity matters, as opposed to running from inside
-  the Processing Development Environment on Windows or Mac OS, where
-  case sensitivity is preserved but ignored.
-
-  The filename passed in can be:
-  - A URL, for instance (open-stream \"http://processing.org/\";
-  - A file in the sketch's data folder
-  - The full path to a file to be opened locally (when running as an
-    application)
-
-  If the file ends with .gz, the stream will automatically be gzip
-  decompressed. If you don't want the automatic decompression, use the
-  related function create-input-raw."
-  [filename]
-  (.createInput (current-applet) (str filename)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "createInputRaw()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  create-input-raw
-  "Call create-input without automatic gzip decompression."
-  [filename]
-  (.createInputRaw (current-applet) filename))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "createOutput()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  create-output
-  "Similar to create-input, this creates a Java OutputStream for a
-  given filename or path. The file will be created in the sketch
-  folder, or in the same folder as an exported application.
-
-  If the path does not exist, intermediate folders will be created. If
-  an exception occurs, it will be printed to the console, and null
-  will be returned.
-
-  This method is a convenience over the Java approach that requires
-  you to 1) create a FileOutputStream object, 2) determine the exact
-  file location, and 3) handle exceptions. Exceptions are handled
-  internally by the function, which is more appropriate for sketch
-  projects.
-
-  If the output filename ends with .gz, the output will be
-  automatically GZIP compressed as it is written."
-  [filename]
-  (.createOutput (current-applet) (str filename)))
+  (let [format (resolve-constant-key format image-formats)]
+    (.createImage (current-applet) (int w) (int h) (int format))))
 
 (defn
   ^{:requires-bindings true
@@ -1080,7 +1053,7 @@
   current-fill
   "Return the current fill color."
   []
-  (.fillColor (current-surface)))
+  (.fillColor (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -1090,7 +1063,7 @@
   current-stroke
   "Return the current stroke color."
   []
-  (.strokeColor (current-surface)))
+  (.strokeColor (current-graphics)))
 
 (def ^{:private true}
   cursor-modes {:arrow PConstants/ARROW
@@ -1107,16 +1080,10 @@
     :subcategory nil
     :added "1.0"}
   cursor
-  "Sets the cursor to a predefined symbol, an image, or makes it
-  visible if already hidden. If you are trying to set an image as the
-  cursor, it is recommended to make the size 16x16 or 32x32 pixels.
-  The values for parameters x and y must be less than the dimensions
-  of the image.
+  "Sets the cursor to a predefined symbol or makes it
+  visible if already hidden (after no-cursor was called).
 
   Available modes: :arrow, :cross, :hand, :move, :text, :wait
-
-  Setting or hiding the cursor generally does not work with 'Present'
-  mode (when running full-screen).
 
   See cursor-image for specifying a generic image as the cursor
   symbol."
@@ -1131,7 +1098,8 @@
     :added "1.0"}
     cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
-  active spots of the cursor may be specified with hx and hy"
+  active spots of the cursor may be specified with hx and hy.
+  It is recommended to make the size 16x16 or 32x32 pixels."
   ([^PImage img] (.cursor (current-applet) img))
   ([^PImage img hx hy] (.cursor (current-applet) img (int hx) (int hy))))
 
@@ -1151,13 +1119,13 @@
   the curve. The curve fn is an implementation of Catmull-Rom
   splines."
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-     (.curve (current-surface)
+     (.curve (current-graphics)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)
              (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-     (.curve (current-surface)
+     (.curve (current-graphics)
              (float x1) (float y1) (float z1)
              (float x2) (float y2) (float z2)
              (float x3) (float y3) (float z3)
@@ -1175,7 +1143,7 @@
   renderer as the default (:java2d) renderer does not use this
   information."
   [detail]
-  (.curveDetail (current-surface) (int detail)))
+  (.curveDetail (current-graphics) (int detail)))
 
 (defn
   ^{:requires-bindings true
@@ -1190,7 +1158,7 @@
   coordinates and a second time with the y coordinates to get the
   location of a curve at t."
   [a b c d t]
-  (.bezierPoint (current-surface) (float a) (float b) (float c) (float d) (float t)))
+  (.curvePoint (current-graphics) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1202,7 +1170,7 @@
   "Calculates the tangent of a point on a curve.
   See: http://en.wikipedia.org/wiki/Tangent"
   [a b c d t]
-  (.curveTangent (current-surface) (float a) (float b) (float c) (float d) (float t)))
+  (.curveTangent (current-graphics) (float a) (float b) (float c) (float d) (float t)))
 
 (defn
   ^{:requires-bindings true
@@ -1220,7 +1188,7 @@
   but will leave them recognizable and as values increase in
   magnitude, they will continue to deform."
   [ti]
-  (.curveTightness (current-surface) (float ti)))
+  (.curveTightness (current-graphics) (float ti)))
 
 (defn
   ^{:requires-bindings true
@@ -1238,8 +1206,8 @@
   with curveVertex will draw the curve between the second, third, and
   fourth points. The curveVertex function is an implementation of
   Catmull-Rom splines."
-  ([x y] (.curveVertex (current-surface) (float x) (float y)))
-  ([x y z] (.curveVertex (current-surface) (float x) (float y) (float z))))
+  ([x y] (.curveVertex (current-graphics) (float x) (float y)))
+  ([x y z] (.curveVertex (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings false
@@ -1304,7 +1272,7 @@
   light is facing. For example, setting ny to -1 will cause the
   geometry to be lit from below (the light is facing directly upward)"
   [r g b nx ny nz]
-  (.directionalLight (current-surface) (float r) (float g) (float b)
+  (.directionalLight (current-graphics) (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
 
 (defn
@@ -1330,7 +1298,7 @@
   equal width and height is a circle.  The origin may be changed with
   the ellipse-mode function"
   [x y width height]
-  (.ellipse (current-surface) (float x) (float y) (float width) (float height)))
+  (.ellipse (current-graphics) (float x) (float y) (float width) (float height)))
 
 (def ^{:private true}
      ellipse-modes   {:center PApplet/CENTER
@@ -1358,7 +1326,7 @@
              corners of the ellipse's bounding box."
   [mode]
   (let [mode (resolve-constant-key mode ellipse-modes)]
-    (.ellipseMode (current-surface) (int mode))))
+    (.ellipseMode (current-graphics) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1371,8 +1339,8 @@
  drawn to the screen. Used in combination with ambient, specular, and
  shininess in setting the material properties of shapes. Converts all
  args to floats"
-  ([float-val] (.emissive (current-surface) (float float-val)))
-  ([r g b] (.emissive (current-surface) (float r) (float g) (float b))))
+  ([float-val] (.emissive (current-graphics) (float float-val)))
+  ([r g b] (.emissive (current-graphics) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -1385,7 +1353,7 @@
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes. Converts all
   args to ints"
-  [int-val] (.emissive (current-surface) (int int-val)))
+  [int-val] (.emissive (current-graphics) (int int-val)))
 
 (defn
   ^{:requires-bindings true
@@ -1412,7 +1380,22 @@
   end-camera
   "Unsets the matrix mode from the camera matrix. See begin-camera."
   []
-  (.endCamera (current-surface)))
+  (.endCamera (current-graphics)))
+
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "endContour()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "2.0"}
+  end-contour
+  "Use the begin-contour and end-contour function to create negative
+  shapes within shapes. These functions can only be within a
+  begin-shape/end-shape pair and they only work with the :p2d and :p3d
+  renderers."
+  []
+  (.endContour (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -1424,19 +1407,7 @@
   "Complement to begin-raw; they must always be used together. See
   the begin-raw docstring for details."
   []
-  (.endRaw (current-surface)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "endRecord()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  end-record
-  "Stops the recording process started by begin-record and closes the
-  file."
-  []
-  (.endRecord (current-applet)))
+  (.endRaw (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -1467,7 +1438,7 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (applet-safe-exit (current-applet)))
+  (applet-close (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -1490,10 +1461,10 @@
   fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
   will specify that all subsequent shapes will be filled with orange."
-  ([gray] (.fill (current-surface) (float gray)))
-  ([gray alpha] (.fill (current-surface) (float gray) (float alpha)))
-  ([r g b] (.fill (current-surface) (float r) (float g) (float b)))
-  ([r g b alpha] (.fill (current-surface) (float r) (float g) (float b) (float alpha))))
+  ([gray] (.fill (current-graphics) (float gray)))
+  ([gray alpha] (.fill (current-graphics) (float gray) (float alpha)))
+  ([r g b] (.fill (current-graphics) (float r) (float g) (float b)))
+  ([r g b alpha] (.fill (current-graphics) (float r) (float g) (float b) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1503,8 +1474,8 @@
     :added "1.0"}
   fill-int
   "Sets the color used to fill shapes."
-  ([rgb] (.fill (current-surface) (int rgb)))
-  ([rgb alpha] (.fill (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.fill (current-graphics) (int rgb)))
+  ([rgb alpha] (.fill (current-graphics) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1537,9 +1508,8 @@
     :added "1.0"}
   display-filter
   "Originally named filter in Processing Language.
-  Filters the display window with the specified mode and level. Level
-  defines the quality of the filter and mode may be one of the
-  following keywords:
+  Filters the display window with the specified mode and level.
+  Level defines the quality of the filter and mode may be one of the following keywords:
 
   :threshold - converts the image to black and white pixels depending
                if they are above or below the threshold defined by
@@ -1547,26 +1517,49 @@
                0.0 (black) and 1.0 (white). If no level is specified,
                0.5 is used.
   :gray      - converts any colors in the image to grayscale
-               equivalents
-  :invert    - sets each pixel to its inverse value
+               equivalents. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with level.
   :posterize - limits each channel of the image to the number of
-               colors specified as the level parameter. The level
-               parameter
+               colors specified as the level parameter. The parameter can
+               be set to values between 2 and 255, but results are most
+               noticeable in the lower ranges.
   :blur      - executes a Guassian blur with the level parameter
                specifying the extent of the blurring. If no level
                parameter is used, the blur is equivalent to Guassian
                blur of radius 1.
-  :opaque    - sets the alpha channel to entirely opaque.
-  :erode     - reduces the light areas with the amount defined by the
-               level parameter.
-  :dilate    - increases the light areas with the amount defined by
-               the level parameter."
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :erode     - reduces the light areas. Doesn't work with level.
+  :dilate    - increases the light areas.  Doesn't work with level."
   ([mode]
-     (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (current-applet) (int mode))))
+   (.filter (current-graphics)
+            (int (resolve-constant-key mode filter-modes))))
+
   ([mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
-       (.filter (current-applet) (int mode) (float level)))))
+       (.filter (current-graphics) (int mode) (float level)))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "filter()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "2.0"}
+  filter-shader
+  "Originally named filter in Processing Language.
+  Filters the display window with given shader (only in :p2d and :p3d modes)."
+  [^PShader shader-obj] (.filter (current-graphics) shader-obj))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name "floor()"
+    :category "Math"
+    :subcategory "Calculation"
+    :added "2.0"}
+  floor
+  "Calculates the closest int value that is less than or equal to the valu  e of the parameter. For example, (floor 9.03) returns the
+  value 9."
+  [n]
+  (PApplet/floor (float n)))
 
 (defn
   ^{:requires-bindings true
@@ -1629,7 +1622,7 @@
   like glFrustum, except it wipes out the current perspective matrix
   rather than muliplying itself with it."
   [left right bottom top near far]
-  (.frustum (current-surface) (float left) (float right) (float bottom) (float top)
+  (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
 (defn
@@ -1640,39 +1633,25 @@
     :added "1.0"}
   get-pixel
   "Reads the color of any pixel or grabs a section of an image. If no
-  parameters are specified, the entire image is returned. Get the
+  parameters are specified, a copy of entire image is returned. Get the
   value of one pixel by specifying an x,y coordinate. Get a section of
-  the display window by specifying an additional width and height
-  parameter. If the pixel requested is outside of the image window,
-  black is returned. The numbers returned are scaled according to the
-  current color ranges, but only RGB values are returned by this
-  function. For example, even though you may have drawn a shape with
-  colorMode(HSB), the numbers returned will be in RGB.
+  the image by specifying an additional width and height parameter.
+  If the pixel requested is outside of the image window, black is returned.
+  The numbers returned are scaled according to the current color ranges,
+  but only RGB values are returned by this function. For example, even though
+  you may have drawn a shape with (color-mode :hsb), the numbers returned
+  will be in RGB.
 
   Getting the color of a single pixel with (get x y) is easy, but not
-  as fast as grabbing the data directly using the pixels fn."
-  ([] (.get (current-surface)))
-  ([x y] (.get (current-surface) (int x) (int y)))
-  ([x y w h] (.get (current-surface) (int x) (int y) (int w) (int h))))
+  as fast as grabbing the data directly using the pixels fn.
 
-(declare load-pixels)
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "pixels[]"
-    :category "Image"
-    :subcategory "Pixels"
-    :added "1.0"}
-  pixels
-  "Array containing the values for all the pixels in the display
-  window. This array is therefore the size of the display window. If
-  this array is modified, the update-pixels fn must be called to update
-  the changes. Calls load-pixels before obtaining the pixel array.
-
-  Only works with P2D and P3D renderer."
-  []
-  (load-pixels)
-  (.-pixels (current-surface)))
+  If no img specified - current-graphics is used."
+  ([] (get-pixel (current-graphics)))
+  ([^PImage img] (.get img))
+  ([x y] (get-pixel (current-graphics) x y))
+  ([^PImage img x y] (.get img (int x) (int y)))
+  ([x y w h] (get-pixel (current-graphics) x y w h))
+  ([^PImage img x y w h] (.get img (int x) (int y) (int w) (int h))))
 
 (defn
   ^{:requires-bindings true
@@ -1685,7 +1664,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (current-surface) (int col)))
+  (.green (current-graphics) (int col)))
 
 (defn
   ^{:require-binding false
@@ -1701,19 +1680,8 @@
   ([val num-digits] (PApplet/hex (int val) (int num-digits))))
 
 (defn
-  ^{:require-binding false
-    :processing-name "hex()"
-    :category "Data"
-    :subcategory "Conversion"}
-  unhex
-  "Converts a String representation of a hexadecimal number to its
-  equivalent integer value."
-  [hex-str]
-  (PApplet/unhex (str hex-str)))
-
-(defn
   ^{:requires-bindings true
-    :processing-name "height"
+    :processing-name "getHeight()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1724,20 +1692,27 @@
   (.getHeight (current-applet)))
 
 (def ^{:private true}
-  hint-options {:enable-opengl-4x-smooth PConstants/ENABLE_OPENGL_4X_SMOOTH
-                :enable-opengl-2x-smooth PConstants/ENABLE_OPENGL_2X_SMOOTH
-                :enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
+  hint-options {:enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
                 :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
                 :enable-depth-test PConstants/ENABLE_DEPTH_TEST
                 :disable-depth-test PConstants/DISABLE_DEPTH_TEST
                 :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
                 :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
-                :disable-opengl-error-report PConstants/DISABLE_OPENGL_ERROR_REPORT
-                :enable-opengl-error-report PConstants/ENABLE_OPENGL_ERROR_REPORT
-                :enable-accurate-textures PConstants/ENABLE_ACCURATE_TEXTURES
-                :disable-accurate-textures PConstants/DISABLE_ACCURATE_TEXTURES
+                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK
                 :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
-                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK})
+                :disable-opengl-errors PConstants/DISABLE_OPENGL_ERRORS
+                :enable-opengl-errors PConstants/ENABLE_OPENGL_ERRORS
+                :enable-optimized-stroke PConstants/ENABLE_OPTIMIZED_STROKE
+                :disable-optimized-stroke PConstants/DISABLE_OPTIMIZED_STROKE
+                :enable-retina-pixels PConstants/ENABLE_RETINA_PIXELS
+                :disable-retina-pixels PConstants/DISABLE_RETINA_PIXELS
+                :enable-stroke-perspective PConstants/ENABLE_STROKE_PERSPECTIVE
+                :disable-stroke-perspective PConstants/DISABLE_STROKE_PERSPECTIVE
+                :enable-stroke-pure PConstants/ENABLE_STROKE_PURE
+                :disable-stroke-pure PConstants/DISABLE_STROKE_PURE
+                :enable-texture-mipmaps PConstants/ENABLE_TEXTURE_MIPMAPS
+                :disable-texture-mipmaps PConstants/DISABLE_TEXTURE_MIPMAPS
+                })
 
 (defn
   ^{:requires-bindings true
@@ -1752,24 +1727,6 @@
   to standard features instead of hints over time.
 
   Options:
-
-  :enable-opengl-4x-smooth - Enable 4x anti-aliasing for OpenGL. This
-     can help force anti-aliasing if it has not been enabled by the
-     user. On some graphics cards, this can also be set by the
-     graphics driver's control panel, however not all cards make this
-     available. This hint must be called immediately after the size
-     command because it resets the renderer, obliterating any settings
-     and anything drawn (and like size(), re-running the code that
-     came before it again).
-
-  :disable-opengl-2x-smooth - In Processing 1.0, Processing always
-    enables 2x smoothing when the OpenGL renderer is used. This hint
-    disables the default 2x smoothing and returns the smoothing
-    behavior found in earlier releases, where smooth and no-smooth
-    could be used to enable and disable smoothing, though the quality
-    was inferior.
-
-  :enable-opengl-2x-smooth - Enables default OpenGL smoothing.
 
   :enable-native-fonts - Use the native version fonts when they are
     installed, rather than the bitmapped version from a .vlw
@@ -1801,20 +1758,30 @@
 
   :disable-depth-sort - Disables hint :enable-depth-sort
 
-  :disable-opengl-error-report - Speeds up the OPENGL renderer setting
+  :disable-opengl-errors - Speeds up the OPENGL renderer setting
      by not checking for errors while running.
 
-  :enable-opengl-error-report - Turns on OpenGL error checking
+  :enable-opengl-errors - Turns on OpenGL error checking
 
-  :enable-accurate-textures
-  :disable-accurate-textures
   :enable-depth-mask
-  :disable-depth-mask"
+  :disable-depth-mask
+
+  :enable-optimized-stroke
+  :disable-optimized-stroke
+  :enable-retina-pixels
+  :disable-retina-pixels
+  :enable-stroke-perspective
+  :disable-stroke-perspective
+  :enable-stroke-pure
+  :disable-stroke-pure
+  :enable-texture-mipmaps
+  :disable-texture-mipmaps
+"
   [hint-type]
   (let [hint-type (if (keyword? hint-type)
                     (get hint-options hint-type)
                     hint-type)]
-    (.hint (current-surface) (int hint-type))))
+    (.hint (current-graphics) (int hint-type))))
 
 (defn
   ^{:requires-bindings false
@@ -1836,7 +1803,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (current-surface) (int col)))
+  (.hue (current-graphics) (int col)))
 
 (defn
   ^{:requires-bindings true
@@ -1859,12 +1826,47 @@
   Starting with release 0124, when using the default (JAVA2D)
   renderer, smooth will also improve image quality of resized
   images."
-  ([^PImage img x y] (.image (current-surface) img (float x) (float y)))
-  ([^PImage img x y c d] (.image (current-surface) img (float x) (float y)
-                                  (float c) (float d)))
-  ([^PImage img x y c d u1 v1 u2 v2]
-     (.image (current-surface) img (float x) (float y) (float c) (float d)
-             (float u1) (float v1) (float u2) (float v2))))
+  ([^PImage img x y] (.image (current-graphics) img (float x) (float y)))
+  ([^PImage img x y c d] (.image (current-graphics) img (float x) (float y)
+                                  (float c) (float d))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "PImage.filter()"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "2.0"}
+  image-filter
+  "Originally named filter in Processing Language.
+  Filters given image with the specified mode and level.
+  Level defines the quality of the filter and mode may be one of
+  the following keywords:
+
+  :threshold - converts the image to black and white pixels depending
+               if they are above or below the threshold defined by
+               the level parameter. The level must be between
+               0.0 (black) and 1.0 (white). If no level is specified,
+               0.5 is used.
+  :gray      - converts any colors in the image to grayscale
+               equivalents. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with level.
+  :posterize - limits each channel of the image to the number of
+               colors specified as the level parameter. The parameter can
+               be set to values between 2 and 255, but results are most
+               noticeable in the lower ranges.
+  :blur      - executes a Guassian blur with the level parameter
+               specifying the extent of the blurring. If no level
+               parameter is used, the blur is equivalent to Guassian
+               blur of radius 1.
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :erode     - reduces the light areas. Doesn't work with level.
+  :dilate    - increases the light areas.  Doesn't work with level."
+  ([^PImage img mode]
+    (let [mode (resolve-constant-key mode filter-modes)]
+      (.filter img (int mode))))
+  ([^PImage img mode level]
+     (let [mode (resolve-constant-key mode filter-modes)]
+       (.filter img (int mode) (float level)))))
 
 (def ^{:private true}
   image-modes {:corner PApplet/CORNER
@@ -1892,7 +1894,7 @@
   :center  - draw images centered at the given x and y position."
   [mode]
   (let [mode (resolve-constant-key mode image-modes)]
-    (.imageMode (current-surface) (int mode))))
+    (.imageMode (current-graphics) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1955,7 +1957,7 @@
   falloff. You can think of it as a point light that doesn't care
   which direction a surface is facing."
   [constant linear quadratic]
-  (.lightFalloff (current-surface) (float constant) (float linear) (float quadratic)))
+  (.lightFalloff (current-graphics) (float constant) (float linear) (float quadratic)))
 
 (defn
   ^{:requires-bindings true
@@ -1969,7 +1971,7 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-surface) (int c1) (int c2) (float amt)))
+  (.lerpColor (current-graphics) (int c1) (int c2) (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -2007,7 +2009,7 @@
   will cause them to only have an effect the first time through the
   loop."
   []
-  (.lights (current-surface)))
+  (.lights (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2024,7 +2026,7 @@
   with the specular material qualities set through the specular and
   shininess functions."
   [r g b]
-  (.lightSpecular (current-surface) (float r) (float g) (float b)))
+  (.lightSpecular (current-graphics) (float r) (float g) (float b)))
 
 (defn
   ^{:requires-bindings true
@@ -2041,23 +2043,10 @@
   with the stroke-weight function. The version with six parameters
   allows the line to be placed anywhere within XYZ space. "
   ([p1 p2] (apply line (concat p1 p2)))
-  ([x1 y1 x2 y2] (.line (current-surface) (float x1) (float y1) (float x2) (float y2)))
+  ([x1 y1 x2 y2] (.line (current-graphics) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
-     (.line (current-surface) (float x1) (float y1) (float z1)
+     (.line (current-graphics) (float x1) (float y1) (float z1)
             (float x2) (float y2) (float z2))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "loadBytes()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  load-bytes
-  "Reads the contents of a file or url and places it in a byte
-  array. The filename parameter can also be a URL to a file found
-  online."
-  [filename]
-  (.loadBytes (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2104,11 +2093,6 @@
 
   The filename parameter can also be a URL to a file found online.
 
-  The extension parameter is used to determine the image type in cases
-  where the image filename does not end with a proper
-  extension. Specify the extension as the second parameter to
-  load-image.
-
   If an image is not loaded successfully, the null value is returned
   and an error message will be printed to the console. The error
   message does not halt the program, however the null value may cause
@@ -2126,23 +2110,17 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "loadPixels()"
-    :category "Image"
-    :subcategory "Pixels"
-    :added "1.0"}
-  load-pixels
-  "Loads the pixel data for the display window into the pixels[]
-  array. This function must always be called before reading from or
-  writing to pixels.
-
-  Certain renderers may or may not seem to require load-pixels or
-  update-pixels. However, the rule is that any time you want to
-  manipulate the pixels array, you must first call load-pixels, and
-  after changes have been made, call updatePixels. Even if the
-  renderer may not seem to use this function in the current Processing
-  release, this will always be subject to change."
-  []
-  (.loadPixels  (current-surface)))
+    :processing-name "loadShader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  load-shader
+  "Loads a shader into the PShader object. Shaders are compatible with the
+  P2D and P3D renderers, but not with the default renderer."
+  ([fragment-filename]
+    (.loadShader (current-graphics) fragment-filename))
+  ([fragment-filename vertex-filename]
+    (.loadShader (current-graphics) fragment-filename vertex-filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2154,17 +2132,6 @@
   "Load a geometry from a file as a PShape."
   [filename]
   (.loadShape (current-applet) filename))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "loadStrings()"
-    :category "Input"
-    :subcategory "Files"
-    :added "1.0"}
-  load-strings
-  "Load data from a file and shove it into a String array."
-  [filename]
-  (.loadStrings (current-applet) filename))
 
 (defn
   ^{:requires-bindings false
@@ -2209,7 +2176,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name nil
+    :processing-name "PImage.mask()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2220,10 +2187,14 @@
   image needs to be the same size as the image to which it is
   applied.
 
-   This method is useful for creating dynamically generated alpha
-   masks."
-  [^PImage img]
-  (.mask (current-surface) img))
+  If single argument function is used - masked image is sketch itself
+  or graphics if used inside with-graphics macro. If you're passing
+  graphics to this function - it works only with :p3d and :opengl renderers.
+
+  This method is useful for creating dynamically generated alpha
+  masks."
+  ([^PImage mask] (mask-image (current-graphics) mask))
+  ([^PImage img ^PImage mask] (.mask img mask)))
 
 (defn
   ^{:requires-bindings true
@@ -2262,7 +2233,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelX (current-surface) (float x) (float y) (float z)))
+  (.modelX (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2277,7 +2248,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelY (current-surface) (float x) (float y) (float z)))
+  (.modelY (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2292,7 +2263,7 @@
   be used to place an object in space relative to the location of the
   original point once the transformations are no longer in use."
   [x y z]
-  (.modelZ (current-surface) (float x) (float y) (float z)))
+  (.modelZ (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
@@ -2313,13 +2284,14 @@
     :added "1.0"}
   mouse-button
   "The value of the system variable mouseButton is either :left, :right,
-  or :center depending on which button is pressed."
+  or :center depending on which button is pressed. nil if no button pressed"
   []
   (let [button-code   (.-mouseButton (current-applet))]
     (condp = button-code
       PConstants/LEFT :left
       PConstants/RIGHT :right
-      PConstants/CENTER :center)))
+      PConstants/CENTER :center
+      nil)))
 
 (defn
   ^{:requires-bindings true
@@ -2327,7 +2299,7 @@
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
-  mouse-state
+  mouse-pressed?
   "Variable storing if a mouse button is pressed. The value of the
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
@@ -2377,7 +2349,7 @@
   no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
- (.noFill (current-surface)))
+ (.noFill (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2472,7 +2444,7 @@
   that 2D geometry (which does not require lighting) can be drawn
   after a set of lighted 3D geometry."
   []
-  (.noLights (current-surface)))
+  (.noLights (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2491,8 +2463,7 @@
   key-pressed. Instead, use those functions to call redraw or
   loop which will run draw, which can update the screen
   properly. This means that when no-loop has been called, no drawing
-  can happen, and functions like save-frame or load-pixels may not
-  be used.
+  can happen, and functions like save-frame may not be used.
 
   Note that if the sketch is resized, redraw will be called to
   update the sketch, even after no-oop has been
@@ -2526,7 +2497,7 @@
   but since that's imperfect, this is a better option when you want
   more control. This function is identical to glNormal3f() in OpenGL."
   [nx ny nz]
-  (.normal (current-surface) (float nx) (float ny) (float nz)))
+  (.normal (current-graphics) (float nx) (float ny) (float nz)))
 
 (defn
   ^{:requires-bindings true
@@ -2536,7 +2507,7 @@
     :added "1.0"}
   no-smooth
   "Draws all geometry with jagged (aliased) edges."
-  [] (.noSmooth (current-surface)))
+  [] (.noSmooth (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2548,19 +2519,19 @@
   "Disables drawing the stroke (outline). If both no-stroke and
   no-fill are called, nothing will be drawn to the screen."
   []
-  (.noStroke (current-surface)))
+  (.noStroke (current-graphics)))
 
 (defn
   ^{:requires-bindings true
     :processing-name "noTint()"
-    :category "Color"
+    :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
   no-tint
   "Removes the current fill value for displaying images and reverts to
   displaying images with their original hues."
   []
-  (.noTint (current-surface)))
+  (.noTint (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2576,10 +2547,12 @@
   and right are the minimum and maximum x values, top and bottom are
   the minimum and maximum y values, and near and far are the minimum
   and maximum z values. If no parameters are given, the default is
-  used: ortho(0, width, 0, height, -10, 10)."
-  ([] (.ortho (current-surface)))
+  used: (ortho 0 width 0 height -10 10)"
+  ([] (.ortho (current-graphics)))
+  ([left right bottom top]
+   (.ortho (current-graphics) (float left) (float right) (float bottom) (float top)))
   ([left right bottom top near far]
-     (.ortho (current-surface) (float left) (float right) (float bottom) (float top) (float near) (float far))))
+     (.ortho (current-graphics) (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
 (defn
   ^{:requires-bindings true
@@ -2599,10 +2572,28 @@
   programmer to set the area precisely. The default values are:
   perspective(PI/3.0, width/height, cameraZ/10.0, cameraZ*10.0) where
   cameraZ is ((height/2.0) / tan(PI*60.0/360.0));"
-  ([] (.perspective (current-surface)))
+  ([] (.perspective (current-graphics)))
   ([fovy aspect z-near z-far]
-     (.perspective (current-surface) (float fovy) (float aspect)
+     (.perspective (current-graphics) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixels[]"
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  pixels
+  "Array containing the values for all the pixels in the display
+  window or image. This array is therefore the size of the display window. If
+  this array is modified, the update-pixels fn must be called to update
+  the changes. Calls .loadPixels before obtaining the pixel array.
+
+  Only works with P2D and P3D renderer if used without arguments."
+  ([] (pixels (current-graphics)))
+  ([^PImage img]
+    (.loadPixels img)
+    (.-pixels img)))
 
 (defn
   ^{:requires-bindings true
@@ -2639,8 +2630,8 @@
   optional third value is the depth value. Drawing this shape in 3D
   using the z parameter requires the :P3D or :opengl renderer to be
   used."
-  ([x y] (.point (current-surface) (float x)(float y)))
-  ([x y z] (.point (current-surface) (float x) (float y) (float z))))
+  ([x y] (.point (current-graphics) (float x)(float y)))
+  ([x y z] (.point (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -2656,7 +2647,7 @@
   parameters is determined by the current color mode. The x, y, and z
   parameters set the position of the light"
   [r g b x y z]
-  (.pointLight (current-surface) (float r) (float g) (float b) (float x) (float y) (float z)))
+  (.pointLight (current-graphics) (float r) (float g) (float b) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings true
@@ -2673,7 +2664,7 @@
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
-  (.popMatrix (current-surface)))
+  (.popMatrix (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2689,7 +2680,7 @@
   The push-style and pop-style functions can be nested to provide more
   control"
   []
-  (.popStyle (current-surface)))
+  (.popStyle (current-graphics)))
 
 (defn
   ^{:requires-bindings false
@@ -2715,7 +2706,7 @@
   print-camera
   "Prints the current camera matrix to std out. Useful for debugging."
   []
-  (.printCamera (current-surface)))
+  (.printCamera (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2726,7 +2717,7 @@
   print-matrix
   "Prints the current matrix to std out. Useful for debugging."
   []
-  (.printMatrix (current-surface)))
+  (.printMatrix (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2738,7 +2729,7 @@
   "Prints the current projection matrix to std out. Useful for
   debugging"
   []
-  (.printProjection (current-surface)))
+  (.printProjection (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2756,7 +2747,7 @@
   methods and may be embedded to control the scope of the
   transformations."
   []
-  (.pushMatrix (current-surface)))
+  (.pushMatrix (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2779,7 +2770,7 @@
   shape-mode, color-mode, text-align, text-font, text-mode, text-size,
   text-leading, emissive, specular, shininess, and ambient"
   []
-  (.pushStyle (current-surface)))
+  (.pushStyle (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2794,11 +2785,30 @@
   first vertex and the subsequent pairs should proceed clockwise or
   counter-clockwise around the defined shape."
   [x1 y1 x2 y2 x3 y3 x4 y4]
-  (.quad (current-surface)
+  (.quad (current-graphics)
          (float x1) (float y1)
          (float x2) (float y2)
          (float x3) (float y3)
          (float x4) (float y4)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "quadraticVertex()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "2.0"}
+  quadratic-vertex
+  "Specifies vertex coordinates for quadratic Bezier curves. Each call to
+  quadratic-vertex defines the position of one control points and one anchor
+  point of a Bezier curve, adding a new segment to a line or shape. The first
+  time quadratic-vertex is used within a begin-shape call, it must be prefaced
+  with a call to vertex to set the first anchor point. This function must be
+  used between begin-shape and end-shape and only when there is no MODE parameter
+  specified to begin-shape. Using the 3D version requires rendering with :p3d."
+  ([cx cy x3 y3]
+    (.quadraticVertex (current-graphics) (float cx) (float cy) (float x3) (float y3)))
+  ([cx cy cz x3 y3 z3]
+   (.quadraticVertex (current-graphics) (float cx) (float cy) (float cz) (float x3) (float y3) (float z3))))
 
 (defn
   ^{:requires-bindings false
@@ -2835,6 +2845,22 @@
   ([max] (.random (current-applet) (float max)))
   ([min max] (.random (current-applet) (float min) (float max))))
 
+(defn
+  ^{:requires-bindings true
+    :processing-name "randomGaussian()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.0"}
+  random-gaussian
+  "Returns a float from a random series of numbers having a mean of 0 and
+  standard deviation of 1. Each time the randomGaussian() function is called,
+  it returns a number fitting a Gaussian, or normal, distribution.
+  There is theoretically no minimum or maximum value that randomGaussian()
+  might return. Rather, there is just a very low probability that values far
+  from the mean will be returned; and a higher probability that numbers near
+  the mean will be returned. ."
+  []
+  (.randomGaussian (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2879,12 +2905,21 @@
     :added "1.0"}
   rect
   "Draws a rectangle to the screen. A rectangle is a four-sided shape
-   with every angle at ninety degrees. By default, the first two
-   parameters set the location of the upper-left corner, the third
-   sets the width, and the fourth sets the height. These parameters
-   may be changed with rect-mode."
-  [x y width height]
-  (.rect (current-surface) (float x) (float y) (float width) (float height)))
+  with every angle at ninety degrees. By default, the first two
+  parameters set the location of the upper-left corner, the third
+  sets the width, and the fourth sets the height. These parameters
+  may be changed with rect-mode.
+
+  To draw a rounded rectangle, add a fifth parameter, which is used as
+  the radius value for all four corners. To use a different radius value
+  for each corner, include eight parameters."
+  ([x y width height]
+     (.rect (current-graphics) (float x) (float y) (float width) (float height)))
+  ([x y width height r]
+     (.rect (current-graphics) (float x) (float y) (float width) (float height) (float r)))
+  ([x y width height top-left-r top-right-r bottom-right-r bottom-left-r]
+     (.rect (current-graphics) (float x) (float y) (float width) (float height)
+            (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
 (def ^{:private true}
   rect-modes {:corner PApplet/CORNER
@@ -2921,7 +2956,7 @@
 
   [mode]
   (let [mode (resolve-constant-key mode rect-modes)]
-    (.rectMode (current-surface) (int mode))))
+    (.rectMode (current-graphics) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -2932,7 +2967,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (current-surface) (int c)))
+  (.red (current-graphics) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -2970,14 +3005,8 @@
   know when the image has loaded properly because its width and height
   will be greater than 0. Asynchronous image loading (particularly
   when downloading from a server) can dramatically improve
-  performance.
-
-  The extension parameter is used to determine the image type in cases
-  where the image filename does not end with a proper
-  extension. Specify the extension as the second parameter to
-  request-image."
-  ([filename] (.requestImage (current-applet) (str filename)))
-  ([filename extension] (.requestImage (current-applet) (str filename) (str extension))))
+  performance."
+  [filename] (.requestImage (current-applet) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2989,7 +3018,27 @@
   "Replaces the current matrix with the identity matrix. The
   equivalent function in OpenGL is glLoadIdentity()"
   []
-  (.resetMatrix (current-surface)))
+  (.resetMatrix (current-graphics)))
+
+(def ^{:private true}
+     shader-modes {:points PApplet/POINTS
+                   :lines PApplet/LINES
+                   :triangles PApplet/TRIANGLES})
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "resetShader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  reset-shader
+  "Restores the default shaders. Code that runs after (reset-shader) will
+  not be affected by previously defined shaders. Optional 'kind' parameter -
+  type of shader, either :points, :lines, or :triangles"
+  ([] (.resetShader (current-graphics)))
+  ([kind]
+    (let [mode (resolve-constant-key kind shader-modes)]
+      (.resetShader (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3013,8 +3062,8 @@
   Technically, rotate multiplies the current transformation matrix by
   a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix."
-  ([angle] (.rotate (current-surface) (float angle)))
-  ([angle vx vy vz] (.rotate (current-surface) (float angle)
+  ([angle] (.rotate (current-graphics) (float angle)))
+  ([angle vx vy vz] (.rotate (current-graphics) (float angle)
                              (float vx) (float vy) (float vz))))
 
 (defn
@@ -3036,7 +3085,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateX (current-surface) (float angle)))
+  (.rotateX (current-graphics) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3057,7 +3106,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateY (current-surface) (float angle)))
+  (.rotateY (current-graphics) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3078,7 +3127,7 @@
   the transformation is reset when the loop begins again. This
   function requires either the :p3d or :opengl renderer."
   [angle]
-  (.rotateZ (current-surface) (float angle)))
+  (.rotateZ (current-graphics) (float angle)))
 
 (defn
   ^{:requires-bindings false
@@ -3088,7 +3137,7 @@
     :added "1.0"}
   round
   "Calculates the integer closest to the value parameter. For example,
-  round(9.2) returns the value 9."
+  (round 9.2) returns the value 9."
   [val]
   (PApplet/round (float val)))
 
@@ -3101,7 +3150,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (current-surface) (int c)))
+  (.saturation (current-graphics) (int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3119,7 +3168,7 @@
   will be opaque. To save images without a background, use
   create-graphics."
   [filename]
-  (.save (current-surface) (str filename)))
+  (.save (current-graphics) (str filename)))
 
 (defn
   ^{:requires-bindings true
@@ -3160,8 +3209,9 @@
   this fuction with the z parameter requires specfying :p3d or :opengl
   as the renderer. This function can be further controlled by
   push-matrix and pop-matrix."
-  ([s] (.scale (current-surface) (float s)))
-  ([sx sy] (.scale (current-surface) (float sx) (float sy))))
+  ([s] (.scale (current-graphics) (float s)))
+  ([sx sy] (.scale (current-graphics) (float sx) (float sy)))
+  ([sx sy sz] (.scale (current-graphics) (float sx) (float sy) (float sz))))
 
 (defn- ^java.awt.Dimension current-screen
   []
@@ -3208,8 +3258,8 @@
   "Takes a three-dimensional x, y, z position and returns the x value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
-  [x y z]
-  (.screenX (current-surface) (float x) (float y) (float z)))
+  ([x y]  (.screenX (current-graphics) (float x) (float y)))
+  ([x y z]  (.screenX (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3221,8 +3271,8 @@
   "Takes a three-dimensional x, y, z position and returns the y value
   for where it will appear on a (two-dimensional) screen, once
   affected by translate, scale or any other transformations"
-  [x y z]
-  (.screenY (current-surface) (float x) (float y) (float z)))
+  ([x y]  (.screenY (current-graphics) (float x) (float y)))
+  ([x y z]  (.screenY (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3238,11 +3288,11 @@
    'real'. They're only useful for in comparison to another value
    obtained from screen-z, or directly out of the zbuffer"
   [x y z]
-  (.screenX (current-surface) (float x) (float y) (float z)))
+  (.screenZ (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
-    :processing-name "seconds()"
+    :processing-name "second()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -3273,8 +3323,9 @@
   when used with the default renderer. Using :p2d or :p3d will fix the
   problem. Grouping many calls to point or set-pixel together can also
   help. (Bug 1094)"
-  [x y c]
-  (.set (current-surface) (int x) (int y) (int c)))
+  ([x y c] (set-pixel (current-graphics) x y c))
+  ([^PImage img x y c]
+    (.set img (int x) (int y) (int c))))
 
 (defn
   ^{:requires-bindings true
@@ -3287,7 +3338,22 @@
   parameters define the coordinates for the upper-left corner of the
   image."
   [x y ^PImage src]
-  (.set (current-surface) (int x) (int y) src))
+  (.set (current-graphics) (int x) (int y) src))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "shader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  shader
+  "Applies the shader specified by the parameters. It's compatible with the :p2d
+  and :p3drenderers, but not with the default :java2d renderer. Optional 'kind'
+  parameter - type of shader, either :points, :lines, or :triangles"
+  ([shader] (.shader (current-graphics) shader))
+  ([shader kind]
+    (let [mode (resolve-constant-key kind shader-modes)]
+      (.shader (current-graphics) shader mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3310,9 +3376,9 @@
   Note complex shapes may draw awkwardly with the renderers :p2d, :p3d, and
   :opengl. Those renderers do not yet support shapes that have holes
   or complicated breaks."
-  ([^PShape sh] (.shape (current-surface) sh))
-  ([^PShape sh x y] (.shape (current-surface) sh (float x) (float y)))
-  ([^PShape sh x y width height] (.shape (current-surface) sh (float x) (float y) (float width) (float height))))
+  ([^PShape sh] (.shape (current-graphics) sh))
+  ([^PShape sh x y] (.shape (current-graphics) sh (float x) (float y)))
+  ([^PShape sh x y width height] (.shape (current-graphics) sh (float x) (float y) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -3337,7 +3403,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearX (current-surface) (float angle)))
+  (.shearX (current-graphics) (float angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3362,7 +3428,7 @@
   by a rotation matrix. This function can be further controlled by the
   push-matrix and pop-matrix fns."
   [angle]
-  (.shearY (current-surface) (float angle)))
+  (.shearY (current-graphics) (float angle)))
 
 (def ^{:private true}
   p-shape-modes {:corner PApplet/CORNER
@@ -3391,7 +3457,7 @@
              height. "
   [mode]
   (let [mode (resolve-constant-key mode p-shape-modes)]
-    (.shapeMode (current-surface) (int mode))))
+    (.shapeMode (current-graphics) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3404,7 +3470,7 @@
   combination with ambient, specular, and emissive in setting
   the material properties of shapes."
   [shine]
-  (.shininess (current-surface) (float shine)))
+  (.shininess (current-graphics) (float shine)))
 
 (defn
   ^{:requires-bindings false
@@ -3419,12 +3485,6 @@
   [angle]
   (PApplet/sin (float angle)))
 
-(defn size
-  "Not supported. Use :size key in applet or defapplet"
-  [& args]
-  (println "Deprecated - size should be specified as a :size key to applet or defapplet")
-  nil)
-
 (defn
   ^{:requires-bindings true
     :processing-name "smooth()"
@@ -3436,9 +3496,18 @@
   down the frame rate of the application, but will enhance the visual
   refinement.
 
+  The level parameter (int) increases the level of smoothness with the P2D and P3D
+  renderers. This is the level of over sampling applied to the graphics buffer.
+  The value '2' will double the rendering size before scaling it down to the
+  display size. This is called '2x anti-aliasing.' The value 4 is used for 4x
+  anti-aliasing and 8 is specified for 8x anti-aliasing. If level is set to 0,
+  it will disable all smoothing; it's the equivalent of the function noSmooth().
+  The maximum anti-aliasing level is determined by the hardware of the machine
+  that is running the software.
+
   Note that smooth will also improve image quality of resized images."
-  []
-  (.smooth (current-surface)))
+  ([] (.smooth (current-graphics)))
+  ([level] (.smooth (current-graphics) (int level))))
 
 (defn
   ^{:requires-bindings true
@@ -3453,8 +3522,8 @@
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
-  ([gray] (.specular (current-surface) (float gray)))
-  ([x y z] (.specular (current-surface) (float x) (float y) (float z))))
+  ([gray] (.specular (current-graphics) (float gray)))
+  ([x y z] (.specular (current-graphics) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3463,8 +3532,8 @@
     :subcategory "3D Primitives"
     :added "1.0"}
   sphere
-  "Genarates a hollow ball made from tessellated triangles."
-  [radius] (.sphere (current-surface) (float radius)))
+  "Generates a hollow ball made from tessellated triangles."
+  [radius] (.sphere (current-graphics) (float radius)))
 
 (defn
   ^{:requires-bindings true
@@ -3485,8 +3554,8 @@
   ones further away from the camera. To controla the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
-  ([res] (.sphereDetail (current-surface) (int res)))
-  ([ures vres] (.sphereDetail (current-surface) (int ures) (int vres))))
+  ([res] (.sphereDetail (current-graphics) (int res)))
+  ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres))))
 
 (defn
   ^{:requires-bindings true
@@ -3504,9 +3573,9 @@
   the direction or light. The angle parameter affects angle of the
   spotlight cone."
   ([r g b x y z nx ny nz angle concentration]
-     (.spotLight (current-surface) r g b x y z nx ny nz angle concentration))
+     (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
-     (.spotLight (current-surface) r g b x y z nx ny nz angle concentration)))
+     (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration)))
 
 (defn
   ^{:requires-bindings false
@@ -3556,10 +3625,10 @@
   stroke-float
   "Sets the color used to draw lines and borders around
   shapes. Converts all args to floats"
-  ([gray] (.stroke (current-surface) (float gray)))
-  ([gray alpha] (.stroke (current-surface) (float gray) (float alpha)))
-  ([x y z] (.stroke (current-surface) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (current-surface) (float x) (float y) (float z) (float a))))
+  ([gray] (.stroke (current-graphics) (float gray)))
+  ([gray alpha] (.stroke (current-graphics) (float gray) (float alpha)))
+  ([x y z] (.stroke (current-graphics) (float x) (float y) (float z)))
+  ([x y z a] (.stroke (current-graphics) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3570,8 +3639,8 @@
   stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (current-surface) (int rgb)))
-  ([rgb alpha] (.stroke (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.stroke (current-graphics) (int rgb)))
+  ([rgb alpha] (.stroke (current-graphics) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -3608,7 +3677,7 @@
   parameters :square, :project, and :round. The default cap is :round."
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
-    (.strokeCap (current-surface) (int cap-mode))))
+    (.strokeCap (current-graphics) (int cap-mode))))
 
 (def ^{:private true}
   stroke-join-modes {:miter PConstants/MITER
@@ -3631,7 +3700,7 @@
   renderers."
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
-    (.strokeJoin (current-surface) (int join-mode))))
+    (.strokeJoin (current-graphics) (int join-mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3643,7 +3712,7 @@
   "Sets the width of the stroke used for lines, points, and the border
   around shapes. All widths are set in units of pixels. "
   [weight]
-  (.strokeWeight (current-surface) (float weight)))
+  (.strokeWeight (current-graphics) (float weight)))
 
 (defn
   ^{:requires-bindings false
@@ -3678,9 +3747,8 @@
   text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
-  ([c] (.text (current-surface) (char c)))
-  ([c x y] (.text (current-surface) (char c) (float x) (float y)))
-  ([c x y z] (.text (current-surface) (char c) (float x) (float y) (float z))))
+  ([c x y] (.text (current-graphics) (char c) (float x) (float y)))
+  ([c x y z] (.text (current-graphics) (char c) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3691,8 +3759,8 @@
   text-num
   "Draws a number to the screen in the specified position. See text fn
   for more details."
-  ([num x y] (.text (current-surface) (float num) (float x) (float y)))
-  ([num x y z] (.text (current-surface) (float num) (float x) (float y) (float z))))
+  ([num x y] (.text (current-graphics) (float num) (float x) (float y)))
+  ([num x y z] (.text (current-graphics) (float num) (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -3708,18 +3776,13 @@
   text-align fn, which gives the option to draw to the left, right, and
   center of the coordinates.
 
-  The x1, y1, x2 and y2 (and optional z) parameters define a
+  The x1, y1, x2 and y2 parameters define a
   rectangular area to display within and may only be used with string
   data. For text drawn inside a rectangle, the coordinates are
-  interpreted based on the current rect-mode setting.
-
-  Use the text-mode function with the :screen parameter to display text
-  in 2D at the surface of the window."
-  ([^String s] (.text (current-surface) s))
-  ([^String s x y] (.text (current-surface) s (float x) (float y)))
-  ([^String s x y z] (.text (current-surface) s (float x) (float y) (float z)))
-  ([^String s x1 y1 x2 y2] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2)))
-  ([^String s x1 y1 x2 y2 z] (.text (current-surface) s (float x1) (float y1) (float x2) (float y2) (float z))))
+  interpreted based on the current rect-mode setting."
+  ([^String s x y] (.text (current-graphics) s (float x) (float y)))
+  ([^String s x y z] (.text (current-graphics) s (float x) (float y) (float z)))
+  ([^String s x1 y1 x2 y2] (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2))))
 
 (def ^{:private true}
   horizontal-alignment-modes {:left PApplet/LEFT
@@ -3763,11 +3826,11 @@
   change the size of the font."
   ([align]
      (let [align (resolve-constant-key align horizontal-alignment-modes)]
-       (.textAlign (current-surface) (int align))))
+       (.textAlign (current-graphics) (int align))))
   ([align-x align-y]
      (let [align-x (resolve-constant-key align-x horizontal-alignment-modes)
            align-y (resolve-constant-key align-y vertical-alignment-modes)]
-       (.textAlign (current-surface) (int align-x) (int align-y)))))
+       (.textAlign (current-graphics) (int align-x) (int align-y)))))
 
 (defn
   ^{:requires-bindings true
@@ -3781,7 +3844,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textAscent (current-surface)))
+  (.textAscent (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -3795,7 +3858,7 @@
   the baseline. For example, adding the text-ascent and text-descent
   values will give you the total height of the line."
   []
-  (.textDescent (current-surface)))
+  (.textDescent (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -3820,8 +3883,8 @@
   sketches and PDF output in cases where the vector data is available:
   when the font is still installed, or the font is created via the
   create-font fn"
-  ([^PFont font] (.textFont (current-surface) font))
-  ([^PFont font size] (.textFont (current-surface) font (int size))))
+  ([^PFont font] (.textFont (current-graphics) font))
+  ([^PFont font size] (.textFont (current-graphics) font (int size))))
 
 (defn
   ^{:requires-bindings true
@@ -3833,12 +3896,11 @@
   "Sets the spacing between lines of text in units of pixels. This
   setting will be used in all subsequent calls to the text function."
   [leading]
-  (.textLeading (current-surface) (float leading)))
+  (.textLeading (current-graphics) (float leading)))
 
 (def ^{:private true}
   text-modes {:model PConstants/MODEL
-              :shape PConstants/SHAPE
-              :screen PConstants/SCREEN})
+              :shape PConstants/SHAPE})
 
 (defn
   ^{:requires-bindings true
@@ -3848,21 +3910,10 @@
     :added "1.0"}
   text-mode
   "Sets the way text draws to the screen - available modes
-  are :model, :shape and :screen
+  are :model and :shape
 
   In the default configuration (the :model mode), it's possible to
   rotate, scale, and place letters in two and three dimensional space.
-
-  Changing to :screen mode draws letters directly to the front of the
-  window and greatly increases rendering quality and speed when used
-  with the :p2d and :p3d renderers. :screen with :opengl
-  and :java2d (the default) renderers will generally be slower, though
-  pixel accurate with :p2d and :p3d. With :screen, the letters draw at
-  the actual size of the font (in pixels) and therefore calls to
-  text-size will not affect the size of the letters. To create a font
-  at the size you desire, use create-font. When using :screen, any
-  z-coordinate passed to a text command will be ignored, because your
-  computer screen is...flat!
 
   The :shape mode draws text using the the glyph outlines of
   individual characters rather than as textures. This mode is only
@@ -3878,7 +3929,7 @@
   geometry with begin-raw."
   [mode]
   (let [mode (resolve-constant-key mode text-modes)]
-    (.textMode (current-surface) (int mode))))
+    (.textMode (current-graphics) (int mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3891,7 +3942,7 @@
   subsequent calls to the text fn. Font size is measured in
   units of pixels."
   [size]
-  (.textSize (current-surface) (float size)))
+  (.textSize (current-graphics) (float size)))
 
 (defn
   ^{:requires-bindings true
@@ -3908,23 +3959,23 @@
   tint to specify the color of the texture as it is applied to the
   shape."
   [^PImage img]
-  (.texture (current-surface) img))
+  (.texture (current-graphics) img))
 
 (def ^{:private true}
   texture-modes {:image PApplet/IMAGE
-                 :normalized PApplet/NORMALIZED})
+                 :normal PApplet/NORMAL})
 
 (defn
     ^{:requires-bindings true
-    :processing-name "textureMode()"
-    :category "Shape"
-    :subcategory "Vertex"
-    :added "1.0"}
+     :processing-name "textureMode()"
+     :category "Shape"
+     :subcategory "Vertex"
+     :added "1.0"}
   texture-mode
   "Sets the coordinate space for texture mapping. There are two
-  options, :image and :normalized.
+  options, :image and :normal.
 
-  :image refers to the actual coordinates of the image and :normalized
+  :image refers to the actual coordinates of the image and :normal
   refers to a normalized space of values ranging from 0 to 1. The
   default mode is :image. In :image, if an image is 100 x 200 pixels,
   mapping the image onto the entire size of a quad would require the
@@ -3932,7 +3983,25 @@
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
   [mode]
   (let [mode (resolve-constant-key mode texture-modes)]
-    (.textureMode (current-surface) (int mode))))
+    (.textureMode (current-graphics) (int mode))))
+
+(def ^{:private true}
+  texture-wrap-modes {:clamp PApplet/CLAMP
+                      :repeat PApplet/REPEAT})
+
+(defn
+    ^{:requires-bindings true
+     :processing-name "textureWrap()"
+     :category "Shape"
+     :subcategory "Vertex"
+     :added "2.0"}
+  texture-wrap
+  "Defines if textures repeat or draw once within a texture map. The two
+  parameters are :clamp (the default behavior) and :repeat. This function
+  only works with the :p2d and :p3d renderers."
+  [mode]
+  (let [mode (resolve-constant-key mode texture-wrap-modes)]
+    (.textureWrap (current-graphics) mode)))
 
 (defn
   ^{:requires-bindings true
@@ -3943,7 +4012,7 @@
   text-width
   "Calculates and returns the width of any text string."
   [^String data]
-  (.textWidth (current-surface) data))
+  (.textWidth (current-graphics) data))
 
 (defn
   ^{:requires-bindings true
@@ -3965,10 +4034,10 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([gray] (.tint (current-surface) (float gray)))
-  ([gray alpha] (.tint (current-surface) (float gray) (float alpha)))
-  ([r g b] (.tint (current-surface) (float r)(float g) (float b)))
-  ([r g b a] (.tint (current-surface) (float g) (float g) (float b) (float a))))
+  ([gray] (.tint (current-graphics) (float gray)))
+  ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
+  ([r g b] (.tint (current-graphics) (float r)(float g) (float b)))
+  ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -3990,8 +4059,8 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([rgb] (.tint (current-surface) (int rgb)))
-  ([rgb alpha] (.tint (current-surface) (int rgb) (float alpha))))
+  ([rgb] (.tint (current-graphics) (int rgb)))
+  ([rgb alpha] (.tint (current-graphics) (int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -4036,8 +4105,8 @@
   the loop begins again. This function can be further controlled by
   the push-matrix and pop-matrix."
   ([v] (apply translate v))
-  ([tx ty] (.translate (current-surface) (float tx) (float ty)))
-  ([tx ty tz] (.translate (current-surface) (float tx) (float ty) (float tz))))
+  ([tx ty] (.translate (current-graphics) (float tx) (float ty)))
+  ([tx ty tz] (.translate (current-graphics) (float tx) (float ty) (float tz))))
 
 (defn
   ^{:requires-bindings true
@@ -4051,11 +4120,33 @@
   specify the second point, and the last two arguments specify the
   third point."
   [x1 y1 x2 y2 x3 y3]
-  (.triangle (current-surface)
+  (.triangle (current-graphics)
              (float x1) (float y1)
              (float x2) (float y2)
              (float x3) (float y3)))
 
+(defn
+  ^{:require-binding false
+    :processing-name "unbinary()"
+    :category "Data"
+    :subcategory "Conversion"
+    :added "1.0"}
+  unbinary
+  "Unpack a binary string to an integer. See binary for converting
+  integers to strings."
+  [str-val]
+  (PApplet/unbinary (str str-val)))
+
+(defn
+  ^{:require-binding false
+    :processing-name "hex()"
+    :category "Data"
+    :subcategory "Conversion"}
+  unhex
+  "Converts a String representation of a hexadecimal number to its
+  equivalent integer value."
+  [hex-str]
+  (PApplet/unhex (str hex-str)))
 
 (defn
   ^{:requires-bindings true
@@ -4064,19 +4155,19 @@
     :subcategory "Pixels"
     :added "1.0"}
   update-pixels
-  "Updates the display window with the data in the pixels array. Use
-  in conjunction with load-pixels. If you're only reading pixels from
+  "Updates the display window or image with the data in the pixels array.
+  Use in conjunction with (pixels). If you're only reading pixels from
   the array, there's no need to call update-pixels unless there are
   changes.
 
-  Certain renderers may or may not seem to require load-pixels or
+  Certain renderers may or may not seem to require pixels or
   update-pixels. However, the rule is that any time you want to
-  manipulate the pixels array, you must first call load-pixels, and
+  manipulate the pixels array, you must first call pixels, and
   after changes have been made, call update-pixels. Even if the
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
-  []
-  (.updatePixels (current-surface)))
+  ([] (update-pixels (current-graphics)))
+  ([^PImage img] (.updatePixels img)))
 
 (defn
   ^{:requires-bindings true
@@ -4099,11 +4190,11 @@
   form. By default, the coordinates used for u and v are specified in
   relation to the image's size in pixels, but this relation can be
   changed with texture-mode."
-  ([x y] (.vertex (current-surface) (float x) (float y)))
-  ([x y z] (.vertex (current-surface) (float x) (float y) (float z)))
-  ([x y u v] (.vertex (current-surface) (float x) (float y) (float u) (float v)))
+  ([x y] (.vertex (current-graphics) (float x) (float y)))
+  ([x y z] (.vertex (current-graphics) (float x) (float y) (float z)))
+  ([x y u v] (.vertex (current-graphics) (float x) (float y) (float u) (float v)))
   ([x y z u v]
-     (.vertex (current-surface) (float x) (float y) (float z) (float u) (float v))))
+     (.vertex (current-graphics) (float x) (float y) (float z) (float u) (float v))))
 
 (defn
   ^{:requires-bindings false
@@ -4118,7 +4209,7 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "width"
+    :processing-name "getWidth()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -4132,7 +4223,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Color"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.7"}
   with-fill
   "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
@@ -4150,7 +4242,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Color"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.7"}
   with-stroke
   "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
@@ -4168,7 +4261,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Transform"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.0"}
   with-translation
   "Performs body with translation, restores current transformation on
   exit."
@@ -4183,7 +4277,8 @@
   ^{:requires-bindings true
     :processing-name nil
     :category "Transform"
-    :subcategory "Utility Macros"}
+    :subcategory "Utility Macros"
+    :added "1.0"}
   with-rotation
   "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
@@ -4198,7 +4293,12 @@
      ~@body
      (pop-matrix)))
 
-(defmacro with-graphics
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Rendering"
+    :added "1.7"}
+  with-graphics
   "All subsequent calls of any drawing function will draw on given graphics.
   'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
   [graphics & body]
@@ -4206,190 +4306,6 @@
      (.beginDraw ~graphics)
      ~@body
      (.endDraw ~graphics)))
-
-;;; version number
-
-(defn quil-version
-  []
-  QUIL-VERSION-STR)
-
-
-;;; doc utils
-
-(def ^{:private true}
-  processing-fn-metas
-  "Returns a seq of metadata maps for all fns related to the original
-  Processing API (but may not have a direct Processing API equivalent)."
-  (map #(-> % second meta) (ns-publics *ns*)))
-
-(defn- processing-fn-metas-with-orig-method-name
-  "Returns a seq of metadata maps for all fns with a corresponding
-  Processing API method."
-  []
-  (filter :processing-name processing-fn-metas))
-
-(defn- matching-processing-methods
-  "Takes a string representing the start of a method name in the
-  original Processing API and returns a map of orig/new-name pairs"
-  [orig-name]
-  (let [metas   (processing-fn-metas-with-orig-method-name)
-        matches (filter #(.startsWith (:processing-name %) orig-name) metas)]
-    (into {} (map (fn [{:keys [name processing-name]}]
-                    [(str processing-name) (str name)])
-                  matches))))
-
-(defn- find-categories
-  []
-  (let [metas processing-fn-metas
-        cats  (into (sorted-set) (map :category metas))]
-    (clojure.set/difference cats #{nil})))
-
-(defn- find-subcategories
-  [category]
-  (let [metas  processing-fn-metas
-        in-cat (filter #(= category (:category %)) metas)
-        res    (into (sorted-set) (map :subcategory in-cat))]
-    (clojure.set/difference res #{nil})))
-
-(defn- find-fns
-  "Find the names of fns in category cat that don't also belong to a
-  subcategory"
-  [cat subcat]
-  (let [metas processing-fn-metas
-        res   (filter (fn [m]
-                        (and (= cat (:category m))
-                             (= subcat (:subcategory m))))
-                      metas)]
-    (sort (map :name res))))
-
-(defn- subcategory-map
-  [cat cat-idx]
-  (let [subcats (find-subcategories cat)
-        idxs    (map inc (range))
-        idxd-subcats (map (fn [idx subcat]
-                            [(str cat-idx "." idx) subcat])
-                          idxs subcats)]
-    (into {}
-          (map (fn [[idx subcat]]
-                 [idx {:name subcat
-                       :fns (find-fns cat subcat)}])
-               idxd-subcats))))
-
-(defn- sorted-category-map
-  []
-  (let [cats      (find-categories)
-        idxs      (map inc (range))
-        idxd-cats (into {} (map (fn [idx cat] [idx cat]) idxs cats))]
-    (into (sorted-map)
-          (map (fn [[idx cat]]
-                 [idx  {:name cat
-                        :fns (find-fns cat nil)
-                        :subcategories (subcategory-map cat idx)}])
-               idxd-cats))))
-
-(defn- all-category-map
-  []
-  (reduce (fn [sum [k v]]
-            (merge sum (:subcategories v)))
-          (into {} (map (fn [[k v]] [(str k) v]) (sorted-category-map)))
-          (sorted-category-map)))
-
-
-
-(defn show-cats
-  "Print out a list of all the categories and subcategories,
-  associated index nums and fn count (in parens)."
-  []
-  (let [cats (sorted-category-map)]
-    (dorun
-     (map (fn [[cat-idx cat]]
-            (println cat-idx
-                     (:name cat)
-                     (str "(" (count (find-fns (:name cat) nil)) ")"))
-            (dorun (map (fn [[subcat-idx subcat]]
-                          (println "  "
-                                   subcat-idx
-                                   (:name subcat)
-                                   (str "(" (count (find-fns (:name cat) (:name subcat))) ")")))
-                        (:subcategories cat))))
-          cats))))
-
-(defn- wrap-lines
-  "Split a list of words in lists (lines) not longer than width chars each,
-   space between words included."
-  [width words]
-  (letfn [(wrap-lines-rec
-            [ws accum-lns]
-            (if (empty? ws)
-              accum-lns
-              (let [lens (map count ws)
-                    cumlens (reduce
-                             (fn [sums len]
-                               (conj sums
-                                     (if (empty? sums)
-                                       len
-                                       (+ (last sums) len 1))))
-                             [] lens)
-                    [line other] (split-with #(> width %) cumlens)
-                    [line other] (split-at (count line) ws)]
-                (recur other (conj accum-lns line)))))]
-    (wrap-lines-rec words [])))
-
-(defn- pprint-wrapped-lines
-  "Pretty print words across several lines by wrapping lines at word boundary."
-  [words & {:keys [fromcolumn width] :or {fromcolumn 0 width 80}}]
-  (let [w (- width fromcolumn)
-        wordss (wrap-lines w words)
-        indent (apply str (repeat fromcolumn \space))
-        lines (map #(apply str indent (interpose " " %)) wordss)]
-    (doseq [l lines] (println l))))
-
-(defn show-fns
-  "If given a number, print all the functions within category or
-  subcategory specified by the category index (use show-cats to see a
-  list of index nums).
-
-  If given a string or a regular expression, print all the functions
-  whose name or category name contains that string.
-
-  If a category is specified, it will not print out the fns in any of
-  cat's subcategories."
-  [q]
-  (letfn [(list-category [cid c & {:keys [only]}]
-            (let [category-fns (:fns c)
-                  display-fns (if (nil? only)
-                                category-fns
-                                (clojure.set/intersection
-                                 (set only) (set category-fns)))
-                  names (sort (map str display-fns))]
-              (if (not (empty? names))
-                (do
-                  (println cid (:name c))
-                  (pprint-wrapped-lines names :fromcolumn 4)))))
-          (show-fns-by-cat-idx [cat-idx]
-            (let [c (get (all-category-map) (str cat-idx))]
-              (list-category cat-idx c)))
-          (show-fns-by-name-regex [re]
-            (doseq [[cid c] (sort-by key (all-category-map))]
-              (let [in-cat-name? (re-find re (:name c))
-                    matching-fns (filter #(re-find re (str %)) (:fns c))
-                    in-fn-names? (not (empty? matching-fns))]
-                (cond
-                 in-cat-name? (list-category cid c) ;; print an entire category
-                 in-fn-names? (list-category cid c :only matching-fns)))))]
-    (cond
-     (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
-     (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
-     :else (show-fns-by-cat-idx q))))
-
-(defn show-meths
-  "Takes a string representing the start of a method name in the
-  original Processing API and prints out all matches alongside the
-  Processing-core equivalent."
-  [orig-name]
-  (let [res (matching-processing-methods orig-name)]
-    (print-definition-list res))
-  nil)
 
 ;;; Useful trig constants
 (def PI  (float Math/PI))
@@ -4401,61 +4317,61 @@
 (def DEG-TO-RAD (/ PI (float 180.0)))
 (def RAD-TO-DEG (/ (float 180.0) PI))
 
-;; Sketch control
-
-(defn sketch-stop
-  "Stop/pause the sketch (restart with sketch-start)"
-  [sketch]
-  (applet-stop sketch))
-
-(defn sketch-state
-  "Fetch an element of state from within the sketch"
-  [sketch k]
-  (applet-state sketch k))
-
-(defn sketch-start
-  "Restart the sketch (if it has been stopped with sketch-stop)"
-  [sketch]
-  (applet-start sketch))
-
-(defn sketch-close
-  "Stop the sketch and close the window"
-  [sketch]
-  (applet-close sketch))
-
 ;; Sketch creation
 
-
-(defn sketch
+(defn ^{:requires-bindings false
+        :category "Environment"
+        :subcategory nil
+        :added "1.0"}
+  sketch
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch.
-                     Defaults to [500 300].
+   :size           - A vector of width and height for the sketch or :fullscreen.
+                     Defaults to [500 300]. If you're using :fullscreen you may
+                     want to enable present mode - :features [:present].
 
-   :renderer       - Specify the renderer type. One of :p2d, :java2d,
-                     :opengl, :pdf or :dxf). Defaults to :java2d. If
-                     :pdf or :dxf is selected, :target is forced to
-                     :none.
+   :renderer       - Specify the renderer type. One of :p2d, :p3d,
+                     :java2d, :opengl, :pdf). Defaults to :java2d.
+                     :dxf renderer can't be used as sketch renderer.
+                     Use begin-raw method for :dxf instead.
 
    :output-file    - Specify an output file path. Only used in :pdf
-                     and :dxf render modes.
+                     mode.
 
    :title          - a string which will be displayed at the top of
                      the sketch window.
-
-   :target         - Specify the target. One of :frame, :perm-frame
-                     or :none. Ignored if :pdf or :dxf renderer is
-                     used.
-
-   :decor          - Specify if the window should have OS frame
-                     decorations. Only honoured with :frame or
-                     :perm-frame targets.
 
    :setup          - a fn to be called once when setting the sketch up.
 
    :draw           - a fn to be repeatedly called at most n times per
                      second where n is the target frame-rate set for
                      the visualisation.
+
+   :features       - A vector of keywords customizing sketch behaviour.
+                     Supported features:
+
+                     :keep-on-top - Sketch window will always be above other
+                                    windows. Note: some platforms might not
+                                    support always-on-top windows.
+
+                     :exit-on-close - Shutdown JVM  when sketch is closed.
+
+                     :resizable - Makes sketch resizable.
+
+                     :no-safe-draw - Do not catch and print exception in the
+                                     draw fn. By default all exceptions thrown
+                                     inside draw function are catched so sketch
+                                     doesn't break if something goes wrong.
+
+                     :present - Switch to present mode (fullscreen without
+                                borders, OS panels). You may want to use this
+                                feature together with :size :fullscreen.
+
+                     Usage example: :features [:keep-on-top :present]
+
+   :bgcolor        - Sets background color for unused space in present mode.
+                     Color is specified in hex format: #XXXXXX.
+                     Example: :bgcolor \"#00FFFF\" (cyan background)
 
    :focus-gained   - Called when the sketch gains focus.
 
@@ -4482,7 +4398,7 @@
                      Takes 1 argument - wheel rotation, an int.
                      Negative values if the mouse wheel was rotated
                      up/away from the user, and positive values
-                     if the mouse wheel was rotated down/ towards the user
+                     if the mouse wheel was rotated down/towards the user
 
    :key-pressed    - Called every time any key is pressed.
 
@@ -4491,14 +4407,15 @@
    :key-typed      - Called once every time non-modifier keys are
                      pressed.
 
-   :safe-draw-fn   - Catches and prints exceptions in the draw fn.
-                     Default is true.
-
    :on-close       - Called once, when sketch is closed"
     [& opts]
     (apply applet opts))
 
-(defmacro defsketch
+(defmacro ^{:requires-bindings false
+            :category "Environment"
+            :subcategory nil
+            :added "1.0"}
+  defsketch
   "Define and start a sketch and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
   symbols, it wraps them in a call to var to ensure they aren't
@@ -4582,3 +4499,65 @@
   ([msg delay-ms]
      (println msg)
      (Thread/sleep delay-ms)))
+
+;;; doc utils
+
+(def ^{:private true}
+  fn-metas
+  "Returns a seq of metadata maps for all fns related to the original
+  Processing API (but may not have a direct Processing API equivalent)."
+  (->> *ns* ns-publics vals (map meta)))
+
+(defn show-cats
+  "Print out a list of all the categories and subcategories,
+  associated index nums and fn count (in parens)."
+  []
+  (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
+    (println cat-idx (:name cat))
+    (doseq [[subcat-idx subcat] (:subcategories cat)]
+      (println "  " subcat-idx (:name subcat)))))
+
+(defn show-fns
+  "If given a number, print all the functions within category or
+  subcategory specified by the category index (use show-cats to see a
+  list of index nums).
+
+  If given a string or a regular expression, print all the functions
+  whose name or category name contains that string.
+
+  If a category is specified, it will not print out the fns in any of
+  cat's subcategories."
+  [q]
+  (letfn [(list-category [cid c & {:keys [only]}]
+            (let [category-fns (:fns c)
+                  display-fns (if (nil? only)
+                                category-fns
+                                (clojure.set/intersection
+                                 (set only) (set category-fns)))
+                  names (sort (map str display-fns))]
+              (when-not (empty? names))
+                (println cid (:name c))
+                (docs/pprint-wrapped-lines names :fromcolumn 4)))
+          (show-fns-by-cat-idx [cat-idx]
+            (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
+              (list-category cat-idx c)))
+          (show-fns-by-name-regex [re]
+            (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
+              (let [in-cat-name? (re-find re (:name c))
+                    matching-fns (filter #(re-find re (str %)) (:fns c))
+                    in-fn-names? (not (empty? matching-fns))]
+                (cond
+                 in-cat-name? (list-category cid c) ;; print an entire category
+                 in-fn-names? (list-category cid c :only matching-fns)))))]
+    (cond
+      (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
+      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+      :else (show-fns-by-cat-idx q))))
+
+(defn show-meths
+  "Takes a string representing the start of a method name in the
+  original Processing API and prints out all matches alongside the
+  Processing-core equivalent."
+  [orig-name]
+  (let [res (docs/matching-processing-methods fn-metas orig-name)]
+    (print-definition-list res)))

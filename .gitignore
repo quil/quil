@@ -10,4 +10,7 @@ native
 .lein-deps-sum
 target
 .lein-repl-history
+.lein-failures
 .nrepl-port
+*.iml
+*.idea

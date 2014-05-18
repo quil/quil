@@ -1,5 +1,5 @@
 (ns quil.helpers.seqs
-  (:use [quil.core :only [noise]]))
+  (:require [quil.core :refer [noise]]))
 
 (defn range-incl
   "Returns a lazy seq of nums from start (inclusive) to end

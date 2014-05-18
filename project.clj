@@ -1,4 +1,4 @@
-(defproject quil "1.7.0"
+(defproject quil "2.0.0"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
   :mailing-list {:name "Quil Mailing List"
@@ -7,10 +7,16 @@
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojars.processing-core/org.processing.core "1.5.1"]
-                 [org.clojars.processing-core/org.processing.gluegen-rt "1.5.1"]
-                 [org.clojars.processing-core/org.processing.jogl "1.5.1"]
-                 [org.clojars.processing-core/org.processing.opengl "1.5.1"]
-                 [org.clojars.processing-core/org.processing.itext "1.5.1"]
-                 [org.clojars.processing-core/org.processing.pdf "1.5.1"]]
-  :aot [quil.applet])
+                 [quil/processing-core "2.2.0"]
+                 [quil/processing-pdf "2.2.0"]
+                 [quil/processing-dxf "2.2.0"]
+                 [quil/jogl-all-fat "2.1.5"]
+                 [quil/gluegen-rt-fat "2.1.5"]
+                 [com.lowagie/itext "2.1.7"]]
+
+  :aot [quil.helpers.applet-listener quil.applet]
+
+  :profiles {:dev {:dependencies [[hiccup "1.0.5"]
+                                  [garden "1.1.6"]]}}
+  :test-selectors {:default (complement :manual)
+                   :manual :manual})
