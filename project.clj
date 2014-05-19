@@ -16,10 +16,10 @@
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]
-                 [org.clojure/clojurescript "0.0-2173"]]
+                 [org.clojure/clojurescript "0.0-2202"]]
 
   :plugins [[com.keminglabs/cljx "0.3.2"]
-            [lein-cljsbuild "1.0.2"]]
+            [lein-cljsbuild "1.0.3"]]
 
   :hooks [cljx.hooks leiningen.cljsbuild]
 
@@ -31,16 +31,18 @@
                    :manual :manual}
 
   :cljx {:builds [{:source-paths ["src"]
-                   :output-path "src/gen/clj"
+                   :output-path "src/quil"
                    :rules :clj}
                   {:source-paths ["src"]
-                   :output-path "src/gen/cljs"
+                   :output-path "src/cljs/quil"
                    :rules :cljs}]}
 
+  :source-paths ["src"]
+
   :cljsbuild
-  {:builds [{:source-paths ["src/cljs" "src/gen/cljs"]
+  {:builds [{:source-paths ["src/cljs/quil"]
              :compiler
              {:output-to "resources/js/main.js"
               :optimizations :whitespace
-              :libs ["resources/js/processing.js"]
+              :libs ["processing.js"]
               :pretty-print true}}]})
