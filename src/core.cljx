@@ -15,7 +15,8 @@
   (:require [cljs.quil.applet :as applet]
             [clojure.browser.dom  :as dom])
   (:use-macros [cljs.quil.applet :only [defsketch]])
-  (:use [cljs.quil.applet :only [current-graphics]]))
+  (:use [cljs.quil.applet :only [current-graphics]]
+        [cljs.quil.helpers.util :only [resolve-constant-key]]))
 
 
 #+cljs
@@ -889,11 +890,19 @@
   ([r g b] (.color (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.color (current-graphics) (float r) (float g) (float b) (float a))))
 
+#+clj
 (def ^{:private true}
   color-modes {:rgb (int 1)
                :hsb (int 3)})
 
-#+clj
+#+cljs
+(def ^{private true}
+  color-modes {:rgb (int 1)
+               :argb (int 2)
+               :hsb (int 3)
+               :alpha (int 4)
+               :cmyk (int 5)})
+
 (defn
   ^{:requires-bindings true
     :processing-name "colorMode()"
