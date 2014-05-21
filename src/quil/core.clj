@@ -653,6 +653,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "blendColor()"
+    :processing-link nil
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -1048,6 +1049,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "fillColor()"
+    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#fillColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-fill
@@ -1058,6 +1060,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "strokeColor()"
+    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#strokeColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-stroke
@@ -1239,6 +1242,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "delay()"
+    :processing-link nil
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -1682,6 +1686,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "getHeight()"
+    :processing-link nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1717,6 +1722,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "hint()"
+    :processing-link nil
     :category "Rendering"
     :subcategory nil
     :added "1.0"}
@@ -3224,7 +3230,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name "screen.width"
+    :processing-name "displayWidth"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -3239,7 +3245,7 @@
 
 (defn
   ^{:requires-bindings false
-    :processing-name "screen.height"
+    :processing-name "displayHeight"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -4210,6 +4216,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "getWidth()"
+    :processing-link nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}

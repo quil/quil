@@ -128,7 +128,9 @@ class is string that will be used as class of body element in the page."
                 "Docstring" [:pre (trim-docstring doc)]
                 "Works only inside sketch functions?" (if requires-bindings "Yes" "No")
                 "Original Processing method" (if processing-name
-                                               [:code processing-name]
+                                               (if-let [link (link-to-processing-reference fn-meta)]
+                                                 [:code (e/link-to link processing-name)]
+                                                 [:code processing-name])
                                                "None. It is present only in Quil.")
                 "Added in" added)]
     [:div.function {:id name}

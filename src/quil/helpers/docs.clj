@@ -3,6 +3,25 @@
   (:require [clojure.string :as cstr]
             [clojure.java.io :as io]))
 
+(defn link-to-processing-reference
+  "Builds a link to processing page about the function.
+  If meta has :processing-link key, value will be returned,
+  otherwise method will try to build the link based on processing-name
+  if it is not nil. It processing-name is nil, returns nil."
+  [fn-meta]
+  (cond (contains? fn-meta :processing-link)
+        (:processing-link fn-meta)
+
+        (:processing-name fn-meta)
+        (let [name (-> (:processing-name fn-meta)
+                       (cstr/replace "()" "_")
+                       (cstr/replace "." "_")
+                       (cstr/replace "[]" ""))]
+          (str "http://www.processing.org/reference/" name ".html"))
+
+        :else
+        nil))
+
 (defn- fn-metas-with-orig-method-name
   "Returns a seq of metadata maps for all fns with a corresponding
   Processing API method."
