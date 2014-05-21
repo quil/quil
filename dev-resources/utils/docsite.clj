@@ -27,7 +27,6 @@
    [[:body {:color "#333"}]
     [:a {:color "#333"}]
     [:p {:margin "0px"}]
-
     [:.category-div :#toc
      [:.category {:margin "0px 0px 7px 0px"}
       [:a {:color "#D53E07"}]]
@@ -77,9 +76,14 @@
              :top "0px"}]]]))
 
 (defn- get-page
-  "Converts hiccup-style body to full-blown page and returns it as string. class is string that will be used as class of body element in the page."
-  [class body]
+  "Converts hiccup-style body to full-blown page and returns it as string.
+class is string that will be used as class of body element in the page."
+  [class title body]
  (let [head [:head
+             [:meta {:name "description"
+                     :content (str "Quil is a clojure animation library for "
+                                   "creating interactive sketches. Quil is based on Processing.")}]
+             [:title title]
              [:style css]]]
    (p/html5 (list head [:body {:class class}
                         body]))))
@@ -180,9 +184,9 @@
           (column->html [column]
             [:div.column (map (comp category->html find-category) column)])]
     [:div.wrapper
-     [:h1#title "Quil 2.0 API"]
+     [:h1#title "Quil 2.0.0 API"]
      [:div#description
-      [:p "Quil is clojure animation library for creating interactive sketches. "]
+      [:p "Quil is a clojure animation library for creating interactive sketches. "]
       [:p
        "Quil is based on " (e/link-to "http://processing.org" "Processing")
        ". Check " (e/link-to "https://github.com/quil/quil" "Github repo") "."]]
@@ -191,11 +195,12 @@
 (defn- generate-all [fn-metas folder]
   (let [category-map (sorted-category-map fn-metas)]
     (doseq [category (vals category-map)]
-      (let [html (get-page "fn-page" (category->html category fn-metas))
+      (let [html (get-page "fn-page" (str "Quil - " (:name category))
+                           (category->html category fn-metas))
             file (as-filename-ext folder (:name category))]
         (spit file html)))
     (->> (generate-index-page category-map)
-         (get-page "index-page")
+         (get-page "index-page" "Quil API")
          (spit (as-filename-ext folder "index")))))
 
 (generate-all @(resolve 'quil.core/fn-metas) "out")
