@@ -17,7 +17,14 @@
 
 
 (defmacro with-shape [mode & body]
-  `(do
-     (cljs.quil.core/begin-shape ~mode)
-     ~@body
-     (cljs.quil.core/end-shape)))
+  (if (keyword? mode)
+    `(do
+       (cljs.quil.core/begin-shape ~mode)
+       ~@body
+       (cljs.quil.core/end-shape))
+
+    `(do
+       (cljs.quil.core/begin-shape)
+       ~mode
+       ~@body
+       (cljs.quil.core/end-shape))))
