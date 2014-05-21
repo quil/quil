@@ -70,7 +70,7 @@ A simple example is called for:
   :draw draw                        ;; Specify the draw fn
   :size [323 200])                  ;; You struggle to beat the golden ratio
 ```
-<img src="http://cloud.github.com/downloads/quil/quil/readme-oh-so-many-grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
+<img src="https://cloud.githubusercontent.com/assets/38924/3032404/48f404d8-e057-11e3-88bd-aeefe0859887.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
 Feast your eyes on this beauty.
 
