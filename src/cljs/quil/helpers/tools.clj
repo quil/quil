@@ -14,3 +14,10 @@
   (map
    #(apply bind-handler (concat (list prc) %))
    (partition 2 opts)))
+
+
+(defmacro with-shape [mode & body]
+  `(do
+     (cljs.quil.core/begin-shape ~mode)
+     ~@body
+     (cljs.quil.core/end-shape)))

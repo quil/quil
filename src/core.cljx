@@ -498,7 +498,28 @@
                   :quads PApplet/QUADS
                   :quad-strip PApplet/QUAD_STRIP})
 
-#+clj
+#+cljs
+(def ^{:private true}
+  shape-modes {:point 2
+               :points 2
+               :line 4
+               :lines 4
+               :triangle 8
+               :triangles 9
+               :triangle-strip 10
+               :triangle-fan 11
+               :quad 16
+               :quads 16
+               :quad-strip 17
+               :polygon 20
+               :path 21
+               :rect 30
+               :ellipse 31
+               :arc 32
+               :sphere 40
+               :box 41})
+
+
 (defn
   ^{:requires-bindings true
     :processing-name "beginShape()"
@@ -1500,7 +1521,7 @@
   []
   (.endRaw (current-graphics)))
 
-#+clj
+
 (defn
   ^{:requires-bindings true
     :processing-name "endShape()"
@@ -1515,8 +1536,11 @@
   ([] (.endShape (current-applet)))
   ([mode]
      (when-not (= :close mode)
-       (throw (Exception. (str "Unknown mode value: " mode ". Expected :close"))))
-     (.endShape (current-applet) PApplet/CLOSE)))
+       #+clj (throw (Exception. (str "Unknown mode value: " mode ". Expected :close")))
+       #+cljs nil)
+     (.endShape (current-applet)
+                #+clj PApplet/CLOSE
+                #+cljs 2)))
 
 #+clj
 (defn
