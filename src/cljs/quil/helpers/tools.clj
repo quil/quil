@@ -6,7 +6,7 @@
   `(set!
     (~processing-name ~prc)
     (fn []
-      (~'with-applet ~prc
+      (~'with-sketch ~prc
         (~@(if (list? handler) handler (list handler)))))))
 
 

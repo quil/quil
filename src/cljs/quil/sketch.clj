@@ -1,6 +1,6 @@
 (ns cljs.quil.sketch)
 
-(defmacro with-applet [applet & body]
+(defmacro with-sketch [applet & body]
   `(binding [cljs.quil.sketch/*surface* ~applet]
      ~@body))
 

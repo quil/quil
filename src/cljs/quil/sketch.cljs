@@ -1,6 +1,6 @@
 (ns cljs.quil.sketch
   (:require [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.sketch :only [with-applet]]
+  (:use-macros [cljs.quil.sketch :only [with-sketch]]
                [cljs.quil.helpers.tools :only [bind-handlers]]))
 
 
