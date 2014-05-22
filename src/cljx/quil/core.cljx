@@ -1934,7 +1934,7 @@
   [col]
   (.hue (current-graphics) (int col)))
 
-#+clj
+
 (defn
   ^{:requires-bindings true
     :processing-name "image()"
@@ -1956,9 +1956,13 @@
   Starting with release 0124, when using the default (JAVA2D)
   renderer, smooth will also improve image quality of resized
   images."
-  ([^PImage img x y] (.image (current-graphics) img (float x) (float y)))
-  ([^PImage img x y c d] (.image (current-graphics) img (float x) (float y)
-                                  (float c) (float d))))
+  (#+clj [^PImage img x y]
+   #+cljs [img x y]
+   (.image (current-graphics) img (float x) (float y)))
+
+  (#+clj [^PImage img x y c d]
+   #+cljs [img x y c d]
+   (.image (current-graphics) img (float x) (float y) (float c) (float d))))
 
 #+clj
 (defn
