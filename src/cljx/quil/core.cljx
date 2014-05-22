@@ -12,10 +12,10 @@
 
 #+cljs
 (ns cljs.quil.core
-  (:require [cljs.quil.applet :as applet]
+  (:require [cljs.quil.sketch :as applet]
             [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.applet :only [defsketch]])
-  (:use [cljs.quil.applet :only [current-graphics]]
+  (:use-macros [cljs.quil.sketch :only [defsketch]])
+  (:use [cljs.quil.sketch :only [current-graphics]]
         [cljs.quil.helpers.util :only [resolve-constant-key]]))
 
 

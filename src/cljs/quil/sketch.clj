@@ -1,11 +1,11 @@
-(ns cljs.quil.applet)
+(ns cljs.quil.sketch)
 
 (defmacro with-applet [applet & body]
-  `(binding [cljs.quil.applet/*surface* ~applet]
+  `(binding [cljs.quil.sketch/*surface* ~applet]
      ~@body))
 
 
 (defmacro defsketch
   [app-name & options]
   `(defn ^:export ~app-name []
-     (cljs.quil.applet/make-processing ~@options)))
+     (cljs.quil.sketch/make-processing ~@options)))
