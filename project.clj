@@ -30,10 +30,10 @@
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
-  :cljx {:builds [{:source-paths ["src"]
+  :cljx {:builds [{:source-paths ["src/cljx/quil"]
                    :output-path "src/quil"
                    :rules :clj}
-                  {:source-paths ["src"]
+                  {:source-paths ["src/cljx/quil"]
                    :output-path "src/cljs/quil"
                    :rules :cljs}]}
 
