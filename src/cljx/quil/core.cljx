@@ -2420,7 +2420,6 @@
   []
   (PApplet/month))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "mouseButton"
@@ -2432,10 +2431,18 @@
   or :center depending on which button is pressed. nil if no button pressed"
   []
   (let [button-code   (.-mouseButton (current-applet))]
+    #+clj
     (condp = button-code
       PConstants/LEFT :left
       PConstants/RIGHT :right
       PConstants/CENTER :center
+      nil)
+
+    #+cljs
+    (condp = button-code
+      37 :left
+      39 :right
+      3  :center
       nil)))
 
 (defn
