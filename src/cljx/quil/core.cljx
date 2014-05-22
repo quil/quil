@@ -4122,7 +4122,6 @@
   [size]
   (.textSize (current-graphics) (float size)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "texture()"
@@ -4137,7 +4136,8 @@
   When textures are in use, the fill color is ignored. Instead, use
   tint to specify the color of the texture as it is applied to the
   shape."
-  [^PImage img]
+  #+clj [^PImage img]
+  #+cljs [img]
   (.texture (current-graphics) img))
 
 #+clj
