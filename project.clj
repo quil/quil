@@ -31,16 +31,16 @@
                    :manual :manual}
 
   :cljx {:builds [{:source-paths ["src/cljx/quil"]
-                   :output-path "src/quil"
+                   :output-path "target/gen/quil"
                    :rules :clj}
                   {:source-paths ["src/cljx/quil"]
-                   :output-path "src/cljs/quil"
+                   :output-path "target//gen/cljs/quil"
                    :rules :cljs}]}
 
-  :source-paths ["src"]
+  :source-paths ["src" "target/gen"]
 
   :cljsbuild
-  {:builds [{:source-paths ["src/cljs/quil"]
+  {:builds [{:source-paths ["src/cljs/quil" "target/gen" "target/classes"]
              :compiler
              {:output-to "resources/js/main.js"
               :optimizations :whitespace
