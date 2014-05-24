@@ -1,4 +1,4 @@
-(ns cljs.quil.helpers.tools
+(ns quil.helpers.tools
   (:require [clojure.string :as string]))
 
 
@@ -19,12 +19,12 @@
 (defmacro with-shape [mode & body]
   (if (keyword? mode)
     `(do
-       (cljs.quil.core/begin-shape ~mode)
+       (quil.core/begin-shape ~mode)
        ~@body
-       (cljs.quil.core/end-shape))
+       (quil.core/end-shape))
 
     `(do
-       (cljs.quil.core/begin-shape)
+       (quil.core/begin-shape)
        ~mode
        ~@body
-       (cljs.quil.core/end-shape))))
+       (.quil.core/end-shape))))

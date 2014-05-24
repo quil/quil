@@ -34,13 +34,14 @@
                    :output-path "target/gen/quil"
                    :rules :clj}
                   {:source-paths ["src/cljx/quil"]
-                   :output-path "target//gen/cljs/quil"
+                   :output-path "target/gen/cljs/quil"
                    :rules :cljs}]}
 
-  :source-paths ["src" "target/gen"]
+  :source-paths ["src" "target/gen" "src/cljs" "target/gen/cljs"]
 
   :cljsbuild
-  {:builds [{:source-paths ["src/cljs/quil" "target/gen" "target/classes"]
+  {:builds [{:source-paths ["src/cljs/quil" "target/gen/cljs" "target/classes"]
+             :jar false
              :compiler
              {:output-to "resources/js/main.js"
               :optimizations :whitespace

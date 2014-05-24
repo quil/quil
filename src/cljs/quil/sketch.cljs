@@ -1,7 +1,7 @@
-(ns cljs.quil.sketch
+(ns quil.sketch
   (:require [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.sketch :only [with-sketch]]
-               [cljs.quil.helpers.tools :only [bind-handlers]]))
+  (:use-macros [quil.sketch :only [with-sketch]]
+               [quil.helpers.tools :only [bind-handlers]]))
 
 
 (defn no-fn [])
@@ -33,10 +33,10 @@
       (bind-handlers prc
                      .-setup  (do
                                 (when (:size opts)
-                                  (apply cljs.quil.core/size (:size opts)))
+                                  (apply quil.core/size (:size opts)))
                                 (setup-fn)
                                 (when (= true (:no-loop opts))
-                                  (cljs.quil.core/no-loop)))
+                                  (quil.core/no-loop)))
                      .-draw draw-fn
 
                      .-keyPressed key-pressed

@@ -11,12 +11,12 @@
             [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
 #+cljs
-(ns cljs.quil.core
-  (:require [cljs.quil.sketch :as applet]
+(ns quil.core
+  (:require [quil.sketch :as applet]
             [clojure.browser.dom  :as dom])
-  (:use-macros [cljs.quil.sketch :only [defsketch]])
-  (:use [cljs.quil.sketch :only [current-graphics]]
-        [cljs.quil.helpers.util :only [resolve-constant-key]]))
+  (:use-macros [quil.sketch :only [defsketch]])
+  (:use [quil.sketch :only [current-graphics]]
+        [quil.helpers.util :only [resolve-constant-key]]))
 
 
 #+cljs

@@ -1,4 +1,4 @@
-(ns cljs.quil.helpers.util)
+(ns quil.helpers.util)
 
 
 (defn resolve-constant-key
