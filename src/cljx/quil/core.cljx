@@ -19,6 +19,221 @@
         [quil.helpers.util :only [resolve-constant-key]]))
 
 
+;; -------------------- PConstants section -----------------------
+
+#+clj
+(def ^{:private true}
+  arc-modes {:open PConstants/OPEN
+             :chord PConstants/CHORD
+             :pie PConstants/PIE})
+
+#+clj
+(def ^{:private true}
+     shape-modes {:points PApplet/POINTS
+                  :lines PApplet/LINES
+                  :triangles PApplet/TRIANGLES
+                  :triangle-strip PApplet/TRIANGLE_STRIP
+                  :triangle-fan PApplet/TRIANGLE_FAN
+                  :quads PApplet/QUADS
+                  :quad-strip PApplet/QUAD_STRIP})
+
+#+cljs
+(def ^{:private true}
+  shape-modes {:point 2
+               :points 2
+               :line 4
+               :lines 4
+               :triangle 8
+               :triangles 9
+               :triangle-strip 10
+               :triangle-fan 11
+               :quad 16
+               :quads 16
+               :quad-strip 17
+               :polygon 20
+               :path 21
+               :rect 30
+               :ellipse 31
+               :arc 32
+               :sphere 40
+               :box 41})
+
+#+clj
+(def ^{:private true}
+  blend-modes {:blend PApplet/BLEND
+               :add PApplet/ADD
+               :subtract PApplet/SUBTRACT
+               :darkest PApplet/DARKEST
+               :lightest PApplet/LIGHTEST
+               :difference PApplet/DIFFERENCE
+               :exclusion PApplet/EXCLUSION
+               :multiply PApplet/MULTIPLY
+               :screen PApplet/SCREEN
+               :overlay PApplet/OVERLAY
+               :replace PApplet/REPLACE
+               :hard-light PApplet/HARD_LIGHT
+               :soft-light PApplet/SOFT_LIGHT
+               :dodge PApplet/DODGE
+               :burn PApplet/BURN})
+
+#+clj
+(def ^{:private true}
+  color-modes {:rgb (int 1)
+               :hsb (int 3)})
+
+#+cljs
+(def ^{private true}
+  color-modes {:rgb (int 1)
+               :argb (int 2)
+               :hsb (int 3)
+               :alpha (int 4)
+               :cmyk (int 5)})
+
+#+clj
+(def ^{:private true}
+  image-formats {:rgb PApplet/RGB
+                :argb PApplet/ARGB
+                :alpha PApplet/ALPHA})
+
+#+clj
+(def ^{:private true}
+     ellipse-modes   {:center PApplet/CENTER
+                      :radius PApplet/RADIUS
+                      :corner PApplet/CORNER
+                      :corners PApplet/CORNERS})
+
+#+clj
+(def ^{:private true}
+  hint-options {:enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
+                :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
+                :enable-depth-test PConstants/ENABLE_DEPTH_TEST
+                :disable-depth-test PConstants/DISABLE_DEPTH_TEST
+                :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
+                :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
+                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK
+                :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
+                :disable-opengl-errors PConstants/DISABLE_OPENGL_ERRORS
+                :enable-opengl-errors PConstants/ENABLE_OPENGL_ERRORS
+                :enable-optimized-stroke PConstants/ENABLE_OPTIMIZED_STROKE
+                :disable-optimized-stroke PConstants/DISABLE_OPTIMIZED_STROKE
+                :enable-retina-pixels PConstants/ENABLE_RETINA_PIXELS
+                :disable-retina-pixels PConstants/DISABLE_RETINA_PIXELS
+                :enable-stroke-perspective PConstants/ENABLE_STROKE_PERSPECTIVE
+                :disable-stroke-perspective PConstants/DISABLE_STROKE_PERSPECTIVE
+                :enable-stroke-pure PConstants/ENABLE_STROKE_PURE
+                :disable-stroke-pure PConstants/DISABLE_STROKE_PURE
+                :enable-texture-mipmaps PConstants/ENABLE_TEXTURE_MIPMAPS
+                :disable-texture-mipmaps PConstants/DISABLE_TEXTURE_MIPMAPS
+                })
+
+#+clj
+(def ^{:private true}
+  image-modes {:corner PApplet/CORNER
+               :corners PApplet/CORNERS
+               :center PApplet/CENTER})
+
+#+clj
+(def ^{:private true}
+  rect-modes {:corner PApplet/CORNER
+              :corners PApplet/CORNERS
+              :center PApplet/CENTER
+              :radius PApplet/RADIUS})
+
+#+clj
+(def ^{:private true}
+  p-shape-modes {:corner PApplet/CORNER
+                 :corners PApplet/CORNERS
+                 :center PApplet/CENTER})
+
+#+clj
+(def ^{:private true}
+  stroke-cap-modes {:square PApplet/SQUARE
+                    :round PApplet/ROUND
+                    :project PApplet/PROJECT
+                    :model PApplet/MODEL})
+
+#+clj
+(def ^{:private true}
+  stroke-join-modes {:miter PConstants/MITER
+                     :bevel PConstants/BEVEL
+                     :round PConstants/ROUND})
+
+#+clj
+(def ^{:private true}
+  horizontal-alignment-modes {:left PApplet/LEFT
+                              :center PApplet/CENTER
+                              :right PApplet/RIGHT})
+#+clj
+(def ^{:private true}
+  vertical-alignment-modes {:top PApplet/TOP
+                            :bottom PApplet/BOTTOM
+                            :center PApplet/CENTER
+                            :baseline PApplet/BASELINE})
+
+#+clj
+(def ^{:private true}
+  text-modes {:model PConstants/MODEL
+              :shape PConstants/SHAPE})
+
+#+clj
+(def ^{:private true}
+  texture-modes {:image PApplet/IMAGE
+                 :normal PApplet/NORMAL})
+
+#+clj
+(def ^{:private true}
+  texture-wrap-modes {:clamp PApplet/CLAMP
+                      :repeat PApplet/REPEAT})
+
+;;; Useful trig constants
+#+clj (def PI  (float Math/PI))
+#+clj (def HALF-PI    (/ PI (float 2.0)))
+#+clj (def THIRD-PI   (/ PI (float 3.0)))
+#+clj (def QUARTER-PI (/ PI (float 4.0)))
+#+clj (def TWO-PI     (* PI (float 2.0)))
+
+#+clj (def DEG-TO-RAD (/ PI (float 180.0)))
+#+clj (def RAD-TO-DEG (/ (float 180.0) PI))
+
+#+clj
+(def  ^{:private true}
+  KEY-CODES {KeyEvent/VK_UP      :up
+             KeyEvent/VK_DOWN    :down
+             KeyEvent/VK_LEFT    :left
+             KeyEvent/VK_RIGHT   :right
+             KeyEvent/VK_ALT     :alt
+             KeyEvent/VK_CONTROL :control
+             KeyEvent/VK_SHIFT   :shift
+             KeyEvent/VK_WINDOWS :command
+             KeyEvent/VK_META    :command
+             KeyEvent/VK_F1      :f1
+             KeyEvent/VK_F2      :f2
+             KeyEvent/VK_F3      :f3
+             KeyEvent/VK_F4      :f4
+             KeyEvent/VK_F5      :f5
+             KeyEvent/VK_F6      :f6
+             KeyEvent/VK_F7      :f7
+             KeyEvent/VK_F8      :f8
+             KeyEvent/VK_F9      :f9
+             KeyEvent/VK_F10     :f10
+             KeyEvent/VK_F11     :f11
+             KeyEvent/VK_F12     :f12
+             KeyEvent/VK_F13     :f13
+             KeyEvent/VK_F14     :f14
+             KeyEvent/VK_F15     :f15
+             KeyEvent/VK_F16     :f16
+             KeyEvent/VK_F17     :f17
+             KeyEvent/VK_F18     :f18
+             KeyEvent/VK_F19     :f19
+             KeyEvent/VK_F20     :f20
+             KeyEvent/VK_F21     :f21
+             KeyEvent/VK_F22     :f22
+             KeyEvent/VK_F23     :f23
+             KeyEvent/VK_F24     :f24})
+             
+;; ------------------ end PConstants section ---------------------
+
+
 #+cljs
 (defn current-applet []
   (current-graphics))
@@ -269,12 +484,6 @@
                    (float n20) (float n21) (float n22) (float n23)
                    (float n30) (float n31) (float n32) (float n33))))
 
-#+clj
-(def ^{:private true}
-  arc-modes {:open PConstants/OPEN
-             :chord PConstants/CHORD
-             :pie PConstants/PIE})
-
 (defn
   ^{:requires-bindings true
     :processing-name "arc()"
@@ -488,38 +697,6 @@
   ([renderer filename]
      (.beginRaw (current-applet) (resolve-renderer renderer) (absolute-path filename))))
 
-#+clj
-(def ^{:private true}
-     shape-modes {:points PApplet/POINTS
-                  :lines PApplet/LINES
-                  :triangles PApplet/TRIANGLES
-                  :triangle-strip PApplet/TRIANGLE_STRIP
-                  :triangle-fan PApplet/TRIANGLE_FAN
-                  :quads PApplet/QUADS
-                  :quad-strip PApplet/QUAD_STRIP})
-
-#+cljs
-(def ^{:private true}
-  shape-modes {:point 2
-               :points 2
-               :line 4
-               :lines 4
-               :triangle 8
-               :triangles 9
-               :triangle-strip 10
-               :triangle-fan 11
-               :quad 16
-               :quads 16
-               :quad-strip 17
-               :polygon 20
-               :path 21
-               :rect 30
-               :ellipse 31
-               :arc 32
-               :sphere 40
-               :box 41})
-
-
 (defn
   ^{:requires-bindings true
     :processing-name "beginShape()"
@@ -662,24 +839,6 @@
   the number of digits used."
   ([val] (PApplet/binary (int val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
-
-#+clj
-(def ^{:private true}
-  blend-modes {:blend PApplet/BLEND
-               :add PApplet/ADD
-               :subtract PApplet/SUBTRACT
-               :darkest PApplet/DARKEST
-               :lightest PApplet/LIGHTEST
-               :difference PApplet/DIFFERENCE
-               :exclusion PApplet/EXCLUSION
-               :multiply PApplet/MULTIPLY
-               :screen PApplet/SCREEN
-               :overlay PApplet/OVERLAY
-               :replace PApplet/REPLACE
-               :hard-light PApplet/HARD_LIGHT
-               :soft-light PApplet/SOFT_LIGHT
-               :dodge PApplet/DODGE
-               :burn PApplet/BURN})
 
 #+clj
 (defn
@@ -911,19 +1070,6 @@
   ([r g b] (.color (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.color (current-graphics) (float r) (float g) (float b) (float a))))
 
-#+clj
-(def ^{:private true}
-  color-modes {:rgb (int 1)
-               :hsb (int 3)})
-
-#+cljs
-(def ^{private true}
-  color-modes {:rgb (int 1)
-               :argb (int 2)
-               :hsb (int 3)
-               :alpha (int 4)
-               :cmyk (int 5)})
-
 (defn
   ^{:requires-bindings true
     :processing-name "colorMode()"
@@ -1120,12 +1266,6 @@
   ([w h renderer path]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
                       (absolute-path path))))
-
-#+clj
-(def ^{:private true}
-  image-formats {:rgb PApplet/RGB
-                :argb PApplet/ARGB
-                :alpha PApplet/ALPHA})
 
 #+clj
 (defn
@@ -1408,13 +1548,6 @@
   the ellipse-mode function"
   [x y width height]
   (.ellipse (current-graphics) (float x) (float y) (float width) (float height)))
-
-#+clj
-(def ^{:private true}
-     ellipse-modes   {:center PApplet/CENTER
-                      :radius PApplet/RADIUS
-                      :corner PApplet/CORNER
-                      :corners PApplet/CORNERS})
 
 #+clj
 (defn
@@ -1818,30 +1951,6 @@
   #+cljs (.-height (current-graphics)))
 
 #+clj
-(def ^{:private true}
-  hint-options {:enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
-                :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
-                :enable-depth-test PConstants/ENABLE_DEPTH_TEST
-                :disable-depth-test PConstants/DISABLE_DEPTH_TEST
-                :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
-                :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
-                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK
-                :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
-                :disable-opengl-errors PConstants/DISABLE_OPENGL_ERRORS
-                :enable-opengl-errors PConstants/ENABLE_OPENGL_ERRORS
-                :enable-optimized-stroke PConstants/ENABLE_OPTIMIZED_STROKE
-                :disable-optimized-stroke PConstants/DISABLE_OPTIMIZED_STROKE
-                :enable-retina-pixels PConstants/ENABLE_RETINA_PIXELS
-                :disable-retina-pixels PConstants/DISABLE_RETINA_PIXELS
-                :enable-stroke-perspective PConstants/ENABLE_STROKE_PERSPECTIVE
-                :disable-stroke-perspective PConstants/DISABLE_STROKE_PERSPECTIVE
-                :enable-stroke-pure PConstants/ENABLE_STROKE_PURE
-                :disable-stroke-pure PConstants/DISABLE_STROKE_PURE
-                :enable-texture-mipmaps PConstants/ENABLE_TEXTURE_MIPMAPS
-                :disable-texture-mipmaps PConstants/DISABLE_TEXTURE_MIPMAPS
-                })
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "hint()"
@@ -2002,12 +2111,6 @@
   ([^PImage img mode level]
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter img (int mode) (float level)))))
-
-#+clj
-(def ^{:private true}
-  image-modes {:corner PApplet/CORNER
-               :corners PApplet/CORNERS
-               :center PApplet/CENTER})
 
 #+clj
 (defn
@@ -3078,13 +3181,6 @@
             (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
 #+clj
-(def ^{:private true}
-  rect-modes {:corner PApplet/CORNER
-              :corners PApplet/CORNERS
-              :center PApplet/CENTER
-              :radius PApplet/RADIUS})
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "rectMode()"
@@ -3601,12 +3697,6 @@
   (.shearY (current-graphics) (float angle)))
 
 #+clj
-(def ^{:private true}
-  p-shape-modes {:corner PApplet/CORNER
-                 :corners PApplet/CORNERS
-                 :center PApplet/CENTER})
-
-#+clj
 (defn ^{:requires-bindings true
         :processing-name "shapeMode()"
         :category "Shape"
@@ -3834,13 +3924,6 @@
   ([x y z a] (stroke-float x y z a)))
 
 #+clj
-(def ^{:private true}
-  stroke-cap-modes {:square PApplet/SQUARE
-                    :round PApplet/ROUND
-                    :project PApplet/PROJECT
-                    :model PApplet/MODEL})
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "strokeCap()"
@@ -3854,12 +3937,6 @@
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
     (.strokeCap (current-graphics) (int cap-mode))))
-
-#+clj
-(def ^{:private true}
-  stroke-join-modes {:miter PConstants/MITER
-                     :bevel PConstants/BEVEL
-                     :round PConstants/ROUND})
 
 #+clj
 (defn
@@ -3963,18 +4040,6 @@
   ([^String s x y] (.text (current-graphics) s (float x) (float y)))
   ([^String s x y z] (.text (current-graphics) s (float x) (float y) (float z)))
   ([^String s x1 y1 x2 y2] (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2))))
-
-#+clj
-(def ^{:private true}
-  horizontal-alignment-modes {:left PApplet/LEFT
-                              :center PApplet/CENTER
-                              :right PApplet/RIGHT})
-#+clj
-(def ^{:private true}
-  vertical-alignment-modes {:top PApplet/TOP
-                            :bottom PApplet/BOTTOM
-                            :center PApplet/CENTER
-                            :baseline PApplet/BASELINE})
 
 #+clj
 (defn
@@ -4082,11 +4147,6 @@
   (.textLeading (current-graphics) (float leading)))
 
 #+clj
-(def ^{:private true}
-  text-modes {:model PConstants/MODEL
-              :shape PConstants/SHAPE})
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "textMode()"
@@ -4148,11 +4208,6 @@
   (.texture (current-graphics) img))
 
 #+clj
-(def ^{:private true}
-  texture-modes {:image PApplet/IMAGE
-                 :normal PApplet/NORMAL})
-
-#+clj
 (defn
     ^{:requires-bindings true
      :processing-name "textureMode()"
@@ -4172,11 +4227,6 @@
   [mode]
   (let [mode (resolve-constant-key mode texture-modes)]
     (.textureMode (current-graphics) (int mode))))
-
-#+clj
-(def ^{:private true}
-  texture-wrap-modes {:clamp PApplet/CLAMP
-                      :repeat PApplet/REPEAT})
 
 #+clj
 (defn
@@ -4508,16 +4558,6 @@
      ~@body
      (.endDraw ~graphics)))
 
-;;; Useful trig constants
-#+clj (def PI  (float Math/PI))
-#+clj (def HALF-PI    (/ PI (float 2.0)))
-#+clj (def THIRD-PI   (/ PI (float 3.0)))
-#+clj (def QUARTER-PI (/ PI (float 4.0)))
-#+clj (def TWO-PI     (* PI (float 2.0)))
-
-#+clj (def DEG-TO-RAD (/ PI (float 180.0)))
-#+clj (def RAD-TO-DEG (/ (float 180.0) PI))
-
 ;; Sketch creation
 
 #+clj
@@ -4631,42 +4671,6 @@
   specific key pressed. See key-keyword."
   [c]
   (= PConstants/CODED (int c)))
-
-#+clj
-(def  ^{:private true}
-  KEY-CODES {KeyEvent/VK_UP      :up
-             KeyEvent/VK_DOWN    :down
-             KeyEvent/VK_LEFT    :left
-             KeyEvent/VK_RIGHT   :right
-             KeyEvent/VK_ALT     :alt
-             KeyEvent/VK_CONTROL :control
-             KeyEvent/VK_SHIFT   :shift
-             KeyEvent/VK_WINDOWS :command
-             KeyEvent/VK_META    :command
-             KeyEvent/VK_F1      :f1
-             KeyEvent/VK_F2      :f2
-             KeyEvent/VK_F3      :f3
-             KeyEvent/VK_F4      :f4
-             KeyEvent/VK_F5      :f5
-             KeyEvent/VK_F6      :f6
-             KeyEvent/VK_F7      :f7
-             KeyEvent/VK_F8      :f8
-             KeyEvent/VK_F9      :f9
-             KeyEvent/VK_F10     :f10
-             KeyEvent/VK_F11     :f11
-             KeyEvent/VK_F12     :f12
-             KeyEvent/VK_F13     :f13
-             KeyEvent/VK_F14     :f14
-             KeyEvent/VK_F15     :f15
-             KeyEvent/VK_F16     :f16
-             KeyEvent/VK_F17     :f17
-             KeyEvent/VK_F18     :f18
-             KeyEvent/VK_F19     :f19
-             KeyEvent/VK_F20     :f20
-             KeyEvent/VK_F21     :f21
-             KeyEvent/VK_F22     :f22
-             KeyEvent/VK_F23     :f23
-             KeyEvent/VK_F24     :f24})
 
 #+clj
 (defn ^{:requires-bindings true
