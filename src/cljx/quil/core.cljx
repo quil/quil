@@ -1542,7 +1542,6 @@
                 #+clj PApplet/CLOSE
                 #+cljs 2)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "exit()"
@@ -1555,7 +1554,8 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (applet-close (current-applet)))
+  #+clj (applet-close (current-applet))
+  #+cljs (.exit (current-applet)))
 
 #+clj
 (defn
