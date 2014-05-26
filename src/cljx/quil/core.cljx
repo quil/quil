@@ -12,14 +12,46 @@
 
 #+cljs
 (ns quil.core
-  (:require [quil.sketch :as applet]
+  (:require clojure.string
+            [quil.sketch :as applet]
             [clojure.browser.dom  :as dom])
-  (:use-macros [quil.sketch :only [defsketch]])
-  (:use [quil.sketch :only [current-graphics]]
-        [quil.helpers.util :only [resolve-constant-key]]))
+  (:use-macros [quil.sketch :only [defsketch]]
+               [quil.helpers.tools :only [resolve-constant-key]])
+  (:use [quil.sketch :only [current-graphics]]))
+
+#+clj
+(def ^{:dynamic true
+       :private true}
+  *graphics* nil)
+
+#+clj
+(defn
+  ^{:requires-bindings true
+    :category "Environment"
+    :subcategory nil
+    :added "2.0"
+    :tag PGraphics}
+  current-graphics
+  "Graphics currently used for drawing. By default it is sketch graphics,
+  but if called inside with-graphics macro - graphics passed to the macro
+  is returned. This method should be used if you need to call some methods
+  that are not implemented by quil. Example (.beginDraw (current-graphics))."
+  []
+  (or *graphics* (.-g (current-applet))))
+
+#+cljs
+(defn current-applet []
+  (current-graphics))
 
 
 ;; -------------------- PConstants section -----------------------
+
+#+cljs
+(defn resolve-c-key [c-key]
+  (aget (current-applet)
+        (clojure.string/replace
+          (clojure.string/upper-case (name c-key))
+          #"-" "_")))
 
 #+clj
 (def ^{:private true}
@@ -36,27 +68,6 @@
                   :triangle-fan PApplet/TRIANGLE_FAN
                   :quads PApplet/QUADS
                   :quad-strip PApplet/QUAD_STRIP})
-
-#+cljs
-(def ^{:private true}
-  shape-modes {:point 2
-               :points 2
-               :line 4
-               :lines 4
-               :triangle 8
-               :triangles 9
-               :triangle-strip 10
-               :triangle-fan 11
-               :quad 16
-               :quads 16
-               :quad-strip 17
-               :polygon 20
-               :path 21
-               :rect 30
-               :ellipse 31
-               :arc 32
-               :sphere 40
-               :box 41})
 
 #+clj
 (def ^{:private true}
@@ -80,14 +91,6 @@
 (def ^{:private true}
   color-modes {:rgb (int 1)
                :hsb (int 3)})
-
-#+cljs
-(def ^{private true}
-  color-modes {:rgb (int 1)
-               :argb (int 2)
-               :hsb (int 3)
-               :alpha (int 4)
-               :cmyk (int 5)})
 
 #+clj
 (def ^{:private true}
@@ -230,13 +233,9 @@
              KeyEvent/VK_F22     :f22
              KeyEvent/VK_F23     :f23
              KeyEvent/VK_F24     :f24})
-             
+
 ;; ------------------ end PConstants section ---------------------
 
-
-#+cljs
-(defn current-applet []
-  (current-graphics))
 
 
 #+cljs
@@ -257,27 +256,6 @@
 #+cljs
 (defn size [width height]
   (.size (current-graphics) (int width) (int height)))
-
-
-#+clj
-(def ^{:dynamic true
-       :private true}
-  *graphics* nil)
-
-#+clj
-(defn
-  ^{:requires-bindings true
-    :category "Environment"
-    :subcategory nil
-    :added "2.0"
-    :tag PGraphics}
-  current-graphics
-  "Graphics currently used for drawing. By default it is sketch graphics,
-  but if called inside with-graphics macro - graphics passed to the macro
-  is returned. This method should be used if you need to call some methods
-  that are not implemented by quil. Example (.beginDraw (current-graphics))."
-  []
-  (or *graphics* (.-g (current-applet))))
 
 #+clj
 (defn
