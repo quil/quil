@@ -45,5 +45,4 @@
              :compiler
              {:output-to "resources/js/main.js"
               :optimizations :whitespace
-              :libs ["processing.js"]
               :pretty-print true}}]})
