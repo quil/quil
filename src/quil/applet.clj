@@ -37,7 +37,7 @@
   (set! (.finished applet) true))
 
 (defn- prepare-applet-frame
-  [applet title renderer]
+  [applet title]
   (let [m              (meta applet)
         keep-on-top?   (:keep-on-top m)
         frame          (.frame applet)
@@ -74,7 +74,7 @@
                      (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
                     "--hide-stop" title])))
    applet)
-  (prepare-applet-frame applet title renderer))
+  (prepare-applet-frame applet title))
 
 
 (def ^{:private true}
@@ -87,9 +87,12 @@
 
 (defn resolve-renderer
   "Converts keyword to Processing renderer string constant.
-  This string can be passed to native Processing methods."
+  This string can be passed to native Processing methods.
+  If renderer passed as String - do nothing and simply return it"
   [renderer]
-  (resolve-constant-key renderer renderer-modes))
+  (cond (keyword? renderer) (resolve-constant-key renderer renderer-modes)
+        (string? renderer) renderer
+        :default (throw (RuntimeException. ":renderer should be keyword or string"))))
 
 (defn- display-size
   "Returns size of screen. If there are 2 or more screens it probably return size of
@@ -167,7 +170,8 @@
                     sketchFullScreen sketchFullScreenParent
                     exit exitParent})
 
-(defn -exit [this] (applet-close this))
+(defn -exit [this]
+  (applet-close this))
 
 (defn -sketchFullScreen [this] (:present (meta this)))
 
@@ -267,7 +271,7 @@
 
    :size           - A vector of width and height for the sketch or :fullscreen.
                      Defaults to [500 300]. If you're using :fullscreen you may
-                     want to enable :present feature - :features [:present]
+                     want to enable present mode - :features [:present]
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
                      :opengl, :pdf). Defaults to :java2d. :dxf renderer
@@ -300,8 +304,8 @@
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
-                     Color is specified in hex format: #AABBCC.
-                     Example: :bgcolor #00FFFF (cyan background)
+                     Color is specified in hex format: #XXXXXX.
+                     Example: :bgcolor \"#00FFFF\" (cyan background)
 
    :setup          - a fn to be called once when setting the sketch up.
 

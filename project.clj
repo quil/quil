@@ -26,7 +26,8 @@
   :aot [quil.helpers.applet-listener quil.applet]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [garden "1.1.6"]]}}
+                                  [garden "1.1.6"]
+                                  [clj-http "0.9.1"]]}}
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 

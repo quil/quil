@@ -876,6 +876,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "blendColor()"
+    :processing-link nil
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -1274,6 +1275,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "fillColor()"
+    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#fillColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-fill
@@ -1284,6 +1286,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "strokeColor()"
+    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#strokeColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-stroke
@@ -1469,6 +1472,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "delay()"
+    :processing-link nil
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -1922,6 +1926,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "getHeight()"
+    :processing-link nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1936,6 +1941,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "hint()"
+    :processing-link nil
     :category "Rendering"
     :subcategory nil
     :added "1.0"}
@@ -3466,7 +3472,7 @@
 #+clj
 (defn
   ^{:requires-bindings false
-    :processing-name "screen.width"
+    :processing-name "displayWidth"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -3483,7 +3489,7 @@
 #+clj
 (defn
   ^{:requires-bindings false
-    :processing-name "screen.height"
+    :processing-name "displayHeight"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -4437,6 +4443,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "getWidth()"
+    :processing-link nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -4550,8 +4557,9 @@
   sketch
   "Create and start a new visualisation applet.
 
-   :size           - a vector of width and height for the sketch or :fullscreen.
-                     Defaults to [500 300].
+   :size           - A vector of width and height for the sketch or :fullscreen.
+                     Defaults to [500 300]. If you're using :fullscreen you may
+                     want to enable present mode - :features [:present].
 
    :renderer       - Specify the renderer type. One of :p2d, :p3d,
                      :java2d, :opengl, :pdf). Defaults to :java2d.
@@ -4573,22 +4581,28 @@
    :features       - A vector of keywords customizing sketch behaviour.
                      Supported features:
 
-                     :keep-on-top - Sketch window will always be above other windows.
-                                    Note: some platforms might not support
-                                    always-on-top windows.
+                     :keep-on-top - Sketch window will always be above other
+                                    windows. Note: some platforms might not
+                                    support always-on-top windows.
 
                      :exit-on-close - Shutdown JVM  when sketch is closed.
 
                      :resizable - Makes sketch resizable.
 
-                     :no-safe-draw - Do not catche and print exception in the draw fn.
-                                     By default all exceptions thrown inside draw function are
-                                     catched so sketch doesn't break if something goes wrong.
+                     :no-safe-draw - Do not catch and print exception in the
+                                     draw fn. By default all exceptions thrown
+                                     inside draw function are catched so sketch
+                                     doesn't break if something goes wrong.
 
-                     :present - Switch to present mode (fullscreen without borders, OS panels). You may
-                                want to use this feature together with :size :fullscreen.
+                     :present - Switch to present mode (fullscreen without
+                                borders, OS panels). You may want to use this
+                                feature together with :size :fullscreen.
 
                      Usage example: :features [:keep-on-top :present]
+
+   :bgcolor        - Sets background color for unused space in present mode.
+                     Color is specified in hex format: #XXXXXX.
+                     Example: :bgcolor \"#00FFFF\" (cyan background)
 
    :focus-gained   - Called when the sketch gains focus.
 
@@ -4615,7 +4629,7 @@
                      Takes 1 argument - wheel rotation, an int.
                      Negative values if the mouse wheel was rotated
                      up/away from the user, and positive values
-                     if the mouse wheel was rotated down/ towards the user
+                     if the mouse wheel was rotated down/towards the user
 
    :key-pressed    - Called every time any key is pressed.
 
