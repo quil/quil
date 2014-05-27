@@ -167,7 +167,7 @@
                     sketchFullScreen sketchFullScreenParent
                     exit exitParent})
 
-(defn -exit [this] (.dispose this))
+(defn -exit [this] (applet-close this))
 
 (defn -sketchFullScreen [this] (:present (meta this)))
 
