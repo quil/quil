@@ -254,8 +254,12 @@
 
 
 #+cljs
-(defn size [width height]
-  (.size (current-graphics) (int width) (int height)))
+(defn size 
+  ([width height]
+    (.size (current-graphics) (int width) (int height)))
+
+  ([width height mode]
+    (.size (current-graphics) (int width) (int height) (resolve-constant-key mode))))
 
 #+clj
 (defn

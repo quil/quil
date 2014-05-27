@@ -18,6 +18,9 @@
   (let [draw-fn         (or (:draw opts) no-fn)
         setup-fn        (or (:setup opts) no-fn)
 
+        sketch-size     (or (:size opts) [200 200])
+        renderer        (:renderer opts)
+
         key-pressed     (or (:key-pressed opts) no-fn)
         key-released    (or (:key-released opts) no-fn)
         key-typed       (or (:key-typed opts) no-fn)
@@ -32,8 +35,7 @@
     (fn [prc]
       (bind-handlers prc
                      .-setup  (do
-                                (when (:size opts)
-                                  (apply quil.core/size (:size opts)))
+                                (apply quil.core/size (concat sketch-size (if renderer [renderer] [])))
                                 (setup-fn)
                                 (when (= true (:no-loop opts))
                                   (quil.core/no-loop)))
