@@ -237,13 +237,6 @@
 
 ;; ------------------ end PConstants section ---------------------
 
-
-
-#+cljs
-(defn start-loop []
-  (.-loop (current-graphics)))
-
-
 #+cljs
 (defn get-key []
   (.-key (current-graphics)))
