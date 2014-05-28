@@ -190,13 +190,14 @@
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
-#+clj (def HALF-PI    (/ PI (float 2.0)))
-#+clj (def THIRD-PI   (/ PI (float 3.0)))
-#+clj (def QUARTER-PI (/ PI (float 4.0)))
-#+clj (def TWO-PI     (* PI (float 2.0)))
+#+cljs (def PI  (.-PI js/Math))
+(def HALF-PI    (/ PI (float 2.0)))
+(def THIRD-PI   (/ PI (float 3.0)))
+(def QUARTER-PI (/ PI (float 4.0)))
+(def TWO-PI     (* PI (float 2.0)))
 
-#+clj (def DEG-TO-RAD (/ PI (float 180.0)))
-#+clj (def RAD-TO-DEG (/ (float 180.0) PI))
+(def DEG-TO-RAD (/ PI (float 180.0)))
+(def RAD-TO-DEG (/ (float 180.0) PI))
 
 #+clj
 (def  ^{:private true}
