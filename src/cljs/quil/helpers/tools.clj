@@ -2,7 +2,7 @@
   (:require [clojure.string :as string]))
 
 
-(defn bind-handler [prc processing-name handler]
+(defn bind-handler [prc [processing-name handler]]
   `(set!
     (~processing-name ~prc)
     (fn []
@@ -11,9 +11,7 @@
 
 
 (defmacro bind-handlers [prc & opts]
-  (map
-   #(apply bind-handler (concat (list prc) %))
-   (partition 2 opts)))
+  (map #(bind-handler prc %) (partition 2 opts)))
 
 
 (defmacro with-shape [mode & body]
