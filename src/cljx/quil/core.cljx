@@ -235,6 +235,17 @@
              KeyEvent/VK_F23     :f23
              KeyEvent/VK_F24     :f24})
 
+#+clj
+(def ^{:private true}
+  filter-modes {:threshold PConstants/THRESHOLD
+                :gray PConstants/GRAY
+                :invert PConstants/INVERT
+                :posterize PConstants/POSTERIZE
+                :blur PConstants/BLUR
+                :opaque PConstants/OPAQUE
+                :erode PConstants/ERODE
+                :dilate PConstants/DILATE})
+
 ;; ------------------ end PConstants section ---------------------
 
 #+cljs
@@ -447,6 +458,7 @@
   parameters. This is very slow because it will try to calculate the
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
+  #+clj
   ([n00 n01 n02 n10 n11 n12]
      (.applyMatrix (current-graphics)
                    (float n00) (float n01) (float n02)
@@ -1719,21 +1731,16 @@
     :added "1.0"}
   fill
   "Sets the color used to fill shapes."
-  #+clj ([rgb] (if (int-like? rgb) (fill-int rgb) (fill-float rgb)))
-  #+clj ([rgb alpha] (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha)))
+  ([rgb] 
+    #+clj (if (int-like? rgb) (fill-int rgb) (fill-float rgb))
+    #+cljs (fill-float rgb))
+
+  ([rgb alpha] 
+    #+clj (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha))
+    #+cljs (fill-float rgb alpha))
+
   ([r g b] (fill-float r g b))
   ([r g b a] (fill-float r g b a)))
-
-#+clj
-(def ^{:private true}
-  filter-modes {:threshold PConstants/THRESHOLD
-                :gray PConstants/GRAY
-                :invert PConstants/INVERT
-                :posterize PConstants/POSTERIZE
-                :blur PConstants/BLUR
-                :opaque PConstants/OPAQUE
-                :erode PConstants/ERODE
-                :dilate PConstants/DILATE})
 
 #+clj
 (defn
@@ -3903,8 +3910,14 @@
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
   each value in the range from 0 to 255)."
-  #+clj ([rgb] (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb)))
-  #+clj ([rgb alpha] (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha)))
+  ([rgb] 
+    #+clj (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb))
+    #+cljs (stroke-float rgb))
+
+  ([rgb alpha] 
+    #+clj (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha))
+    #+cljs (stroke-float rgb alpha))
+
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
 
