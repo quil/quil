@@ -396,7 +396,6 @@
   [rgb]
   (.ambient (current-graphics) (int rgb)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "ambient()"
@@ -411,7 +410,9 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([rgb] (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb)))
+  ([rgb] 
+    #+clj (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb))
+    #+cljs (ambient-float rgb))
   ([x y z] (ambient-float x y z)))
 
 (defn
@@ -1579,7 +1580,7 @@
   args to ints"
   [int-val] (.emissive (current-graphics) (int int-val)))
 
-#+clj
+
 (defn
   ^{:requires-bindings true
     :processing-name "emissive()"
@@ -1593,7 +1594,9 @@
 
   If passed one arg - it is assumed to be an int (i.e. a color),
   multiple args are converted to floats."
-  ([c] (if (int-like? c) (emissive-int c) (emissive-float c)))
+  ([c] 
+    #+clj (if (int-like? c) (emissive-int c) (emissive-float c))
+    #+cljs (emissive-float c))
   ([r g b] (emissive-float r g b)))
 
 (defn
