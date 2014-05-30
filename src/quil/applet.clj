@@ -401,13 +401,6 @@
       (applet-run title renderer)
       (attach-applet-listeners))))
 
-(def ^{:private true}
-  fn-applet-params
-  #{:setup :draw :focus-gained :focus-lost :mouse-entered
-    :mouse-exited :mouse-pressed :mouse-released :mouse-clicked
-    :mouse-moved :mouse-dragged :mouse-wheel :key-pressed
-    :key-typed :on-close})
-
 (defmacro defapplet
   "Define and start an applet and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
@@ -415,11 +408,11 @@
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See applet for the available options."
   [app-name & opts]
-  (let [fn-param? #(contains? fn-applet-params %)
-        opts  (mapcat (fn [[k v]]
-                        [k (if (and (symbol? v)
-                                    (fn-param? k))
-                             `(var ~v)
-                             v)])
-                      (partition 2 opts))]
-    `(def ~app-name (applet ~@opts))))
+  (letfn [(wrap [v]
+            (if (symbol? v)
+              ; It is possible that symbol points to non-fn var.
+              ; For example it points to [300 300] which defines size
+              ; In this case we should not wrap it with (var ...)
+              `(if (fn? ~v) (var ~v) ~v)
+              v))]
+    `(def ~app-name (applet ~@(map wrap opts)))))
