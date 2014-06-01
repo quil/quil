@@ -10,4 +10,6 @@
   `(do
      (defn ^:export ~app-name []
        (quil.sketch/make-processing ~@options))
-     (quil.sketch/add-sketch-to-init-list ~app-name)))
+
+     ~(when (not (false? (:start options)))
+     	`(quil.sketch/add-sketch-to-init-list ~app-name))))
