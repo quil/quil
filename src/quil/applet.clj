@@ -347,12 +347,20 @@
    :key-typed      - Called once every time non-modifier keys are
                      pressed.
 
-   :on-close       - Called once, when sketch is closed"
+   :on-close       - Called once, when sketch is closed
+
+   :middleware     - vector of middleware to be applied to the sketch.
+                     Middleware will be applied in the same order as in comp
+                     function: [f g] will be applied as (f (g options))."
   [& opts]
   (check-for-removed-opts (apply hash-map opts))
-  (let [options      (merge {:size [500 300]
-                             :target :frame}
-                            (apply hash-map opts))
+  (let [options (apply hash-map opts)
+
+        options     (->> (:middleware options [])
+                         (reverse)
+                         (reduce #(%2 %1) options)
+                         (merge {:size [500 300]
+                                 :target :frame}))
 
         features     (let [user-features (set (:features options))]
                        (reduce #(assoc %1 %2 (contains? user-features %2)) {}
