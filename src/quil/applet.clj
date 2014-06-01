@@ -5,7 +5,8 @@
            [java.awt Dimension]
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
-            [clojure.stacktrace :refer [print-cause-trace]]
+            [quil.middleware.deprecated-options :refer [deprecated-options]]
+            [quil.middleware.safe-fns :refer [safe-fns]]
             [clojure.string :as string]))
 
 (defonce untitled-applet-id* (atom 0))
@@ -253,18 +254,7 @@
 
 (def ^{:private true}
   supported-features
-  #{:resizable :exit-on-close :keep-on-top :present :no-safe-draw})
-
-(defn- check-for-removed-opts
-  "Checks if opts map contains options which were removed in Quil 2.0.
-  Prints messages how it could be potentially fixed."
-  [opts]
-  (let [messages {:decor "Try :features [:present] for similar effect"
-                  :target "Use :features [:keep-on-top] instead."
-                  :safe-draw-fn "Use :features [:no-safe-draw] instead."}]
-    (doseq [key (keys opts)]
-      (when-let [text (messages key)]
-        (println key "option was removed in Quil 2.0. " text)))))
+  #{:resizable :exit-on-close :keep-on-top :present :no-safe-fns})
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -294,9 +284,14 @@
 
                      :resizable - Makes sketch resizable.
 
-                     :no-safe-draw - Do not catch and print exception in the draw fn.
-                                     By default all exceptions thrown inside draw function are catched
-                                     so sketch doesn't break if something goes wrong.
+                     :no-safe-fns - Do not catch and print exceptions thrown inside
+                                    functions provided to sketch (like draw, mouse-click,
+                                    key-pressed and other). By default all exceptions
+                                    thrown inside these functions are catched. This
+                                    prevents sketch from breaking when bad function
+                                    was provided and allows user to fix it and reload it
+                                    on fly. You can disable this behaviour by enabling
+                                    :no-safe-fns feature.
 
                      :present - Switch to present mode (fullscreen without borders, OS panels). You may
                                 want to use this feature together with :size :fullscreen.
@@ -353,11 +348,11 @@
                      Middleware will be applied in the same order as in comp
                      function: [f g] will be applied as (f (g options))."
   [& opts]
-  (check-for-removed-opts (apply hash-map opts))
   (let [options (apply hash-map opts)
 
         options     (->> (:middleware options [])
                          (reverse)
+                         (cons deprecated-options)
                          (reduce #(%2 %1) options)
                          (merge {:size [500 300]
                                  :target :frame}))
@@ -365,6 +360,10 @@
         features     (let [user-features (set (:features options))]
                        (reduce #(assoc %1 %2 (contains? user-features %2)) {}
                                supported-features))
+
+        options     (if (:no-safe-fns features)
+                      options
+                      (safe-fns options))
 
         options           (merge (dissoc options :features)
                                  features)
@@ -374,14 +373,6 @@
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) no-fn)
         setup-fn          (or (:setup options) no-fn)
-        safe-draw-fn      (fn []
-                            (try
-                              (draw-fn)
-                              (catch Exception e
-                                (println "Exception in Quil draw-fn for sketch" title ": " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
-                                (Thread/sleep 1000))))
-        draw-fn           (if (:no-safe-draw options) draw-fn safe-draw-fn)
-
         on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
                             (if (:exit-on-close options)
                               (fn []
