@@ -7,5 +7,7 @@
 
 (defmacro defsketch
   [app-name & options]
-  `(defn ^:export ~app-name []
-     (quil.sketch/make-processing ~@options)))
+  `(do
+     (defn ^:export ~app-name []
+       (quil.sketch/make-processing ~@options))
+     (quil.sketch/add-sketch-to-init-list ~app-name)))
