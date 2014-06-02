@@ -47,7 +47,8 @@
 ;; -------------------- PConstants section -----------------------
 
 #+cljs
-(defn resolve-c-key [c-key]
+(defn ^{:private true} 
+  resolve-c-key [c-key]
   (aget (current-applet)
         (clojure.string/replace
           (clojure.string/upper-case (name c-key))
