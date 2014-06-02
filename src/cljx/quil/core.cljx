@@ -257,6 +257,8 @@
     :subcategory "Keyboard"
     :added "1.0"}
   get-key []
+  "The system variable key always contains the value of the most recently pressed key on the keyboard. 
+   For detecting the arrow keys, the keyCode variable is set to either UP, DOWN, LEFT, or RIGHT."
   (.-key (current-graphics)))
 
 
@@ -268,16 +270,22 @@
     :subcategory nil
     :added "1.0"}
   get-sketch-by-id [id]
+  "Returns sketch object by id of canvas element of sketch."
   (.getInstanceById js/Processing id))
 
 
 #+cljs
-(defn size 
+(defn 
   ^{:requires-bindings true
     :processing-name "size()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
+  size
+  "Defines the dimension of the display window in units of pixels. 
+  The size() function must be the first line in setup(). 
+  If size() is not called, the default size of the window is 100x100 pixels. 
+  The system variables width and height are set by the parameters passed to the size() function."
   ([width height]
     (.size (current-graphics) (int width) (int height)))
 
