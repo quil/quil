@@ -250,17 +250,34 @@
 ;; ------------------ end PConstants section ---------------------
 
 #+cljs
-(defn get-key []
+(defn 
+  ^{:requires-bindings true
+    :processing-name "key"
+    :category "Input"
+    :subcategory "Keyboard"
+    :added "1.0"}
+  get-key []
   (.-key (current-graphics)))
 
 
 #+cljs
-(defn get-sketch-by-id [id]
+(defn 
+  ^{:requires-bindings true
+    :processing-name "getSketchById()"
+    :category nil
+    :subcategory nil
+    :added "1.0"}
+  get-sketch-by-id [id]
   (.getInstanceById js/Processing id))
 
 
 #+cljs
 (defn size 
+  ^{:requires-bindings true
+    :processing-name "size()"
+    :category "Structure"
+    :subcategory nil
+    :added "1.0"}
   ([width height]
     (.size (current-graphics) (int width) (int height)))
 
