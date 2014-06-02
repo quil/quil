@@ -11,8 +11,15 @@
                  :exception-in-var #'throw-exc
                  :keyword :hello
                  :string "world"
-                 :vector [1 2 #(throw (ex-info "Bla-bla" {}))]}
+                 :vector [1 2 #(throw (ex-info "Bla-bla" {}))]
+
+                 ; mouse-wheel is a special case as it takes single
+                 ; argument while all other fns don'ttake any arguments
+                 :mouse-wheel (fn [value] (throw (ex-info "Test" {})))}
         safe-options (safe-fns options)]
-    (doseq [fn (vals (safe-fns options))
+    (doseq [[name fn] (safe-fns options)
             :when (or (var? fn) (fn? fn))]
-      (with-out-str (fn)))))
+      (with-out-str
+        (if (= name :mouse-wheel)
+          (fn 123)
+          (fn))))))
