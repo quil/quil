@@ -258,16 +258,7 @@
 
 #+cljs
 (defn 
-  ^{:requires-bindings true
-    :processing-name "size()"
-    :category "Structure"
-    :subcategory nil
-    :added "1.0"}
   size
-  "Defines the dimension of the display window in units of pixels. 
-  The size() function must be the first line in setup(). 
-  If size() is not called, the default size of the window is 100x100 pixels. 
-  The system variables width and height are set by the parameters passed to the size() function."
   ([width height]
     (.size (current-graphics) (int width) (int height)))
 
