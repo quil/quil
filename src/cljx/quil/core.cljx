@@ -4550,7 +4550,6 @@
      ~@body
      (pop-matrix)))
 
-#+clj
 (defmacro
   ^{:requires-bindings true
     :processing-name nil
