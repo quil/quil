@@ -8,10 +8,10 @@
 
 
 (def ^:dynamic
-  *surface* nil)
+  *applet* nil)
 
 
-(defn current-graphics [] *surface*)
+(defn current-applet [] *applet*)
 
 
 (defn sketch [opts]

@@ -17,14 +17,12 @@
             [clojure.browser.dom  :as dom])
   (:use-macros [quil.sketch :only [defsketch]]
                [quil.helpers.tools :only [resolve-constant-key]])
-  (:use [quil.sketch :only [current-graphics]]))
+  (:use [quil.sketch :only [current-applet]]))
 
-#+clj
 (def ^{:dynamic true
        :private true}
   *graphics* nil)
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "Environment"
@@ -37,12 +35,9 @@
   is returned. This method should be used if you need to call some methods
   that are not implemented by quil. Example (.beginDraw (current-graphics))."
   []
-  (or *graphics* (.-g (current-applet))))
-
-#+cljs
-(defn current-applet []
-  (current-graphics))
-
+  (or *graphics* 
+    #+clj (.-g (current-applet))
+    #+cljs (current-applet)))
 
 ;; -------------------- PConstants section -----------------------
 

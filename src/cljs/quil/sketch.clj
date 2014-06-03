@@ -1,7 +1,7 @@
 (ns quil.sketch)
 
 (defmacro with-sketch [applet & body]
-  `(binding [quil.sketch/*surface* ~applet]
+  `(binding [quil.sketch/*applet* ~applet]
      ~@body))
 
 
