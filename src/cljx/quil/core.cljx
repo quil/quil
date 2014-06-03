@@ -247,19 +247,6 @@
 #+cljs
 (defn 
   ^{:requires-bindings true
-    :processing-name "key"
-    :category "Input"
-    :subcategory "Keyboard"
-    :added "1.0"}
-  get-key []
-  "The system variable key always contains the value of the most recently pressed key on the keyboard. 
-   For detecting the arrow keys, the keyCode variable is set to either UP, DOWN, LEFT, or RIGHT."
-  (.-key (current-graphics)))
-
-
-#+cljs
-(defn 
-  ^{:requires-bindings true
     :processing-name "getSketchById()"
     :category nil
     :subcategory nil
