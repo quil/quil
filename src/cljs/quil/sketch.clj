@@ -7,7 +7,7 @@
 
 (def ^{:private true} 
 	supported-features
-	#{:no-start :no-loop})
+	#{:no-start})
 
 
 (defmacro defsketch

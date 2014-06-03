@@ -37,8 +37,7 @@
                      .-setup  (do
                                 (apply quil.core/size (concat sketch-size (if renderer [renderer] [])))
                                 (setup-fn)
-                                (when (= true (:no-loop opts))
-                                  (quil.core/no-loop)))
+                                )
                      .-draw draw-fn
 
                      .-keyPressed key-pressed

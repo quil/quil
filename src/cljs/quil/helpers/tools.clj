@@ -11,7 +11,7 @@
 
 
 (defmacro bind-handlers [prc & opts]
-  (map #(bind-handler prc %) (partition 2 opts)))
+  `(do ~@(map #(bind-handler prc %) (partition 2 opts))))
 
 
 (defmacro with-shape [mode & body]
