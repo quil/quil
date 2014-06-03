@@ -1,6 +1,7 @@
 (ns ^:manual
-    manual
+  manual
   (:require [quil.core :refer :all]
+            [quil.middleware.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
 
 (defn draw-text-fn [& txt]
@@ -83,10 +84,54 @@
      :features [:exit-on-close])
     @lock))
 
+(defn fun-mode []
+  (letfn [(setup []
+            (frame-rate 30)
+            (fill 0)
+            {:round 0})
+          (update [state]
+            (update-in state [:round] inc))
+          (single-fn [name]
+            (fn [state]
+              (background 255)
+              (text (str name) 50 20)
+              (text (pr-str state) 50 50)
+              state))
+          (double-fn [name]
+            (fn [state event]
+              (background 255)
+              (text (str name) 50 20)
+              (text (pr-str event) 50 35)
+              (text (pr-str state) 50 50)
+              state))]
+    (let [lock (promise)]
+     (sketch
+      :title "Functional mode"
+      :size [500 500]
+      :setup setup
+      :update update
+      :focus-gained (single-fn :focus-gained)
+      :focus-lost (single-fn :focus-lost)
+      :mouse-entered (double-fn :mouse-entered)
+      :mouse-exited (double-fn :mouse-exited)
+      :mouse-pressed (double-fn :mouse-pressed)
+      :mouse-released (double-fn :mouse-released)
+      :mouse-clicked (double-fn :mouse-clicked)
+      :mouse-moved (double-fn :mouse-moved)
+      :mouse-dragged (double-fn :mouse-dragged)
+      :mouse-wheel (double-fn :mouse-wheel)
+      :key-pressed (double-fn :key-pressed)
+      :key-released (single-fn :key-released)
+      :key-typed (double-fn :key-typed)
+      :on-close #(deliver lock true)
+      :middleware [fm/fun-mode])
+     @lock)))
+
 (deftest run-all
   (doseq [fn [resizable-and-keep-on-top
               fullscreen present-and-bgcolor
               no-loop-with-start-loop
               redraw-on-key
+              fun-mode
               on-close-and-exit-on-close]]
     (fn)))
