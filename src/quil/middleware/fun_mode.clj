@@ -17,7 +17,9 @@
     (-> options
         (dissoc :update)
         (assoc :draw #(-> (state-atom)
-                          (swap! update)
+                          (swap! (if (= (q/frame-count) 1)
+                                   identity
+                                   update))
                           (draw))))))
 
 (defn- mouse-event []
