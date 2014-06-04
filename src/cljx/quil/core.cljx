@@ -4,10 +4,11 @@
   (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
            [processing.opengl PShader]
            [java.awt.event KeyEvent])
-  (:require [clojure.set]
+  (:require quil.sketch
+            [clojure.set]
             [quil.helpers.docs :as docs]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
-                               absolute-path]]
+                               absolute-path clj-compilation?]]
             [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
 #+cljs
@@ -4660,8 +4661,10 @@
   symbols, it wraps them in a call to var to ensure they aren't
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See sketch for the available options."
-  [app-name & opts]
-  `(defapplet ~app-name ~@opts))
+  [app-name & options]
+  (if (clj-compilation?) 
+    `(defapplet ~app-name ~@options)
+    `(quil.sketch/defsketch ~app-name ~@options)))
 
 #+clj
 (defn ^{:requires-bindings false

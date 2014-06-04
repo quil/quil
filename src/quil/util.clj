@@ -58,3 +58,6 @@
                   pad (gen-padding diff)]
               (println k pad "- " v)))
           definitions))))
+
+
+(defn clj-compilation? [] (nil? cljs.env/*compiler*))
