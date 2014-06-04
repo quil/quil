@@ -76,22 +76,20 @@
 
 #+clj
 (defn prepare-quil-clj-constants [constants]
-  (apply hash-map
-         (apply concat
-                (map 
-                 #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
-                 constants))))
+  (into {}
+        (map 
+         #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
+         constants)))
 
 #+clj
 (defn make-quil-constant-map [const-map-name const-map]
   `(def ^{:private true} 
-     ~(symbol (name const-map-name)) 
+     ~const-map-name
      ~(prepare-quil-clj-constants const-map)))
 
 
 (defmacro generate-quil-constants [& opts]
-  (let [options (apply hash-map opts)]
-    `(do
-       ~@(map 
-          #(make-quil-constant-map % (get options %)) 
-          (keys options)))))
+  `(do
+     ~@(map 
+        #(make-quil-constant-map (first %) (second %)) 
+        (partition 2 opts))))

@@ -51,14 +51,14 @@
 
 #+clj
 (generate-quil-constants
- :arc-modes (:open :chord :pie)
- :shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
- :blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
+ arc-modes (:open :chord :pie)
+ shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
+ blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
                                :screen :overlay :replace :hard-light :soft-light :dodge :burn)
- :color-modes (:rgb :hsb)
- :image-formats (:rgb :argb :alpha)
- :ellipse-modes (:center :radius :corner :corners)
- :hint-options (:enable-native-fonts :disable-native-fonts 
+ color-modes (:rgb :hsb)
+ image-formats (:rgb :argb :alpha)
+ ellipse-modes (:center :radius :corner :corners)
+ hint-options (:enable-native-fonts :disable-native-fonts 
                             :enable-depth-test :disable-depth-test
                             :enable-depth-sort :disable-depth-sort
                             :enable-depth-mask :disable-depth-mask
@@ -68,18 +68,17 @@
                             :enable-stroke-perspective :disable-stroke-perspective
                             :enable-stroke-pure :disable-stroke-pure
                             :enable-texture-mipmaps :disable-texture-mipmaps)
- :image-modes (:corner :corners :center)
- :rect-modes (:corner :corners :center :radius)
- :p-shape-modes (:corner :corners :center)
- :stroke-cap-modes (:square :round :project :model)
- :stroke-join-modes (:miter :bevel :round)
- :horizontal-alignment-modes (:left :center :right)
- :vertical-alignment-modes (:top :bottom :center :baseline)
- :text-modes (:model :shape)
- :texture-modes (:image :normal)
- :texture-wrap-modes (:clamp :repeat)
- :filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
- )
+ image-modes (:corner :corners :center)
+ rect-modes (:corner :corners :center :radius)
+ p-shape-modes (:corner :corners :center)
+ stroke-cap-modes (:square :round :project :model)
+ stroke-join-modes (:miter :bevel :round)
+ horizontal-alignment-modes (:left :center :right)
+ vertical-alignment-modes (:top :bottom :center :baseline)
+ text-modes (:model :shape)
+ texture-modes (:image :normal)
+ texture-wrap-modes (:clamp :repeat)
+ filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate))
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
