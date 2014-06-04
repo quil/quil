@@ -42,148 +42,70 @@
 
 ;; -------------------- PConstants section -----------------------
 
+(defn prepare-quil-name [const-keyword]
+  (clojure.string/replace
+   (clojure.string/upper-case (name const-keyword))
+   #"-" "_"))
+
 #+cljs
 (defn ^{:private true} 
   resolve-c-key [c-key]
   (aget (current-applet)
-        (clojure.string/replace
-          (clojure.string/upper-case (name c-key))
-          #"-" "_")))
+        (prepare-quil-name c-key)))
 
 #+clj
-(def ^{:private true}
-  arc-modes {:open PConstants/OPEN
-             :chord PConstants/CHORD
-             :pie PConstants/PIE})
+(defn prepare-quil-clj-constants [prefix constants]
+  (apply hash-map
+         (apply concat
+                (map 
+                 #(vector % (symbol (str prefix "/" (prepare-quil-name %))))
+                 constants))))
 
 #+clj
-(def ^{:private true}
-     shape-modes {:points PApplet/POINTS
-                  :lines PApplet/LINES
-                  :triangles PApplet/TRIANGLES
-                  :triangle-strip PApplet/TRIANGLE_STRIP
-                  :triangle-fan PApplet/TRIANGLE_FAN
-                  :quads PApplet/QUADS
-                  :quad-strip PApplet/QUAD_STRIP})
+(defn make-quil-constant-map [const-map-name const-map]
+  `(def ^{:private true} 
+     ~(symbol (name const-map-name)) 
+     ~(prepare-quil-clj-constants (nth const-map 0) (nth const-map 1))))
+
+
+(defmacro generate-quil-constants [& opts]
+  (let [options (apply hash-map opts)]
+    `(do
+       ~@(map 
+          #(make-quil-constant-map % (get options %)) 
+          (keys options)))))
+
 
 #+clj
-(def ^{:private true}
-  blend-modes {:blend PApplet/BLEND
-               :add PApplet/ADD
-               :subtract PApplet/SUBTRACT
-               :darkest PApplet/DARKEST
-               :lightest PApplet/LIGHTEST
-               :difference PApplet/DIFFERENCE
-               :exclusion PApplet/EXCLUSION
-               :multiply PApplet/MULTIPLY
-               :screen PApplet/SCREEN
-               :overlay PApplet/OVERLAY
-               :replace PApplet/REPLACE
-               :hard-light PApplet/HARD_LIGHT
-               :soft-light PApplet/SOFT_LIGHT
-               :dodge PApplet/DODGE
-               :burn PApplet/BURN})
-
-#+clj
-(def ^{:private true}
-  color-modes {:rgb (int 1)
-               :hsb (int 3)})
-
-#+clj
-(def ^{:private true}
-  image-formats {:rgb PApplet/RGB
-                :argb PApplet/ARGB
-                :alpha PApplet/ALPHA})
-
-#+clj
-(def ^{:private true}
-     ellipse-modes   {:center PApplet/CENTER
-                      :radius PApplet/RADIUS
-                      :corner PApplet/CORNER
-                      :corners PApplet/CORNERS})
-
-#+clj
-(def ^{:private true}
-  hint-options {:enable-native-fonts PConstants/ENABLE_NATIVE_FONTS
-                :disable-native-fonts PConstants/DISABLE_NATIVE_FONTS
-                :enable-depth-test PConstants/ENABLE_DEPTH_TEST
-                :disable-depth-test PConstants/DISABLE_DEPTH_TEST
-                :enable-depth-sort PConstants/ENABLE_DEPTH_SORT
-                :disable-depth-sort PConstants/DISABLE_DEPTH_SORT
-                :enable-depth-mask PConstants/ENABLE_DEPTH_MASK
-                :disable-depth-mask PConstants/DISABLE_DEPTH_MASK
-                :disable-opengl-errors PConstants/DISABLE_OPENGL_ERRORS
-                :enable-opengl-errors PConstants/ENABLE_OPENGL_ERRORS
-                :enable-optimized-stroke PConstants/ENABLE_OPTIMIZED_STROKE
-                :disable-optimized-stroke PConstants/DISABLE_OPTIMIZED_STROKE
-                :enable-retina-pixels PConstants/ENABLE_RETINA_PIXELS
-                :disable-retina-pixels PConstants/DISABLE_RETINA_PIXELS
-                :enable-stroke-perspective PConstants/ENABLE_STROKE_PERSPECTIVE
-                :disable-stroke-perspective PConstants/DISABLE_STROKE_PERSPECTIVE
-                :enable-stroke-pure PConstants/ENABLE_STROKE_PURE
-                :disable-stroke-pure PConstants/DISABLE_STROKE_PURE
-                :enable-texture-mipmaps PConstants/ENABLE_TEXTURE_MIPMAPS
-                :disable-texture-mipmaps PConstants/DISABLE_TEXTURE_MIPMAPS
-                })
-
-#+clj
-(def ^{:private true}
-  image-modes {:corner PApplet/CORNER
-               :corners PApplet/CORNERS
-               :center PApplet/CENTER})
-
-#+clj
-(def ^{:private true}
-  rect-modes {:corner PApplet/CORNER
-              :corners PApplet/CORNERS
-              :center PApplet/CENTER
-              :radius PApplet/RADIUS})
-
-#+clj
-(def ^{:private true}
-  p-shape-modes {:corner PApplet/CORNER
-                 :corners PApplet/CORNERS
-                 :center PApplet/CENTER})
-
-#+clj
-(def ^{:private true}
-  stroke-cap-modes {:square PApplet/SQUARE
-                    :round PApplet/ROUND
-                    :project PApplet/PROJECT
-                    :model PApplet/MODEL})
-
-#+clj
-(def ^{:private true}
-  stroke-join-modes {:miter PConstants/MITER
-                     :bevel PConstants/BEVEL
-                     :round PConstants/ROUND})
-
-#+clj
-(def ^{:private true}
-  horizontal-alignment-modes {:left PApplet/LEFT
-                              :center PApplet/CENTER
-                              :right PApplet/RIGHT})
-#+clj
-(def ^{:private true}
-  vertical-alignment-modes {:top PApplet/TOP
-                            :bottom PApplet/BOTTOM
-                            :center PApplet/CENTER
-                            :baseline PApplet/BASELINE})
-
-#+clj
-(def ^{:private true}
-  text-modes {:model PConstants/MODEL
-              :shape PConstants/SHAPE})
-
-#+clj
-(def ^{:private true}
-  texture-modes {:image PApplet/IMAGE
-                 :normal PApplet/NORMAL})
-
-#+clj
-(def ^{:private true}
-  texture-wrap-modes {:clamp PApplet/CLAMP
-                      :repeat PApplet/REPEAT})
+(generate-quil-constants
+ :arc-modes [PConstants (:open :chord :pie)]
+ :shape-modes [PConstants (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)]
+ :blend-modes [PConstants (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
+                               :screen :overlay :replace :hard-light :soft-light :dodge :burn)]
+ :color-modes [PConstants (:rgb :hsb)] 
+ :image-formats [PConstants (:rgb :argb :alpha)]
+ :ellipse-modes [PConstants (:center :radius :corner :corners)]
+ :hint-options [PConstants (:enable-native-fonts :disable-native-fonts 
+                            :enable-depth-test :disable-depth-test
+                            :enable-depth-sort :disable-depth-sort
+                            :enable-depth-mask :disable-depth-mask
+                            :enable-opengl-errors :disable-opengl-errors
+                            :enable-optimized-stroke :disable-optimized-stroke
+                            :enable-retina-pixels :disable-retina-pixels
+                            :enable-stroke-perspective :disable-stroke-perspective
+                            :enable-stroke-pure :disable-stroke-pure
+                            :enable-texture-mipmaps :disable-texture-mipmaps)]
+ :image-modes [PConstants (:corner :corners :center)]
+ :rect-modes [PConstants (:corner :corners :center :radius)]
+ :p-shape-modes [PConstants (:corner :corners :center)]
+ :stroke-cap-modes [PConstants (:square :round :project :model)]
+ :stroke-join-modes [PConstants (:miter :bevel :round)]
+ :horizontal-alignment-modes [PConstants (:left :center :right)]
+ :vertical-alignment-modes [PConstants (:top :bottom :center :baseline)]
+ :text-modes [PConstants (:model :shape)]
+ :texture-modes [PConstants (:image :normal)]
+ :texture-wrap-modes [PConstants (:clamp :repeat)]
+ :filter-modes [PConstants (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)])
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
@@ -231,17 +153,6 @@
              KeyEvent/VK_F22     :f22
              KeyEvent/VK_F23     :f23
              KeyEvent/VK_F24     :f24})
-
-#+clj
-(def ^{:private true}
-  filter-modes {:threshold PConstants/THRESHOLD
-                :gray PConstants/GRAY
-                :invert PConstants/INVERT
-                :posterize PConstants/POSTERIZE
-                :blur PConstants/BLUR
-                :opaque PConstants/OPAQUE
-                :erode PConstants/ERODE
-                :dilate PConstants/DILATE})
 
 ;; ------------------ end PConstants section ---------------------
 
