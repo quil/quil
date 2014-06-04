@@ -15,6 +15,12 @@
 (defn ^PApplet current-applet []
   *applet*)
 
+(defmacro with-applet
+  "Binds dynamic var to current applet."
+  [applet & body]
+  `(binding [*applet* ~applet]
+     ~@body))
+
 (defn target-frame-rate []
   (:target-frame-rate (meta (current-applet))))
 
@@ -23,8 +29,9 @@
   It means we can dispose frame, call on-close function and perform other
   clean ups."
   [applet]
-  (.dispose (. applet frame))
-  ((:on-close (meta applet))))
+  (with-applet applet
+    ((:on-close (meta applet))))
+  (-> applet .frame .dispose))
 
 (defn applet-state
   "Fetch an element of state from within the applet"
@@ -126,11 +133,6 @@
 (defn- parent-method [method]
   "Appends string 'Parent' to given symbol"
   (symbol (str method "Parent")))
-
-(defmacro with-applet [applet & body]
-  "Binds dynamic var to current applet."
-  `(binding [*applet* ~applet]
-     ~@body))
 
 (def listeners [:key-pressed
                 :key-released

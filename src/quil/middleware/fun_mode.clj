@@ -71,5 +71,6 @@
                      [:mouse-dragged (fn [] {:x (q/mouse-x) :y (q/mouse-y)
                                              :p-x (q/pmouse-x) :p-y (q/pmouse-y)
                                              :button (q/mouse-button)})]
-                     [:key-pressed key-event] :key-released [:key-typed key-event])
+                     [:key-pressed key-event] :key-released [:key-typed key-event]
+                     :on-close)
       wrap-mouse-wheel))
