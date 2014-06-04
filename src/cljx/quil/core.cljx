@@ -8,7 +8,7 @@
             [clojure.set]
             [quil.helpers.docs :as docs]
             [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
-                               absolute-path clj-compilation?]]
+                               absolute-path clj-compilation? generate-quil-constants]]
             [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
 #+cljs
@@ -18,7 +18,8 @@
             [clojure.browser.dom  :as dom])
   (:use-macros [quil.sketch :only [defsketch]]
                [quil.helpers.tools :only [resolve-constant-key]])
-  (:use [quil.sketch :only [current-applet]]))
+  (:use [quil.sketch :only [current-applet]]
+        [quil.util :only [prepare-quil-name]]))
 
 (def ^{:dynamic true
        :private true}
@@ -42,39 +43,11 @@
 
 ;; -------------------- PConstants section -----------------------
 
-(defn prepare-quil-name [const-keyword]
-  (clojure.string/replace
-   (clojure.string/upper-case (name const-keyword))
-   #"-" "_"))
-
 #+cljs
 (defn ^{:private true} 
   resolve-c-key [c-key]
   (aget (current-applet)
         (prepare-quil-name c-key)))
-
-#+clj
-(defn prepare-quil-clj-constants [prefix constants]
-  (apply hash-map
-         (apply concat
-                (map 
-                 #(vector % (symbol (str prefix "/" (prepare-quil-name %))))
-                 constants))))
-
-#+clj
-(defn make-quil-constant-map [const-map-name const-map]
-  `(def ^{:private true} 
-     ~(symbol (name const-map-name)) 
-     ~(prepare-quil-clj-constants (nth const-map 0) (nth const-map 1))))
-
-
-(defmacro generate-quil-constants [& opts]
-  (let [options (apply hash-map opts)]
-    `(do
-       ~@(map 
-          #(make-quil-constant-map % (get options %)) 
-          (keys options)))))
-
 
 #+clj
 (generate-quil-constants
@@ -105,7 +78,8 @@
  :text-modes [PConstants (:model :shape)]
  :texture-modes [PConstants (:image :normal)]
  :texture-wrap-modes [PConstants (:clamp :repeat)]
- :filter-modes [PConstants (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)])
+ :filter-modes [PConstants (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)]
+ )
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))

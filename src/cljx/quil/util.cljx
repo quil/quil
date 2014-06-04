@@ -5,11 +5,13 @@
   "Function that does nothing."
   [])
 
+#+clj
 (defn absolute-path [path]
   (-> (str path)
       (java.io.File.)
       (.getAbsolutePath)))
 
+#+clj
 (defn int-like?
   [val]
   (let [t (type val)]
@@ -23,8 +25,12 @@
   (cond
     (get mappings key)            (get mappings key)
     (some #{key} (vals mappings)) key
-    :else                         (throw (Exception.
-                                          (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
+
+    #+clj :else                         
+    #+clj (throw (Exception. (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))
+
+    #+cljs :else 
+    #+cljs nil))
 
 
 (defn length-of-longest-key
@@ -59,5 +65,33 @@
               (println k pad "- " v)))
           definitions))))
 
-
+#+clj
 (defn clj-compilation? [] (nil? cljs.env/*compiler*))
+
+
+(defn prepare-quil-name [const-keyword]
+  (clojure.string/replace
+   (clojure.string/upper-case (name const-keyword))
+   #"-" "_"))
+
+#+clj
+(defn prepare-quil-clj-constants [prefix constants]
+  (apply hash-map
+         (apply concat
+                (map 
+                 #(vector % (symbol (str prefix "/" (prepare-quil-name %))))
+                 constants))))
+
+#+clj
+(defn make-quil-constant-map [const-map-name const-map]
+  `(def ^{:private true} 
+     ~(symbol (name const-map-name)) 
+     ~(prepare-quil-clj-constants (nth const-map 0) (nth const-map 1))))
+
+
+(defmacro generate-quil-constants [& opts]
+  (let [options (apply hash-map opts)]
+    `(do
+       ~@(map 
+          #(make-quil-constant-map % (get options %)) 
+          (keys options)))))
