@@ -51,14 +51,14 @@
 
 #+clj
 (generate-quil-constants
- :arc-modes [PConstants (:open :chord :pie)]
- :shape-modes [PConstants (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)]
- :blend-modes [PConstants (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
-                               :screen :overlay :replace :hard-light :soft-light :dodge :burn)]
- :color-modes [PConstants (:rgb :hsb)] 
- :image-formats [PConstants (:rgb :argb :alpha)]
- :ellipse-modes [PConstants (:center :radius :corner :corners)]
- :hint-options [PConstants (:enable-native-fonts :disable-native-fonts 
+ :arc-modes (:open :chord :pie)
+ :shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
+ :blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
+                               :screen :overlay :replace :hard-light :soft-light :dodge :burn)
+ :color-modes (:rgb :hsb)
+ :image-formats (:rgb :argb :alpha)
+ :ellipse-modes (:center :radius :corner :corners)
+ :hint-options (:enable-native-fonts :disable-native-fonts 
                             :enable-depth-test :disable-depth-test
                             :enable-depth-sort :disable-depth-sort
                             :enable-depth-mask :disable-depth-mask
@@ -67,18 +67,18 @@
                             :enable-retina-pixels :disable-retina-pixels
                             :enable-stroke-perspective :disable-stroke-perspective
                             :enable-stroke-pure :disable-stroke-pure
-                            :enable-texture-mipmaps :disable-texture-mipmaps)]
- :image-modes [PConstants (:corner :corners :center)]
- :rect-modes [PConstants (:corner :corners :center :radius)]
- :p-shape-modes [PConstants (:corner :corners :center)]
- :stroke-cap-modes [PConstants (:square :round :project :model)]
- :stroke-join-modes [PConstants (:miter :bevel :round)]
- :horizontal-alignment-modes [PConstants (:left :center :right)]
- :vertical-alignment-modes [PConstants (:top :bottom :center :baseline)]
- :text-modes [PConstants (:model :shape)]
- :texture-modes [PConstants (:image :normal)]
- :texture-wrap-modes [PConstants (:clamp :repeat)]
- :filter-modes [PConstants (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)]
+                            :enable-texture-mipmaps :disable-texture-mipmaps)
+ :image-modes (:corner :corners :center)
+ :rect-modes (:corner :corners :center :radius)
+ :p-shape-modes (:corner :corners :center)
+ :stroke-cap-modes (:square :round :project :model)
+ :stroke-join-modes (:miter :bevel :round)
+ :horizontal-alignment-modes (:left :center :right)
+ :vertical-alignment-modes (:top :bottom :center :baseline)
+ :text-modes (:model :shape)
+ :texture-modes (:image :normal)
+ :texture-wrap-modes (:clamp :repeat)
+ :filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
  )
 
 ;;; Useful trig constants
