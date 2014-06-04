@@ -71,8 +71,7 @@
  text-modes (:model :shape)
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
- filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
- rendering-modes (:java2d :p2d :p3d :opengl))
+ filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate))
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
@@ -133,16 +132,6 @@
   get-sketch-by-id [id]
   "Returns sketch object by id of canvas element of sketch."
   (.getInstanceById js/Processing id))
-
-
-#+cljs
-(defn 
-  size
-  ([width height]
-    (.size (current-graphics) (int width) (int height)))
-
-  ([width height mode]
-    (.size (current-graphics) (int width) (int height) (resolve-constant-key mode rendering-modes))))
 
 #+clj
 (defn

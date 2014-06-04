@@ -1,17 +1,25 @@
 (ns quil.sketch
-  (:require [clojure.browser.dom  :as dom])
+  (:require [clojure.browser.dom  :as dom]
+            [quil.util :refer [no-fn resolve-constant-key]])
   (:use-macros [quil.sketch :only [with-sketch]]
-               [quil.helpers.tools :only [bind-handlers]]))
-
-
-(defn no-fn [])
-
+               [quil.helpers.tools :only [bind-handlers]]
+               [quil.util :only [generate-quil-constants]]))
 
 (def ^:dynamic
   *applet* nil)
 
-
 (defn current-applet [] *applet*)
+
+(generate-quil-constants
+  rendering-modes (:java2d :p2d :p3d :opengl))
+
+(defn 
+  size
+  ([width height]
+    (.size (current-applet) (int width) (int height)))
+
+  ([width height mode]
+    (.size (current-applet) (int width) (int height) (resolve-constant-key mode rendering-modes))))
 
 
 (defn make-sketch [opts]
@@ -35,7 +43,7 @@
     (fn [prc]
       (bind-handlers prc
                      .-setup  (do
-                                (apply quil.core/size (concat sketch-size (if renderer [renderer] [])))
+                                (apply size (concat sketch-size (if renderer [renderer] [])))
                                 (setup-fn))
                      .-draw draw-fn
 
