@@ -18,7 +18,8 @@
                            supported-features))]
     `(do
        (defn ^:export ~app-name []
-         (quil.sketch/make-processing ~@(apply concat (seq (merge (dissoc opts :features) features)))))
+         (quil.sketch/sketch 
+          ~app-name ~@(apply concat (seq (merge (dissoc opts :features) features)))))
        
        ~(when (not (:no-start features))
           `(quil.sketch/add-sketch-to-init-list ~app-name)))))

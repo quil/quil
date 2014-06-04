@@ -14,7 +14,7 @@
 (defn current-applet [] *applet*)
 
 
-(defn sketch [opts]
+(defn make-sketch [opts]
   (let [draw-fn         (or (:draw opts) no-fn)
         setup-fn        (or (:setup opts) no-fn)
 
@@ -36,8 +36,7 @@
       (bind-handlers prc
                      .-setup  (do
                                 (apply quil.core/size (concat sketch-size (if renderer [renderer] [])))
-                                (setup-fn)
-                                )
+                                (setup-fn))
                      .-draw draw-fn
 
                      .-keyPressed key-pressed
@@ -54,11 +53,11 @@
                      ))))
 
 
-(defn ^:export make-processing
-  [& opts]
+(defn ^:export sketch
+  [app-name & opts]
   (let [opts-map (apply hash-map opts)]
     (let [host-elem (dom/get-element (:host opts-map))
-          processing-fn (sketch opts-map)]
+          processing-fn (make-sketch opts-map)]
       (when host-elem
         (js/Processing. host-elem processing-fn)))))
 
