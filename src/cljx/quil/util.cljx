@@ -18,6 +18,7 @@
     (or (= java.lang.Long t)
         (= java.lang.Integer t))))
 
+#+clj
 (defn resolve-constant-key
   "Returns the val associated with key in mappings or key directly if it
   is one of the vals in mappings. Otherwise throws an exception."
@@ -26,11 +27,13 @@
     (get mappings key)            (get mappings key)
     (some #{key} (vals mappings)) key
 
-    #+clj :else                         
-    #+clj (throw (Exception. (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))
+    :else                         (throw (Exception. (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
-    #+cljs :else 
-    #+cljs nil))
+#+cljs 
+(defn resolve-constant-key
+  ""
+  [key mappings]
+  (aget (quil.sketch/current-applet) (get mappings key)))
 
 
 (defn length-of-longest-key
@@ -82,10 +85,19 @@
          constants)))
 
 #+clj
+(defn prepare-quil-cljs-constants [constants]
+  (into {}
+    (map 
+      #(vector % (prepare-quil-name %))
+      constants)))
+
+#+clj
 (defn make-quil-constant-map [const-map-name const-map]
   `(def ^{:private true} 
      ~const-map-name
-     ~(prepare-quil-clj-constants const-map)))
+     ~(if (clj-compilation?) 
+            (prepare-quil-clj-constants const-map)
+            (prepare-quil-cljs-constants const-map))))
 
 
 (defmacro generate-quil-constants [& opts]

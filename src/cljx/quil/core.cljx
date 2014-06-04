@@ -17,9 +17,9 @@
             [quil.sketch :as applet]
             [clojure.browser.dom  :as dom])
   (:use-macros [quil.sketch :only [defsketch]]
-               [quil.helpers.tools :only [resolve-constant-key]])
+               [quil.util :only [generate-quil-constants]])
   (:use [quil.sketch :only [current-applet]]
-        [quil.util :only [prepare-quil-name]]))
+        [quil.util :only [resolve-constant-key]]))
 
 (def ^{:dynamic true
        :private true}
@@ -43,13 +43,6 @@
 
 ;; -------------------- PConstants section -----------------------
 
-#+cljs
-(defn ^{:private true} 
-  resolve-c-key [c-key]
-  (aget (current-applet)
-        (prepare-quil-name c-key)))
-
-#+clj
 (generate-quil-constants
  arc-modes (:open :chord :pie)
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
@@ -78,7 +71,8 @@
  text-modes (:model :shape)
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
- filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate))
+ filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
+ rendering-modes (:java2d :p2d :p3d :opengl))
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
@@ -148,7 +142,7 @@
     (.size (current-graphics) (int width) (int height)))
 
   ([width height mode]
-    (.size (current-graphics) (int width) (int height) (resolve-constant-key mode))))
+    (.size (current-graphics) (int width) (int height) (resolve-constant-key mode rendering-modes))))
 
 #+clj
 (defn
