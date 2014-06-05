@@ -219,7 +219,6 @@
     #+cljs
     (.abs (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "acos()"
@@ -231,7 +230,8 @@
   function expects the values in the range of -1 to 1 and values are
   returned in the range 0 to Math/PI (3.1415927)."
   [n]
-  (PApplet/acos (float n)))
+  #+clj (PApplet/acos (float n))
+  #+cljs (.acos (current-applet) n))
 
 #+clj
 (defn
@@ -365,7 +365,6 @@
       (.arc (current-applet) (float x) (float y) (float width) (float height)
         (float start) (float stop) (int arc-mode)))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "asin()"
@@ -377,9 +376,9 @@
   expects the values in the range of -1 to 1 and values are returned
   in the range -PI/2 to PI/2."
   [n]
-  (PApplet/asin (float n)))
+  #+clj (PApplet/asin (float n))
+  #+cljs (.asin (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "atan()"
@@ -392,9 +391,9 @@
   Infinity (exclusive) and values are returned in the range -PI/2 to
   PI/2 ."
   [n]
-  (PApplet/atan (float n)))
+  #+clj (PApplet/atan (float n))
+  #+cljs (.atan (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "atan2()"
@@ -410,7 +409,8 @@
   and the x-coordinate is the second due the the structure of
   calculating the tangent."
   [y x]
-  (PApplet/atan2 (float y) (float x)))
+  #+clj (PApplet/atan2 (float y) (float x))
+  #+cljs (.atan2 (current-applet) y x))
 
 #+clj
 (defn
@@ -1026,7 +1026,6 @@
      (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
             (int dx) (int dy) (int dwidth) (int dheight))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "cos()"
@@ -1038,7 +1037,8 @@
   of the angle parameter to be provided in radians (values from 0 to
   Math/PI*2). Values are returned in the range -1 to 1."
   [angle]
-  (PApplet/cos (float angle)))
+  #+clj (PApplet/cos (float angle))
+  #+cljs (.cos (current-applet) angle))
 
 #+clj
 (defn
@@ -1331,7 +1331,6 @@
   []
   (PApplet/day))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "degrees()"
@@ -1346,7 +1345,8 @@
   trigonometric methods in Processing require their parameters to be
   specified in radians."
   [radians]
-  (PApplet/degrees (float radians)))
+  #+clj (PApplet/degrees (float radians))
+  #+cljs (.degrees (current-applet) radians))
 
 (defn
   ^{:requires-bindings true
@@ -2937,7 +2937,6 @@
   ([cx cy cz x3 y3 z3]
    (.quadraticVertex (current-graphics) (float cx) (float cy) (float cz) (float x3) (float y3) (float z3))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "radians()"
@@ -2952,7 +2951,8 @@
   methods in Processing require their parameters to be specified in
   radians."
   [degrees]
-  (PApplet/radians (float degrees)))
+  #+clj (PApplet/radians (float degrees))
+  #+cljs (.radians (current-applet) degrees))
 
 (defn
   ^{:requires-bindings true
@@ -3603,7 +3603,6 @@
   [shine]
   (.shininess (current-graphics) (float shine)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "sin()"
@@ -3615,7 +3614,8 @@
   of the angle parameter to be provided in radians (values from 0 to
   6.28). A float within the range -1 to 1 is returned."
   [angle]
-  (PApplet/sin (float angle)))
+  #+clj (PApplet/sin (float angle))
+  #+cljs (.sin (current-applet) angle))
 
 (defn
   ^{:requires-bindings true
@@ -3844,7 +3844,6 @@
   [weight]
   (.strokeWeight (current-graphics) (float weight)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "tan()"
@@ -3857,7 +3856,8 @@
   radians (values from 0 to PI*2). Values are returned in the range
   infinity to -infinity."
   [angle]
-  (PApplet/tan (float angle)))
+  #+clj (PApplet/tan (float angle))
+  #+cljs (.tan (current-applet) angle))
 
 #+clj
 (defn
