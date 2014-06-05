@@ -200,7 +200,7 @@
   [n]
   (PApplet/abs (float n)))
 
-#+clj
+
 (defn
   ^{:requires-bindings false
     :processing-name "abs()"
@@ -212,9 +212,12 @@
   absolute value of a number is always positive. Dynamically casts to
   an int or float appropriately"
     [n]
+    #+clj
     (if (int-like? n)
       (abs-int n)
-      (abs-float n)))
+      (abs-float n))
+    #+cljs
+    (.abs (current-applet) n))
 
 #+clj
 (defn
@@ -891,7 +894,6 @@
               (float centerX) (float centerY) (float centerZ)
               (float upX) (float upY) (float upZ))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "ceil()"
@@ -903,7 +905,8 @@
   the value of the parameter. For example, (ceil 9.03) returns the
   value 10."
   [n]
-  (PApplet/ceil (float n)))
+  #+clj (PApplet/ceil (float n))
+  #+cljs (.ceil (current-applet) n))
 
 (defn
   ^{:requires-bindings true
@@ -982,7 +985,7 @@
   [amt low high]
   (PApplet/constrain (int amt) (int low) (int high)))
 
-#+clj
+
 (defn
   ^{:requires-bindings false
     :processing-name "constrain()"
@@ -992,9 +995,11 @@
   constrain
   "Constrains a value to not exceed a maximum and minimum value."
   [amt low high]
+  #+clj
   (if (int-like? amt)
     (constrain-int amt low high)
-    (constrain-float amt low high)))
+    (constrain-float amt low high))
+  #+cljs (.constrain (current-applet) amt low high))
 
 #+clj
 (defn
@@ -1383,7 +1388,6 @@
   (.directionalLight (current-graphics) (float r) (float g) (float b)
                      (float nx) (float ny) (float nz)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "dist()"
@@ -1392,9 +1396,12 @@
     :added "1.0"}
   dist
   "Calculates the distance between two points"
-  ([x1 y1 x2 y2] (PApplet/dist (float x1) (float y1) (float x2) (float y2)))
-  ([x1 y1 z1 x2 y2 z2] (PApplet/dist (float x1) (float y1) (float z1)
-                               (float x2) (float y2) (float z2))))
+  ([x1 y1 x2 y2] 
+    #+clj (PApplet/dist (float x1) (float y1) (float x2) (float y2))
+    #+cljs (.dist (current-applet) x1 y1 x2 y2))
+  ([x1 y1 z1 x2 y2 z2] 
+    #+clj (PApplet/dist (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))
+    #+cljs (.dist (current-applet) x1 y1 z1 x2 y2 z2)))
 
 (defn
   ^{:requires-bindings true
@@ -1552,7 +1559,6 @@
   #+clj (applet-close (current-applet))
   #+cljs (.exit (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "exp()"
@@ -1563,7 +1569,8 @@
   "Returns Euler's number e (2.71828...) raised to the power of the
   value parameter."
   [val]
-  (PApplet/exp (float val)))
+  #+clj (PApplet/exp (float val))
+  #+cljs (.exp (current-applet) val))
 
 (defn
   ^{:requires-bindings true
@@ -1660,7 +1667,6 @@
   Filters the display window with given shader (only in :p2d and :p3d modes)."
   [^PShader shader-obj] (.filter (current-graphics) shader-obj))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "floor()"
@@ -1671,7 +1677,8 @@
   "Calculates the closest int value that is less than or equal to the valu  e of the parameter. For example, (floor 9.03) returns the
   value 9."
   [n]
-  (PApplet/floor (float n)))
+  #+clj (PApplet/floor (float n))
+  #+cljs (.floor (current-applet) n))
 
 #+clj
 (defn
@@ -2072,7 +2079,6 @@
   [c1 c2 amt]
   (.lerpColor (current-graphics) (int c1) (int c2) (float amt)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "lerp()"
@@ -2087,7 +2093,8 @@
   is convenient for creating motion along a straight path and for
   drawing dotted lines."
   [start stop amt]
-  (PApplet/lerp (float start) (float stop) (float amt)))
+  #+clj (PApplet/lerp (float start) (float stop) (float amt))
+  #+cljs (.lerp (current-applet) start stop amt))
 
 (defn
   ^{:requires-bindings true
@@ -2233,7 +2240,6 @@
   [filename]
   (.loadShape (current-applet) filename))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "log()"
@@ -2244,9 +2250,9 @@
   "Calculates the natural logarithm (the base-e logarithm) of a
   number. This function expects the values greater than 0.0."
   [val]
-  (PApplet/log (float val)))
+  #+clj (PApplet/log (float val))
+  #+cljs (.log (current-applet) val))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "mag()"
@@ -2259,10 +2265,13 @@
   algebra. Because it has no start position, the magnitude of a vector
   can be thought of as the distance from coordinate (0,0) to its (x,y)
   value. Therefore, mag is a shortcut for writing (dist 0 0 x y)."
-  ([a b] (PApplet/mag (float a) (float b)))
-  ([a b c] (PApplet/mag (float a) (float b) (float c))))
+  ([a b] 
+    #+clj (PApplet/mag (float a) (float b))
+    #+cljs (.mag (current-applet) a b))
+  ([a b c] 
+    #+clj (PApplet/mag (float a) (float b) (float c))
+    #+cljs (.mag (current-applet) a b c)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "map()"
@@ -2275,7 +2284,8 @@
   Numbers outside the range are not clamped to 0 and 1, because
   out-of-range values are often intentional and useful."
   [val low1 high1 low2 high2]
-  (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2)))
+  #+clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
+  #+cljs (.map (current-applet) val low1 high1 low2 high2))
 
 #+clj
 (defn
@@ -2586,7 +2596,6 @@
   []
   (.noLoop (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "norm()"
@@ -2596,7 +2605,8 @@
   norm
   "Normalize a value to exist between 0 and 1 (inclusive)."
   [val start stop]
-  (PApplet/norm (float val) (float start) (float stop)))
+  #+clj (PApplet/norm (float val) (float start) (float stop))
+  #+cljs (.norm (current-applet) val start stop))
 
 (defn
   ^{:requires-bindings true
@@ -2798,7 +2808,6 @@
   []
   (.popStyle (current-graphics)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "pow()"
@@ -2812,7 +2821,8 @@
   equivalent to the expression (* 3 3 3 3 3) and (pow 3 -5) is
   equivalent to (/ 1 (* 3 3 3 3 3))."
   [num exponent]
-  (PApplet/pow (float num) (float exponent)))
+  #+clj (PApplet/pow (float num) (float exponent))
+  #+cljs (.pow (current-applet) num exponent))
 
 (defn
   ^{:requires-bindings true
@@ -3244,7 +3254,6 @@
   [angle]
   (.rotateZ (current-graphics) (float angle)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "round()"
@@ -3255,7 +3264,8 @@
   "Calculates the integer closest to the value parameter. For example,
   (round 9.2) returns the value 9."
   [val]
-  (PApplet/round (float val)))
+  #+clj (PApplet/round (float val))
+  #+cljs (.round (current-applet) val))
 
 (defn
   ^{:requires-bindings true
@@ -3699,7 +3709,6 @@
   ([[r g b] [x y z] [nx ny nz] angle concentration]
      (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "sq()"
@@ -3711,9 +3720,9 @@
   always a positive number, as multiplying two negative numbers always
   yields a positive result. For example, -1 * -1 = 1."
   [a]
-  (PApplet/sq (float a)))
+  #+clj (PApplet/sq (float a))
+  #+cljs (.sq (current-applet) a))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "sqrt()"
@@ -3726,7 +3735,8 @@
   root. The square root s of number a is such that (= a (* s s)) . It
   is the opposite of squaring."
   [a]
-  (PApplet/sqrt (float a)))
+  #+clj (PApplet/sqrt (float a))
+  #+cljs (.sqrt (current-applet) a))
 
 (defn
   ^{:requires-bindings true
