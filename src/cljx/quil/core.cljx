@@ -124,13 +124,46 @@
 
 #+cljs
 (defn 
+  ^{:require-bindings true
+    :category "Output"
+    :subcategory "Text area"
+    :added "1.0"}
+  prc-println 
+  "Writes to the text area of the Processing environment's console. 
+  This is often helpful for looking at the data a program is producing. 
+  Each call to this function creates a new line of output. 
+  Individual elements can be separated with quotes (\"\") and joined with the string concatenation operator (+). 
+  Also writes the content of an array to the text area of the Processing environment. 
+  This is often helpful for looking at the data a program is producing. 
+  A new line is put between each element of the array. This function can only print 1D arrays, 
+  but can test to see if the content are null or not null for 2+ dimensional arrays."
+  [msg]
+  (.println (current-applet) msg))
+
+#+cljs
+(defn 
+  ^{:require-bindings true
+    :category "Output"
+    :subcategory "Text area"
+    :added "1.0"}
+  prc-print
+  "Writes to the console area of the Processing environment.
+  This is often helpful for looking at the data a program is producing.
+  The companion function println() works like print(), but creates a new line of text for each call to the function.
+   Individual elements can be separated with quotes (\"\") and joined with the addition operator (+). "
+  [msg]
+  (.print (current-applet) msg))
+
+#+cljs
+(defn 
   ^{:requires-bindings true
     :processing-name "getSketchById()"
     :category nil
     :subcategory nil
     :added "1.0"}
-  get-sketch-by-id [id]
+  get-sketch-by-id 
   "Returns sketch object by id of canvas element of sketch."
+  [id]
   (.getInstanceById js/Processing id))
 
 #+clj
