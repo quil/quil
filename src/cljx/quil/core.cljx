@@ -1352,7 +1352,6 @@
   ([x y] (.curveVertex (current-graphics) (float x) (float y)))
   ([x y z] (.curveVertex (current-graphics) (float x) (float y) (float z))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "day()"
@@ -1362,7 +1361,8 @@
   day
   "Get the current day of the month (1 through 31)."
   []
-  (PApplet/day))
+  #+clj (PApplet/day)
+  #+cljs (.day (current-applet)))
 
 (defn
   ^{:requires-bindings false
@@ -1919,7 +1919,6 @@
                     hint-type)]
     (.hint (current-graphics) (int hint-type))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "hour()"
@@ -1929,7 +1928,8 @@
   hour
   "Returns the current hour as a value from 0 - 23."
   []
-  (PApplet/hour))
+  #+clj (PApplet/hour)
+  #+cljs (.hour (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2356,7 +2356,6 @@
   []
   (.millis (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "minute()"
@@ -2366,7 +2365,8 @@
   minute
   "Returns the current minute as a value from 0 - 59"
   []
-  (PApplet/minute))
+  #+clj (PApplet/minute)
+  #+cljs (.minute (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -2413,7 +2413,6 @@
   [x y z]
   (.modelZ (current-graphics) (float x) (float y) (float z)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "month()"
@@ -2423,7 +2422,8 @@
   month
   "Returns the current month as a value from 1 - 12."
   []
-  (PApplet/month))
+  #+clj (PApplet/month)
+  #+cljs (.month (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -3454,7 +3454,6 @@
   [x y z]
   (.screenZ (current-graphics) (float x) (float y) (float z)))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "second()"
@@ -3464,7 +3463,8 @@
   seconds
   "Returns the current second as a value from 0 - 59."
   []
-  (PApplet/second))
+  #+clj (PApplet/second)
+  #+cljs (.second (current-applet)))
 
 #+clj
 (defn
@@ -4344,7 +4344,6 @@
   ([x y z u v]
      (.vertex (current-graphics) (float x) (float y) (float z) (float u) (float v))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "year()"
@@ -4354,7 +4353,8 @@
   year
   "Returns the current year as an integer (2003, 2004, 2005, etc)."
   []
-  (PApplet/year))
+  #+clj (PApplet/year)
+  #+cljs (.year (current-applet)))
 
 (defn
   ^{:requires-bindings true
