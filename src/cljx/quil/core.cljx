@@ -3949,7 +3949,6 @@
   ([^String s x y z] (.text (current-graphics) s (float x) (float y) (float z)))
   ([^String s x1 y1 x2 y2] (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "textAlign()"
@@ -4015,7 +4014,6 @@
   []
   (.textDescent (current-graphics)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "textFont()"
@@ -4054,7 +4052,6 @@
   [leading]
   (.textLeading (current-graphics) (float leading)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "textMode()"
@@ -4151,7 +4148,6 @@
   (let [mode (resolve-constant-key mode texture-wrap-modes)]
     (.textureWrap (current-graphics) mode)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "textWidth()"
