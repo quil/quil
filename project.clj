@@ -15,13 +15,11 @@
                  [quil/processing-dxf "2.2.0"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
-                 [com.lowagie/itext "2.1.7"]
-                 [org.clojure/clojurescript "0.0-2202"]]
+                 [com.lowagie/itext "2.1.7"]]
 
-  :plugins [[com.keminglabs/cljx "0.3.2"]
-            [lein-cljsbuild "1.0.3"]]
+  :plugins [[com.keminglabs/cljx "0.3.2"]]
 
-  :hooks [cljx.hooks leiningen.cljsbuild]
+  :hooks [cljx.hooks]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
@@ -40,12 +38,4 @@
 
   :source-paths ["src" "target/gen" "src/cljs" "target/gen/cljs"]
   :jar-exclusions [#"^cljx.*" #"^cljs.*" #"^resources.*" #"^js.*"]
-  :uberjar-exclusions [#"^cljx.*" #"^cljs.*" #"^resources.*" #"^js.*"]
-
-  :cljsbuild
-  {:builds [{:source-paths ["src/cljs/quil" "target/gen/cljs" "target/classes"]
-             :jar false
-             :compiler
-             {:output-to "resources/js/main.js"
-              :optimizations :whitespace
-              :pretty-print true}}]})
+  :uberjar-exclusions [#"^cljx.*" #"^cljs.*" #"^resources.*" #"^js.*"])

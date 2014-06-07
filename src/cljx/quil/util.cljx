@@ -69,7 +69,12 @@
           definitions))))
 
 #+clj
-(defn clj-compilation? [] (nil? cljs.env/*compiler*))
+(defn clj-compilation? [] 
+  (not 
+    (boolean
+     (when-let [n (find-ns 'cljs.analyzer)]
+       (when-let [v (ns-resolve n '*cljs-file*)]
+         @v)))))
 
 
 (defn prepare-quil-name [const-keyword]
