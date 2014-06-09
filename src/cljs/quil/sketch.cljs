@@ -13,6 +13,9 @@
 (generate-quil-constants
   rendering-modes (:java2d :p2d :p3d :opengl))
 
+(defn resolve-renderer [mode]
+  (resolve-constant-key mode rendering-modes))
+
 (defn 
   size
   ([width height]

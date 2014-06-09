@@ -18,7 +18,7 @@
             [clojure.browser.dom  :as dom])
   (:use-macros [quil.sketch :only [defsketch]]
                [quil.util :only [generate-quil-constants]])
-  (:use [quil.sketch :only [current-applet]]
+  (:use [quil.sketch :only [current-applet resolve-renderer]]
         [quil.util :only [resolve-constant-key]]))
 
 (def ^{:dynamic true
@@ -1125,7 +1125,6 @@
   ([name size smooth ^chars charset]
      (.createFont (current-applet) (str name) (float size) smooth charset)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
@@ -1154,13 +1153,15 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
+  #+clj 
   ([w h]
      (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
-                      (absolute-path path))))
+                      #+clj (absolute-path path)
+                      #+cljs path)))
 
 #+clj
 (defn
