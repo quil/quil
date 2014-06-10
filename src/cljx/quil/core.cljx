@@ -1163,7 +1163,6 @@
                       #+clj (absolute-path path)
                       #+cljs path)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "createImage()"
@@ -1779,7 +1778,6 @@
   (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
             (float near) (float far)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "get()"
@@ -2736,7 +2734,6 @@
      (.perspective (current-graphics) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "pixels[]"
@@ -3467,7 +3464,6 @@
   #+clj (PApplet/second)
   #+cljs (.second (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "set()"
