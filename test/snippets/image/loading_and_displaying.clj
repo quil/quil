@@ -37,6 +37,12 @@
   (let [im (load-image "http://cloud.github.com/downloads/quil/quil/quil.png")]
     (image im 0 0)))
 
+(defsnippet resize-image-s {}
+  (let [im (load-image "http://cloud.github.com/downloads/quil/quil/quil.png")]
+    (image im 0 0)
+    (resize im 50 50)
+    (image im 0 0)))
+
 (defsnippet mask-image-s {:renderer :p3d}
   (background 255)
   (let [gr (create-graphics 100 100 :p3d)
