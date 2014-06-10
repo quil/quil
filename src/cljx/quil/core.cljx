@@ -1034,7 +1034,6 @@
     (constrain-float amt low high))
   #+cljs (.constrain (current-applet) amt low high))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "copy()"
