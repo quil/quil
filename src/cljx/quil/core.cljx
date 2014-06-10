@@ -732,7 +732,6 @@
   ([val] (PApplet/binary (int val)))
   ([val num-digits] (PApplet/binary (int val) (int num-digits))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "blend()"
@@ -1648,7 +1647,6 @@
   ([r g b] (fill-float r g b))
   ([r g b a] (fill-float r g b a)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "filter()"
@@ -2318,7 +2316,6 @@
   #+clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
   #+cljs (.map (current-applet) val low1 high1 low2 high2))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "PImage.mask()"
@@ -4291,7 +4288,6 @@
   [hex-str]
   (PApplet/unhex (str hex-str)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "updatePixels()"
