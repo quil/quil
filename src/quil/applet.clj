@@ -353,11 +353,10 @@
   (let [options (apply hash-map opts)
 
         options     (->> (:middleware options [])
-                         (reverse)
                          (cons deprecated-options)
-                         (reduce #(%2 %1) options)
-                         (merge {:size [500 300]
-                                 :target :frame}))
+                         (apply comp)
+                         (#(% options))
+                         (merge {:size [500 300]}))
 
         features     (let [user-features (set (:features options))]
                        (reduce #(assoc %1 %2 (contains? user-features %2)) {}
