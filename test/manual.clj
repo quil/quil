@@ -123,7 +123,7 @@
       :key-pressed (double-fn :key-pressed)
       :key-released (single-fn :key-released)
       :key-typed (double-fn :key-typed)
-      :on-close #(deliver lock true)
+      :on-close #(do (println ":on-close in fun-mode. State is:" %) (deliver lock true))
       :middleware [fm/fun-mode])
      @lock)))
 
