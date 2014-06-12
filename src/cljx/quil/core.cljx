@@ -195,6 +195,21 @@
     :category "State"
     :subcategory nil
     :added "1.0"}
+  state-atom
+  "Retrieve sketch-specific state-atom. All changes to the
+  atom will be reflected in the state.
+
+  (set-state! :foo 1)
+  (state :foo) ;=> 1
+  (swap! (state-atom) update-in [:foo] inc)
+  (state :foo) ;=> 2"
+  ([] (-> (current-applet) meta :state)))
+
+(defn
+  ^{:requires-bindings true
+    :category "State"
+    :subcategory nil
+    :added "1.0"}
   set-state!
   "Set sketch-specific state. May only be called once (ideally in the
   setup fn).  Subsequent calls have no effect.
