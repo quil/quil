@@ -85,9 +85,17 @@
   (let [child (.-childNodes (.-body js/document))]
     (= 1 (.-length child))))
 
+(defn add-canvas [canvas-id]
+  (let [canvas (.createElement js/document "canvas")]
+    (.setAttribute canvas "id" canvas-id)
+    (.appendChild (.-body js/document) canvas)))
+
 (defn init-sketches []
-  (doseq [sk @sketch-init-list]
-    (sk)))
+  (let [add-elem? (empty-body?)]
+    (doseq [sk @sketch-init-list]
+      (when add-elem?
+        (add-canvas (:name sk)))
+      ((:fn sk)))))
 
 (defn add-sketch-to-init-list [sk]
   (swap! sketch-init-list conj sk))

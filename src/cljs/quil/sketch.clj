@@ -12,7 +12,9 @@
 
 (defmacro defsketch
   [app-name & options]
-  (let [opts (apply hash-map options)
+  (let [raw-opts (apply hash-map options)
+        opts     (if (:host raw-opts) raw-opts
+                     (merge raw-opts {:host app-name}))
         features (let [user-features (set (:features opts))]
                    (reduce #(assoc %1 %2 (contains? user-features %2)) {}
                            supported-features))]
@@ -22,4 +24,4 @@
           ~app-name ~@(apply concat (seq (merge (dissoc opts :features) features)))))
        
        ~(when (not (:no-start features))
-          `(quil.sketch/add-sketch-to-init-list ~app-name)))))
+          `(quil.sketch/add-sketch-to-init-list {:fn ~app-name :name (str '~app-name)})))))
