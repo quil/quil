@@ -81,7 +81,7 @@
       (if (.-attachEvent js/window)
           (.attachEvent js/window (str "on" event) fun))))
 
-(defn ^:export check-empty-body []
+(defn empty-body? []
   (let [child (.-childNodes (.-body js/document))]
     (= 1 (.-length child))))
 
