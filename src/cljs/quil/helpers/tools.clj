@@ -26,10 +26,3 @@
        ~mode
        ~@body
        (quil.core/end-shape))))
-
-(defmacro resolve-constant-key 
-  ([mode mode-list-name]
-    `(~'resolve-c-key ~mode))
-
-  ([mode]
-    `(~'resolve-c-key ~mode)))
