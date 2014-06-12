@@ -186,7 +186,7 @@ class is string that will be used as class of body element in the page."
           (column->html [column]
             [:div.column (map (comp category->html find-category) column)])]
     [:div.wrapper
-     [:h1#title "Quil 2.0.0 API"]
+     [:h1#title "Quil 2.1.0 API"]
      [:div#description
       [:p "Quil is a clojure animation library for creating interactive sketches. "]
       [:p
