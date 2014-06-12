@@ -23,7 +23,8 @@
   "Graphics currently used for drawing. By default it is sketch graphics,
   but if called inside with-graphics macro - graphics passed to the macro
   is returned. This method should be used if you need to call some methods
-  that are not implemented by quil. Example (.beginDraw (current-graphics))."
+  that are not implemented by quil. Example:
+  (.beginDraw (current-graphics))."
   []
   (or *graphics* (.-g (current-applet))))
 
@@ -1528,7 +1529,8 @@
   display-filter
   "Originally named filter in Processing Language.
   Filters the display window with the specified mode and level.
-  Level defines the quality of the filter and mode may be one of the following keywords:
+  Level defines the quality of the filter and mode may be one of the
+  following keywords:
 
   :threshold - converts the image to black and white pixels depending
                if they are above or below the threshold defined by
@@ -1537,7 +1539,8 @@
                0.5 is used.
   :gray      - converts any colors in the image to grayscale
                equivalents. Doesn't work with level.
-  :invert    - sets each pixel to its inverse value. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with
+               level.
   :posterize - limits each channel of the image to the number of
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
@@ -1546,7 +1549,8 @@
                specifying the extent of the blurring. If no level
                parameter is used, the blur is equivalent to Guassian
                blur of radius 1.
-  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work
+               with level.
   :erode     - reduces the light areas. Doesn't work with level.
   :dilate    - increases the light areas.  Doesn't work with level."
   ([mode]
@@ -1575,8 +1579,8 @@
     :subcategory "Calculation"
     :added "2.0"}
   floor
-  "Calculates the closest int value that is less than or equal to the valu  e of the parameter. For example, (floor 9.03) returns the
-  value 9."
+  "Calculates the closest int value that is less than or equal to the
+  value of the parameter. For example, (floor 9.03) returns the value 9."
   [n]
   (PApplet/floor (float n)))
 
@@ -1870,7 +1874,8 @@
                0.5 is used.
   :gray      - converts any colors in the image to grayscale
                equivalents. Doesn't work with level.
-  :invert    - sets each pixel to its inverse value. Doesn't work with level.
+  :invert    - sets each pixel to its inverse value. Doesn't work with
+               level.
   :posterize - limits each channel of the image to the number of
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
@@ -1879,7 +1884,8 @@
                specifying the extent of the blurring. If no level
                parameter is used, the blur is equivalent to Guassian
                blur of radius 1.
-  :opaque    - sets the alpha channel to entirely opaque. Doesn't work with level.
+  :opaque    - sets the alpha channel to entirely opaque. Doesn't work
+               with level.
   :erode     - reduces the light areas. Doesn't work with level.
   :dilate    - increases the light areas.  Doesn't work with level."
   ([^PImage img mode]
@@ -2820,12 +2826,13 @@
     :added "2.0"}
   quadratic-vertex
   "Specifies vertex coordinates for quadratic Bezier curves. Each call to
-  quadratic-vertex defines the position of one control points and one anchor
-  point of a Bezier curve, adding a new segment to a line or shape. The first
-  time quadratic-vertex is used within a begin-shape call, it must be prefaced
-  with a call to vertex to set the first anchor point. This function must be
-  used between begin-shape and end-shape and only when there is no MODE parameter
-  specified to begin-shape. Using the 3D version requires rendering with :p3d."
+  quadratic-vertex defines the position of one control points and one
+  anchor point of a Bezier curve, adding a new segment to a line or shape.
+  The first time quadratic-vertex is used within a begin-shape call, it
+  must be prefaced with a call to vertex to set the first anchor point.
+  This function must be used between begin-shape and end-shape and only
+  when there is no MODE parameter specified to begin-shape. Using the 3D
+  version requires rendering with :p3d."
   ([cx cy x3 y3]
     (.quadraticVertex (current-graphics) (float cx) (float cy) (float x3) (float y3)))
   ([cx cy cz x3 y3 z3]
@@ -3069,9 +3076,9 @@
     :added "2.1.0"}
   resize
   "Resize the image to a new width and height. 
-  To make the image scale proportionally, use 0 as the value for the wide or high parameter. 
-  For instance, to make the width of an image 150 pixels, and change the height 
-  using the same proportion, use resize(150, 0).
+  To make the image scale proportionally, use 0 as the value for the wide or
+  high parameter. For instance, to make the width of an image 150 pixels,
+  and change the height using the same proportion, use resize(150, 0).
 
   Even though a PGraphics is technically a PImage, it is not possible 
   to rescale the image data found in a PGraphics. 
@@ -3538,14 +3545,15 @@
   down the frame rate of the application, but will enhance the visual
   refinement.
 
-  The level parameter (int) increases the level of smoothness with the P2D and P3D
-  renderers. This is the level of over sampling applied to the graphics buffer.
-  The value '2' will double the rendering size before scaling it down to the
-  display size. This is called '2x anti-aliasing.' The value 4 is used for 4x
-  anti-aliasing and 8 is specified for 8x anti-aliasing. If level is set to 0,
-  it will disable all smoothing; it's the equivalent of the function noSmooth().
-  The maximum anti-aliasing level is determined by the hardware of the machine
-  that is running the software.
+  The level parameter (int) increases the level of smoothness with the
+  P2D and P3D renderers. This is the level of over sampling applied to
+  the graphics buffer. The value '2' will double the rendering size
+  before scaling it down to the display size. This is called '2x
+  anti-aliasing.' The value 4 is used for 4x anti-aliasing and 8 is
+  specified for 8x anti-aliasing. If level is set to 0, it will disable
+  all smoothing; it's the equivalent of the function noSmooth().
+  The maximum anti-aliasing level is determined by the hardware of the
+  machine that is running the software.
 
   Note that smooth will also improve image quality of resized images."
   ([] (.smooth (current-graphics)))
@@ -4342,8 +4350,9 @@
     :category "Rendering"
     :added "1.7"}
   with-graphics
-  "All subsequent calls of any drawing function will draw on given graphics.
-  'with-graphics' cannot be nested (you can draw simultaneously only on 1 graphics)"
+  "All subsequent calls of any drawing function will draw on given
+  graphics. 'with-graphics' cannot be nested (you can draw simultaneously
+  only on 1 graphics)"
   [graphics & body]
   `(binding [*graphics* ~graphics]
      (.beginDraw ~graphics)
