@@ -75,18 +75,19 @@
 
 (def sketch-init-list (atom (list )))
 
-
 (defn ^:export add-js-event [event fun]
   (if (.-addEventListener js/window)
       (.addEventListener js/window event fun false)
       (if (.-attachEvent js/window)
           (.attachEvent js/window (str "on" event) fun))))
 
+(defn ^:export check-empty-body []
+  (let [child (.-childNodes (.-body js/document))]
+    (= 1 (.-length child))))
 
 (defn init-sketches []
   (doseq [sk @sketch-init-list]
     (sk)))
-
 
 (defn add-sketch-to-init-list [sk]
   (swap! sketch-init-list conj sk))
