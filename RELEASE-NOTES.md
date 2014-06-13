@@ -1,3 +1,17 @@
+## 2.1.0
+_13th June 2014_
+
+* Updated to Processing 2.2.1.
+* [Middleware](https://github.com/quil/quil/wiki/Middleware) support.
+* [Functional mode](https://github.com/quil/quil/wiki/Functional-mode-%28fun-mode%29) support.
+* New methods: [`resize`](http://quil.info/image.html#resize) and [`state-atom`](http://quil.info/state.html#state-atom).
+* `:no-safe-draw` feature renamed to `:no-safe-fns`. 
+
+#### Bug fixes
+* NPE when exiting :p2d sketch using "esc" key. [#110](https://github.com/quil/quil/issues/110).
+* Wrap all user-provided function to safe wrappers. [#106](https://github.com/quil/quil/issues/106).
+
+
 ## 2.0.0
 _18th May 2014_
 
