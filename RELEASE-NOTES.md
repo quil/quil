@@ -7,7 +7,7 @@ _13th June 2014_
 * New methods: [`resize`](http://quil.info/image.html#resize) and [`state-atom`](http://quil.info/state.html#state-atom).
 * `:no-safe-draw` feature renamed to `:no-safe-fns`. 
 
-#### Bug fixes
+###### Fixed
 * NPE when exiting :p2d sketch using "esc" key. [#110](https://github.com/quil/quil/issues/110).
 * Wrap all user-provided function to safe wrappers. [#106](https://github.com/quil/quil/issues/106).
 
@@ -15,7 +15,7 @@ _13th June 2014_
 ## 2.0.0
 _18th May 2014_
 
-#### General changes
+###### General changes
 
 * Updated to Processing 2.1.2!
 * New `:features` option to specify features for sketch. It replaces some options: `:target`, `:decor`, `:safe-draw-fn`. Check documentation for [sketch](http://quil.info/environment.html#sketch) to see list of supported features.
@@ -26,7 +26,7 @@ _18th May 2014_
 * Added and removed bunch of hint options. Check documentation for [hint](http://quil.info/rendering.html#hint) function.
 * `mouse-state` renamed to `mouse-pressed?`.
 
-#### Fixed
+###### Fixed
 
 * OpenGL renderers bug: [#24](https://github.com/quil/quil/issues/24).
 * `(screen-z x y z)`: [commit](https://github.com/quil/quil/commit/8848af1a49fcafbbbaadc631af4b7a00ef74b733).
@@ -36,7 +36,7 @@ _18th May 2014_
 * Tinting doesn't work in `with-graphics`: [#83](https://github.com/quil/quil/issues/83).
 * Wrong size after closing the window in REPL: [#31](https://github.com/quil/quil/issues/31).
 
-#### Functions added
+###### Functions added
 
 * [(arc x y width height start stop mode)](http://quil.info/shape.html#arc)
 * [(random-gaussian)](http://quil.info/math.html#random-gaussian)
@@ -63,7 +63,7 @@ _18th May 2014_
 * [(state)](http://quil.info/state.html#state)
 * [(floor n)](http://quil.info/math.html#floor)
 
-#### Functions removed
+###### Functions removed
 
 * `(text s)` - removed from Processing.
 * `(text-char ch)` - removed from Processing.
