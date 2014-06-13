@@ -140,15 +140,16 @@ class is string that will be used as class of body element in the page."
 
 (defn- category->html [category fn-metas]
   (let [{:keys [name fns subcategories]} category
+        subcat-id #(-> % :name (str "-subcategory") as-url)
         fn-metas (reduce #(assoc %1 (:name %2) %2) {} fn-metas)
         function->html (comp function->html fn-metas)
         subcat->html (fn [subcat]
                        (cons [:h3.subcategory
-                              {:id (as-url (:name subcat))}
+                              {:id (subcat-id subcat)}
                               (:name subcat)]
                              (map function->html (:fns subcat))))
         subcat->toc (fn [subcat]
-                      (cons [:h4.subcategory (link (:name subcat) nil (:name subcat))]
+                      (cons [:h4.subcategory (link (:name subcat) nil (subcat-id subcat))]
                             (map #(vector :p.function (link % nil %)) (:fns subcat))))]
     (list
      [:div#toc
