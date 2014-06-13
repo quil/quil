@@ -21,7 +21,7 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
 ```clojure
-[quil "2.0.0"]
+[quil "2.1.0"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -144,7 +144,7 @@ Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/t
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `2.2.0`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
+Quil provides support for the standard Processing API - currently version `2.2.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
 ## Community
 
