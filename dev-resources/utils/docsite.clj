@@ -164,20 +164,20 @@ class is string that will be used as class of body element in the page."
       (mapcat subcat->html (vals subcategories))])))
 
 (defn generate-index-page [categories-map]
-  (letfn [(fns->html [fns linkify]
-            (map #(vector :p.function (linkify %)) fns))
+  (letfn [(fns->html [fns page]
+            (map #(vector :p.function (link % page %)) fns))
 
-          (subcat->html [subcat linkify]
-            (cons [:h4.subcategory (linkify (:name subcat))]
-                  (fns->html (:fns subcat) linkify)))
+          (subcat->html [subcat page]
+            (cons [:h4.subcategory (link (:name subcat) page
+                                         (str (:name subcat) "-subcategory"))]
+                  (fns->html (:fns subcat) page)))
 
           (category->html [category]
-            (let [{:keys [name fns subcategories]} category
-                  linkify #(link % name %)]
+            (let [{:keys [name fns subcategories]} category]
               [:div.category-div
                [:h3.category (link name)]
-               (fns->html fns linkify)
-               (map #(subcat->html % linkify) (vals subcategories))]))
+               (fns->html fns name)
+               (map #(subcat->html % name) (vals subcategories))]))
 
           (find-category [name]
             (->> (vals categories-map)
