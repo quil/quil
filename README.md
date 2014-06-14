@@ -20,7 +20,9 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
-[![Clojars Project](http://clojars.org/quil/latest-version.svg)](http://clojars.org/quil)
+```clojure
+[quil "2.1.0"]
+```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
