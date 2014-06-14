@@ -1725,7 +1725,6 @@
   #+clj (PApplet/floor (float n))
   #+cljs (.floor (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "focused"
@@ -1747,7 +1746,8 @@
   displayed since the program started. Inside setup() the value is 0
   and and after the first iteration of draw it is 1, etc."
   []
-  (.frameCount (current-applet)))
+  #+clj (.frameCount (current-applet))
+  #+cljs (.-frameCount (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1758,7 +1758,8 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  (.frameRate (current-applet)))
+  #+clj (.frameRate (current-applet))
+  #+cljs (.-frameRate (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1857,7 +1858,7 @@
   size is called."
   []
   #+clj (.getHeight (current-applet))
-  #+cljs (.-height (current-graphics)))
+  #+cljs (.-height (current-applet)))
 
 #+clj
 (defn
@@ -4396,7 +4397,7 @@
   called."
   []
   #+clj (.getWidth (current-applet))
-  #+cljs (.-width (current-graphics)))
+  #+cljs (.-width (current-applet)))
 
 #+clj
 (defmacro
