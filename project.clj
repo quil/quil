@@ -17,7 +17,7 @@
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]]
 
-  :plugins [[com.keminglabs/cljx "0.3.2"]]
+  :plugins [[com.keminglabs/cljx "0.4.0"]]
 
   :hooks [cljx.hooks]
 
