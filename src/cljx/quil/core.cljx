@@ -206,6 +206,7 @@
   (state :foo) ;=> 2"
   ([] (-> (current-applet) meta :state)))
 
+#+clj
 (defn
   ^{:requires-bindings true
     :category "State"
