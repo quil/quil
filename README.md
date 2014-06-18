@@ -27,7 +27,7 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
 
 ```clojure
-(:require [quil.core :refer :all])
+(:require [quil.core :as q])
 ```
 
 For more detailed instructions [head over to the wiki](https://github.com/quil/quil/wiki/Installing).
@@ -47,28 +47,28 @@ If `setup` and `draw` are hard working *artistic gladiators*, `sketch` is the *a
 A simple example is called for:
 ```clojure
 (ns for-the-glory-of-art
-  (:require [quil.core :refer :all]))
+  (:require [quil.core :as q]))
 
 (defn setup []
-  (smooth)                          ;; Turn on anti-aliasing
-  (frame-rate 1)                    ;; Set framerate to 1 FPS
-  (background 200))                 ;; Set the background colour to
-                                    ;; a nice shade of grey.
+  (q/smooth)                          ;; Turn on anti-aliasing
+  (q/frame-rate 1)                    ;; Set framerate to 1 FPS
+  (q/background 200))                 ;; Set the background colour to
+                                      ;; a nice shade of grey.
 (defn draw []
-  (stroke (random 255))             ;; Set the stroke colour to a random grey
-  (stroke-weight (random 10))       ;; Set the stroke thickness randomly
-  (fill (random 255))               ;; Set the fill colour to a random grey
+  (q/stroke (q/random 255))             ;; Set the stroke colour to a random grey
+  (q/stroke-weight (q/random 10))       ;; Set the stroke thickness randomly
+  (q/fill (q/random 255))               ;; Set the fill colour to a random grey
 
-  (let [diam (random 100)           ;; Set the diameter to a value between 0 and 100
-        x    (random (width))       ;; Set the x coord randomly within the sketch
-        y    (random (height))]     ;; Set the y coord randomly within the sketch
-    (ellipse x y diam diam)))       ;; Draw a circle at x y with the correct diameter
+  (let [diam (q/random 100)             ;; Set the diameter to a value between 0 and 100
+        x    (q/random (q/width))       ;; Set the x coord randomly within the sketch
+        y    (q/random (q/height))]     ;; Set the y coord randomly within the sketch
+    (q/ellipse x y diam diam)))         ;; Draw a circle at x y with the correct diameter
 
-(defsketch example                  ;; Define a new sketch named example
-  :title "Oh so many grey circles"  ;; Set the title of the sketch
-  :setup setup                      ;; Specify the setup fn
-  :draw draw                        ;; Specify the draw fn
-  :size [323 200])                  ;; You struggle to beat the golden ratio
+(q/defsketch example                  ;; Define a new sketch named example
+  :title "Oh so many grey circles"    ;; Set the title of the sketch
+  :setup setup                        ;; Specify the setup fn
+  :draw draw                          ;; Specify the draw fn
+  :size [323 200])                    ;; You struggle to beat the golden ratio
 ```
 <img src="https://cloud.githubusercontent.com/assets/38924/3032404/48f404d8-e057-11e3-88bd-aeefe0859887.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
@@ -107,22 +107,22 @@ Quil supports an explorable API. For a full list of API categories and subcatego
 
 In order to see the fns within a specific category use `(show-fns 11.1)` if `11.1` is the index of the category you wish to examine.
 
-    user=> (show-fns 11.1)
+    user=> (q/show-fns 11.1)
     11.1 2D Primitives
         arc ellipse line point quad rect triangle
 
 You can also lookup functions by name of the category or function name.
 
-    user=> (show-fns "trans")
+    user=> (q/show-fns "trans")
     14 Transform
         apply-matrix pop-matrix print-matrix push-matrix reset-matrix rotate
         rotate-x rotate-y rotate-z scale shear-x shear-y translate
     14.1 Utility Macros
         with-translation
 
-If you know the start of Processing API method name such as `bezier`, you can use `(show-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
+If you know the start of Processing API method name such as `bezier`, you can use `(q/show-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
 
-    user=> (show-meths "bezier")
+    user=> (q/show-meths "bezier")
     bezierPoint()    -  bezier-point
     bezierDetail()   -  bezier-detail
     bezier()         -  bezier
