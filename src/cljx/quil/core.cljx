@@ -167,7 +167,6 @@
   [id]
   (.getInstanceById js/Processing id))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "State"
@@ -181,16 +180,19 @@
   (set-state! :foo 1)
   (state :foo) ;=> 1
   (state) ;=> {:foo 1}"
-  ([] (let [state* (:state (meta (current-applet)))]
+  ([] (let #+clj [state* (:state (meta (current-applet)))]
+           #+cljs [state* (. (current-applet) -quil)]
         (when-not @state*
-          (throw (Exception. "State not set - use set-state! before fetching state")))
+          (throw #+clj (Exception. "State not set - use set-state! before fetching state")
+                 #+cljs "State not set - use set-state! before fetching state"))
         @state*))
+
   ([key] (let [state (state)]
            (when-not (contains? state key)
-             (throw (Exception. (str "Unable to find state with key: " key))))
+             (throw #+clj (Exception. (str "Unable to find state with key: " key))
+                    #+cljs (str "Unable to find state with key: " key)))
            (get state key))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "State"
@@ -204,9 +206,9 @@
   (state :foo) ;=> 1
   (swap! (state-atom) update-in [:foo] inc)
   (state :foo) ;=> 2"
-  ([] (-> (current-applet) meta :state)))
+  #+clj ([] (-> (current-applet) meta :state))
+  #+cljs ([] (. (current-applet) -quil)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "State"
@@ -219,7 +221,8 @@
   Example:
   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
   [& state-vals]
-  (let [state* (:state (meta (current-applet)))]
+  (let #+clj [state* (:state (meta (current-applet)))]
+       #+cljs [state* (. (current-applet) -quil)]
     (when-not @state*
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))

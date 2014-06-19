@@ -60,8 +60,8 @@
                      .-mousePressed mouse-pressed
                      .-mouseReleased mouse-released
                      .-mouseOut mouse-out
-                     .-mouseOver mouse-over
-                     ))))
+                     .-mouseOver mouse-over)
+      (set! (.-quil prc) (atom nil)))))
 
 
 (defn ^:export sketch
