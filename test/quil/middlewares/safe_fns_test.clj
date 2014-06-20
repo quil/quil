@@ -1,6 +1,6 @@
-(ns quil.middleware.safe-fns-test
+(ns quil.middlewares.safe-fns-test
   (:require [clojure.test :refer :all]
-            [quil.middleware.safe-fns :refer [safe-fns]]))
+            [quil.middlewares.safe-fns :refer [safe-fns]]))
 
 (defn throw-exc []
   (throw (ex-info "Hey ho" {})))
