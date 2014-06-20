@@ -1,4 +1,4 @@
-(ns quil.middleware.safe-fns
+(ns quil.middlewares.safe-fns
   (:require [clojure.stacktrace :refer [print-cause-trace]]))
 
 

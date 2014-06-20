@@ -5,8 +5,8 @@
            [java.awt Dimension]
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
-            [quil.middleware.deprecated-options :refer [deprecated-options]]
-            [quil.middleware.safe-fns :refer [safe-fns]]
+            [quil.middlewares.deprecated-options :refer [deprecated-options]]
+            [quil.middlewares.safe-fns :refer [safe-fns]]
             [clojure.string :as string]))
 
 (defonce untitled-applet-id* (atom 0))
