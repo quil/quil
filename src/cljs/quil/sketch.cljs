@@ -1,6 +1,7 @@
 (ns quil.sketch
   (:require [clojure.browser.dom  :as dom]
-            [quil.util :refer [no-fn resolve-constant-key]])
+            [quil.util :refer [no-fn resolve-constant-key]]
+            [quil.middlewares.deprecated-options :refer [deprecated-options]])
   (:use-macros [quil.sketch :only [with-sketch]]
                [quil.helpers.tools :only [bind-handlers]]
                [quil.util :only [generate-quil-constants]]))
@@ -25,8 +26,14 @@
     (.size (current-applet) (int width) (int height) (resolve-constant-key mode rendering-modes))))
 
 
-(defn make-sketch [opts]
-  (let [draw-fn         (or (:draw opts) no-fn)
+(defn make-sketch [options]
+  (let [opts            (->> (:middleware options [])
+                          (cons deprecated-options)
+                          (apply comp)
+                          (#(% options))
+                          (merge {:size [500 300]}))
+
+        draw-fn         (or (:draw opts) no-fn)
         setup-fn        (or (:setup opts) no-fn)
 
         sketch-size     (or (:size opts) [200 200])
