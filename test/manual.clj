@@ -1,7 +1,7 @@
 (ns ^:manual
   manual
   (:require [quil.core :refer :all]
-            [quil.middleware.fun-mode :as fm]
+            [quil.middlewares.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
 
 (defn draw-text-fn [& txt]

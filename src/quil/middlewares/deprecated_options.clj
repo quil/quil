@@ -1,4 +1,4 @@
-(ns quil.middleware.deprecated-options)
+(ns quil.middlewares.deprecated-options)
 
 (def ^:private deprecated
   {:decor ["2.0" "Try :features [:present] for similar effect"]

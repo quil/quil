@@ -1,4 +1,4 @@
-(ns quil.middleware.fun-mode
+(ns quil.middlewares.fun-mode
   (:require [quil.core :as q]))
 
 (defn- wrap-setup [options]

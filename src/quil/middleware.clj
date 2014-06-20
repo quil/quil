@@ -1,6 +1,6 @@
 (ns ^{:doc "Quil middleware."}
   quil.middleware
-  (:require [quil.middleware.fun-mode :as fun-mode]))
+  (:require [quil.middlewares.fun-mode :as fun-mode]))
 
 (defn fun-mode
   "Introduces function mode. Adds 'update' function which takes current
