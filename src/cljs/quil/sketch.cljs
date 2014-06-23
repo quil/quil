@@ -52,22 +52,22 @@
         mouse-over      (or (:mouse-over opts) no-fn)]
     (fn [prc]
       (bind-handlers prc
-                     .-setup  (do
+                     :setup  (do
                                 (apply size (concat sketch-size (if renderer [renderer] [])))
                                 (setup-fn))
-                     .-draw draw-fn
+                     :draw draw-fn
 
-                     .-keyPressed key-pressed
-                     .-keyReleased key-released
-                     .-keyTyped key-typed
+                     :keyPressed key-pressed
+                     :keyReleased key-released
+                     :keyTyped key-typed
 
-                     .-mouseClicked mouse-clicked
-                     .-mouseDragged mouse-dragged
-                     .-mouseMoved mouse-moved
-                     .-mousePressed mouse-pressed
-                     .-mouseReleased mouse-released
-                     .-mouseOut mouse-out
-                     .-mouseOver mouse-over)
+                     :mouseClicked mouse-clicked
+                     :mouseDragged mouse-dragged
+                     :mouseMoved mouse-moved
+                     :mousePressed mouse-pressed
+                     :mouseReleased mouse-released
+                     :mouseOut mouse-out
+                     :mouseOver mouse-over)
       (set! (.-quil prc) (atom nil)))))
 
 

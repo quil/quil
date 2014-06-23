@@ -3,8 +3,7 @@
 
 
 (defn bind-handler [prc [processing-name handler]]
-  `(set!
-    (~processing-name ~prc)
+  `(aset ~prc ~(name processing-name)
     (fn []
       (~'with-sketch ~prc
         (~@(if (list? handler) handler (list handler)))))))

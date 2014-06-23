@@ -161,6 +161,7 @@
     :processing-name "getSketchById()"
     :category nil
     :subcategory nil
+    :export true
     :added "1.0"}
   get-sketch-by-id 
   "Returns sketch object by id of canvas element of sketch."
