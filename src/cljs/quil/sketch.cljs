@@ -82,7 +82,7 @@
 
 (def sketch-init-list (atom (list )))
 
-(defn ^:export add-js-event [event fun]
+(defn add-js-event [event fun]
   (if (.-addEventListener js/window)
       (.addEventListener js/window event fun false)
       (if (.-attachEvent js/window)
