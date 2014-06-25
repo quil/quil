@@ -1,5 +1,6 @@
 (ns quil.middlewares.safe-fns
-  (:require [clojure.stacktrace :refer [print-cause-trace]]))
+  (:require [clojure.stacktrace :refer [print-cause-trace]]
+            [quil.util :as u]))
 
 
 (defn- wrap-fn [name function]
@@ -27,7 +28,7 @@
   [options]
   (into {}
         (for [[name value] options]
-          [name (if (or (var? value) (fn? value))
+          [name (if (u/callable? value)
                   ; :mouse-wheel is a special case as it takes single argument
                   ; while all other fns don't take any arguments
                   (if (= name :mouse-wheel)
