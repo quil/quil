@@ -130,7 +130,7 @@
              18 :alt
              17 :control
              16 :shift
-             157 :windows
+             157 :command
              112 :f1
              113 :f2
              114 :f3
