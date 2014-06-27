@@ -121,6 +121,29 @@
              KeyEvent/VK_F23     :f23
              KeyEvent/VK_F24     :f24})
 
+#+cljs
+(def ^{:private true}
+  KEY-CODES {38 :up
+             40 :down
+             37 :left
+             39 :right
+             18 :alt
+             17 :control
+             16 :shift
+             157 :windows
+             112 :f1
+             113 :f2
+             114 :f3
+             115 :f4
+             116 :f5
+             117 :f6
+             118 :f7
+             119 :f8
+             120 :f9
+             121 :f10
+             122 :f11
+             123 :f12})
+
 ;; ------------------ end PConstants section ---------------------
 
 #+cljs
@@ -4621,7 +4644,6 @@
     `(defapplet ~app-name ~@options)
     `(quil.sketch/defsketch ~app-name ~@options)))
 
-#+clj
 (defn ^{:requires-bindings false
         :processing-name nil
         :category "Input"
@@ -4632,9 +4654,9 @@
   fetch the key-code as an integer and use that to determine the
   specific key pressed. See key-keyword."
   [c]
-  (= PConstants/CODED (int c)))
+  #+clj (= PConstants/CODED (int c))
+  #+cljs (= 65535 (.charCodeAt (str c))))
 
-#+clj
 (defn ^{:requires-bindings true
         :processing-name nil
         :category "Input"
