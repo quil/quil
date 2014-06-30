@@ -11,5 +11,9 @@
   (fun-mode/fun-mode options))
 
 (defn pause-on-error
+  "Pauses sketch if any of user-provided handlers throws error.
+  It allows to fix the error on the fly and continue sketch.
+  May be good alternative to default '500ms pause if exception'
+  behaviour."
   [options]
   (pause-on-error/pause-on-error options))
