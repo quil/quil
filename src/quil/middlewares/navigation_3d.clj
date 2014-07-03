@@ -132,7 +132,7 @@
   [user-setup user-settings]
   (let [initial-state (-> user-settings
                           (select-keys [:straight :up :position])
-                          (->> (merge (default-camera)))
+                          (->> (merge (default-position)))
                           (update-in [:straight] v-normalize)
                           (update-in [:up] v-normalize))]
     (update-in (user-setup) [:navigation-3d]
