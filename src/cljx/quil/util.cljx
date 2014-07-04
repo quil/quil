@@ -5,9 +5,9 @@
   "Function that does nothing."
   [])
 
-#+clj
 (defn callable? [value]
-  (or (fn? value) (var? value)))
+  (or (fn? value) 
+      #+clj (var? value)))
 
 #+clj
 (defn absolute-path [path]
