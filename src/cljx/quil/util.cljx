@@ -9,6 +9,7 @@
 (defn callable? [value]
   (or (fn? value) (var? value)))
 
+#+clj
 (defn absolute-path [path]
   (-> (str path)
       (java.io.File.)

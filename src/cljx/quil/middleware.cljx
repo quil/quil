@@ -1,8 +1,9 @@
 (ns ^{:doc "Quil middleware."}
   quil.middleware
   (:require [quil.middlewares.fun-mode :as fun-mode]
-            [quil.middlewares.pause-on-error :as pause-on-error]
-            [quil.middlewares.navigation-3d :as navigation-3d]))
+            #+clj [quil.middlewares.pause-on-error :as pause-on-error]
+            #+clj [quil.middlewares.navigation-3d :as navigation-3d]
+            ))
 
 (defn fun-mode
   "Introduces function mode. Adds 'update' function which takes current
@@ -11,6 +12,7 @@
   [options]
   (fun-mode/fun-mode options))
 
+#+clj
 (defn pause-on-error
   "Pauses sketch if any of user-provided handlers throws error.
   It allows to fix the error on the fly and continue sketch.
@@ -19,7 +21,7 @@
   [options]
   (pause-on-error/pause-on-error options))
 
-
+#+clj
 (defn navigation-3d
   "Enables navigation in 3D space. Similar to how it is done in
   shooters: WASD navigation, space is go up, drag mouse to look around.
