@@ -2,7 +2,7 @@
   quil.middleware
   (:require [quil.middlewares.fun-mode :as fun-mode]
             #+clj [quil.middlewares.pause-on-error :as pause-on-error]
-            #+clj [quil.middlewares.navigation-3d :as navigation-3d]
+            [quil.middlewares.navigation-3d :as navigation-3d]
             ))
 
 (defn fun-mode
@@ -21,7 +21,6 @@
   [options]
   (pause-on-error/pause-on-error options))
 
-#+clj
 (defn navigation-3d
   "Enables navigation in 3D space. Similar to how it is done in
   shooters: WASD navigation, space is go up, drag mouse to look around.
