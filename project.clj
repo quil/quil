@@ -37,5 +37,7 @@
                    :rules :cljs}]}
 
   :source-paths ["src" "target/gen" "src/cljs" "target/gen/cljs"]
+  :resource-paths ["resources"]
+
   :jar-exclusions [#"^cljx.*" #"^cljs.*" #"^resources.*" #"^js.*"]
   :uberjar-exclusions [#"^cljx.*" #"^cljs.*" #"^resources.*" #"^js.*"])
