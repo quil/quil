@@ -34,11 +34,11 @@
     (point 400 150)))
 
 (defsnippet load-image-s {}
-  (let [im (load-image "http://cloud.github.com/downloads/quil/quil/quil.png")]
+  (let [im (load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
     (image im 0 0)))
 
 (defsnippet resize-image-s {}
-  (let [im (load-image "http://cloud.github.com/downloads/quil/quil/quil.png")]
+  (let [im (load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
     (image im 0 0)
     (resize im 50 50)
     (image im 0 0)))
