@@ -49,19 +49,6 @@ Processing.height;
 Processing.prototype.size = function(x, y){};
 Processing.prototype.size = function(x, y, z){};
 
-// 2D Primitives
-Processing.prototype.arc = function(x, y, width, height, start, stop){};
-Processing.prototype.ellipse = function(x, y, width, height){};
-Processing.prototype.line = function(x1, y1, x2, y2){};
-Processing.prototype.line = function(x1, y1, z1, x2, y2, z2){};
-Processing.prototype.point = function(x, y){};
-Processing.prototype.point = function(x, y, z){};
-Processing.prototype.quad = function(x1, y1, x2, y2, x3, y3, x4, y4){};
-Processing.prototype.rect = function(x, y, width, height){};
-Processing.prototype.rect = function(x, y, width, height, radius){};
-Processing.prototype.rect = function(x, y, width, height, tlradius, trradius, brradius, blradius){};
-Processing.prototype.triangle = function(x1, y1, x2, y2, x3, y3){};
-
 // Color Setting
 Processing.prototype.background = function(gray){};
 Processing.prototype.background = function(gray, alpha){};
@@ -224,3 +211,91 @@ Processing.prototype.noiseSeed = function(seed){};
 Processing.prototype.random = function(high){};
 Processing.prototype.random = function(high, low){};
 Processing.prototype.randomSeed = function(seed){};
+
+// Shape 2D Primitives
+Processing.prototype.arc = function(x, y, width, height, start, stop){};
+Processing.prototype.ellipse = function(x, y, width, height){};
+Processing.prototype.line = function(x1, y1, x2, y2){};
+Processing.prototype.line = function(x1, y1, z1, x2, y2, z2){};
+Processing.prototype.point = function(x, y){};
+Processing.prototype.point = function(x, y, z){};
+Processing.prototype.quad = function(x1, y1, x2, y2, x3, y3, x4, y4){};
+Processing.prototype.rect = function(x, y, width, height){};
+Processing.prototype.rect = function(x, y, width, height, radius){};
+Processing.prototype.rect = function(x, y, width, height, tlradius, trradius, brradius, blradius){};
+Processing.prototype.triangle = function(x1, y1, x2, y2, x3, y3){};
+
+// Shape 3D Primitives
+Processing.prototype.box = function(size){};
+Processing.prototype.box = function(width, height, depth){};
+Processing.prototype.sphere = function(radius){};
+Processing.prototype.sphereDetail = function(res){};
+Processing.prototype.sphereDetail = function(ures, vres){};
+
+// Shape PShare
+var PShare = {};
+var PShare = function(family){};
+
+PShare.width = undefined;
+PShare.height = undefined;
+
+PShare.prototype.isVisible = function(){};
+PShare.prototype.setVisible = function(visible){};
+PShare.prototype.disableStyle = function(){};
+PShare.prototype.enableStyle = function(){};
+PShare.prototype.getChild = function(target){};
+PShare.prototype.translate = function(x, y){};
+PShare.prototype.translate = function(x, y, z){};
+PShare.prototype.rotate = function(angle){};
+PShare.prototype.rotateX = function(angle){};
+PShare.prototype.rotateY = function(angle){};
+PShare.prototype.rotateZ = function(angle){};
+PShare.prototype.scale = function(size){};
+PShare.prototype.scale = function(x, y){};
+PShare.prototype.scale = function(x, y, z){};
+
+// Shape Curves
+Processing.prototype.bezier = function(x1, y1, cx1, cy1, cx2, cy2, x2, y2){};
+Processing.prototype.bezier = function(x1, y1, z1, cx1, cy1, cz1, cx2, cy2, cz2, x2, y2, z2){};
+Processing.prototype.bezierDetail = function(detail){};
+Processing.prototype.bezierPoint = function(a, b, c, d, t){};
+Processing.prototype.bezierTangent = function(a, b, c, d, t){};
+
+Processing.prototype.curve = function(x1, y1, x2, y2, x3, y3, x4, y4){};
+Processing.prototype.curve = function(x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4){};
+Processing.prototype.curveDetail = function(detail){};
+Processing.prototype.curvePoint = function(a, b, c, d, t){};
+Processing.prototype.curveTangent = function(a, b, c, d, t){};
+Processing.prototype.curveTightness = function(squishy){};
+
+// Shape Attributes
+Processing.prototype.ellipseMode = function(mode){};
+Processing.prototype.noSmooth = function(){};
+Processing.prototype.rectMode = function(mode){};
+Processing.prototype.smooth = function(){};
+Processing.prototype.strokeCap = function(mode){};
+Processing.prototype.strokeJoin = function(mode){};
+Processing.prototype.strokeWeight = function(weight){};
+
+// Shape Vertex
+Processing.prototype.beginShape = function(mode){};
+Processing.prototype.bezierVertex = function(cx1, cy1, cx2, cy2, x, y){};
+Processing.prototype.bezierVertex = function(cx1, cy1, cz1, cx2, cy2, cz2, x, y, z){};
+Processing.prototype.curveVertex = function(x, y){};
+Processing.prototype.curveVertex = function(x, y, z){};
+Processing.prototype.endShape = function(){};
+Processing.prototype.endShape = function(mode){};
+Processing.prototype.texture = function(image){};
+Processing.prototype.textureMode = function(mode){};
+
+Processing.prototype.vertex = function(x, y){};
+Processing.prototype.vertex = function(x, y, z){};
+Processing.prototype.vertex = function(x, y, u, v){};
+Processing.prototype.vertex = function(x, y, z, u, v){};
+
+// Shape Loading & Displaying
+Processing.prototype.loadShape = function(filename){};
+Processing.prototype.shape = function(sh){};
+Processing.prototype.shape = function(sh, x, y){};
+Processing.prototype.shape = function(sh, x, y, width, height){};
+Processing.prototype.shapeMode = function(mode){};
