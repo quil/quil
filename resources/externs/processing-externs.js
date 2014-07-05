@@ -147,3 +147,80 @@ Processing.prototype.createGraphics = function(width, height, renderer){};
 Processing.prototype.createGraphics = function(width, height, renderer, filename){};
 
 PGraphics.prototype.hint = function(item){};
+
+// Typography Creating & Displaying
+
+Processing.prototype.createFont = function(name, size){};
+Processing.prototype.loadFont = function(fontname){};
+
+Processing.prototype.text = function(data, x, y){};
+Processing.prototype.text = function(data, x, y, z){};
+Processing.prototype.text = function(data, x, y, width, height){};
+Processing.prototype.text = function(data, x, y, width, height, z){};
+
+Processing.prototype.textFont = function(pfont, size){};
+Processing.prototype.textFont = function(pfont){};
+
+// Typography Attributes
+Processing.prototype.textAlign = function(align){};
+Processing.prototype.textAlign = function(align, yalign){};
+Processing.prototype.textLeading = function(dist){};
+Processing.prototype.textMode = function(mode){};
+Processing.prototype.textSize = function(size){};
+Processing.prototype.textWidth = function(data){};
+
+// Typography Mertics
+Processing.prototype.textAscent = function(){};
+Processing.prototype.textDescent = function(){};
+
+// Math Calculation
+Processing.prototype.abs = function(arg){};
+Processing.prototype.ceil = function(arg){};
+Processing.prototype.constrain = function(value, max, min){};
+Processing.prototype.dist = function(x1, y1, x2,y2){};
+Processing.prototype.dist = function(x1, y1, z1, x2, y2, z2){};
+Processing.prototype.exp = function(arg){};
+Processing.prototype.floor = function(arg){};
+Processing.prototype.lerp = function(value1, value2, amt){};
+Processing.prototype.log = function(arg){};
+Processing.prototype.mag = function(a, b){};
+Processing.prototype.mag = function(a, b, c){};
+Processing.prototype.map = function(value, low1, high1, low2, high2){};		// ???
+
+Processing.prototype.max = function(value1, value2){};
+Processing.prototype.max = function(value1, value2, value3){};
+Processing.prototype.max = function(array){};
+
+Processing.prototype.min = function(value1, value2){};
+Processing.prototype.min = function(value1, value2, value3){};
+Processing.prototype.min = function(array){};
+
+Processing.prototype.norm = function(value, low, high){};
+Processing.prototype.pow = function(num, exponent){};
+Processing.prototype.round = function(value){};
+Processing.prototype.sq = function(value){};
+Processing.prototype.sqrt = function(value){};
+
+// Math Trigonometry
+Processing.prototype.acos = function(value){};
+Processing.prototype.asin = function(value){};
+Processing.prototype.atan = function(value){};
+Processing.prototype.atan2 = function(x, y){};
+Processing.prototype.cos = function(angle){};
+Processing.prototype.degrees = function(angle){};
+Processing.prototype.radians = function(angle){};
+Processing.prototype.sin = function(rad){};
+Processing.prototype.tan = function(angle){};
+
+// Math Random
+Processing.prototype.noise = function(x){};
+Processing.prototype.noise = function(x, y){};
+Processing.prototype.noise = function(x, y, z){};
+
+Processing.prototype.noiseDetail = function(octaves, fallout){};
+Processing.prototype.noiseDetail = function(octaves){};
+Processing.prototype.noiseSeed = function(seed){};
+
+Processing.prototype.random = function(high){};
+Processing.prototype.random = function(high, low){};
+Processing.prototype.randomSeed = function(seed){};
