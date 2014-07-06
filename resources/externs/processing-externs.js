@@ -6,31 +6,13 @@ Processing.use3DContext;
 Processing.focused;
 Processing.breakShape;
 Processing.glyphTable;
-Processing.pmouseX;
-Processing.pmouseY;
-Processing.mouseX;
-Processing.mouseY;
-Processing.mouseButton;
-Processing.mouseScroll;
+
 
 // Undefined event handlers to be replaced by user when needed
-Processing.mouseClicked;
-Processing.mouseDragged;
-Processing.mouseMoved;
-Processing.mousePressed;
-Processing.mouseReleased;
-Processing.mouseScrolled;
-Processing.mouseOver;
-Processing.mouseOut;
 Processing.touchStart;
 Processing.touchEnd;
 Processing.touchMove;
 Processing.touchCancel;
-Processing.key;
-Processing.keyCode;
-Processing.keyPressed;
-Processing.keyReleased;
-Processing.keyTyped;
 Processing.draw;
 Processing.setup;
 
@@ -299,3 +281,124 @@ Processing.prototype.shape = function(sh){};
 Processing.prototype.shape = function(sh, x, y){};
 Processing.prototype.shape = function(sh, x, y, width, height){};
 Processing.prototype.shapeMode = function(mode){};
+
+// Input Mouse
+Processing.mouseButton;
+Processing.mouseClicked;
+Processing.mouseDragged;
+Processing.mouseMoved;
+Processing.mouseOut;
+Processing.mouseOver;
+Processing.mousePressed;
+Processing.mouseReleased;
+Processing.mouseX;
+Processing.mouseY;
+Processing.pmouseX;
+Processing.pmouseY;
+
+// not in offical reference
+Processing.mouseScroll;
+Processing.mouseScrolled;
+
+// Input Keyboard
+Processing.key;
+Processing.keyCode;
+Processing.keyPressed;
+Processing.keyReleased;
+Processing.keyTyped;
+
+// Input Files
+Processing.prototype.loadBytes = function(filename){};
+Processing.prototype.loadStrings = function(filename){};
+
+// Input Web
+Processing.prototype.link = function(url){};
+Processing.prototype.link = function(url, target){};
+Processing.prototype.status = function(text){};
+
+// Input Time & Date
+Processing.prototype.day = function(){};
+Processing.prototype.hour = function(){};
+Processing.prototype.millis = function(){};
+Processing.prototype.minute = function(){};
+Processing.prototype.month = function(){};
+Processing.prototype.second = function(){};
+Processing.prototype.year = function(){};
+
+// Output Text Area
+Processing.prototype.print = function(message){};
+Processing.prototype.println = function(message){};
+
+// Output Image
+Processing.prototype.save = function(filename){};
+Processing.prototype.saveFrame = function(){};
+Processing.prototype.saveFrame = function(filename){};
+
+// Output Files
+Processing.prototype.saveStrings = function(filename, strings){};
+
+// Transform
+Processing.prototype.applyMatrix = function(n00, n01, n02, n03,
+																            n04, n05, n06, n07,
+																            n08, n09, n10, n11,
+																            n12, n13, n14, n15){};
+Processing.prototype.popMatrix = function(){};
+Processing.prototype.printMatrix = function(){};
+Processing.prototype.pushMatrix = function(){};
+Processing.prototype.resetMatrix = function(){};
+Processing.prototype.rotate = function(angle){};
+Processing.prototype.rotateX = function(angle){};
+Processing.prototype.rotateY = function(angle){};
+Processing.prototype.rotateZ = function(angle){};
+
+Processing.prototype.scale = function(size){};
+Processing.prototype.scale = function(x, y){};
+Processing.prototype.scale = function(x, y, z){};
+
+Processing.prototype.translate = function(x, y){};
+Processing.prototype.translate = function(x, y, z){};
+
+// Lights, Camera Ligths
+Processing.prototype.ambientLight = function(v1, v2, v3){};
+Processing.prototype.ambientLight = function(v1, v2, v3, x, y, z){};
+Processing.prototype.directionalLight = function(v1, v2, v3, nx, ny, nz){};
+Processing.prototype.lightFalloff = function(constant, linear, quadratic){};
+Processing.prototype.lightSpecular = function(v1, v2, v3){};
+Processing.prototype.lights = function(){};
+Processing.prototype.noLights = function(){};
+Processing.prototype.pointLight = function(v1, v2, v3, nx, ny, nz){};
+Processing.prototype.spotLight = function(v1, v2, v3, nx, ny, nz, angle, concentration){};
+
+// Lights, Camera Camera
+Processing.prototype.beginCamera = function(){};
+Processing.prototype.camera = function(){};
+Processing.prototype.camera = function(eyeX, eyeY, eyeZ,centerX, centerY, centerZ, upX, upY, upZ){};
+Processing.prototype.endCamera = function(){};
+Processing.prototype.frustum = function(left, right, bottom,top, near, far){};
+Processing.prototype.ortho = function(){};
+Processing.prototype.ortho = function(left, right, bottom,top, near, far){};
+Processing.prototype.perspective = function(){};
+Processing.prototype.perspective = function(fov, aspect, zNear,zFar){};
+Processing.prototype.printCamera = function(){};
+Processing.prototype.printProjection = function(){};
+
+// Lights, Camera Coordinates
+Processing.prototype.modelX = function(x, y, z){};
+Processing.prototype.modelY = function(x, y, z){};
+Processing.prototype.modelZ = function(x, y, z){};
+
+Processing.prototype.screenX = function(x, y, z){};
+Processing.prototype.screenY = function(x, y, z){};
+Processing.prototype.screenZ = function(x, y, z){};
+
+// Lights, Camera Material Properties
+Properties.prototype.ambient = function(arg){};
+Properties.prototype.ambient = function(v1, v2, v3){};
+
+Properties.prototype.emissive = function(arg){};
+Properties.prototype.emissive = function(v1, v2, v3){};
+
+Properties.prototype.shininess = function(shine){};
+
+Properties.prototype.specular = function(arg){};
+Properties.prototype.specular = function(v1, v2, v3){};
