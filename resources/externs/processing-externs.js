@@ -220,8 +220,8 @@ Processing.prototype.sphereDetail = function(ures, vres){};
 var PShare = {};
 var PShare = function(family){};
 
-PShare.width = undefined;
-PShare.height = undefined;
+PShare.width;
+PShare.height;
 
 PShare.prototype.isVisible = function(){};
 PShare.prototype.setVisible = function(visible){};
