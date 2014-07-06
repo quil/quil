@@ -397,13 +397,13 @@ Processing.prototype.screenY = function(x, y, z){};
 Processing.prototype.screenZ = function(x, y, z){};
 
 // Lights, Camera Material Properties
-Properties.prototype.ambient = function(arg){};
-Properties.prototype.ambient = function(v1, v2, v3){};
+Processing.prototype.ambient = function(arg){};
+Processing.prototype.ambient = function(v1, v2, v3){};
 
-Properties.prototype.emissive = function(arg){};
-Properties.prototype.emissive = function(v1, v2, v3){};
+Processing.prototype.emissive = function(arg){};
+Processing.prototype.emissive = function(v1, v2, v3){};
 
-Properties.prototype.shininess = function(shine){};
+Processing.prototype.shininess = function(shine){};
 
-Properties.prototype.specular = function(arg){};
-Properties.prototype.specular = function(v1, v2, v3){};
+Processing.prototype.specular = function(arg){};
+Processing.prototype.specular = function(v1, v2, v3){};
