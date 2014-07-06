@@ -2,34 +2,36 @@ var Processing = {};
 var Processing = function(aCanvas, aCode, aFunctions){};
 
 Processing.name;
-Processing.use3DContext;
-Processing.focused;
-Processing.breakShape;
-Processing.glyphTable;
 
-
-// Undefined event handlers to be replaced by user when needed
+// Structure
+Processing.draw;
+Processing.prototype.exit = function(){};
+Processing.prototype.loop = function(){};
+Processing.prototype.noLoop = function(){};
+Processing.prototype.pushStyle = function(){};
+Processing.prototype.popStyle = function(){};
+Processing.prototype.redraw = function(){};
+Processing.setup;
+Processing.prototype.size = function(x, y){};
+Processing.prototype.size = function(x, y, z){};
 Processing.touchStart;
 Processing.touchEnd;
 Processing.touchMove;
 Processing.touchCancel;
-Processing.draw;
-Processing.setup;
 
-// Remapped vars
-Processing.__mousePressed;
-Processing.__keyPressed;
-Processing.__frameRate;
+// Environment
+Processing.prototype.cursor = function(){};
+Processing.prototype.cursor = function(mode){};
+Processing.prototype.cursor = function(image, x, y){};
 
-// The current animation frame
+Processing.focused;
 Processing.frameCount;
-
-// The height/width of the canvas
-Processing.width;
+Processing.prototype.frameRate = function(fps){};
+Processing.__frameRate;
 Processing.height;
+Processing.prototype.noCursor = function(){};
+Processing.width;
 
-Processing.prototype.size = function(x, y){};
-Processing.prototype.size = function(x, y, z){};
 
 // Color Setting
 Processing.prototype.background = function(gray){};
@@ -299,6 +301,9 @@ Processing.pmouseY;
 // not in offical reference
 Processing.mouseScroll;
 Processing.mouseScrolled;
+
+Processing.__mousePressed;
+Processing.__keyPressed;
 
 // Input Keyboard
 Processing.key;
