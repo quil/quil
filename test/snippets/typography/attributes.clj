@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet text-align-s {}
+(defsnippet text-align {}
   (q/fill 0)
   (q/stroke 255 0 0)
   (q/stroke-weight 5)
@@ -27,14 +27,14 @@
       (q/text txt x y)
       (q/point x y))))
 
-(defsnippet text-leading-s {}
+(defsnippet text-leading {}
   (q/fill 0)
   (doseq [ind (range 4)
           :let [leading (* ind 10)]]
     (q/text-leading leading)
     (q/text (str "text leading\n" leading) 20 (+ 20 (* ind 100)))))
 
-(defsnippet text-mode-s {:renderer :p2d}
+(defsnippet text-mode {:renderer :p2d}
   (q/fill 0)
   (q/text-mode :model)
   (q/text "text-mode: model" 20 50)
@@ -42,14 +42,14 @@
   (q/text-mode :shape)
   (q/text "text-mode: shape" 20 100))
 
-(defsnippet text-size-s {}
+(defsnippet text-size {}
   (q/fill 0)
   (doseq [ind (range 6)
           :let [size (+ 10 (* ind 5))]]
     (q/text-size size)
     (q/text (str "Text size: " size) 20 (+ 20 (* ind 80)))))
 
-(defsnippet text-width-s {}
+(defsnippet text-width {}
   (q/fill 0)
   (let [txt "Hello, world!"
         width (q/text-width txt)]

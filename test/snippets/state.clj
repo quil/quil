@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet set-state-state-s
+(defsnippet set-state-state
   {:setup (q/set-state! :text "I'm state!"
                       :year (q/year))}
   (q/fill 0)

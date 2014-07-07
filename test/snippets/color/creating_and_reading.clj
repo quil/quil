@@ -3,7 +3,7 @@
             [quil.core :as q]))
 
 
-(defsnippet alpha-s {}
+(defsnippet alpha {}
   (q/background 255)
 
   (let [semi-red (q/color 255 0 0 120)
@@ -16,7 +16,7 @@
     (q/rect 70 70 100 100)))
 
 
-(defsnippet blend-color-s {}
+(defsnippet blend-color {}
   (q/background 255)
 
   (let [c1 (q/color 255 100 20 50) ; very transparent red
@@ -38,7 +38,7 @@
         (q/rect (* col 100) (* (inc row) 100) 70 70)))))
 
 
-(defsnippet red-green-blue-s {}
+(defsnippet red-green-blue {}
   (q/background 255)
 
   (let [col (q/color 123 50 220)]
@@ -54,7 +54,7 @@
     (q/fill 0 0 (q/blue col))
     (q/rect 210 210 100 100)))
 
-(defsnippet hue-saturation-brightness-s {}
+(defsnippet hue-saturation-brightness {}
   (q/background 255)
   (q/color-mode :hsb)
 
@@ -71,7 +71,7 @@
     (q/fill 255 255 (q/brightness col))
     (q/rect 210 210 100 100)))
 
-(defsnippet color-s {}
+(defsnippet color {}
   (q/background 255)
 
   (q/fill (q/color 0)) ; black
@@ -86,7 +86,7 @@
   (q/fill (q/color 0 255 255 120)) ; semitransparent cyan
   (q/rect 210 210 100 100))
 
-(defsnippet color-mode-s {}
+(defsnippet color-mode {}
   (q/background 255)
 
   ; Result image is total mess, as apparently color-mode is global
@@ -108,7 +108,7 @@
   (q/fill 5 10 0 15)
   (q/rect 210 210 100 100))
 
-(defsnippet current-fill-s {}
+(defsnippet current-fill {}
   (q/background 255)
 
   (q/fill 255 0 0)
@@ -121,7 +121,7 @@
     (q/fill cur-fill)
     (q/rect 140 140 100 100)))
 
-(defsnippet current-stroke-s {}
+(defsnippet current-stroke {}
   (q/background 255)
 
   (q/stroke 255 0 0)
@@ -134,7 +134,7 @@
     (q/stroke cur-stroke)
     (q/rect 140 140 100 100)))
 
-(defsnippet lerp-color-s {}
+(defsnippet lerp-color {}
   (q/background 255)
   (let [c1 (q/color 255 0 0)
         c2 (q/color 0 0 255)]

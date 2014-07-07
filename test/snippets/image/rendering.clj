@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet blend-mode-s {:renderer :p2d}
+(defsnippet blend-mode {:renderer :p2d}
   (q/background 255)
   (let [modes [:replace :blend :add :subtract :darkest
                :lightest :exclusion :multiply :screen]
@@ -25,7 +25,7 @@
             (q/rect 20 10 20 80))
           (q/image gr (* col 120) (* row 120)))))))
 
-(defsnippet create-graphics-s {}
+(defsnippet create-graphics {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr

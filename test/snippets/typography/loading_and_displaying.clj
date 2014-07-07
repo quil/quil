@@ -3,7 +3,7 @@
             [quil.core :as q]
             clojure.java.io))
 
-(defsnippet available-fonts-s {}
+(defsnippet available-fonts {}
   (q/background 255)
   (q/fill 0)
   (q/text-size 7)
@@ -13,7 +13,7 @@
           [row font] (map-indexed vector fonts)]
     (q/text font (+ 20 (* col 100)) (+ 20 (* row 10)))))
 
-(defsnippet create-font-s {}
+(defsnippet create-font {}
   (q/background 255)
   (q/fill 0)
 
@@ -34,7 +34,7 @@
   (q/text (str "'My Custom Font' available: " (q/font-available? "My Custom Font"))
         20 40))
 
-(defsnippet load-font-s {}
+(defsnippet load-font {}
   (q/background 255)
   (q/fill 0)
   (let [font (q/load-font (clojure.java.io/resource "ComicSansMS-48.vlw"))]
@@ -43,7 +43,7 @@
          (q/text-font))
     (q/text "CoMiC SaNs HeRe" 20 100)))
 
-(defsnippet text-s {:renderer :p3d}
+(defsnippet text {:renderer :p3d}
   (q/background 255)
   (q/fill 0)
   (q/camera 50 50 50 0 0 0 0 0 -1)
@@ -57,14 +57,14 @@
   (q/rect-mode :corners)
   (q/text "box" -30 0 30 -15))
 
-(defsnippet text-char-s {:renderer :p3d}
+(defsnippet text-char {:renderer :p3d}
   (q/background 255)
   (q/fill 0)
   (q/camera 50 50 50 0 0 0 0 0 -1)
   (q/text-char \Q 0 0)
   (q/text-char \W 0 0 10))
 
-(defsnippet text-font-s {}
+(defsnippet text-font {}
   (q/background 255)
   (q/fill 0)
   (let [font (q/create-font "Courier New" 20)]
@@ -73,7 +73,7 @@
     (q/text-font font 30)
     (q/text "(print-bigger :hello)" 20 100)))
 
-(defsnippet text-num-s {:renderer :p3d}
+(defsnippet text-num {:renderer :p3d}
   (q/background 255)
   (q/fill 0)
   (q/camera 70 70 70 0 0 0 0 0 -1)

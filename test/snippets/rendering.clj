@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet hint-s {}
+(defsnippet hint {}
   (let [hints [:enable-native-fonts
                :disable-native-fonts
                :enable-depth-test
@@ -27,7 +27,7 @@
       (q/hint h)))
   (q/ellipse 250 250 400 200))
 
-(defsnippet with-graphics-s {}
+(defsnippet with-graphics {}
   (let [gr (q/create-graphics 250 250)]
     (q/with-graphics gr
       (q/background 255)
@@ -38,7 +38,7 @@
     (q/image gr 0 250)
     (q/image gr 250 250)))
 
-(defsnippet load-shader-s {:renderer :p2d}
+(defsnippet load-shader {:renderer :p2d}
   (let [gr (q/create-graphics 250 250)
         path (clojure.java.io/resource "SimpleShader.glsl")
         shd (q/load-shader (str path))]

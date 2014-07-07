@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet background-s {}
+(defsnippet background {}
   (q/background 255 0 0)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
@@ -21,7 +21,7 @@
       (q/background 0 0 255 120))
     (q/image gr 210 210)))
 
-(defsnippet background-image-s {}
+(defsnippet background-image {}
   (let [gr (q/create-graphics (q/width) (q/height))]
     (q/with-graphics gr
       (q/background 0 120 120)
@@ -29,7 +29,7 @@
 
     (q/background-image gr)))
 
-(defsnippet fill-s {}
+(defsnippet fill {}
   (q/background 0 0 255)
 
   (q/fill 120)
@@ -44,7 +44,7 @@
   (q/fill 255 0 0 120)
   (q/rect 210 210 100 100))
 
-(defsnippet no-fill-s {}
+(defsnippet no-fill {}
   (q/background 255)
 
   (q/stroke 0)
@@ -54,7 +54,7 @@
   (q/no-fill)
   (q/rect 70 70 100 100))
 
-(defsnippet no-stroke-s {}
+(defsnippet no-stroke {}
   (q/background 255)
 
   (q/fill 120)
@@ -64,7 +64,7 @@
   (q/no-stroke)
   (q/rect 70 70 100 100))
 
-(defsnippet stroke-s {}
+(defsnippet stroke {}
   (q/background 255)
   (q/stroke-weight 10)
 

@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet ellipse-mode-s {}
+(defsnippet ellipse-mode {}
   (q/stroke-weight 5)
   (q/ellipse-mode :center)
   (q/with-translation [125 125]
@@ -25,7 +25,7 @@
     (q/point -50 -35)
     (q/point 50 35)))
 
-(defsnippet smooth-no-smooth-s {:renderer :p2d}
+(defsnippet smooth-no-smooth {:renderer :p2d}
   (q/smooth)
   (q/with-translation [125 125]
    (q/ellipse 0 0 200 200))
@@ -38,7 +38,7 @@
   (q/with-translation [375 125]
     (q/ellipse 0 0 200 200)))
 
-(defsnippet rect-mode-s {}
+(defsnippet rect-mode {}
   (q/stroke-weight 5)
   (q/rect-mode :center)
   (q/with-translation [125 125]
@@ -69,7 +69,7 @@
     (q/point -50 -35)
     (q/point 50 35)))
 
-(defsnippet stroke-cap-s {}
+(defsnippet stroke-cap {}
   (q/stroke-weight 12)
   (q/stroke-cap :square)
   (q/line 230 200 270 200)
@@ -80,7 +80,7 @@
   (q/stroke-cap :round)
   (q/line 230 300 270 300))
 
-(defsnippet stroke-join-s {}
+(defsnippet stroke-join {}
   (q/rect-mode :center)
   (q/stroke-weight 12)
   (q/stroke-join :miter)
@@ -92,7 +92,7 @@
   (q/stroke-join :round)
   (q/rect 125 375 100 100))
 
-(defsnippet stroke-weight-s {}
+(defsnippet stroke-weight {}
   (doseq [i (range 1 10)]
     (q/stroke-weight i)
     (q/line 230 (+ (* i 30) 100)

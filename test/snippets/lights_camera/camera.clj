@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet begin-camera-end-camera-camera-s {:renderer :p3d}
+(defsnippet begin-camera-end-camera-camera {:renderer :p3d}
   (q/background 255)
   (q/begin-camera)
   (q/camera)
@@ -23,7 +23,7 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-(defsnippet camera-s {:renderer :p3d}
+(defsnippet camera {:renderer :p3d}
   (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
 
@@ -38,7 +38,7 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-(defsnippet frustum-s {:renderer :p3d}
+(defsnippet frustum {:renderer :p3d}
   (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/frustum -100 100 -100 100 200 330)
@@ -54,7 +54,7 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-(defsnippet ortho-s {:renderer :p2d}
+(defsnippet ortho {:renderer :p2d}
   (let [ortho-params [[] [0 300 0 300] [0 300 0 300 0 170]]
         pos [[0 0] [250 0] [127 250]]]
     (dotimes [ind (count ortho-params)]
@@ -67,7 +67,7 @@
           (q/box 100))
         (apply q/image gr (nth pos ind))))))
 
-(defsnippet perspective-s {:renderer :p2d}
+(defsnippet perspective {:renderer :p2d}
   (let [perspective-params [[] [(/ q/PI 2) 0.5 50 300]]
         pos [[0 0] [250 0] [127 250]]]
     (dotimes [ind (count perspective-params)]
@@ -80,8 +80,8 @@
           (q/box 100))
         (apply q/image gr (nth pos ind))))))
 
-(defsnippet print-camera-s {:renderer :p3d}
+(defsnippet print-camera {:renderer :p3d}
   (q/print-camera))
 
-(defsnippet print-projection-s {:renderer :p3d}
+(defsnippet print-projection {:renderer :p3d}
   (q/print-projection))

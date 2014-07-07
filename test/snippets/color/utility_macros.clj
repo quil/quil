@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet with-fill-s {}
+(defsnippet with-fill {}
   (q/fill 255) ; global white fill
 
   (q/rect 30 30 60 60) ; white rect
@@ -13,7 +13,7 @@
 
   (q/rect 120 120 150 150)) ; white rect again
 
-(defsnippet with-stroke-s {}
+(defsnippet with-stroke {}
   (q/fill 255) ; global white fill
   (q/stroke-weight 10) ; make borders thicker
 

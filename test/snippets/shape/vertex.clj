@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet begin-contour-end-contour-s {:renderer :p2d}
+(defsnippet begin-contour-end-contour {:renderer :p2d}
   (q/stroke 255 0 0)
   (q/begin-shape)
   (q/vertex 250 20)
@@ -15,7 +15,7 @@
   (q/end-contour)
   (q/end-shape :close))
 
-(defsnippet begin-shape-end-shape-s {:renderer :p2d}
+(defsnippet begin-shape-end-shape {:renderer :p2d}
   (q/stroke 255 0 0)
   (doseq [[ind begin-mode close-mode]
           [[0 nil nil]
@@ -42,7 +42,7 @@
       (q/end-shape close-mode)
       (q/end-shape))))
 
-(defsnippet bezier-vertex-s {:renderer :p3d}
+(defsnippet bezier-vertex {:renderer :p3d}
   (q/camera -400 250 -100 500 250 0 0 0 1)
   (q/begin-shape)
   (q/vertex 30 20)
@@ -56,7 +56,7 @@
   (q/bezier-vertex 250 380 40 360 125 10 30 20 0)
   (q/end-shape :close))
 
-(defsnippet curve-vertex-s {:renderer :p3d}
+(defsnippet curve-vertex {:renderer :p3d}
   (q/camera 50 200 50 50 0 0 0 0 1)
   (q/begin-shape)
   (q/curve-vertex 0 0)
@@ -78,7 +78,7 @@
   (q/curve-vertex 0 0 0)
   (q/end-shape :close))
 
-(defsnippet quadratic-vertex-s {:renderer :p3d}
+(defsnippet quadratic-vertex {:renderer :p3d}
   (q/camera 50 200 50 50 0 0 0 0 -1)
   (q/line 0 0 0 0 0 100)
   (q/line 0 0 0 0 100 0)
@@ -96,7 +96,7 @@
   (q/quadratic-vertex 80 0 50 100 0 0)
   (q/end-shape :close))
 
-(defsnippet texture-s {:renderer :p2d}
+(defsnippet texture {:renderer :p2d}
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
       (q/background 255)
@@ -119,7 +119,7 @@
       (q/vertex -50 100 25 100)
       (q/end-shape :close))))
 
-(defsnippet texture-mode-s {:renderer :p2d}
+(defsnippet texture-mode {:renderer :p2d}
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
       (q/background 255)
@@ -147,7 +147,7 @@
       (q/vertex 0 100 0 1)
       (q/end-shape :close))))
 
-(defsnippet texture-wrap-s {:renderer :p2d}
+(defsnippet texture-wrap {:renderer :p2d}
   (let [txtr (q/create-graphics 100 100)
         mode (if (even? (q/frame-count)) :clamp :repeat)]
     (q/with-graphics txtr
@@ -167,7 +167,7 @@
       (q/vertex 0 200 0 200)
       (q/end-shape :close))))
 
-(defsnippet vertex-s {:renderer :p3d}
+(defsnippet vertex {:renderer :p3d}
   (q/camera 100 400 200 100 0 0 0 0 -1)
   (q/line 0 0 0 0 0 100)
   (q/line 0 0 0 0 100 0)

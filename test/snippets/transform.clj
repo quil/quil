@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet apply-matrix-s {:renderer :p3d}
+(defsnippet apply-matrix {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)
@@ -17,7 +17,7 @@
                  0 0 0 1))
   (q/box 50))
 
-(defsnippet push-matrix-pop-matrix-s {}
+(defsnippet push-matrix-pop-matrix {}
   (q/fill 255 0 0)
   (q/translate 20 20)
   (q/rect 0 0 50 50)
@@ -29,20 +29,20 @@
   (q/translate 150 0)
   (q/rect 0 0 50 50))
 
-(defsnippet print-matrix-s {}
+(defsnippet print-matrix {}
   (q/translate 250 250)
   (q/rotate 1)
   (q/rect 0 0 100 100)
   (q/print-matrix))
 
-(defsnippet reset-matrix-s {}
+(defsnippet reset-matrix {}
   (q/rect 0 0 100 50)
   (q/translate 250 250)
   (q/rect 0 0 50 50)
   (q/reset-matrix)
   (q/rect 0 0 50 100))
 
-(defsnippet rotate-s {:renderer :p3d}
+(defsnippet rotate {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)
@@ -65,7 +65,7 @@
   (q/box 50)
   (q/pop-matrix))
 
-(defsnippet rotate-x-y-z-s {:renderer :p3d}
+(defsnippet rotate-x-y-z {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)
@@ -88,7 +88,7 @@
   (q/box 50)
   (q/pop-matrix))
 
-(defsnippet scale-s {:renderer :p3d}
+(defsnippet scale {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)
@@ -107,7 +107,7 @@
     (q/box 50)
     (q/scale 2 1 0.75)))
 
-(defsnippet shear-x-y-s {}
+(defsnippet shear-x-y {}
   (q/with-translation [125 125]
     (q/rect 0 0 100 50))
   (q/with-translation [375 125]
@@ -117,7 +117,7 @@
     (q/shear-x 0.5)
     (q/rect 0 0 100 50)))
 
-(defsnippet translate-s {:renderer :p3d}
+(defsnippet translate {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)

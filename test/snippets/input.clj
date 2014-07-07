@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet keyboard-s {}
+(defsnippet keyboard {}
   (q/background 255)
   (q/fill 0)
   (doseq [[ind capt fn] [[0 "key-as-keyword" q/key-as-keyword]
@@ -12,7 +12,7 @@
                          [4 "raw-key" q/raw-key]]]
     (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
-(defsnippet mouse-s {}
+(defsnippet mouse {}
   (q/background 255)
   (q/fill 0)
   (doseq [[ind capt fn] [[0 "mouse-button" q/mouse-button]
@@ -23,7 +23,7 @@
                          [5 "pmouse-y" q/pmouse-y]]]
     (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
-(defsnippet time-and-date-s {}
+(defsnippet time-and-date {}
   (q/background 255)
   (q/fill 0)
   (doseq [[ind capt fn] [[0 "millis" q/millis]

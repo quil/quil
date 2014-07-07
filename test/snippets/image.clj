@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet create-image-s {}
+(defsnippet create-image {}
   (q/background 255)
   (let [im (q/create-image 100 100 :rgb)]
     (dotimes [x 100]

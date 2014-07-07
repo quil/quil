@@ -2,18 +2,18 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet box-s {:renderer :p3d}
+(defsnippet box {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/with-translation [100 0 0]
     (q/box 70))
   (q/with-translation [0 100 0]
     (q/box 70 100 50)))
 
-(defsnippet sphere-s {:renderer :p3d}
+(defsnippet sphere {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/sphere 150))
 
-(defsnippet sphere-detail-s {:renderer :p3d}
+(defsnippet sphere-detail {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/sphere-detail 30) ; default
   (q/with-translation [0 0 100]

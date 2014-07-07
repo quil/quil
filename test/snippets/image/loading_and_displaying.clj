@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet image-s {}
+(defsnippet image {}
   (q/background 255)
   (let [gr (q/create-graphics 70 70)]
     (q/with-graphics gr
@@ -11,7 +11,7 @@
     (q/image gr 0 0)
     (q/image gr 100 0 100 70)))
 
-(defsnippet image-mode-s {}
+(defsnippet image-mode {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
@@ -33,17 +33,17 @@
     (q/point 350 50)
     (q/point 400 150)))
 
-(defsnippet load-image-s {}
+(defsnippet load-image {}
   (let [im (q/load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
     (q/image im 0 0)))
 
-(defsnippet resize-image-s {}
+(defsnippet resize-image {}
   (let [im (q/load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
     (q/image im 0 0)
     (q/resize im 50 50)
     (q/image im 0 0)))
 
-(defsnippet mask-image-s {:renderer :p3d}
+(defsnippet mask-image {:renderer :p3d}
   (q/background 255)
   (let [gr (q/create-graphics 100 100 :p3d)
         gr2 (q/create-graphics 100 100 :p3d)
@@ -88,7 +88,7 @@
       (q/mask-image mask))
     (q/image gr2 260 140)))
 
-(defsnippet no-tint-s {}
+(defsnippet no-tint {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics (q/create-graphics 100 100)
@@ -113,13 +113,13 @@
     (q/no-tint)
     (q/image gr 200 0)))
 
-(defsnippet request-image-s
+(defsnippet request-image
   {:setup (q/set-state! :image (q/request-image "http://cloud.github.com/downloads/quil/quil/quil.png"))}
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (q/image (q/state :image) 0 0)))
 
-(defsnippet tint-s {}
+(defsnippet tint {}
   (q/background 127)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr

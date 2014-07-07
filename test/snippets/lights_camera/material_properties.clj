@@ -2,7 +2,7 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
-(defsnippet ambient-s {:renderer :p3d}
+(defsnippet ambient {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 0 0 0 0 -1)
   (q/ambient-light 255 127 127)
@@ -12,7 +12,7 @@
   (q/ambient 127)
   (q/sphere 40))
 
-(defsnippet emissive-s {:renderer :p3d}
+(defsnippet emissive {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 0 0 0 0 -1)
   (q/ambient-light 255 127 127)
@@ -22,7 +22,7 @@
   (q/emissive (q/color 0 127 0))
   (q/sphere 40))
 
-(defsnippet shininess-s {:renderer :p3d}
+(defsnippet shininess {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 25 0 0 0 -1)
   (q/fill 127 0 255)
@@ -36,7 +36,7 @@
   (q/shininess 10)
   (q/sphere 40))
 
-(defsnippet specular-s {:renderer :p3d}
+(defsnippet specular {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 25 0 0 0 -1)
   (q/no-stroke)
