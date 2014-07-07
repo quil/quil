@@ -1,18 +1,18 @@
 (ns snippets.structure
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
 (defsnippet push-style-pop-style-s {}
-  (background 255)
-  (fill 255 0 0)
-  (ellipse 125 125 100 100)
-  (push-style)
-  (fill 0 0 255)
-  (ellipse 250 250 100 100)
-  (pop-style)
-  (ellipse 375 375 100 100))
+  (q/background 255)
+  (q/fill 255 0 0)
+  (q/ellipse 125 125 100 100)
+  (q/push-style)
+  (q/fill 0 0 255)
+  (q/ellipse 250 250 100 100)
+  (q/pop-style)
+  (q/ellipse 375 375 100 100))
 
 (defsnippet delay-s {}
-  (background 127)
-  (ellipse (* 5 (frame-count)) (* 5 (frame-count)) 50 50)
-  (delay-frame (rand-int (* 500 (rand-int 4)))))
+  (q/background 127)
+  (q/ellipse (* 5 (q/frame-count)) (* 5 (q/frame-count)) 50 50)
+  (q/delay-frame (rand-int (* 500 (rand-int 4)))))

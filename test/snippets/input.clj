@@ -1,36 +1,36 @@
 (ns snippets.input
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
 (defsnippet keyboard-s {}
-  (background 255)
-  (fill 0)
-  (doseq [[ind capt fn] [[0 "key-as-keyword" key-as-keyword]
-                         [1 "key-code" key-code]
-                         [2 "key-coded?" #(key-coded? (raw-key))]
-                         [3 "key-pressed?" key-pressed?]
-                         [4 "raw-key" raw-key]]]
-    (text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
+  (q/background 255)
+  (q/fill 0)
+  (doseq [[ind capt fn] [[0 "key-as-keyword" q/key-as-keyword]
+                         [1 "key-code" q/key-code]
+                         [2 "key-coded?" #(q/key-coded? (q/raw-key))]
+                         [3 "key-pressed?" q/key-pressed?]
+                         [4 "raw-key" q/raw-key]]]
+    (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
 (defsnippet mouse-s {}
-  (background 255)
-  (fill 0)
-  (doseq [[ind capt fn] [[0 "mouse-button" mouse-button]
-                         [1 "mouse-pressed?" mouse-pressed?]
-                         [2 "mouse-x" mouse-x]
-                         [3 "mouse-y" mouse-y]
-                         [4 "pmouse-x" pmouse-x]
-                         [5 "pmouse-y" pmouse-y]]]
-    (text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
+  (q/background 255)
+  (q/fill 0)
+  (doseq [[ind capt fn] [[0 "mouse-button" q/mouse-button]
+                         [1 "mouse-pressed?" q/mouse-pressed?]
+                         [2 "mouse-x" q/mouse-x]
+                         [3 "mouse-y" q/mouse-y]
+                         [4 "pmouse-x" q/pmouse-x]
+                         [5 "pmouse-y" q/pmouse-y]]]
+    (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
 (defsnippet time-and-date-s {}
-  (background 255)
-  (fill 0)
-  (doseq [[ind capt fn] [[0 "millis" millis]
-                         [1 "seconds" seconds]
-                         [2 "minute" minute]
-                         [3 "hour" hour]
-                         [4 "day" day]
-                         [5 "month" month]
-                         [6 "year" year]]]
-    (text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
+  (q/background 255)
+  (q/fill 0)
+  (doseq [[ind capt fn] [[0 "millis" q/millis]
+                         [1 "seconds" q/seconds]
+                         [2 "minute" q/minute]
+                         [3 "hour" q/hour]
+                         [4 "day" q/day]
+                         [5 "month" q/month]
+                         [6 "year" q/year]]]
+    (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))

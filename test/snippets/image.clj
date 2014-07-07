@@ -1,11 +1,11 @@
 (ns snippets.image
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
 (defsnippet create-image-s {}
-  (background 255)
-  (let [im (create-image 100 100 :rgb)]
+  (q/background 255)
+  (let [im (q/create-image 100 100 :rgb)]
     (dotimes [x 100]
       (dotimes [y 100]
-        (set-pixel im x y (color (* 2 x) (* 2 y) (+ x y)))))
-    (image im 0 0)))
+        (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
+    (q/image im 0 0)))

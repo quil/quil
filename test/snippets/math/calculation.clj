@@ -1,82 +1,82 @@
 (ns snippets.math.calculation
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
 (defsnippet abs-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(abs -1) = " (abs -1)) 10 20)
-  (text (str "(abs -0.5) = " (abs -0.5)) 10 40))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/abs -1) = " (q/abs -1)) 10 20)
+  (q/text (str "(q/abs -0.5) = " (q/abs -0.5)) 10 40))
 
 (defsnippet ceil-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(ceil 9.03) = " (ceil 9.03)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/ceil 9.03) = " (q/ceil 9.03)) 10 20))
 
 (defsnippet constrain-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(constrain 4 10 20) = " (constrain 4 10 20)) 10 20)
-  (text (str "(constrain 4.5 1.5 3.9) = " (constrain 4.5 1.5 3.9)) 10 40))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/constrain 4 10 20) = " (q/constrain 4 10 20)) 10 20)
+  (q/text (str "(q/constrain 4.5 1.5 3.9) = " (q/constrain 4.5 1.5 3.9)) 10 40))
 
 (defsnippet dist-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(dist 0 0 3 4) = " (dist 0 0 3 4)) 10 20)
-  (text (str "(dist 0 0 0 5 5 5) = " (dist 0 0 0 5 5 5)) 10 40))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/dist 0 0 3 4) = " (q/dist 0 0 3 4)) 10 20)
+  (q/text (str "(q/dist 0 0 0 5 5 5) = " (q/dist 0 0 0 5 5 5)) 10 40))
 
 (defsnippet exp-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(exp 2) = " (exp 2)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/exp 2) = " (q/exp 2)) 10 20))
 
 (defsnippet floor-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(floor 9.03) = " (floor 9.03)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/floor 9.03) = " (q/floor 9.03)) 10 20))
 
 (defsnippet lerp-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(lerp 2 5 0.5) = " (lerp 2 5 0.5)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/lerp 2 5 0.5) = " (q/lerp 2 5 0.5)) 10 20))
 
 (defsnippet log-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(log Math/E) = " (log Math/E)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/log Math/E) = " (q/log Math/E)) 10 20))
 
 (defsnippet mag-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(mag 3 4) = " (mag 3 4)) 10 20)
-  (text (str "(mag 3 4 5) = " (mag 3 4 5)) 10 40))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/mag 3 4) = " (q/mag 3 4)) 10 20)
+  (q/text (str "(q/mag 3 4 5) = " (q/mag 3 4 5)) 10 40))
 
 (defsnippet map-range-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(map-range 2 0 5 10 20) = " (map-range 2 0 5 10 20)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/map-range 2 0 5 10 20) = " (q/map-range 2 0 5 10 20)) 10 20))
 
 (defsnippet norm-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(norm 20 0 50) = " (norm 20 0 50)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/norm 20 0 50) = " (q/norm 20 0 50)) 10 20))
 
 (defsnippet pow-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(pow 2 10) = " (pow 2 10)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/pow 2 10) = " (q/pow 2 10)) 10 20))
 
 (defsnippet round-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(round 9.2) = " (round 9.2)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/round 9.2) = " (q/round 9.2)) 10 20))
 
 (defsnippet sq-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(sq 5) = " (sq 5)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/sq 5) = " (q/sq 5)) 10 20))
 
 (defsnippet sqrt-s {}
-  (background 255)
-  (fill 0)
-  (text (str "(sqrt 25) = " (sqrt 25)) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/sqrt 25) = " (q/sqrt 25)) 10 20))
