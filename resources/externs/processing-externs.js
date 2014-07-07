@@ -2,6 +2,7 @@ var Processing = {};
 var Processing = function(aCanvas, aCode, aFunctions){};
 
 Processing.name;
+Processing.prototype.getInstanceById = function(id){};
 
 // Structure
 Processing.draw;
