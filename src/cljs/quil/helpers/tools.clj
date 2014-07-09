@@ -1,5 +1,4 @@
-(ns quil.helpers.tools
-  (:require [clojure.string :as string]))
+(ns quil.helpers.tools)
 
 
 (defn bind-handler [prc [processing-name handler]]

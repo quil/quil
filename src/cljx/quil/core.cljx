@@ -195,32 +195,6 @@
     :category "State"
     :subcategory nil
     :added "1.0"}
-  state
-  "Retrieve sketch-specific state by key. Must initially call
-  set-state! to store state. If no parameter passed whole
-  state map is returned.
-
-  (set-state! :foo 1)
-  (state :foo) ;=> 1
-  (state) ;=> {:foo 1}"
-  ([] (let #+clj [state* (:state (meta (current-applet)))]
-           #+cljs [state* (. (current-applet) -quil)]
-        (when-not @state*
-          (throw #+clj (Exception. "State not set - use set-state! before fetching state")
-                 #+cljs "State not set - use set-state! before fetching state"))
-        @state*))
-
-  ([key] (let [state (state)]
-           (when-not (contains? state key)
-             (throw #+clj (Exception. (str "Unable to find state with key: " key))
-                    #+cljs (str "Unable to find state with key: " key)))
-           (get state key))))
-
-(defn
-  ^{:requires-bindings true
-    :category "State"
-    :subcategory nil
-    :added "1.0"}
   state-atom
   "Retrieve sketch-specific state-atom. All changes to the
   atom will be reflected in the state.
@@ -231,6 +205,27 @@
   (state :foo) ;=> 2"
   #+clj ([] (-> (current-applet) meta :state))
   #+cljs ([] (. (current-applet) -quil)))
+
+(defn
+  ^{:requires-bindings true
+    :category "State"
+    :subcategory nil
+    :added "1.0"}
+  state
+  "Retrieve sketch-specific state by key. Must initially call
+  set-state! to store state. If no parameter passed whole
+  state map is returned.
+
+  (set-state! :foo 1)
+  (state :foo) ;=> 1
+  (state) ;=> {:foo 1}"
+  ([] @(state-atom))
+
+  ([key] (let [state (state)]
+           (when-not (contains? state key)
+             (throw #+clj (Exception. (str "Unable to find state with key: " key))
+                    #+cljs (js/Error (str "Unable to find state with key: " key))))
+           (get state key))))
 
 (defn
   ^{:requires-bindings true
