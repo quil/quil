@@ -75,7 +75,7 @@
 
 
 (defn sketch
-  [app-name & opts]
+  [& opts]
   (let [opts-map (apply hash-map opts)
         host-elem (dom/get-element (:host opts-map))
         processing-fn (make-sketch opts-map)]

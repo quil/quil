@@ -14,7 +14,7 @@
     `(do
        (defn ~(vary-meta app-name assoc :export true) []
          (quil.sketch/sketch
-          ~app-name ~@(apply concat (seq (merge (dissoc opts :features) features)))))
+          ~@(apply concat (seq (merge (dissoc opts :features) features)))))
 
        ~(when (not (:no-start features))
           `(quil.sketch/add-sketch-to-init-list 

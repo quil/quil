@@ -4521,7 +4521,6 @@
      ~@body
      (.endDraw ~graphics)))
 
-#+clj
 (defn ^{:requires-bindings false
         :category "Environment"
         :subcategory nil
@@ -4621,7 +4620,8 @@
                      Middleware will be applied in the same order as in comp
                      function: [f g] will be applied as (f (g options))."
     [& opts]
-    (apply applet opts))
+    #+clj (apply applet opts)
+    #+cljs (apply applet/sketch opts))
 
 (defmacro ^{:requires-bindings false
             :category "Environment"
