@@ -24,4 +24,8 @@
           ~app-name ~@(apply concat (seq (merge (dissoc opts :features) features)))))
 
        ~(when (not (:no-start features))
-          `(quil.sketch/add-sketch-to-init-list {:fn ~app-name :name (str '~app-name)})))))
+          `(quil.sketch/add-sketch-to-init-list 
+            {:fn ~app-name 
+             :host-id (if (:host raw-opts) 
+                          (:host raw-opts)
+                          '~app-name)})))))

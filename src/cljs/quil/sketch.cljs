@@ -101,7 +101,7 @@
   (let [add-elem? (empty-body?)]
     (doseq [sk @sketch-init-list]
       (when add-elem?
-        (add-canvas (:name sk)))
+        (add-canvas (:host-id sk)))
       ((:fn sk)))))
 
 (defn add-sketch-to-init-list [sk]
