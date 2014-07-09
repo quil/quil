@@ -48,8 +48,8 @@
         mouse-moved     (or (:mouse-moved opts) no-fn)
         mouse-pressed   (or (:mouse-pressed opts) no-fn)
         mouse-released  (or (:mouse-released opts) no-fn)
-        mouse-out       (or (:mouse-out opts) no-fn)
-        mouse-over      (or (:mouse-over opts) no-fn)]
+        mouse-out       (or (:mouse-exited opts) no-fn)
+        mouse-over      (or (:mouse-entered opts) no-fn)]
     (fn [prc]
       (bind-handlers prc
                      :setup  (do
