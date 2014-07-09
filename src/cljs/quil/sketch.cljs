@@ -25,6 +25,9 @@
   ([width height mode]
     (.size (current-applet) (int width) (int height) (resolve-constant-key mode rendering-modes))))
 
+(def ^{:private true}
+  supported-features
+  #{:no-start})
 
 (defn make-sketch [options]
   (let [opts            (->> (:middleware options [])

@@ -1,6 +1,5 @@
 (ns quil.helpers.tools)
 
-
 (defn bind-handler [prc [processing-name handler]]
   `(aset ~prc ~(name processing-name)
     (fn []

@@ -5,19 +5,12 @@
      ~@body))
 
 
-(def ^{:private true}
-	supported-features
-	#{:no-start})
-
-
 (defmacro defsketch
   [app-name & options]
   (let [raw-opts (apply hash-map options)
         opts     (if (:host raw-opts) raw-opts
                      (merge raw-opts {:host app-name}))
-        features (let [user-features (set (:features opts))]
-                   (reduce #(assoc %1 %2 (contains? user-features %2)) {}
-                           supported-features))]
+        features (set (:features opts))]
     `(do
        (defn ~(vary-meta app-name assoc :export true) []
          (quil.sketch/sketch
