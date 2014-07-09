@@ -18,6 +18,4 @@
        (when-not (some #(= :no-start %) ~(:features opts))
           (quil.sketch/add-sketch-to-init-list 
             {:fn ~app-name 
-             :host-id (if (:host raw-opts) 
-                          (:host raw-opts)
-                          '~app-name)})))))
+             :host-id (:host opts)})))))
