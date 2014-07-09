@@ -71,7 +71,7 @@
       (set! (.-quil prc) (atom nil)))))
 
 
-(defn ^:export sketch
+(defn sketch
   [app-name & opts]
   (let [opts-map (apply hash-map opts)
         host-elem (dom/get-element (:host opts-map))
