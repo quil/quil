@@ -73,11 +73,11 @@
 
 (defn ^:export sketch
   [app-name & opts]
-  (let [opts-map (apply hash-map opts)]
-    (let [host-elem (dom/get-element (:host opts-map))
-          processing-fn (make-sketch opts-map)]
-      (when host-elem
-        (js/Processing. host-elem processing-fn)))))
+  (let [opts-map (apply hash-map opts)
+        host-elem (dom/get-element (:host opts-map))
+        processing-fn (make-sketch opts-map)]
+    (when host-elem
+      (js/Processing. host-elem processing-fn))))
 
 
 (def sketch-init-list (atom (list )))

@@ -239,8 +239,7 @@
   Example:
   (set-state! :foo 1 :bar (atom true) :baz (/ (width) 2))"
   [& state-vals]
-  (let #+clj [state* (:state (meta (current-applet)))]
-       #+cljs [state* (. (current-applet) -quil)]
+  (let [state* (state-atom)]
     (when-not @state*
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
