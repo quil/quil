@@ -30,14 +30,11 @@
                    :manual :manual}
 
   :cljx {:builds [{:source-paths ["src/cljx/quil"]
-                   :output-path "target/gen/quil"
+                   :output-path "target/gen/clj/quil"
                    :rules :clj}
                   {:source-paths ["src/cljx/quil"]
                    :output-path "target/gen/cljs/quil"
                    :rules :cljs}]}
 
-  :source-paths ["src" "target/gen" "src/cljs" "target/gen/cljs"]
-  :resource-paths ["resources"]
-
-  :jar-exclusions [#"^cljx.*" #"^cljs.*"]
-  :uberjar-exclusions [#"^cljx.*" #"^cljs.*"])
+  :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
+  :resource-paths ["resources"])
