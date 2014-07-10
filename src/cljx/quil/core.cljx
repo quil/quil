@@ -190,6 +190,10 @@
   [id]
   (.getInstanceById js/Processing id))
 
+(defmacro with-sketch [applet & body]
+  (when-not (clj-compilation?)
+    `(quil.sketch/with-sketch ~applet ~@body)))
+
 (defn
   ^{:requires-bindings true
     :category "State"
