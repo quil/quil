@@ -76,9 +76,12 @@ var PImage = function(width, height){};
 var PImage = function(width, height, format){};
 var PImage = function(img){};
 
+PImage.pixels;
+
 PImage.prototype.blend = function(srcImg, x, y, width, height, dx, dy, dwidth, dheight, MODE){};
 PImage.prototype.blend = function(x, y, width, height, dx, dy, dwidth, dheight, MODE){};
 PImage.prototype.updatePixels = function(){};
+PImage.prototype.loadPixels = function(){};
 PImage.prototype.get = function(x, y, w, h){};
 PImage.prototype.set = function(x, y, c){};
 PImage.prototype.copy = function(srcImg, sx, sy, swidth, sheight, dx, dy, dwidth, dheight){};
@@ -90,6 +93,13 @@ PImage.prototype.resize = function(w, h){};
 PImage.prototype.mask = function(mask){};
 
 Processing.prototype.createImage = function(w, h, mode){};
+
+var pixels = {};
+pixels.prototype.getLenght = function(){};
+pixels.prototype.getPixel = function(i){};
+pixels.prototype.setPixel = function(i, c){};
+pixels.prototype.toArray = function(){};
+pixels.prototype.set = function(arr){};
 
 // PImage Loading & Displaying
 Processing.prototype.image = function(img, x, y){};
