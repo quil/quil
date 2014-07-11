@@ -3584,7 +3584,6 @@
     (let [mode (resolve-constant-key kind shader-modes)]
       (.shader (current-graphics) shader mode))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "shape()"
@@ -3660,7 +3659,6 @@
   [angle]
   (.shearY (current-graphics) (float angle)))
 
-#+clj
 (defn ^{:requires-bindings true
         :processing-name "shapeMode()"
         :category "Shape"
