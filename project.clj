@@ -1,4 +1,4 @@
-(defproject org.clojars.norgat/quil "2.0.1-SNAPSHOT"
+(defproject quil "2.2.0-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/Norgat/quil"
 
