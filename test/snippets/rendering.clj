@@ -1,8 +1,8 @@
 (ns snippets.rendering
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
-(defsnippet hint-s {}
+(defsnippet hint {}
   (let [hints [:enable-native-fonts
                :disable-native-fonts
                :enable-depth-test
@@ -24,31 +24,31 @@
                :enable-texture-mipmaps
                :disable-texture-mipmaps]]
     (doseq [h hints]
-      (hint h)))
-  (ellipse 250 250 400 200))
+      (q/hint h)))
+  (q/ellipse 250 250 400 200))
 
-(defsnippet with-graphics-s {}
-  (let [gr (create-graphics 250 250)]
-    (with-graphics gr
-      (background 255)
-      (fill 255 0 0)
-      (triangle 50 30 220 120 20 180))
-    (image gr 0 0)
-    (image gr 250 0)
-    (image gr 0 250)
-    (image gr 250 250)))
+(defsnippet with-graphics {}
+  (let [gr (q/create-graphics 250 250)]
+    (q/with-graphics gr
+      (q/background 255)
+      (q/fill 255 0 0)
+      (q/triangle 50 30 220 120 20 180))
+    (q/image gr 0 0)
+    (q/image gr 250 0)
+    (q/image gr 0 250)
+    (q/image gr 250 250)))
 
-(defsnippet load-shader-s {:renderer :p2d}
-  (let [gr (create-graphics 250 250)
+(defsnippet load-shader {:renderer :p2d}
+  (let [gr (q/create-graphics 250 250)
         path (clojure.java.io/resource "SimpleShader.glsl")
-        shd (load-shader (str path))]
-    (with-graphics gr
-      (background 255)
-      (fill 255 0 0)
-      (triangle 50 30 220 120 20 180))
-    (image gr 0 0)
-    (image gr 250 0)
-    (shader shd)
-    (image gr 0 250)
-    (reset-shader)
-    (image gr 250 250)))
+        shd (q/load-shader (str path))]
+    (q/with-graphics gr
+      (q/background 255)
+      (q/fill 255 0 0)
+      (q/triangle 50 30 220 120 20 180))
+    (q/image gr 0 0)
+    (q/image gr 250 0)
+    (q/shader shd)
+    (q/image gr 0 250)
+    (q/reset-shader)
+    (q/image gr 250 250)))

@@ -1,20 +1,20 @@
 (ns snippets.typography.attributes
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
-(defsnippet text-align-s {}
-  (fill 0)
-  (stroke 255 0 0)
-  (stroke-weight 5)
+(defsnippet text-align {}
+  (q/fill 0)
+  (q/stroke 255 0 0)
+  (q/stroke-weight 5)
   (let [h-align [:left :center :right]
         v-align [:top :bottom :center :baseline]]
 
     (doseq [ind (range (count h-align))
             :let [x 50
                   y (+ 20 (* ind 50))]]
-      (text-align (h-align ind))
-      (text (name (h-align ind)) x y)
-      (point x y))
+      (q/text-align (h-align ind))
+      (q/text (name (h-align ind)) x y)
+      (q/point x y))
 
     (doseq [ind-h (range (count h-align))
             ind-v (range (count v-align))
@@ -23,36 +23,36 @@
                   h-al (h-align ind-h)
                   v-al (v-align ind-v)
                   txt (str (name h-al) "+" (name v-al))]]
-      (text-align h-al v-al)
-      (text txt x y)
-      (point x y))))
+      (q/text-align h-al v-al)
+      (q/text txt x y)
+      (q/point x y))))
 
-(defsnippet text-leading-s {}
-  (fill 0)
+(defsnippet text-leading {}
+  (q/fill 0)
   (doseq [ind (range 4)
           :let [leading (* ind 10)]]
-    (text-leading leading)
-    (text (str "text leading\n" leading) 20 (+ 20 (* ind 100)))))
+    (q/text-leading leading)
+    (q/text (str "text leading\n" leading) 20 (+ 20 (* ind 100)))))
 
-(defsnippet text-mode-s {:renderer :p2d}
-  (fill 0)
-  (text-mode :model)
-  (text "text-mode: model" 20 50)
+(defsnippet text-mode {:renderer :p2d}
+  (q/fill 0)
+  (q/text-mode :model)
+  (q/text "text-mode: model" 20 50)
 
-  (text-mode :shape)
-  (text "text-mode: shape" 20 100))
+  (q/text-mode :shape)
+  (q/text "text-mode: shape" 20 100))
 
-(defsnippet text-size-s {}
-  (fill 0)
+(defsnippet text-size {}
+  (q/fill 0)
   (doseq [ind (range 6)
           :let [size (+ 10 (* ind 5))]]
-    (text-size size)
-    (text (str "Text size: " size) 20 (+ 20 (* ind 80)))))
+    (q/text-size size)
+    (q/text (str "Text size: " size) 20 (+ 20 (* ind 80)))))
 
-(defsnippet text-width-s {}
-  (fill 0)
+(defsnippet text-width {}
+  (q/fill 0)
   (let [txt "Hello, world!"
-        width (text-width txt)]
-    (text txt 20 20)
-    (text (str "Width of text above is " width) 20 40)))
+        width (q/text-width txt)]
+    (q/text txt 20 20)
+    (q/text (str "Width of text above is " width) 20 40)))
 

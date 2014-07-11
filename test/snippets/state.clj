@@ -1,10 +1,10 @@
 (ns snippets.state
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
-(defsnippet set-state-state-s
-  {:setup (set-state! :text "I'm state!"
-                      :year (year))}
-  (fill 0)
-  (text (state :text) 10 20)
-  (text (str "Full state: " (state)) 10 40))
+(defsnippet set-state-state
+  {:setup (q/set-state! :text "I'm state!"
+                      :year (q/year))}
+  (q/fill 0)
+  (q/text (q/state :text) 10 20)
+  (q/text (str "Full state: " (q/state)) 10 40))

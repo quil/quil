@@ -1,26 +1,26 @@
 (ns snippets.shape.3d-primitives
   (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :refer :all]))
+            [quil.core :as q]))
 
-(defsnippet box-s {:renderer :p3d}
-  (camera 200 200 200 0 0 0 0 0 -1)
-  (with-translation [100 0 0]
-    (box 70))
-  (with-translation [0 100 0]
-    (box 70 100 50)))
+(defsnippet box {:renderer :p3d}
+  (q/camera 200 200 200 0 0 0 0 0 -1)
+  (q/with-translation [100 0 0]
+    (q/box 70))
+  (q/with-translation [0 100 0]
+    (q/box 70 100 50)))
 
-(defsnippet sphere-s {:renderer :p3d}
-  (camera 200 200 200 0 0 0 0 0 -1)
-  (sphere 150))
+(defsnippet sphere {:renderer :p3d}
+  (q/camera 200 200 200 0 0 0 0 0 -1)
+  (q/sphere 150))
 
-(defsnippet sphere-detail-s {:renderer :p3d}
-  (camera 200 200 200 0 0 0 0 0 -1)
-  (sphere-detail 30) ; default
-  (with-translation [0 0 100]
-    (sphere 70))
-  (sphere-detail 15)
-  (with-translation [100 0 0]
-    (sphere 70))
-  (sphere-detail 30 5)
-  (with-translation [0 100 0]
-    (sphere 70)))
+(defsnippet sphere-detail {:renderer :p3d}
+  (q/camera 200 200 200 0 0 0 0 0 -1)
+  (q/sphere-detail 30) ; default
+  (q/with-translation [0 0 100]
+    (q/sphere 70))
+  (q/sphere-detail 15)
+  (q/with-translation [100 0 0]
+    (q/sphere 70))
+  (q/sphere-detail 30 5)
+  (q/with-translation [0 100 0]
+    (q/sphere 70)))
