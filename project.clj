@@ -1,6 +1,6 @@
 (defproject quil "2.2.0-SNAPSHOT"
   :description "(mix Processing Clojure)"
-  :url "http://github.com/Norgat/quil"
+  :url "http://github.com/quil/quil"
 
   :mailing-list {:name "Quil Mailing List"
                  :archive "https://groups.google.com/forum/?fromgroups#!forum/clj-processing"

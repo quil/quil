@@ -114,7 +114,7 @@
     (q/image gr 200 0)))
 
 (defsnippet request-image
-  {:setup (q/set-state! :image (q/request-image "http://cloud.github.com/downloads/quil/quil/quil.png"))}
+  {:setup (q/set-state! :image (q/request-image "https://cloud.github.com/downloads/quil/quil/quil.png"))}
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (q/image (q/state :image) 0 0)))
