@@ -21,7 +21,7 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 [Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
 
 ```clojure
-[quil "2.1.0"]
+[quil "2.2.0"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -75,6 +75,10 @@ A simple example is called for:
 Feast your eyes on this beauty.
 
 You're witnessing `setup`, `draw` and `sketch` working in complete harmony. See how `setup` turns on anti-aliasing, sets the framerate to 1 FPS and sets the background colour to a nice shade of grey. `draw` then kicks into action. It chooses random stroke, fill colours as well as a random stroke weight (thickness of the pen). It then chooses some random coordinates and circle size and draws an ellipse. An ellipse with the same height and width is a circle. Finally `defsketch` a convenience macro around `sketch` ties everything together, specifies a title and size and starts things running. Don't just watch it though, start modifying it to see immediate effects. Go to town.
+
+## ClojureScript
+
+Quil supports ClojureScript! Check [wiki article](https://github.com/quil/quil/wiki/ClojureScript) for more info.
 
 ## Documentation
 
@@ -144,7 +148,7 @@ Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/t
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `2.2.1`. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
+Quil provides support for the standard Processing API - currently version `2.2.1` of Processing and `1.4.8` of Processing.js. The majority of fns Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
 
 ## Community
 

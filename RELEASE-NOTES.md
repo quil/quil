@@ -1,3 +1,10 @@
+## 2.2.0
+_14th July 2014_
+
+* ClojureScript support. [Wiki](https://github.com/quil/quil/wiki/ClojureScript).
+* Navigation 3D middleware. [Wiki](https://github.com/quil/quil/wiki/Navigation-3D).
+* Pause On Error middleware.
+
 ## 2.1.0
 _13th June 2014_
 
@@ -5,7 +12,7 @@ _13th June 2014_
 * [Middleware](https://github.com/quil/quil/wiki/Middleware) support.
 * [Functional mode](https://github.com/quil/quil/wiki/Functional-mode-%28fun-mode%29) support.
 * New methods: [`resize`](http://quil.info/image.html#resize) and [`state-atom`](http://quil.info/state.html#state-atom).
-* `:no-safe-draw` feature renamed to `:no-safe-fns`. 
+* `:no-safe-draw` feature renamed to `:no-safe-fns`.
 
 ###### Fixed
 * NPE when exiting :p2d sketch using "esc" key. [#110](https://github.com/quil/quil/issues/110).
