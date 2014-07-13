@@ -9,7 +9,7 @@
   [app-name & options]
   (let [raw-opts (apply hash-map options)
         opts     (if (:host raw-opts) raw-opts
-                     (merge raw-opts {:host app-name}))]
+                     (merge raw-opts {:host (str app-name)}))]
     `(do
        (defn ~(vary-meta app-name assoc :export true) []
          (quil.sketch/sketch
