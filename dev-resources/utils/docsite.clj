@@ -4,7 +4,8 @@
             [hiccup
              [core :as h]
              [page :as p]
-             [element :as e]]
+             [element :as e]
+             [util :as u]]
             garden.core
             [garden.units :refer [px]]
             [garden.arithmetic :as ga]
@@ -95,6 +96,11 @@ class is string that will be used as class of body element in the page."
                                  "," ""
                                  "&" "and"})))
 
+(defn- as-id [str]
+  (-> str
+      (string/lower-case)
+      (string/replace "?" "_q")))
+
 (defn- as-filename [& path]
   (->> path (map as-url) (string/join "/")))
 
@@ -109,9 +115,9 @@ class is string that will be used as class of body element in the page."
   ([text to anchor]
      (let [page (if to (as-filename-ext to) "")]
       (e/link-to (if anchor
-                   (str page "#" (as-url anchor))
+                   (str page "#" (as-url (as-id anchor)))
                    page)
-                 text))))
+                 (u/escape-html text)))))
 
 (defn trim-docstring
   "Removes extra spaces in the begginning of dostringing lines."
@@ -133,7 +139,7 @@ class is string that will be used as class of body element in the page."
                                                  [:code processing-name])
                                                "None. It is present only in Quil.")
                 "Added in" added)]
-    [:div.function {:id name}
+    [:div.function {:id (as-id name)}
      [:h3 name]
      [:dl (for [[key val] fields]
             (list [:dt key] [:dd val]))]]))
@@ -145,8 +151,8 @@ class is string that will be used as class of body element in the page."
         function->html (comp function->html fn-metas)
         subcat->html (fn [subcat]
                        (cons [:h3.subcategory
-                              {:id (subcat-id subcat)}
-                              (:name subcat)]
+                              {:id (as-id (subcat-id subcat))}
+                              (u/escape-html (:name subcat))]
                              (map function->html (:fns subcat))))
         subcat->toc (fn [subcat]
                       (cons [:h4.subcategory (link (:name subcat) nil (subcat-id subcat))]
@@ -187,7 +193,7 @@ class is string that will be used as class of body element in the page."
           (column->html [column]
             [:div.column (map (comp category->html find-category) column)])]
     [:div.wrapper
-     [:h1#title "Quil 2.1.0 API"]
+     [:h1#title "Quil 2.2.0 API"]
      [:div#description
       [:p "Quil is a clojure animation library for creating interactive sketches. "]
       [:p
