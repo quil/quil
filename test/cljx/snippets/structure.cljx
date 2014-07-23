@@ -3,6 +3,8 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs (ns snippets.structure)
+
 #+clj
 (defsnippet push-style-pop-style {}
   (q/background 255)

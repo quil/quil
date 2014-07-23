@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.math.trigonometry)
+
 #+clj
 (defsnippet acos {}
   (q/background 255)

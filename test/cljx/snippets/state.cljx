@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.state)
+
 #+clj
 (defsnippet set-state-state
   {:setup (q/set-state! :text "I'm state!"

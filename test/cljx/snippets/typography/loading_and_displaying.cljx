@@ -4,6 +4,9 @@
             [quil.core :as q]
             clojure.java.io))
 
+#+cljs
+(ns snippets.typography.loading-and-displaying)
+
 #+clj
 (defsnippet available-fonts {}
   (q/background 255)

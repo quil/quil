@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.typography.metrics)
+
 #+clj
 (defsnippet text-ascent {}
   (q/background 255)

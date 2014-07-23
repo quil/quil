@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.shape.loading-and-displaying)
+
 #+clj
 (defsnippet load-shape {:renderer :p2d}
   (let [sh (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")]

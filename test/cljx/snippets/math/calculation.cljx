@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.math.calculation)
+
 #+clj
 (defsnippet abs {}
   (q/background 255)

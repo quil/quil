@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.environment)
+
 #+clj
 (defsnippet current-frame-rate-target-frame-rate {}
   (q/background 255)

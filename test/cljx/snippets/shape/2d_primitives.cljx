@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.shape.2d-primitives)
+
 #+clj
 (defsnippet arc {}
   (q/background 255)

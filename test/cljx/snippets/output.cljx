@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.output)
+
 #+clj
 (defsnippet begin-raw-end-raw {:renderer :p3d}
   (q/begin-raw :dxf "generated/dxf.txt")

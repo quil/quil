@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.transform.utility-macros)
+
 #+clj
 (defsnippet with-rotation {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)

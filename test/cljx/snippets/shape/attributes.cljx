@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.shape.attributes)
+
 #+clj
 (defsnippet ellipse-mode {}
   (q/stroke-weight 5)

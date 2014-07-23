@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.color.creating-and-reading)
+
 #+clj
 (defsnippet alpha {}
   (q/background 255)

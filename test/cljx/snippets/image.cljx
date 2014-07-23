@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.image)
+
 #+clj
 (defsnippet create-image {}
   (q/background 255)

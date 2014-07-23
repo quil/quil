@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.color.utility-macros)
+
 #+clj
 (defsnippet with-fill {}
   (q/fill 255) ; global white fill

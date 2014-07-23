@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.color.creating-and-reading)
+
 ; These snippets test non-graphic functions.
 ; Draw results as strings in sketch.
 

@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.lights-camera.coordinates)
+
 #+clj
 (defsnippet model-x-y-z {:renderer :p2d}
   (let [gr3d (q/create-graphics 240 240 :p3d)

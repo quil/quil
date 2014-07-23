@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.shape.vertex)
+
 #+clj
 (defsnippet begin-contour-end-contour {:renderer :p2d}
   (q/stroke 255 0 0)

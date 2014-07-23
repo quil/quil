@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.image.rendering)
+
 #+clj
 (defsnippet blend-mode {:renderer :p2d}
   (q/background 255)

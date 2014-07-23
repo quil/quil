@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.image.pixels)
+
 #+clj
 (defsnippet blend {}
   (q/background 255 100 20 50)

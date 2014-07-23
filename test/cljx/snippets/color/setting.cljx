@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.color.setting)
+
 #+clj
 (defsnippet background {}
   (q/background 255 0 0)

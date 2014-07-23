@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.rendering)
+
 #+clj
 (defsnippet hint {}
   (let [hints [:enable-native-fonts

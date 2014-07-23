@@ -3,6 +3,9 @@
   (:require [quil.snippet :refer [defsnippet]]
             [quil.core :as q]))
 
+#+cljs
+(ns snippets.lights-camera.lights)
+
 #+clj
 (defsnippet ambient-light {:renderer :p3d}
   (q/background 0)

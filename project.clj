@@ -9,19 +9,20 @@
   :license {:name "Common Public License - v 1.0"
             :url "http://www.opensource.org/licenses/cpl1.0"}
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [quil/processing-core "2.2.1"]
                  [quil/processing-pdf "2.2.1"]
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]
-                 [org.clojure/clojurescript "0.0-2268"]
+                 [org.clojure/clojurescript "0.0-2234"]
                  [prismatic/dommy "0.1.2"]]
 
-  :plugins [[com.keminglabs/cljx "0.4.0"]]
+  :plugins [[com.keminglabs/cljx "0.4.0"]
+            [lein-cljsbuild "1.0.3"]]
 
-  :hooks [cljx.hooks]
+  :hooks [cljx.hooks leiningen.cljsbuild]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
@@ -45,6 +46,15 @@
   :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
   :test-paths ["test" "target/gen/clj/test"]
   :resource-paths ["resources"]
+
+  :cljsbuild
+  {:builds [{:source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs" "test" "target/gen/clj/test" "target/gen/cljs/test"]
+             :compiler
+             {:output-to "test/html/js/main.js"
+              :externs ["externs/processing-externs.js"]
+              :optimizations :whitespace
+              :pretty-print true}}]}
+
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
