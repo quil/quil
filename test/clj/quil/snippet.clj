@@ -59,11 +59,11 @@
                 (try
                   ~@body
                   (catch js/Error e#
-                    (swap! quil-test.core/failed inc)
+                    (swap! quil.snippet/failed inc)
                     (throw (js/Error. e#)))
                   (finally (q/exit))))))
 
-     (swap! quil-test.core/test-data conj
+     (swap! quil.snippet/test-data conj
             {:name (name '~snip-name)
              :ns ~(str (ns-name *ns*))
              :fn ~snip-name}))))

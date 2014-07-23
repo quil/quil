@@ -15,14 +15,11 @@
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
-                 [com.lowagie/itext "2.1.7"]
-                 [org.clojure/clojurescript "0.0-2234"]
-                 [prismatic/dommy "0.1.2"]]
+                 [com.lowagie/itext "2.1.7"]]
 
-  :plugins [[com.keminglabs/cljx "0.4.0"]
-            [lein-cljsbuild "1.0.3"]]
+  :plugins [[com.keminglabs/cljx "0.4.0"]]
 
-  :hooks [cljx.hooks leiningen.cljsbuild]
+  :hooks [cljx.hooks]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
@@ -44,18 +41,22 @@
                    :rules :cljs}]}
 
   :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
-  :test-paths ["test" "target/gen/clj/test"]
+  :test-paths ["test/clj" "target/gen/clj/test"]
   :resource-paths ["resources"]
-
-  :cljsbuild
-  {:builds [{:source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs" "test" "target/gen/clj/test" "target/gen/cljs/test"]
-             :compiler
-             {:output-to "test/html/js/main.js"
-              :externs ["externs/processing-externs.js"]
-              :optimizations :whitespace
-              :pretty-print true}}]}
 
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
-                                  [clj-http "0.9.1"]]}})
+                                  [clj-http "0.9.1"]]}
+             :t1 {:dependencies [[org.clojure/clojurescript "0.0-2234"]
+                                 [prismatic/dommy "0.1.2"]]
+                  :hooks [leiningen.cljsbuild]
+                  :plugins [[lein-cljsbuild "1.0.3"]]
+
+                  :cljsbuild
+                  {:builds [{:source-paths ["target/classes" "src/clj" "src/cljs" "test/clj" "test/cljs" "target/gen/clj" "target/gen/cljs" "target/gen/clj/test" "target/gen/cljs/test"]
+                             :compiler
+                             {:output-to "test/html/js/main.js"
+                              :externs ["externs/processing-externs.js"]
+                              :optimizations :whitespace
+                              :pretty-print true}}]}}})
