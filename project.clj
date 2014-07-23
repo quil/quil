@@ -23,9 +23,6 @@
 
   :aot [quil.helpers.applet-listener quil.applet]
 
-  :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [garden "1.1.6"]
-                                  [clj-http "0.9.1"]]}}
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
@@ -34,7 +31,19 @@
                    :rules :clj}
                   {:source-paths ["src/cljx/quil"]
                    :output-path "target/gen/cljs/quil"
+                   :rules :cljs}
+
+                  {:source-paths ["test/cljx"]
+                   :output-path "target/gen/clj/test"
+                   :rules :clj}
+                  {:source-paths ["test/cljx"]
+                   :output-path "target/gen/cljs/test"
                    :rules :cljs}]}
 
   :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
-  :resource-paths ["resources"])
+  :test-paths ["test" "target/gen/clj/test"]
+  :resource-paths ["resources"]
+
+  :profiles {:dev {:dependencies [[hiccup "1.0.5"]
+                                  [garden "1.1.6"]
+                                  [clj-http "0.9.1"]]}})
