@@ -1,12 +1,11 @@
-#+clj
 (ns snippets.image
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs
-(ns snippets.image)
 
-#+clj
 (defsnippet create-image {}
   (q/background 255)
   (let [im (q/create-image 100 100 :rgb)]

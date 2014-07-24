@@ -56,18 +56,3 @@
   (dommy/set-text! (sel1 :#results) "Test started")
   (reset! test-indx 0)
   (reset! test-interval (js/setInterval run-single-test 100)))
-
-
-(defsnippet hello2 {:size [300 300]}
-  (q/background 90 102 0)
-	(q/fill 124)
-	(q/rect 56 46 55 55))
-
-
-(defsnippet create-image {}
-  (q/background 255)
-  (let [im (q/create-image 100 100 :rgb)]
-    (dotimes [x 100]
-      (dotimes [y 100]
-        (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
-    (q/image im 0 0)))
