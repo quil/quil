@@ -44,6 +44,9 @@
   :test-paths ["test/clj" "target/gen/clj/test"]
   :resource-paths ["resources"]
 
+  :jar-exclusions [#"^test/*"]
+  :uberjar-exclusions [#"^test/*"]
+
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]

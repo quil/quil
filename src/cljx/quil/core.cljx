@@ -1192,8 +1192,9 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
+  #+clj
   ([w h]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer :p2d)))
+     (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
