@@ -1,12 +1,10 @@
-#+clj
 (ns snippets.typography.attributes
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs
-(ns snippets.typography.attributes)
-
-#+clj
 (defsnippet text-align {}
   (q/fill 0)
   (q/stroke 255 0 0)
@@ -32,7 +30,6 @@
       (q/text txt x y)
       (q/point x y))))
 
-#+clj
 (defsnippet text-leading {}
   (q/fill 0)
   (doseq [ind (range 4)
@@ -40,7 +37,6 @@
     (q/text-leading leading)
     (q/text (str "text leading\n" leading) 20 (+ 20 (* ind 100)))))
 
-#+clj
 (defsnippet text-mode {:renderer :p2d}
   (q/fill 0)
   (q/text-mode :model)
@@ -49,7 +45,6 @@
   (q/text-mode :shape)
   (q/text "text-mode: shape" 20 100))
 
-#+clj
 (defsnippet text-size {}
   (q/fill 0)
   (doseq [ind (range 6)
@@ -57,7 +52,6 @@
     (q/text-size size)
     (q/text (str "Text size: " size) 20 (+ 20 (* ind 80)))))
 
-#+clj
 (defsnippet text-width {}
   (q/fill 0)
   (let [txt "Hello, world!"

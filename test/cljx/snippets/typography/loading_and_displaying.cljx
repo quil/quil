@@ -1,11 +1,10 @@
-#+clj
 (ns snippets.typography.loading-and-displaying
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]
-            clojure.java.io))
-
-#+cljs
-(ns snippets.typography.loading-and-displaying)
+  (:require #+cljs quil.snippet
+            #+clj clojure.java.io
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet available-fonts {}
@@ -18,7 +17,6 @@
           [row font] (map-indexed vector fonts)]
     (q/text font (+ 20 (* col 100)) (+ 20 (* row 10)))))
 
-#+clj
 (defsnippet create-font {}
   (q/background 255)
   (q/fill 0)
@@ -29,7 +27,7 @@
   (q/text-font (q/create-font "Georgia" 30 true))
   (q/text "(print :hello)" 20 100)
 
-  (q/text-font (q/create-font "Georgia" 30 false (char-array "what is it for?")))
+  #+clj (q/text-font (q/create-font "Georgia" 30 false (char-array "what is it for?")))
   (q/text "(print :hello)" 20 150))
 
 #+clj
@@ -74,7 +72,6 @@
   (q/text-char \Q 0 0)
   (q/text-char \W 0 0 10))
 
-#+clj
 (defsnippet text-font {}
   (q/background 255)
   (q/fill 0)
