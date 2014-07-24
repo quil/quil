@@ -42,10 +42,16 @@
     (let [sketch (nth @test-data @test-indx)]
       (log-sketch-test sketch)
       (swap! total inc)
-      ((:fn sketch))
 
-      (swap! test-indx inc)
-      (reset! test-interval (js/setInterval run-single-test 1000)))
+      (try
+        ((:fn sketch))
+
+        (catch js/Error e
+          (log e))
+
+        (finally
+         (swap! test-indx inc)
+         (reset! test-interval (js/setInterval run-single-test 1000)))))
 
     (reset! test-interval (js/setInterval end-of-tests 500))))
 

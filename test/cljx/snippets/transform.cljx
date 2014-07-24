@@ -1,9 +1,9 @@
-#+clj
 (ns snippets.transform
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs (ns snippets.transform)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet apply-matrix {:renderer :p3d}
@@ -21,7 +21,6 @@
                  0 0 0 1))
   (q/box 50))
 
-#+clj
 (defsnippet push-matrix-pop-matrix {}
   (q/fill 255 0 0)
   (q/translate 20 20)
@@ -34,14 +33,12 @@
   (q/translate 150 0)
   (q/rect 0 0 50 50))
 
-#+clj
 (defsnippet print-matrix {}
   (q/translate 250 250)
   (q/rotate 1)
   (q/rect 0 0 100 100)
   (q/print-matrix))
 
-#+clj
 (defsnippet reset-matrix {}
   (q/rect 0 0 100 50)
   (q/translate 250 250)
@@ -49,7 +46,6 @@
   (q/reset-matrix)
   (q/rect 0 0 50 100))
 
-#+clj
 (defsnippet rotate {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -73,7 +69,6 @@
   (q/box 50)
   (q/pop-matrix))
 
-#+clj
 (defsnippet rotate-x-y-z {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -97,7 +92,6 @@
   (q/box 50)
   (q/pop-matrix))
 
-#+clj
 (defsnippet scale {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -117,7 +111,6 @@
     (q/box 50)
     (q/scale 2 1 0.75)))
 
-#+clj
 (defsnippet shear-x-y {}
   (q/with-translation [125 125]
     (q/rect 0 0 100 50))
@@ -128,7 +121,6 @@
     (q/shear-x 0.5)
     (q/rect 0 0 100 50)))
 
-#+clj
 (defsnippet translate {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
