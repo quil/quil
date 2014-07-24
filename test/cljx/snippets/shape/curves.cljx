@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.shape.curves
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.shape.curves)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet bezier {:renderer :p3d}
@@ -22,22 +21,20 @@
   (q/bezier-detail 20)
   (q/bezier 0 0 -50 100 -100 -100 -150 0))
 
-#+clj
 (defsnippet bezier-point {}
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/bezier-point 0 5 7 0 v)
-          txt (format "(q/bezier-point 0 5 7 0 %s) = %s" v res)]
+          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
-#+clj
 (defsnippet bezier-tangent {}
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/bezier-tangent 0 5 7 0 v)
-          txt (format "(q/bezier-tangent 0 5 7 0 %s) = %s" v res)]
+          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
 #+clj
@@ -62,22 +59,20 @@
   (q/curve-detail 20)
   (q/curve 0 0 -50 100 -100 -100 -150 0))
 
-#+clj
 (defsnippet curve-point {}
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/curve-point 0 5 7 0 v)
-          txt (format "(q/curve-point 0 5 7 0 %s) = %s" v res)]
+          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
-#+clj
 (defsnippet curve-tangent {}
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/curve-tangent 0 5 7 0 v)
-          txt (format "(q/curve-tangent 0 5 7 0 %s) = %s" v res)]
+          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
 #+clj

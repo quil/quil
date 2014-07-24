@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.color.creating-and-reading
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.color.creating-and-reading)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet alpha {}
@@ -41,7 +40,6 @@
           (q/fill (q/blend-color c1 c2 mode)))
         (q/rect (* col 100) (* (inc row) 100) 70 70)))))
 
-#+clj
 (defsnippet red-green-blue {}
   (q/background 255)
 
@@ -58,7 +56,6 @@
     (q/fill 0 0 (q/blue col))
     (q/rect 210 210 100 100)))
 
-#+clj
 (defsnippet hue-saturation-brightness {}
   (q/background 255)
   (q/color-mode :hsb)
@@ -76,7 +73,6 @@
     (q/fill 255 255 (q/brightness col))
     (q/rect 210 210 100 100)))
 
-#+clj
 (defsnippet color {}
   (q/background 255)
 
@@ -92,7 +88,6 @@
   (q/fill (q/color 0 255 255 120)) ; semitransparent cyan
   (q/rect 210 210 100 100))
 
-#+clj
 (defsnippet color-mode {}
   (q/background 255)
 
@@ -143,7 +138,6 @@
     (q/stroke cur-stroke)
     (q/rect 140 140 100 100)))
 
-#+clj
 (defsnippet lerp-color {}
   (q/background 255)
   (let [c1 (q/color 255 0 0)

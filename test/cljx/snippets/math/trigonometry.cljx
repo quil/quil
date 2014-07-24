@@ -1,68 +1,58 @@
-#+clj
 (ns snippets.math.trigonometry
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs
-(ns snippets.math.trigonometry)
-
-#+clj
 (defsnippet acos {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/acos 0) = " (q/acos 0)) 10 20)
   (q/text (str "(q/acos 1) = " (q/acos 1)) 10 40))
 
-#+clj
 (defsnippet asin {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/asin 0) = " (q/asin 0)) 10 20)
   (q/text (str "(q/asin 1) = " (q/asin 1)) 10 40))
 
-#+clj
 (defsnippet atan {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/atan 0) = " (q/atan 0)) 10 20)
   (q/text (str "(q/atan 1) = " (q/atan 1)) 10 40))
 
-#+clj
 (defsnippet atan2-s {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/atan2 2 1) = " (q/atan2 2 1)) 10 20)
   (q/text (str "(q/atan2 1 2) = " (q/atan2 1 2)) 10 40))
 
-#+clj
 (defsnippet cos {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/cos 0) = " (q/cos 0)) 10 20)
   (q/text (str "(q/cos q/HALF-PI) = " (q/cos q/HALF-PI)) 10 40))
 
-#+clj
 (defsnippet degrees {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/degrees 0) = " (q/degrees 0)) 10 20)
   (q/text (str "(q/degrees q/HALF-PI) = " (q/degrees q/HALF-PI)) 10 40))
 
-#+clj
 (defsnippet radians {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/radians 0) = " (q/radians 0)) 10 20)
   (q/text (str "(q/radians 90) = " (q/radians 90)) 10 40))
 
-#+clj
 (defsnippet sin {}
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/sin 0) = " (q/sin 0)) 10 20)
   (q/text (str "(q/sin q/HALF-PI) = " (q/sin q/HALF-PI)) 10 40))
 
-#+clj
 (defsnippet tan {}
   (q/background 255)
   (q/fill 0)

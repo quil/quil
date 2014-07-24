@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.shape.vertex
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.shape.vertex)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet begin-contour-end-contour {:renderer :p2d}
@@ -20,7 +19,6 @@
   (q/end-contour)
   (q/end-shape :close))
 
-#+clj
 (defsnippet begin-shape-end-shape {:renderer :p2d}
   (q/stroke 255 0 0)
   (doseq [[ind begin-mode close-mode]

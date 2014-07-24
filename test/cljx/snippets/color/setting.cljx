@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.color.setting
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.color.setting)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet background {}
@@ -35,7 +34,6 @@
 
     (q/background-image gr)))
 
-#+clj
 (defsnippet fill {}
   (q/background 0 0 255)
 
@@ -51,7 +49,6 @@
   (q/fill 255 0 0 120)
   (q/rect 210 210 100 100))
 
-#+clj
 (defsnippet no-fill {}
   (q/background 255)
 
@@ -62,7 +59,6 @@
   (q/no-fill)
   (q/rect 70 70 100 100))
 
-#+clj
 (defsnippet no-stroke {}
   (q/background 255)
 
@@ -73,7 +69,6 @@
   (q/no-stroke)
   (q/rect 70 70 100 100))
 
-#+clj
 (defsnippet stroke {}
   (q/background 255)
   (q/stroke-weight 10)

@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.color.creating-and-reading
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.color.creating-and-reading)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 ; These snippets test non-graphic functions.
 ; Draw results as strings in sketch.

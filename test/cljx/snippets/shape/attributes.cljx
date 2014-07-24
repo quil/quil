@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.shape.attributes
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.shape.attributes)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet ellipse-mode {}
@@ -101,7 +100,6 @@
   (q/stroke-join :round)
   (q/rect 125 375 100 100))
 
-#+clj
 (defsnippet stroke-weight {}
   (doseq [i (range 1 10)]
     (q/stroke-weight i)
