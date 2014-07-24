@@ -1,11 +1,10 @@
-#+clj
 (ns snippets.structure
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs (ns snippets.structure)
-
-#+clj
 (defsnippet push-style-pop-style {}
   (q/background 255)
   (q/fill 255 0 0)

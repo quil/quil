@@ -24,6 +24,9 @@
   (log (str "Testing " (:ns sketch) "/" (:name sketch))))
 
 
+(defn log-sketch-passed [sketch status]
+  (log (str (:ns sketch) "/" (:name sketch) " is " (if status "passed." "failed."))))
+
 (defn end-of-tests []
   (log "end of tests")
   (log "Total tested: " @total "   Accepted: " (- @total @failed) "   Failed: " @failed)
@@ -47,6 +50,8 @@
         ((:fn sketch))
 
         (catch js/Error e
+          (log-sketch-passed sketch false)
+          (swap! quil.snippet/failed inc)
           (log e))
 
         (finally

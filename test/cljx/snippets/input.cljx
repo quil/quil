@@ -1,12 +1,10 @@
-#+clj
 (ns snippets.input
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs
-(ns snippets.input)
-
-#+clj
 (defsnippet keyboard {}
   (q/background 255)
   (q/fill 0)
@@ -17,7 +15,6 @@
                          [4 "raw-key" q/raw-key]]]
     (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
-#+clj
 (defsnippet mouse {}
   (q/background 255)
   (q/fill 0)
@@ -29,7 +26,6 @@
                          [5 "pmouse-y" q/pmouse-y]]]
     (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
-#+clj
 (defsnippet time-and-date {}
   (q/background 255)
   (q/fill 0)

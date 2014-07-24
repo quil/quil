@@ -1,12 +1,10 @@
-#+clj
 (ns snippets.state
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+cljs
-(ns snippets.state)
-
-#+clj
 (defsnippet set-state-state
   {:setup (q/set-state! :text "I'm state!"
                       :year (q/year))}

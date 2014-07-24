@@ -1,10 +1,9 @@
-#+clj
 (ns snippets.output
-  (:require [quil.snippet :refer [defsnippet]]
-            [quil.core :as q]))
-
-#+cljs
-(ns snippets.output)
+  (:require #+cljs quil.snippet
+            #+clj [quil.snippet :refer [defsnippet]]
+            [quil.core :as q])
+  #+cljs
+  (:use-macros [quil.snippet :only [defsnippet]]))
 
 #+clj
 (defsnippet begin-raw-end-raw {:renderer :p3d}
