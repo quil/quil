@@ -2,7 +2,7 @@
   quil.applet
   (:import [processing.core PApplet]
            [javax.swing JFrame]
-           [java.awt Dimension]
+           [java.awt Dimension GraphicsEnvironment]
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
             [quil.middlewares.deprecated-options :refer [deprecated-options]]
@@ -106,18 +106,14 @@
 (defn- display-size
   "Returns size of screen. If there are 2 or more screens it probably return size of
   default one whatever it means."
-  ([] (display-size 0))
-
   ([display]
-   (let [devices (.. (java.awt.GraphicsEnvironment/getLocalGraphicsEnvironment)
-                     getScreenDevices)]
-     (if (and (>= display 0) (< display (alength devices)))
-       (let [bounds (.. (aget devices display)
-                        getDefaultConfiguration
-                        getBounds)]
-         [(.-width bounds) (.-height bounds)])
-       (throw (IllegalArgumentException.
-                      (str "Invalid display definition: " display ". Displays are numbered starting from 0")))))))
+   (if-let [bounds (some->
+                    (get (.getScreenDevices (GraphicsEnvironment/getLocalGraphicsEnvironment)) display)
+                    .getDefaultConfiguration
+                    .getBounds)]
+     [(.-width bounds) (.-height bounds)]
+     (throw (IllegalArgumentException.
+             (str "Invalid display index: " display ". Displays are numbered starting from 0"))))))
 
 (defn- process-size
   "Checks that the size vector is exactly two elements. If not, throws
@@ -311,7 +307,8 @@
                      Color is specified in hex format: #XXXXXX.
                      Example: :bgcolor \"#00FFFF\" (cyan background)
 
-   :display        - Set what display should be used by this sketch. Displays are numbered starting from 0.
+   :display        - Set what display should be used by this sketch.
+                     Displays are numbered starting from 0. Example: :display 1.
 
    :setup          - A function to be called once when setting the sketch up.
 
