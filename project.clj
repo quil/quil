@@ -61,6 +61,7 @@
                                        :compiler
                                        {:output-to "target/js/main.js"
                                         :optimizations :whitespace
+                                        :externs ["externs/processing-externs.js"]
                                         :pretty-print true}}]}}
 
              :test-1.5.1 [:cljs-testing
