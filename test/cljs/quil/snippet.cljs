@@ -7,7 +7,6 @@
 
 (def test-data (atom (list)))
 
-(def test-interval (atom nil))
 (def test-indx (atom 0))
 
 (def failed (atom 0))
@@ -35,12 +34,9 @@
                    (str "Total tested: " @total ";   Accepted: " (- @total @failed) ";   Failed: " @failed))
   (reset! test-indx 0)
   (reset! failed 0)
-  (reset! total 0)
-
-  (reset! test-interval (js/clearInterval @test-interval)))
+  (reset! total 0))
 
 (defn run-single-test []
-  (js/clearInterval @test-interval)
   (if (< @test-indx (count @test-data))
     (let [sketch (nth @test-data @test-indx)]
       (log-sketch-test sketch)
@@ -56,9 +52,9 @@
 
         (finally
          (swap! test-indx inc)
-         (reset! test-interval (js/setInterval run-single-test 1000)))))
+         (js/setTimeout run-single-test 1000))))
 
-    (reset! test-interval (js/setInterval end-of-tests 500))))
+    (js/setTimeout end-of-tests 500)))
 
 
 (defn ^:export run-tests []
@@ -66,4 +62,4 @@
 
   (dommy/set-text! (sel1 :#results) "Test started")
   (reset! test-indx 0)
-  (reset! test-interval (js/setInterval run-single-test 100)))
+  (js/setTimeout run-single-test 100))
