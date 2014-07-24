@@ -52,31 +52,22 @@
                                   [garden "1.1.6"]
                                   [clj-http "0.9.1"]]}
 
-             :test-1.5.1 {:dependencies [[org.clojure/clojurescript "0.0-2234"]
-                                         [prismatic/dommy "0.1.2"]
-                                         [quil "2.2.1-SNAPSHOT"]]
-                          :hooks [leiningen.cljsbuild]
-                          :plugins [[lein-cljsbuild "1.0.3"]]
-                          :aot [quil.helpers.applet-listener quil.applet]
+             :cljs-testing {:hooks [leiningen.cljsbuild]
+                            :plugins [[lein-cljsbuild "1.0.3"]]
+                            :dependencies [[prismatic/dommy "0.1.2"]
+                                           [quil "2.2.1-SNAPSHOT"]]
 
-                          :cljsbuild
-                          {:builds [{:source-paths ["test/clj" "test/cljs" "target/gen/cljs/test"]
-                                     :compiler
-                                     {:output-to "target/js/main.js"
-                                      :optimizations :whitespace
-                                      :pretty-print true}}]}}
+                            :cljsbuild
+                            {:builds [{:source-paths ["test/clj" "test/cljs" "target/gen/cljs/test"]
+                                       :compiler
+                                       {:output-to "target/js/main.js"
+                                        :optimizations :whitespace
+                                        :pretty-print true}}]}}
 
-             :test-1.6.0 {:dependencies [[org.clojure/clojure "1.6.0"]
-                                         [org.clojure/clojurescript "0.0-2268"]
-                                         [prismatic/dommy "0.1.2"]
-                                         [quil "2.2.1-SNAPSHOT"]]
-                          :hooks [leiningen.cljsbuild]
-                          :plugins [[lein-cljsbuild "1.0.3"]]
-                          :aot [quil.helpers.applet-listener quil.applet]
+             :test-1.5.1 [:cljs-testing
+                          {:dependencies [[org.clojure/clojure "1.5.1"]
+                                          [org.clojure/clojurescript "0.0-2234"]]}]
 
-                          :cljsbuild
-                          {:builds [{:source-paths ["test/clj" "test/cljs" "target/gen/cljs/test"]
-                                     :compiler
-                                     {:output-to "target/js/main.js"
-                                      :optimizations :whitespace
-                                      :pretty-print true}}]}}})
+             :test-1.6.0 [:cljs-testing
+                          {:dependencies [[org.clojure/clojure "1.6.0"]
+                                          [org.clojure/clojurescript "0.0-2268"]]}]})
