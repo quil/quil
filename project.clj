@@ -54,11 +54,10 @@
 
              :cljs-testing {:hooks [leiningen.cljsbuild]
                             :plugins [[lein-cljsbuild "1.0.3"]]
-                            :dependencies [[prismatic/dommy "0.1.2"]
-                                           [quil "2.2.1-SNAPSHOT"]]
+                            :dependencies [[prismatic/dommy "0.1.2"]]
 
                             :cljsbuild
-                            {:builds [{:source-paths ["test/clj" "test/cljs" "target/gen/cljs/test"]
+                            {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gen/cljs/test"]
                                        :compiler
                                        {:output-to "target/js/main.js"
                                         :optimizations :whitespace
