@@ -48,15 +48,17 @@
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
                                   [clj-http "0.9.1"]]}
-             :t1 {:dependencies [[org.clojure/clojurescript "0.0-2234"]
-                                 [prismatic/dommy "0.1.2"]]
-                  :hooks [leiningen.cljsbuild]
-                  :plugins [[lein-cljsbuild "1.0.3"]]
 
-                  :cljsbuild
-                  {:builds [{:source-paths ["target/classes" "src/clj" "src/cljs" "test/clj" "test/cljs" "target/gen/clj" "target/gen/cljs" "target/gen/clj/test" "target/gen/cljs/test"]
-                             :compiler
-                             {:output-to "test/html/js/main.js"
-                              :externs ["externs/processing-externs.js"]
-                              :optimizations :whitespace
-                              :pretty-print true}}]}}})
+             :test-1.5.1 {:dependencies [[org.clojure/clojurescript "0.0-2234"]
+                                         [prismatic/dommy "0.1.2"]
+                                         [quil "2.2.1-SNAPSHOT"]]
+                          :hooks [leiningen.cljsbuild]
+                          :plugins [[lein-cljsbuild "1.0.3"]]
+                          :aot [quil.helpers.applet-listener quil.applet]
+
+                          :cljsbuild
+                          {:builds [{:source-paths ["test/clj" "test/cljs" "target/gen/cljs/test"]
+                                     :compiler
+                                     {:output-to "target/js/main.js"
+                                      :optimizations :whitespace
+                                      :pretty-print true}}]}}})
