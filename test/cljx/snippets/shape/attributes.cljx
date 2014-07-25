@@ -1,11 +1,11 @@
 (ns snippets.shape.attributes
   (:require #+cljs quil.snippet
             #+clj [quil.snippet :refer [defsnippet]]
-            [quil.core :as q])
+            [quil.core :as q :include-macros true])
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
+
 (defsnippet ellipse-mode {}
   (q/stroke-weight 5)
   (q/ellipse-mode :center)

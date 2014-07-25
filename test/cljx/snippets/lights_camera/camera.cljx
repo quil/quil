@@ -1,7 +1,7 @@
 (ns snippets.lights-camera.camera
   (:require #+cljs quil.snippet
             #+clj [quil.snippet :refer [defsnippet]]
-            [quil.core :as q])
+            [quil.core :as q :include-macros true])
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 

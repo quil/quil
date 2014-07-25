@@ -1488,7 +1488,6 @@
   [x y width height]
   (.ellipse (current-graphics) (float x) (float y) (float width) (float height)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "ellipseMode()"
