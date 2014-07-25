@@ -5,6 +5,15 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
+
+#+cljs
+(defsnippet hello {:renderer :p3d}
+  (q/background 0 90 102)
+  (q/translate 58 48 0)
+  (q/rotate-y (/ q/PI 3.0))
+  (q/box 40)
+  )
+
 #+clj
 (defsnippet apply-matrix {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)

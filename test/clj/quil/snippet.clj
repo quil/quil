@@ -5,7 +5,8 @@
             [clojure.test :refer [is]]))
 
 (def default-size [500 500])
-(def default-host "quil-test")
+(def default-host {:p2d "quil-test-2d"
+                   :p3d "quil-test-3d"})
 
 (defmacro snippet-as-test [snip-name opts & draw-fn-body]
   `(let [result# (promise)]
@@ -49,18 +50,18 @@
        (quil.core/sketch
         :size ~(:size opts default-size)
         :renderer ~(:renderer opts :p2d)
-        :host ~(:host opts default-host)
+        :host ~(or (:host opts)
+                   (get default-host (:renderer opts :p2d)))
 
         :setup (fn []
-                 ~(:setup opts)
-                 (q/frame-rate 5))
+                 ~(:setup opts))
 
         :draw (fn []
                 (try
                   ~@body
                   (catch js/Error e#
                     (swap! quil.snippet/failed inc)
-                    (throw (js/Error. e#)))
+                    (throw e#))
                   (finally (q/exit))))))
 
      (swap! quil.snippet/test-data conj
