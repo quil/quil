@@ -1,11 +1,10 @@
-(ns snippets.shape.3d-primitives
+(ns snippets.shape.primitives-3d
   (:require #+cljs quil.snippet
             #+clj [quil.snippet :refer [defsnippet]]
             [quil.core :as q :include-macros true])
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet box {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/with-translation [100 0 0]
@@ -13,12 +12,10 @@
   (q/with-translation [0 100 0]
     (q/box 70 100 50)))
 
-#+clj
 (defsnippet sphere {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/sphere 150))
 
-#+clj
 (defsnippet sphere-detail {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/sphere-detail 30) ; default
