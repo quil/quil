@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet alpha {}
   (q/background 255)
 
@@ -18,7 +17,6 @@
     (q/fill semi-blue)
     (q/rect 70 70 100 100)))
 
-#+clj
 (defsnippet blend-color {}
   (q/background 255)
 

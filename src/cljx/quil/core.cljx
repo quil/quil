@@ -307,7 +307,6 @@
   #+clj (PApplet/acos (float n))
   #+cljs (.acos (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "alpha()"
@@ -823,7 +822,6 @@
        (.blend dest-img src-img (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "blendColor()"
@@ -864,7 +862,8 @@
                 Photoshop."
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
-    (PApplet/blendColor (int c1) (int c2) (int mode))))
+    #+clj (PApplet/blendColor (int c1) (int c2) (int mode)))
+    #+cljs (.blendColor (current-graphics) c1 c2 mode))
 
 #+clj
 (defn
