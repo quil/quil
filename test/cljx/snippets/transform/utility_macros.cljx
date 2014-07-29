@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet with-rotation {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -22,7 +21,6 @@
   (q/with-rotation [1 0 1 0]
     (q/box 50)))
 
-#+clj
 (defsnippet with-translation {}
   (q/translate 10 10)
   (q/rect 0 0 50 50)

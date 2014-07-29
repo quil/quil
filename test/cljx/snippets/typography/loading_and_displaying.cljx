@@ -48,7 +48,6 @@
          (q/text-font))
     (q/text "CoMiC SaNs HeRe" 20 100)))
 
-#+clj
 (defsnippet text {:renderer :p3d}
   (q/background 255)
   (q/fill 0)
