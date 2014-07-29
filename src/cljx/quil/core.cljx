@@ -4336,7 +4336,6 @@
              (float x2) (float y2)
              (float x3) (float y3)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "unbinary()"
@@ -4347,9 +4346,9 @@
   "Unpack a binary string to an integer. See binary for converting
   integers to strings."
   [str-val]
-  (PApplet/unbinary (str str-val)))
+  #+clj (PApplet/unbinary (str str-val))
+  #+cljs (.unbinary (current-applet) (str str-val)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "hex()"
@@ -4359,7 +4358,8 @@
   "Converts a String representation of a hexadecimal number to its
   equivalent integer value."
   [hex-str]
-  (PApplet/unhex (str hex-str)))
+  #+clj (PApplet/unhex (str hex-str))
+  #+cljs (.unhex (current-applet) (str hex-str)))
 
 (defn
   ^{:requires-bindings true

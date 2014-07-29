@@ -22,13 +22,11 @@
 
   (q/text (q/hex 42 5) 10 30))
 
-#+clj
 (defsnippet unbinary {}
   (q/background 255)
   (q/fill 0)
   (q/text (str (q/unbinary "0101010")) 10 10))
 
-#+clj
 (defsnippet unhex {}
   (q/background 255)
   (q/fill 0)
