@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet begin-camera-end-camera-camera {:renderer :p3d}
   (q/background 255)
   (q/begin-camera)
@@ -27,7 +26,6 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-#+clj
 (defsnippet camera {:renderer :p3d}
   (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
@@ -43,7 +41,6 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-#+clj
 (defsnippet frustum {:renderer :p3d}
   (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
@@ -60,7 +57,6 @@
   (q/stroke 0 0 255) ; blue - Z axis
   (q/line 0 0 0 0 0 100))
 
-#+clj
 (defsnippet ortho {:renderer :p2d}
   (let [ortho-params [[] [0 300 0 300] [0 300 0 300 0 170]]
         pos [[0 0] [250 0] [127 250]]]
@@ -74,7 +70,6 @@
           (q/box 100))
         (apply q/image gr (nth pos ind))))))
 
-#+clj
 (defsnippet perspective {:renderer :p2d}
   (let [perspective-params [[] [(/ q/PI 2) 0.5 50 300]]
         pos [[0 0] [250 0] [127 250]]]
@@ -88,10 +83,8 @@
           (q/box 100))
         (apply q/image gr (nth pos ind))))))
 
-#+clj
 (defsnippet print-camera {:renderer :p3d}
   (q/print-camera))
 
-#+clj
 (defsnippet print-projection {:renderer :p3d}
   (q/print-projection))
