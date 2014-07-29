@@ -127,7 +127,8 @@
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size display]
-  (cond (= size :fullscreen) (apply display-size display)
+  (cond (= size :fullscreen) (if (== :default display) (display-size)
+                               (display-size display))
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
                       (str "Invalid size definition: " size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
@@ -383,8 +384,7 @@
         options           (merge (dissoc options :features)
                                  features)
 
-        display           (let [d (:display options)]
-                            (if d [d] []))
+        display           (or (:display options) :default)
         size              (process-size (:size options) display)
 
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
