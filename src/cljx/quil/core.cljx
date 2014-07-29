@@ -1192,9 +1192,8 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
-  #+clj
   ([w h]
-     (.createGraphics (current-applet) (int w) (int h)))
+     (.createGraphics (current-applet) (int w) (int h) #+cljs :p2d))
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
@@ -2053,7 +2052,6 @@
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter img (int mode) (float level)))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "imageMode()"

@@ -15,7 +15,7 @@
     (q/image gr 0 0)
     (q/image gr 100 0 100 70)))
 
-#+clj
+
 (defsnippet image-mode {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
