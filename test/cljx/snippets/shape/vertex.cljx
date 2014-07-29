@@ -46,7 +46,6 @@
       (q/end-shape close-mode)
       (q/end-shape))))
 
-#+clj
 (defsnippet bezier-vertex {:renderer :p3d}
   (q/camera -400 250 -100 500 250 0 0 0 1)
   (q/begin-shape)
@@ -61,7 +60,6 @@
   (q/bezier-vertex 250 380 40 360 125 10 30 20 0)
   (q/end-shape :close))
 
-#+clj
 (defsnippet curve-vertex {:renderer :p3d}
   (q/camera 50 200 50 50 0 0 0 0 1)
   (q/begin-shape)

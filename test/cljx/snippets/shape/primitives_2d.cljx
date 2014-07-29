@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet arc {}
   (q/background 255)
   (q/stroke 0)
@@ -14,7 +13,7 @@
   (doseq [[ind mode] [[0 :open]
                       [1 :chord]
                       [2 :pie]]]
-    (q/arc (+ 50 (* ind 150)) 300 200 170 0  q/QUARTER-PI mode)))
+    (q/arc (+ 50 (* ind 150)) 300 200 170 0  q/QUARTER-PI #+clj mode)))
 
 (defsnippet ellipse {}
   (q/background 255)
