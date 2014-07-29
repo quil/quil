@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet model-x-y-z {:renderer :p2d}
   (let [gr3d (q/create-graphics 240 240 :p3d)
         gr-text (q/create-graphics 240 240 :java2d)]
@@ -36,7 +35,6 @@
     (q/image gr3d 0 0)
     (q/image gr-text 250 0)))
 
-#+clj
 (defsnippet screen-x-y-z {:renderer :p2d}
   (let [gr3d (q/create-graphics 240 240 :p3d)
         gr-text (q/create-graphics 240 240 :java2d)]

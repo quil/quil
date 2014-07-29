@@ -5,21 +5,18 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet ambient-light {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 1)
   (q/ambient-light 200 190 230)
   (q/sphere 50))
 
-#+clj
 (defsnippet directional-light {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
   (q/directional-light 255 150 150 -1 -0.76 -0.5)
   (q/box 50))
 
-#+clj
 (defsnippet light-falloff {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
@@ -27,7 +24,6 @@
   (q/point-light 255 150 150 100 100 100)
   (q/box 50))
 
-#+clj
 (defsnippet light-specular {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
@@ -35,14 +31,12 @@
   (q/directional-light 255 150 150 -1 -0.76 -0.5)
   (q/box 50))
 
-#+clj
 (defsnippet lights {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
   (q/lights)
   (q/box 50))
 
-#+clj
 (defsnippet no-lights {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
@@ -52,7 +46,6 @@
   (q/translate 0 50 0)
   (q/sphere 20))
 
-#+clj
 (defsnippet normal {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 40 40 0 0 0 -1)
@@ -66,14 +59,12 @@
     (apply q/vertex v))
   (q/end-shape :close))
 
-#+clj
 (defsnippet point-light {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
   (q/point-light 255 150 150 100 100 100)
   (q/box 50))
 
-#+clj
 (defsnippet spot-light {:renderer :p3d}
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)

@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet ambient {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 0 0 0 0 -1)
@@ -16,7 +15,6 @@
   (q/ambient 127)
   (q/sphere 40))
 
-#+clj
 (defsnippet emissive {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 0 0 0 0 -1)
@@ -27,7 +25,6 @@
   (q/emissive (q/color 0 127 0))
   (q/sphere 40))
 
-#+clj
 (defsnippet shininess {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 25 0 0 0 -1)
@@ -42,7 +39,6 @@
   (q/shininess 10)
   (q/sphere 40))
 
-#+clj
 (defsnippet specular {:renderer :p3d}
   (q/background 0)
   (q/camera 150 150 150 0 25 0 0 0 -1)
