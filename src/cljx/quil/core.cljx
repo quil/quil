@@ -3127,7 +3127,6 @@
      (.rect (current-graphics) (float x) (float y) (float width) (float height)
             (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "rectMode()"
@@ -3895,7 +3894,6 @@
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "strokeCap()"
@@ -3910,7 +3908,6 @@
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
     (.strokeCap (current-graphics) (int cap-mode))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "strokeJoin()"

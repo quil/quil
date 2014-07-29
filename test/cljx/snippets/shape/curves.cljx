@@ -5,14 +5,12 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet bezier {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/bezier 0 0 50 100 100 -100 150 0)
   (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
-#+clj
 (defsnippet bezier-detail {:renderer :p3d}
   (q/camera 0 0 300 0 0 0 0 1 0)
   (q/no-fill)
@@ -37,7 +35,6 @@
           txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
-#+clj
 (defsnippet curve {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -50,7 +47,6 @@
          0 0 100
          100 0 0))
 
-#+clj
 (defsnippet curve-detail {:renderer :p3d}
   (q/camera 0 0 300 0 0 0 0 1 0)
   (q/no-fill)
@@ -75,7 +71,6 @@
           txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
-#+clj
 (defsnippet curve-tightness {}
   (q/no-fill)
   (doseq [[ind t] [[0 -5] [1 -1] [2 0] [3 1] [4 5]]]

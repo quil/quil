@@ -29,7 +29,6 @@
     (q/point -50 -35)
     (q/point 50 35)))
 
-#+clj
 (defsnippet smooth-no-smooth {:renderer :p2d}
   (q/smooth)
   (q/with-translation [125 125]
@@ -43,7 +42,6 @@
   (q/with-translation [375 125]
     (q/ellipse 0 0 200 200)))
 
-#+clj
 (defsnippet rect-mode {}
   (q/stroke-weight 5)
   (q/rect-mode :center)
@@ -75,7 +73,6 @@
     (q/point -50 -35)
     (q/point 50 35)))
 
-#+clj
 (defsnippet stroke-cap {}
   (q/stroke-weight 12)
   (q/stroke-cap :square)
@@ -87,7 +84,6 @@
   (q/stroke-cap :round)
   (q/line 230 300 270 300))
 
-#+clj
 (defsnippet stroke-join {}
   (q/rect-mode :center)
   (q/stroke-weight 12)
