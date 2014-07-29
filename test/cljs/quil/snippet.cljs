@@ -52,7 +52,7 @@
 
         (finally
          (swap! test-indx inc)
-         (js/setTimeout run-single-test 1000))))
+         (js/setTimeout run-single-test 500))))
 
     (js/setTimeout end-of-tests 500)))
 

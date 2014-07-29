@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet background {}
   (q/background 255 0 0)
   (let [gr (q/create-graphics 100 100)]
