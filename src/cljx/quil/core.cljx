@@ -759,7 +759,6 @@
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "binary()"
@@ -770,8 +769,12 @@
   "Returns a string representing the binary value of an int, char or
   byte. When converting an int to a string, it is possible to specify
   the number of digits used."
-  ([val] (PApplet/binary (int val)))
-  ([val num-digits] (PApplet/binary (int val) (int num-digits))))
+  ([val]
+    #+clj (PApplet/binary (int val))
+    #+cljs (.binary (current-applet) val))
+  ([val num-digits]
+    #+clj (PApplet/binary (int val) (int num-digits))
+    #+cljs (.binary (current-applet) val num-digits)))
 
 (defn
   ^{:requires-bindings true
@@ -1859,7 +1862,6 @@
   [col]
   (.green (current-graphics) (int col)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "hex()"
@@ -1870,8 +1872,12 @@
   equivalent hexadecimal notation. For example color(0, 102, 153) will
   convert to the String \"FF006699\". This function can help make your
   geeky debugging sessions much happier. "
-  ([val] (PApplet/hex (int val)))
-  ([val num-digits] (PApplet/hex (int val) (int num-digits))))
+  ([val]
+    #+clj (PApplet/hex (int val))
+    #+cljs (.hex (current-applet) val))
+  ([val num-digits]
+    #+clj (PApplet/hex (int val) (int num-digits))
+    #+cljs (.hex (current-applet) val num-digits)))
 
 (defn
   ^{:requires-bindings true

@@ -1,4 +1,4 @@
-(ns snippets.color.creating-and-reading
+(ns snippets.data.conversion
   (:require #+cljs quil.snippet
             #+clj [quil.snippet :refer [defsnippet]]
             [quil.core :as q :include-macros true])
@@ -8,7 +8,6 @@
 ; These snippets test non-graphic functions.
 ; Draw results as strings in sketch.
 
-#+clj
 (defsnippet binary {}
   (q/background 255)
   (q/fill 0)
@@ -16,7 +15,6 @@
 
   (q/text (q/binary 42 5) 10 30))
 
-#+clj
 (defsnippet hex {}
   (q/background 255)
   (q/fill 0)
