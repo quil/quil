@@ -563,6 +563,7 @@
   #+clj ([rgb] (if (int-like? rgb) (background-int rgb) (background-float rgb)))
   #+cljs ([rgb] (.background (current-graphics) rgb))
   #+clj ([rgb alpha] (if (int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
+  #+cljs ([rgb alpha] (.background (current-graphics) rgb alpha))
   ([r g b] (background-float r g b))
   ([r g b a] (background-float r g b a)))
 
@@ -4287,6 +4288,8 @@
   Also used to control the coloring of textures in 3D."
   #+clj ([rgb] (if (int-like? rgb) (tint-int rgb) (tint-float rgb)))
   #+clj ([rgb alpha] (if (int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
+  #+cljs ([rgb] (.tint (current-graphics) rgb))
+  #+cljs ([rgb alpha] (.tint (current-graphics) rgb alpha))
   ([r g b] (tint-float r g b))
   ([r g b a] (tint-float r g b a)))
 

@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet image {}
   (q/background 255)
   (let [gr (q/create-graphics 70 70)]
@@ -96,7 +95,6 @@
       (q/mask-image mask))
     (q/image gr2 260 140)))
 
-#+clj
 (defsnippet no-tint {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
@@ -122,14 +120,12 @@
     (q/no-tint)
     (q/image gr 200 0)))
 
-#+clj
 (defsnippet request-image
   {:setup (q/set-state! :image (q/request-image "https://cloud.github.com/downloads/quil/quil/quil.png"))}
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (q/image (q/state :image) 0 0)))
 
-#+clj
 (defsnippet tint {}
   (q/background 127)
   (let [gr (q/create-graphics 100 100)]
