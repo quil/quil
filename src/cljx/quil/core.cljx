@@ -1893,7 +1893,6 @@
   #+clj (.getHeight (current-applet))
   #+cljs (.-height (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "hint()"

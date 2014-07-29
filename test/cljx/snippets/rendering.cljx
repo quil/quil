@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet hint {}
   (let [hints [:enable-native-fonts
                :disable-native-fonts
@@ -31,7 +30,6 @@
       (q/hint h)))
   (q/ellipse 250 250 400 200))
 
-#+clj
 (defsnippet with-graphics {}
   (let [gr (q/create-graphics 250 250)]
     (q/with-graphics gr
