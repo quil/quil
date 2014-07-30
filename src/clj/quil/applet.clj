@@ -127,7 +127,7 @@
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
   [size display]
-  (cond (= size :fullscreen) (if (== :default display) (display-size)
+  (cond (= size :fullscreen) (if (= :default display) (display-size)
                                (display-size display))
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
