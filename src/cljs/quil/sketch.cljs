@@ -71,7 +71,8 @@
                      :mouseReleased mouse-released
                      :mouseOut mouse-out
                      :mouseOver mouse-over)
-      (set! (.-quil prc) (atom {:target-frame-rate (atom 60)})))))
+      (set! (.-quil prc) (atom nil))
+      (set! (.-applet prc) (atom {:target-frame-rate (atom 60)})))))
 
 
 (defn sketch

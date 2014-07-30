@@ -3952,7 +3952,7 @@
   "Returns the target framerate specified with the fn frame-rate"
   []
   #+clj @(quil.applet/target-frame-rate)
-  #+cljs @(state :target-frame-rate))
+  #+cljs @(:target-frame-rate @(. (current-applet) -applet)))
 
 (defn
   ^{:requires-bindings true

@@ -29,6 +29,7 @@
   (doseq [type [:arrow :cross :hand :move :text :wait]]
     (q/cursor type)))
 
+#+clj
 (defsnippet cursor-image {}
   (let [curs (q/create-graphics 32 32)]
     (q/with-graphics curs
