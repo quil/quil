@@ -17,7 +17,7 @@
 (defn resolve-renderer [mode]
   (resolve-constant-key mode rendering-modes))
 
-(defn 
+(defn
   size
   ([width height]
     (.size (current-applet) (int width) (int height)))
@@ -71,7 +71,7 @@
                      :mouseReleased mouse-released
                      :mouseOut mouse-out
                      :mouseOver mouse-over)
-      (set! (.-quil prc) (atom nil)))))
+      (set! (.-quil prc) (atom {:target-frame-rate (atom 60)})))))
 
 
 (defn sketch

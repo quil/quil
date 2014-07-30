@@ -72,7 +72,8 @@
  text-modes (:model :shape)
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
- filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate))
+ filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
+ cursor-modes (:arrow :cross :hand :move :text :wait))
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
@@ -1247,16 +1248,6 @@
   []
   (.strokeColor (current-graphics)))
 
-#+clj
-(def ^{:private true}
-  cursor-modes {:arrow PConstants/ARROW
-                :cross PConstants/CROSS
-                :hand PConstants/HAND
-                :move PConstants/MOVE
-                :text PConstants/TEXT
-                :wait PConstants/WAIT})
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "cursor()"
@@ -1272,7 +1263,7 @@
   See cursor-image for specifying a generic image as the cursor
   symbol."
   ([] (.cursor (current-applet)))
-  #+clj ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
+  ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
 
 (defn
   ^{:requires-bindings true
@@ -3952,7 +3943,6 @@
   #+clj (PApplet/tan (float angle))
   #+cljs (.tan (current-applet) angle))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "Environment"
@@ -3961,7 +3951,8 @@
   target-frame-rate
   "Returns the target framerate specified with the fn frame-rate"
   []
-  @(quil.applet/target-frame-rate))
+  #+clj @(quil.applet/target-frame-rate)
+  #+cljs @(state :target-frame-rate))
 
 (defn
   ^{:requires-bindings true

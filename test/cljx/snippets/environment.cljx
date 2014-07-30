@@ -5,14 +5,12 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet current-frame-rate-target-frame-rate {}
   (q/background 255)
   (q/fill 0)
   (q/text (str (q/current-frame-rate)) 10 20)
   (q/text (str (q/target-frame-rate)) 10 40))
 
-#+clj
 (defsnippet current-graphics {}
   (q/background 255)
   (q/fill 0 0 255)
@@ -24,7 +22,6 @@
       (.ellipse (q/current-graphics) 50 50 100 100))
     (q/image gr 70 70)))
 
-#+clj
 (defsnippet cursor {}
   (q/no-cursor)
   (q/cursor)
@@ -32,7 +29,6 @@
   (doseq [type [:arrow :cross :hand :move :text :wait]]
     (q/cursor type)))
 
-#+clj
 (defsnippet cursor-image {}
   (let [curs (q/create-graphics 32 32)]
     (q/with-graphics curs
@@ -52,7 +48,6 @@
   (q/fill 0)
   (q/text (str (q/frame-count)) 10 20))
 
-#+clj
 (defsnippet frame-rate {}
   (q/background 255)
   (q/fill 0)
