@@ -5,20 +5,19 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet apply-matrix {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/box 50)
-  (q/apply-matrix 1 0 50
-                0 1 -50)
-  (q/box 50)
+  #+clj (q/apply-matrix 1 0 50
+                        0 1 -50)
+  #+clj (q/box 50)
   (let [s (q/sin 1)
         c (q/cos 1)]
    (q/apply-matrix 1 0 0 0
-                 0 c s 50
-                 0 (- s) c -50
-                 0 0 0 1))
+                   0 c s 50
+                   0 (- s) c -50
+                   0 0 0 1))
   (q/box 50))
 
 (defsnippet push-matrix-pop-matrix {}
