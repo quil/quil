@@ -160,7 +160,7 @@ There is also a small number of people that hang out in `#quil` on freenode. New
 
 ## License
 
-Quil is distributed under Common Public License Version 1.0. See LICENSE for details.
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.
 
 The official Processing.org's jars, used as dependencies, are distributed under LGPL and their code can be found on http://processing.org/
 
