@@ -24,11 +24,10 @@
       (q/background 0 0 255 120))
     (q/image gr 210 210)))
 
-#+clj
 (defsnippet background-image {}
   (let [gr (q/create-graphics (q/width) (q/height))]
     (q/with-graphics gr
-      (q/background 0 120 120)
+      (q/background 0 90 120)
       (q/ellipse 250 250 300 300))
 
     (q/background-image gr)))
