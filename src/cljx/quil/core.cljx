@@ -567,7 +567,6 @@
   ([r g b] (background-float r g b))
   ([r g b a] (background-float r g b a)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
@@ -2356,6 +2355,7 @@
   #+clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
   #+cljs (.map (current-applet) val low1 high1 low2 high2))
 
+#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "PImage.mask()"
