@@ -6,8 +6,8 @@
                  :archive "https://groups.google.com/forum/?fromgroups#!forum/clj-processing"
                  :post "clj-processing@googlegroups.com"}
 
-  :license {:name "Common Public License - v 1.0"
-            :url "http://www.opensource.org/licenses/cpl1.0"}
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [quil/processing-core "2.2.1"]
