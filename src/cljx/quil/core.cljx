@@ -38,7 +38,7 @@
   that are not implemented by quil. Example:
   (.beginDraw (current-graphics))."
   []
-  (or *graphics* 
+  (or *graphics*
     #+clj (.-g (current-applet))
     #+cljs (current-applet)))
 
@@ -52,7 +52,7 @@
  color-modes (:rgb :hsb)
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
- hint-options (:enable-native-fonts :disable-native-fonts 
+ hint-options (:enable-native-fonts :disable-native-fonts
                             :enable-depth-test :disable-depth-test
                             :enable-depth-sort :disable-depth-sort
                             :enable-depth-mask :disable-depth-mask
@@ -147,25 +147,25 @@
 ;; ------------------ end PConstants section ---------------------
 
 #+cljs
-(defn 
+(defn
   ^{:require-bindings true
     :category "Output"
     :subcategory "Text area"
     :added "1.0"}
-  prc-println 
-  "Writes to the text area of the Processing environment's console. 
-  This is often helpful for looking at the data a program is producing. 
-  Each call to this function creates a new line of output. 
-  Individual elements can be separated with quotes (\"\") and joined with the string concatenation operator (+). 
-  Also writes the content of an array to the text area of the Processing environment. 
-  This is often helpful for looking at the data a program is producing. 
-  A new line is put between each element of the array. This function can only print 1D arrays, 
+  prc-println
+  "Writes to the text area of the Processing environment's console.
+  This is often helpful for looking at the data a program is producing.
+  Each call to this function creates a new line of output.
+  Individual elements can be separated with quotes (\"\") and joined with the string concatenation operator (+).
+  Also writes the content of an array to the text area of the Processing environment.
+  This is often helpful for looking at the data a program is producing.
+  A new line is put between each element of the array. This function can only print 1D arrays,
   but can test to see if the content are null or not null for 2+ dimensional arrays."
   [msg]
   (.println (current-applet) msg))
 
 #+cljs
-(defn 
+(defn
   ^{:require-bindings true
     :category "Output"
     :subcategory "Text area"
@@ -179,13 +179,13 @@
   (.print (current-applet) msg))
 
 #+cljs
-(defn 
+(defn
   ^{:requires-bindings true
     :processing-name "getSketchById()"
     :category nil
     :subcategory nil
     :added "1.0"}
-  get-sketch-by-id 
+  get-sketch-by-id
   "Returns sketch object by id of canvas element of sketch."
   [id]
   (.getInstanceById js/Processing id))
@@ -365,7 +365,7 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([rgb] 
+  ([rgb]
     #+clj (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb))
     #+cljs (ambient-float rgb))
   ([x y z] (ambient-float x y z)))
@@ -1192,7 +1192,7 @@
   graphics object will be honored. Note that transparency levels are
   binary: pixels are either complete opaque or transparent. This means
   that text characters will be opaque blocks."
-  #+clj 
+  #+clj
   ([w h]
      (.createGraphics (current-applet) (int w) (int h)))
   ([w h renderer]
@@ -1468,10 +1468,10 @@
     :added "1.0"}
   dist
   "Calculates the distance between two points"
-  ([x1 y1 x2 y2] 
+  ([x1 y1 x2 y2]
     #+clj (PApplet/dist (float x1) (float y1) (float x2) (float y2))
     #+cljs (.dist (current-applet) x1 y1 x2 y2))
-  ([x1 y1 z1 x2 y2 z2] 
+  ([x1 y1 z1 x2 y2 z2]
     #+clj (PApplet/dist (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))
     #+cljs (.dist (current-applet) x1 y1 z1 x2 y2 z2)))
 
@@ -1552,7 +1552,7 @@
 
   If passed one arg - it is assumed to be an int (i.e. a color),
   multiple args are converted to floats."
-  ([c] 
+  ([c]
     #+clj (if (int-like? c) (emissive-int c) (emissive-float c))
     #+cljs (emissive-float c))
   ([r g b] (emissive-float r g b)))
@@ -1677,11 +1677,11 @@
     :added "1.0"}
   fill
   "Sets the color used to fill shapes."
-  ([rgb] 
+  ([rgb]
     #+clj (if (int-like? rgb) (fill-int rgb) (fill-float rgb))
     #+cljs (fill-float rgb))
 
-  ([rgb alpha] 
+  ([rgb alpha]
     #+clj (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha))
     #+cljs (fill-float rgb alpha))
 
@@ -2341,10 +2341,10 @@
   algebra. Because it has no start position, the magnitude of a vector
   can be thought of as the distance from coordinate (0,0) to its (x,y)
   value. Therefore, mag is a shortcut for writing (dist 0 0 x y)."
-  ([a b] 
+  ([a b]
     #+clj (PApplet/mag (float a) (float b))
     #+cljs (.mag (current-applet) a b))
-  ([a b c] 
+  ([a b c]
     #+clj (PApplet/mag (float a) (float b) (float c))
     #+cljs (.mag (current-applet) a b c)))
 
@@ -3240,22 +3240,22 @@
     (let [mode (resolve-constant-key kind shader-modes)]
       (.resetShader (current-graphics) mode))))
 
-(defn 
+(defn
   ^{:requires-bindings true
     :processing-name "resize()"
     :category "Image"
     :processing-link "http://processing.org/reference/PImage_resize_.html"
     :added "2.1.0"}
   resize
-  "Resize the image to a new width and height. 
+  "Resize the image to a new width and height.
   To make the image scale proportionally, use 0 as the value for the wide or
   high parameter. For instance, to make the width of an image 150 pixels,
   and change the height using the same proportion, use resize(150, 0).
 
-  Even though a PGraphics is technically a PImage, it is not possible 
-  to rescale the image data found in a PGraphics. 
-  (It's simply not possible to do this consistently across renderers: 
-  technically infeasible with P3D, or what would it even do with PDF?) 
+  Even though a PGraphics is technically a PImage, it is not possible
+  to rescale the image data found in a PGraphics.
+  (It's simply not possible to do this consistently across renderers:
+  technically infeasible with P3D, or what would it even do with PDF?)
   If you want to resize PGraphics content, first get a copy of its image data
   using the get() method, and call resize() on the PImage that is returned."
   [^PImage img w h]
@@ -3881,11 +3881,11 @@
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
   each value in the range from 0 to 255)."
-  ([rgb] 
+  ([rgb]
     #+clj (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb))
     #+cljs (stroke-float rgb))
 
-  ([rgb alpha] 
+  ([rgb alpha]
     #+clj (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha))
     #+cljs (stroke-float rgb alpha))
 
@@ -4576,6 +4576,9 @@
                      Color is specified in hex format: #XXXXXX.
                      Example: :bgcolor \"#00FFFF\" (cyan background)
 
+   :display        - Set what display should be used by this sketch.
+                     Displays are numbered starting from 0. Example: :display 1.
+
    :setup          - A function to be called once when setting the sketch up.
 
    :draw           - A function to be repeatedly called at most n times per
@@ -4636,7 +4639,7 @@
   inlined and that redefinitions to the original fns are reflected in
   the visualisation. See sketch for the available options."
   [app-name & options]
-  (if (clj-compilation?) 
+  (if (clj-compilation?)
     `(defapplet ~app-name ~@options)
     `(quil.sketch/defsketch ~app-name ~@options)))
 

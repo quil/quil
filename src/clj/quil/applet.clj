@@ -2,7 +2,7 @@
   quil.applet
   (:import [processing.core PApplet]
            [javax.swing JFrame]
-           [java.awt Dimension]
+           [java.awt Dimension GraphicsEnvironment]
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
             [quil.middlewares.deprecated-options :refer [deprecated-options]]
@@ -77,10 +77,12 @@
   (PApplet/runSketch
    (into-array String
                (vec (filter string?
-                   [(when (and (:bgcolor (meta applet))
-                               (:present (meta applet)))
-                     (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
-                    "--hide-stop" title])))
+                            [(when (:display (meta applet))
+                               (str "--display=" (:display (meta applet))))
+                             (when (and (:bgcolor (meta applet))
+                                        (:present (meta applet)))
+                               (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
+                             "--hide-stop" title])))
    applet)
   (prepare-applet-frame applet title))
 
@@ -105,21 +107,31 @@
 (defn- display-size
   "Returns size of screen. If there are 2 or more screens it probably return size of
   default one whatever it means."
-  []
-  (let [bounds (.. (java.awt.GraphicsEnvironment/getLocalGraphicsEnvironment)
-                   getDefaultScreenDevice
-                   getDefaultConfiguration
-                   getBounds)]
-    [(.-width bounds) (.-height bounds)]))
+  ([]
+   (let [bounds (.. (java.awt.GraphicsEnvironment/getLocalGraphicsEnvironment)
+                    getDefaultScreenDevice
+                    getDefaultConfiguration
+                    getBounds)]
+     [(.-width bounds) (.-height bounds)]))
+
+  ([display]
+   (if-let [bounds (some->
+                    (get (.getScreenDevices (GraphicsEnvironment/getLocalGraphicsEnvironment)) display)
+                    .getDefaultConfiguration
+                    .getBounds)]
+     [(.-width bounds) (.-height bounds)]
+     (throw (IllegalArgumentException.
+             (str "Invalid display index: " display ". Displays are numbered starting from 0"))))))
 
 (defn- process-size
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
-  [size]
-  (cond (= size :fullscreen) (display-size)
+  [size display]
+  (cond (= size :fullscreen) (if (= :default display) (display-size)
+                               (display-size display))
         (and (coll? size) (= 2 (count size))) size
         :else (throw (IllegalArgumentException.
-                      (str "Invalid size definition:" size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
+                      (str "Invalid size definition: " size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
 
 (defn- to-method-name [keyword]
   "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
@@ -304,6 +316,9 @@
                      Color is specified in hex format: #XXXXXX.
                      Example: :bgcolor \"#00FFFF\" (cyan background)
 
+   :display        - Set what display should be used by this sketch.
+                     Displays are numbered starting from 0. Example: :display 1.
+
    :setup          - A function to be called once when setting the sketch up.
 
    :draw           - A function to be repeatedly called at most n times per
@@ -369,7 +384,9 @@
         options           (merge (dissoc options :features)
                                  features)
 
-        size              (process-size (:size options))
+        display           (or (:display options) :default)
+        size              (process-size (:size options) display)
+
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) no-fn)
@@ -394,6 +411,7 @@
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size
+                                  :display (:display options)
                                   :target-frame-rate (atom 60)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
