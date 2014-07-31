@@ -29,8 +29,6 @@
     (is (<= (max-docstring-length doc) 80)
         (str "Function " name " has docstring longer than 80 chars."))))
 
-(meta #'quil.core/sketch)
-
 (deftest test-sketch-docstring-up-to-date
   (let [sketch-docstring (-> #'quil.core/sketch meta :doc)
         applet-docstring (-> #'quil.applet/applet meta :doc)]
