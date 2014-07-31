@@ -17,15 +17,14 @@
                  [quil/gluegen-rt-fat "2.1.5"]
                  [com.lowagie/itext "2.1.7"]]
 
-  :plugins [[com.keminglabs/cljx "0.4.0"]]
-
   :hooks [cljx.hooks]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
-                                  [clj-http "0.9.1"]]}}
+                                  [clj-http "0.9.1"]]
+                   :plugins [[com.keminglabs/cljx "0.4.0"]]}}
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
