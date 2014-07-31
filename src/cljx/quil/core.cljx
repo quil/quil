@@ -2006,7 +2006,6 @@
    #+cljs [img x y c d]
    (.image (current-graphics) img (float x) (float y) (float c) (float d))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "PImage.filter()"

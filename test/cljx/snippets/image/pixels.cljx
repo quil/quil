@@ -52,7 +52,6 @@
     (q/copy gr [0 0 100 100] [120 0 100 100])
     (q/copy [0 0 50 50] [240 0 100 100])))
 
-#+clj
 (defsnippet image-filter {}
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
