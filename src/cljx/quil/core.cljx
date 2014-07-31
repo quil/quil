@@ -4534,12 +4534,14 @@
                      Defaults to [500 300]. If you're using :fullscreen you may
                      want to enable present mode - :features [:present]
 
-   :renderer       - Specify the renderer type. One of :p2d, :p3d, :java2d,
+   :renderer       - Specifies the renderer type. One of :p2d, :p3d, :java2d,
                      :opengl, :pdf). Defaults to :java2d. :dxf renderer
                      can't be used as sketch renderer. Use begin-raw method
-                     instead.
+                     instead. In clojurescript only :p2d and :p3d renderers
+                     are supported.
 
-   :output-file    - Specify an output file path. Only used in :pdf mode.
+   :output-file    - Specifies an output file path. Only used in :pdf mode.
+                     Not supported in clojurescript.
 
    :title          - A string which will be displayed at the top of
                      the sketch window.
@@ -4550,10 +4552,13 @@
                      :keep-on-top - Sketch window will always be above other
                                     windows. Note: some platforms might not
                                     support always-on-top windows.
+                                    Not supported in clojurescript.
 
                      :exit-on-close - Shutdown JVM  when sketch is closed.
+                                      Not supported in clojurescript.
 
                      :resizable - Makes sketch resizable.
+                                  Not supported in clojurescript.
 
                      :no-safe-fns - Do not catch and print exceptions thrown
                                     inside functions provided to sketch (like
@@ -4565,19 +4570,28 @@
                                     fix it and reload it on fly. You can
                                     disable this behaviour by enabling
                                     :no-safe-fns feature.
+                                    Not supported in clojurescript.
 
                      :present - Switch to present mode (fullscreen without
                                 borders, OS panels). You may want to use
                                 this feature together with :size :fullscreen.
+                                Not supported in clojurescript.
+
+                     :no-start - Disables autostart if sketch was created using
+                                 defsketch macro. To start sketch you have to
+                                 call function created defsketch.
+                                 Supported only in clojurescript.
 
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
                      Color is specified in hex format: #XXXXXX.
                      Example: :bgcolor \"#00FFFF\" (cyan background)
+                     Not supported in clojurescript.
 
-   :display        - Set what display should be used by this sketch.
+   :display        - Sets what display should be used by this sketch.
                      Displays are numbered starting from 0. Example: :display 1.
+                     Not supported in clojurescript.
 
    :setup          - A function to be called once when setting the sketch up.
 
@@ -4586,8 +4600,10 @@
                      the visualisation.
 
    :focus-gained   - Called when the sketch gains focus.
+                     Not supported in clojurescript.
 
    :focus-lost     - Called when the sketch loses focus.
+                     Not supported in clojurescript.
 
    :mouse-entered  - Called when the mouse enters the sketch window.
 
@@ -4611,6 +4627,7 @@
                      Negative values if the mouse wheel was rotated
                      up/away from the user, and positive values
                      if the mouse wheel was rotated down/ towards the user
+                     Currently not supported in clojurescript.
 
    :key-pressed    - Called every time any key is pressed.
 
@@ -4620,8 +4637,9 @@
                      pressed.
 
    :on-close       - Called once, when sketch is closed
+                     Not supported in clojurescript.
 
-   :middleware     - vector of middleware to be applied to the sketch.
+   :middleware     - Vector of middleware to be applied to the sketch.
                      Middleware will be applied in the same order as in comp
                      function: [f g] will be applied as (f (g options))."
     [& opts]
