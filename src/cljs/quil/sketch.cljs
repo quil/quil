@@ -17,8 +17,7 @@
 (defn resolve-renderer [mode]
   (resolve-constant-key mode rendering-modes))
 
-(defn 
-  size
+(defn size
   ([width height]
     (.size (current-applet) (int width) (int height)))
 

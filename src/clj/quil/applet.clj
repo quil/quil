@@ -287,7 +287,7 @@
                      Not supported in clojurescript.
 
    :title          - A string which will be displayed at the top of
-                     the sketch window.
+                     the sketch window. Not supported in clojurescript.
 
    :features       - A vector of keywords customizing sketch behaviour.
                      Supported features:
