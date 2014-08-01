@@ -1189,9 +1189,7 @@
   created with create-graphics can have transparency. This makes it
   possible to draw into a graphics and maintain the alpha channel. By
   using save to write a PNG or TGA file, the transparency of the
-  graphics object will be honored. Note that transparency levels are
-  binary: pixels are either complete opaque or transparent. This means
-  that text characters will be opaque blocks."
+  graphics object will be honored."
   #+clj
   ([w h]
      (.createGraphics (current-applet) (int w) (int h)))
