@@ -51,7 +51,8 @@
         mouse-pressed   (or (:mouse-pressed opts) no-fn)
         mouse-released  (or (:mouse-released opts) no-fn)
         mouse-out       (or (:mouse-exited opts) no-fn)
-        mouse-over      (or (:mouse-entered opts) no-fn)]
+        mouse-over      (or (:mouse-entered opts) no-fn)
+        mouse-scrolled  (or (:mouse-wheel opts) (fn [x] ))]
     (fn [prc]
       (bind-handlers prc
                      :setup  (do
@@ -69,7 +70,8 @@
                      :mousePressed mouse-pressed
                      :mouseReleased mouse-released
                      :mouseOut mouse-out
-                     :mouseOver mouse-over)
+                     :mouseOver mouse-over
+                     :mouseScrolled (mouse-scrolled (* -1 (.-mouseScroll prc)))) ;; -1 need for compability to Clojure version
       (set! (.-quil prc) (atom nil)))))
 
 
