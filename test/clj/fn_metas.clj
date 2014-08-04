@@ -28,3 +28,10 @@
           :when doc]
     (is (<= (max-docstring-length doc) 80)
         (str "Function " name " has docstring longer than 80 chars."))))
+
+(deftest test-sketch-docstring-up-to-date
+  (let [sketch-docstring (-> #'quil.core/sketch meta :doc)
+        applet-docstring (-> #'quil.applet/applet meta :doc)]
+    (is (= sketch-docstring applet-docstring)
+        "Docstrings for quil.core/sketch and quil.applet/applet must be equal.
+         Otherwise quil.core/sketch might become stale.")))

@@ -17,8 +17,7 @@
 (defn resolve-renderer [mode]
   (resolve-constant-key mode rendering-modes))
 
-(defn
-  size
+(defn size
   ([width height]
     (.size (current-applet) (int width) (int height)))
 
@@ -52,7 +51,8 @@
         mouse-pressed   (or (:mouse-pressed opts) no-fn)
         mouse-released  (or (:mouse-released opts) no-fn)
         mouse-out       (or (:mouse-exited opts) no-fn)
-        mouse-over      (or (:mouse-entered opts) no-fn)]
+        mouse-over      (or (:mouse-entered opts) no-fn)
+        mouse-scrolled  (or (:mouse-wheel opts) (fn [x] ))]
     (fn [prc]
       (bind-handlers prc
                      :setup  (do
@@ -73,7 +73,6 @@
                      :mouseOver mouse-over)
       (set! (.-quil prc) (atom nil))
       (set! (.-applet prc) (atom {:target-frame-rate (atom 60)})))))
-
 
 (defn sketch
   [& opts]
