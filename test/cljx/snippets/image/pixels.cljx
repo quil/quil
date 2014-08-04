@@ -5,6 +5,7 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
+#+clj
 (defsnippet blend {}
   (q/background 255 100 20 50)
 
@@ -32,6 +33,7 @@
           ; blend graphics to graphics
           (q/blend gr (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode))))))
 
+#+clj
 (defsnippet copy {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
@@ -137,6 +139,7 @@
     (q/filter-shader shd)
     (q/image orig 100 100)))
 
+#+clj
 (defsnippet get-pixel {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
