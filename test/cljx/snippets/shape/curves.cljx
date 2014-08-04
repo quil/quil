@@ -5,12 +5,25 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
+#+clj
 (defsnippet bezier {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/bezier 0 0 50 100 100 -100 150 0)
   (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
+#+cljs
+(defsnippet bezier-2d {}
+  (q/no-fill)
+  (q/bezier 0 0 50 100 100 -100 150 0))
+
+#+cljs
+(defsnippet bezier-3d {:renderer :p3d}
+  (q/camera 200 200 200 0 0 0 0 0 -1)
+  (q/no-fill)
+  (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
+
+#+clj
 (defsnippet bezier-detail {:renderer :p3d}
   (q/camera 0 0 300 0 0 0 0 1 0)
   (q/no-fill)
@@ -18,6 +31,19 @@
   (q/bezier 0 0 50 100 100 -100 150 0)
   (q/bezier-detail 20)
   (q/bezier 0 0 -50 100 -100 -100 -150 0))
+
+#+cljs
+(defsnippet bezier-detail-2d {}
+  (q/no-fill)
+  (q/bezier-detail 5)
+  (q/bezier 0 0 50 100 100 -100 150 0))
+
+#+cljs
+(defsnippet bezier-detail-3d {:renderer :p3d}
+  (q/camera 0 0 300 0 0 0 0 1 0)
+  (q/no-fill)
+  (q/bezier-detail 20)
+  (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
 (defsnippet bezier-point {}
   (q/fill 0)
