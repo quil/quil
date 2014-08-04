@@ -70,4 +70,4 @@
 
              :test-1.6.0 [:cljs-testing
                           {:dependencies [[org.clojure/clojure "1.6.0"]
-                                          [org.clojure/clojurescript "0.0-2268"]]}]})
+                                          [org.clojure/clojurescript "0.0-2280"]]}]})
