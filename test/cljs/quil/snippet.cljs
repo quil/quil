@@ -2,8 +2,7 @@
   (:require [quil.core :as q :include-macros true]
             [dommy.utils :as utils]
             [dommy.core :as dommy])
-  (:use-macros [quil.snippet :only [defsnippet]]
-               [dommy.macros :only [node sel sel1]]))
+  (:use-macros [dommy.macros :only [node sel sel1]]))
 
 (def test-data (atom (list)))
 
