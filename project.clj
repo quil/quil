@@ -21,8 +21,6 @@
 
   :aot [quil.helpers.applet-listener quil.applet]
 
-  :plugins [[com.keminglabs/cljx "0.4.0"]]
-
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
@@ -46,7 +44,8 @@
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
-                                  [clj-http "0.9.1"]]}
+                                  [clj-http "0.9.1"]]
+                   :plugins [[com.keminglabs/cljx "0.4.0"]]}
 
              :cljs-testing {:hooks [leiningen.cljsbuild]
                             :plugins [[lein-cljsbuild "1.0.3"]]
