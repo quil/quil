@@ -1,3 +1,10 @@
+## 2.2.1
+_5th August 2014_
+
+* Added `:display` option to control on which display sketch will be shown.
+* Docs updates.
+* Clojurescript improvements: support `:mouse-wheel` handler and `frame-rate` function.
+
 ## 2.2.0
 _14th July 2014_
 
