@@ -1794,7 +1794,7 @@
   is 60 frames per second."
   [new-rate]
   (do
-    #+cljs (reset! (:target-frame-rate @(. (current-applet) -applet)) new-rate)
+    #+cljs (reset! (.-target-frame-rate (current-applet)) new-rate)
     (.frameRate (current-applet) (float new-rate))))
 
 (defn
@@ -3951,7 +3951,7 @@
   "Returns the target framerate specified with the fn frame-rate"
   []
   #+clj @(quil.applet/target-frame-rate)
-  #+cljs @(:target-frame-rate @(. (current-applet) -applet)))
+  #+cljs @(.-target-frame-rate (current-applet)))
 
 (defn
   ^{:requires-bindings true

@@ -73,7 +73,7 @@
                      :mouseOver mouse-over
                      :mouseScrolled (mouse-scrolled (* -1 (.-mouseScroll prc)))) ;; -1 need for compability to Clojure version
       (set! (.-quil prc) (atom nil))
-      (set! (.-applet prc) (atom {:target-frame-rate (atom 60)})))))
+      (set! (.-target-frame-rate prc) (atom 60)))))
 
 (defn sketch
   [& opts]
