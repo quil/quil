@@ -21,10 +21,6 @@
 
   :aot [quil.helpers.applet-listener quil.applet]
 
-  :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [garden "1.1.6"]
-                                  [clj-http "0.9.1"]]
-                   :plugins [[com.keminglabs/cljx "0.4.0"]]}}
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
@@ -33,7 +29,40 @@
                    :rules :clj}
                   {:source-paths ["src/cljx/quil"]
                    :output-path "target/gen/cljs/quil"
+                   :rules :cljs}
+
+                  {:source-paths ["test/cljx"]
+                   :output-path "target/gentest/clj"
+                   :rules :clj}
+                  {:source-paths ["test/cljx"]
+                   :output-path "target/gentest/cljs"
                    :rules :cljs}]}
 
   :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
-  :resource-paths ["resources"])
+  :test-paths ["test/clj" "target/gentest/clj"]
+  :resource-paths ["resources"]
+
+  :profiles {:dev {:dependencies [[hiccup "1.0.5"]
+                                  [garden "1.1.6"]
+                                  [clj-http "0.9.1"]]
+                   :plugins [[com.keminglabs/cljx "0.4.0"]]}
+
+             :cljs-testing {:hooks [leiningen.cljsbuild]
+                            :plugins [[lein-cljsbuild "1.0.3"]]
+                            :dependencies [[prismatic/dommy "0.1.2"]]
+
+                            :cljsbuild
+                            {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
+                                       :compiler
+                                       {:output-to "target/js/main.js"
+                                        :optimizations :whitespace
+                                        :externs ["externs/processing-externs.js"]
+                                        :pretty-print true}}]}}
+
+             :test-1.5.1 [:cljs-testing
+                          {:dependencies [[org.clojure/clojure "1.5.1"]
+                                          [org.clojure/clojurescript "0.0-2234"]]}]
+
+             :test-1.6.0 [:cljs-testing
+                          {:dependencies [[org.clojure/clojure "1.6.0"]
+                                          [org.clojure/clojurescript "0.0-2280"]]}]})

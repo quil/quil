@@ -72,7 +72,8 @@
  text-modes (:model :shape)
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
- filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate))
+ filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
+ cursor-modes (:arrow :cross :hand :move :text :wait))
 
 ;;; Useful trig constants
 #+clj (def PI  (float Math/PI))
@@ -307,7 +308,6 @@
   #+clj (PApplet/acos (float n))
   #+cljs (.acos (current-applet) n))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "alpha()"
@@ -563,10 +563,10 @@
   #+clj ([rgb] (if (int-like? rgb) (background-int rgb) (background-float rgb)))
   #+cljs ([rgb] (.background (current-graphics) rgb))
   #+clj ([rgb alpha] (if (int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
+  #+cljs ([rgb alpha] (.background (current-graphics) rgb alpha))
   ([r g b] (background-float r g b))
   ([r g b a] (background-float r g b a)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
@@ -759,7 +759,6 @@
                     (float cx2) (float cy2) (float cz2)
                     (float x) (float y) (float z))))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "binary()"
@@ -770,8 +769,12 @@
   "Returns a string representing the binary value of an int, char or
   byte. When converting an int to a string, it is possible to specify
   the number of digits used."
-  ([val] (PApplet/binary (int val)))
-  ([val num-digits] (PApplet/binary (int val) (int num-digits))))
+  ([val]
+    #+clj (PApplet/binary (int val))
+    #+cljs (.binary (current-applet) val))
+  ([val num-digits]
+    #+clj (PApplet/binary (int val) (int num-digits))
+    #+cljs (.binary (current-applet) val num-digits)))
 
 (defn
   ^{:requires-bindings true
@@ -822,7 +825,6 @@
        (.blend dest-img src-img (int x) (int y) (int width) (int height)
                (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "blendColor()"
@@ -863,7 +865,8 @@
                 Photoshop."
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
-    (PApplet/blendColor (int c1) (int c2) (int mode))))
+    #+clj (PApplet/blendColor (int c1) (int c2) (int mode)))
+    #+cljs (.blendColor (current-graphics) c1 c2 mode))
 
 #+clj
 (defn
@@ -1190,9 +1193,8 @@
   possible to draw into a graphics and maintain the alpha channel. By
   using save to write a PNG or TGA file, the transparency of the
   graphics object will be honored."
-  #+clj
   ([w h]
-     (.createGraphics (current-applet) (int w) (int h)))
+     (.createGraphics (current-applet) (int w) (int h) #+cljs :p2d))
   ([w h renderer]
      (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
@@ -1243,16 +1245,6 @@
   []
   (.strokeColor (current-graphics)))
 
-#+clj
-(def ^{:private true}
-  cursor-modes {:arrow PConstants/ARROW
-                :cross PConstants/CROSS
-                :hand PConstants/HAND
-                :move PConstants/MOVE
-                :text PConstants/TEXT
-                :wait PConstants/WAIT})
-
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "cursor()"
@@ -1268,7 +1260,7 @@
   See cursor-image for specifying a generic image as the cursor
   symbol."
   ([] (.cursor (current-applet)))
-  #+clj ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
+  ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
 
 (defn
   ^{:requires-bindings true
@@ -1486,7 +1478,6 @@
   [x y width height]
   (.ellipse (current-graphics) (float x) (float y) (float width) (float height)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "ellipseMode()"
@@ -1786,7 +1777,7 @@
   "Returns the current framerate"
   []
   #+clj (.frameRate (current-applet))
-  #+cljs (.-frameRate (current-applet)))
+  #+cljs (.-__frameRate (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1802,7 +1793,9 @@
   is recommended to set the frame rate within setup. The default rate
   is 60 frames per second."
   [new-rate]
-  (.frameRate (current-applet) (float new-rate)))
+  (do
+    #+cljs (reset! (.-target-frame-rate (current-applet)) new-rate)
+    (.frameRate (current-applet) (float new-rate))))
 
 (defn
   ^{:requires-bindings true
@@ -1859,7 +1852,6 @@
   [col]
   (.green (current-graphics) (int col)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "hex()"
@@ -1870,8 +1862,12 @@
   equivalent hexadecimal notation. For example color(0, 102, 153) will
   convert to the String \"FF006699\". This function can help make your
   geeky debugging sessions much happier. "
-  ([val] (PApplet/hex (int val)))
-  ([val num-digits] (PApplet/hex (int val) (int num-digits))))
+  ([val]
+    #+clj (PApplet/hex (int val))
+    #+cljs (.hex (current-applet) val))
+  ([val num-digits]
+    #+clj (PApplet/hex (int val) (int num-digits))
+    #+cljs (.hex (current-applet) val num-digits)))
 
 (defn
   ^{:requires-bindings true
@@ -1887,7 +1883,6 @@
   #+clj (.getHeight (current-applet))
   #+cljs (.-height (current-applet)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "hint()"
@@ -2011,7 +2006,6 @@
    #+cljs [img x y c d]
    (.image (current-graphics) img (float x) (float y) (float c) (float d))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "PImage.filter()"
@@ -2052,7 +2046,6 @@
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter img (int mode) (float level)))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "imageMode()"
@@ -2361,6 +2354,7 @@
   #+clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
   #+cljs (.map (current-applet) val low1 high1 low2 high2))
 
+#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "PImage.mask()"
@@ -3122,7 +3116,6 @@
      (.rect (current-graphics) (float x) (float y) (float width) (float height)
             (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "rectMode()"
@@ -3890,7 +3883,6 @@
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "strokeCap()"
@@ -3905,7 +3897,6 @@
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
     (.strokeCap (current-graphics) (int cap-mode))))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :processing-name "strokeJoin()"
@@ -3951,7 +3942,6 @@
   #+clj (PApplet/tan (float angle))
   #+cljs (.tan (current-applet) angle))
 
-#+clj
 (defn
   ^{:requires-bindings true
     :category "Environment"
@@ -3960,7 +3950,8 @@
   target-frame-rate
   "Returns the target framerate specified with the fn frame-rate"
   []
-  @(quil.applet/target-frame-rate))
+  #+clj @(quil.applet/target-frame-rate)
+  #+cljs @(.-target-frame-rate (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -4288,6 +4279,8 @@
   Also used to control the coloring of textures in 3D."
   #+clj ([rgb] (if (int-like? rgb) (tint-int rgb) (tint-float rgb)))
   #+clj ([rgb alpha] (if (int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
+  #+cljs ([rgb] (.tint (current-graphics) rgb))
+  #+cljs ([rgb alpha] (.tint (current-graphics) rgb alpha))
   ([r g b] (tint-float r g b))
   ([r g b a] (tint-float r g b a)))
 
@@ -4329,7 +4322,6 @@
              (float x2) (float y2)
              (float x3) (float y3)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "unbinary()"
@@ -4340,9 +4332,9 @@
   "Unpack a binary string to an integer. See binary for converting
   integers to strings."
   [str-val]
-  (PApplet/unbinary (str str-val)))
+  #+clj (PApplet/unbinary (str str-val))
+  #+cljs (.unbinary (current-applet) (str str-val)))
 
-#+clj
 (defn
   ^{:require-binding false
     :processing-name "hex()"
@@ -4352,7 +4344,8 @@
   "Converts a String representation of a hexadecimal number to its
   equivalent integer value."
   [hex-str]
-  (PApplet/unhex (str hex-str)))
+  #+clj (PApplet/unhex (str hex-str))
+  #+cljs (.unhex (current-applet) (str hex-str)))
 
 (defn
   ^{:requires-bindings true

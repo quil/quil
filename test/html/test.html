@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quil on ClojureScript tests</title>
+
+  <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script type="text/javascript" src="js/processing-1.4.8.js"></script>
+    <script type="text/javascript" src="../../target/js/main.js"></script>
+</head>
+<body>
+  <div class="centerBorder">
+    <div class="centerLayer">
+
+      <div class="table">
+        <ul class="cmenu">
+          <li class="hor"><button onclick="quil.snippet.run_tests();">Run</button></li>
+        </ul>
+      </div>
+
+      <hr class="symbol"/>
+
+      <div class="cframe">
+        <canvas id="quil-test-2d" width="500" height="500"></canvas>
+                <canvas id="quil-test-3d" width="500" height="500"></canvas>
+      </div>
+
+
+            <div class="table" id="results"></div>
+            <div id="logframe_border>
+                <hr class="symbol"/>
+                <div id="logframe">
+                </div>
+            </div>
+    </div>
+  </div>
+</body>
+</html>

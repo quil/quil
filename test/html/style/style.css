@@ -1,0 +1,43 @@
+.centerLayer {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 3%;
+    background: #fff;
+    padding: 10px;
+    overflow: auto;
+}
+
+.cmenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li.hor {
+    display: inline;
+}
+
+.table {
+    display: table;
+    margin: 0 auto;
+}
+
+.cline {
+    color: black;
+    size:1;
+}
+
+hr.symbol {
+    padding: 5px;
+    width: 67%;
+    border: none;
+    border-top: 1px solid #333;
+    color: #333;
+}
+
+.cframe {
+  margin: auto;
+  width: 1200px;
+  height: 500px;
+}
