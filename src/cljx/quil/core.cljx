@@ -1777,7 +1777,7 @@
   "Returns the current framerate"
   []
   #+clj (.frameRate (current-applet))
-  #+cljs (.-frameRate (current-applet)))
+  #+cljs (.-__frameRate (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1793,7 +1793,9 @@
   is recommended to set the frame rate within setup. The default rate
   is 60 frames per second."
   [new-rate]
-  (.frameRate (current-applet) (float new-rate)))
+  (do
+    #+cljs (reset! (:target-frame-rate @(. (current-applet) -applet)) new-rate)
+    (.frameRate (current-applet) (float new-rate))))
 
 (defn
   ^{:requires-bindings true
