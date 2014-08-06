@@ -18,7 +18,7 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 
 ## Installation
 
-You can create sample project using Quil lein template:
+Create sample project using Quil lein template:
 ```bash
 lein new quil hello-quil
 ```
