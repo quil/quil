@@ -370,7 +370,6 @@
                      Negative values if the mouse wheel was rotated
                      up/away from the user, and positive values
                      if the mouse wheel was rotated down/ towards the user
-                     Currently not supported in clojurescript.
 
    :key-pressed    - Called every time any key is pressed.
 

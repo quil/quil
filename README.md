@@ -18,10 +18,16 @@ Quil works with Clojure 1.5.1 and 1.6.0.
 
 ## Installation
 
-[Leiningen](https://github.com/technomancy/leiningen) users simply need to add Quil as a dependency to their `project.clj`:
+Create sample project using Quil lein template:
+```bash
+lein new quil hello-quil
+```
+Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
+
+If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "2.2.0"]
+[quil "2.2.1"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
