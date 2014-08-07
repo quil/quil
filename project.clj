@@ -57,7 +57,7 @@
                                        :compiler
                                        {:output-to "target/js/main.js"
                                         :optimizations :advanced
-                                        :preamble ["processing.js"]
+                                        :preamble ["processing.min.js"]
                                         :externs ["externs/processing.js"]
                                         :pretty-print true}}]}}
 
