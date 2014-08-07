@@ -15,6 +15,7 @@
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
+                 [quil/processing-js "1.4.8"]
                  [com.lowagie/itext "2.1.7"]]
 
   :hooks [cljx.hooks]
@@ -56,6 +57,7 @@
                                        :compiler
                                        {:output-to "target/js/main.js"
                                         :optimizations :whitespace
+                                        :preamble ["processing.js"]
                                         :externs ["externs/processing-externs.js"]
                                         :pretty-print true}}]}}
 
