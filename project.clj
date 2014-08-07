@@ -56,9 +56,9 @@
                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
                                        :compiler
                                        {:output-to "target/js/main.js"
-                                        :optimizations :whitespace
+                                        :optimizations :advanced
                                         :preamble ["processing.js"]
-                                        :externs ["externs/processing-externs.js"]
+                                        :externs ["externs/processing.js"]
                                         :pretty-print true}}]}}
 
              :test-1.5.1 [:cljs-testing
