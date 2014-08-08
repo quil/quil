@@ -1,4 +1,4 @@
-(defproject quil "2.2.1"
+(defproject quil "2.2.2-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -15,6 +15,7 @@
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
+                 [quil/processing-js "1.4.8"]
                  [com.lowagie/itext "2.1.7"]]
 
   :hooks [cljx.hooks]
@@ -55,8 +56,9 @@
                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
                                        :compiler
                                        {:output-to "target/js/main.js"
-                                        :optimizations :whitespace
-                                        :externs ["externs/processing-externs.js"]
+                                        :optimizations :advanced
+                                        :preamble ["processing.min.js"]
+                                        :externs ["externs/processing.js"]
                                         :pretty-print true}}]}}
 
              :test-1.5.1 [:cljs-testing
