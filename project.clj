@@ -49,8 +49,15 @@
                    :plugins [[com.keminglabs/cljx "0.4.0"]]}
 
              :cljs-testing {:hooks [leiningen.cljsbuild]
-                            :plugins [[lein-cljsbuild "1.0.3"]]
-                            :dependencies [[prismatic/dommy "0.1.2"]]
+                            :plugins [[lein-cljsbuild "1.0.3"]
+                                      [lein-ring "0.8.11"]]
+                            :source-paths ["test/clj"]
+                            :ring {:handler test-server/app}
+                            :dependencies [[prismatic/dommy "0.1.2"]
+                                           [compojure "1.1.8"]
+                                           [javax.servlet/servlet-api "2.5"]
+                                           [ring-mock "0.1.5"]
+                                           [clj-http "0.9.2"]]
 
                             :cljsbuild
                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
