@@ -6,7 +6,7 @@
             [clj-http.client :as client]))
 
 (defroutes app-routes
-  (compojure.core/GET "/" req (ring.util.response/redirect "/test.html"))
+  (GET "/" req (ring.util.response/redirect "/test.html"))
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))

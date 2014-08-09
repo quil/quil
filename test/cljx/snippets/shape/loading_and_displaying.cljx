@@ -5,21 +5,21 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet load-shape {:renderer :p2d}
-  (let [sh (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")]
+  (let [sh #+clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+           #+cljs (q/load-shape "Heckert_GNU_white.svg")]
     (q/shape sh 0 0 500 500)))
 
-#+clj
 (defsnippet shape {:renderer :p2d}
-  (let [sh (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")]
+  (let [sh #+clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+           #+cljs (q/load-shape "Heckert_GNU_white.svg")]
     (q/shape sh)
     (q/shape sh 100 100)
     (q/shape sh 300 300 200 200)))
 
-#+clj
 (defsnippet shape-mode {:renderer :p2d}
-  (let [sh (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")]
+  (let [sh #+clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+           #+cljs (q/load-shape "Heckert_GNU_white.svg")]
     (q/stroke-weight 5)
     (q/stroke 255 0 0)
 
