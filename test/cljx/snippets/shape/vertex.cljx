@@ -125,6 +125,26 @@
       (q/vertex -50 100 25 100)
       (q/end-shape :close))))
 
+#+cljs
+(defsnippet texture
+  {:renderer :p3d
+   :setup (q/set-state! :image (q/request-image "texture.jpg"))}
+  (if (zero? (.-width (q/state :image)))
+    (q/text "Loading" 10 10)
+    (let [gr (q/state :image)]
+      (q/with-translation [250 250]
+        (q/begin-shape)
+        (q/texture gr)
+        (q/vertex 50 100 75 100)
+        (q/vertex 100 50 100 75)
+        (q/vertex 100 -50 100 25)
+        (q/vertex 50 -100 75 0)
+        (q/vertex -50 -100 25 0)
+        (q/vertex -100 -50 0 25)
+        (q/vertex -100 50 0 75)
+        (q/vertex -50 100 25 100)
+        (q/end-shape :close)))))
+
 #+clj
 (defsnippet texture-mode {:renderer :p2d}
   (let [gr (q/create-graphics 100 100)]
@@ -153,6 +173,31 @@
       (q/vertex 100 100 1 1)
       (q/vertex 0 100 0 1)
       (q/end-shape :close))))
+
+#+cljs
+(defsnippet texture-mode
+  {:renderer :p3d
+   :setup (q/set-state! :image (q/request-image "texture.jpg"))}
+  (if (zero? (.-width (q/state :image)))
+    (q/text "Loading" 10 10)
+    (let [gr (q/state :image)]
+      (q/with-translation [375 125]
+        (q/begin-shape)
+        (q/texture gr)
+        (q/texture-mode :image)
+        (q/vertex 0 0 0 0)
+        (q/vertex 100 100 100 100)
+        (q/vertex 0 100 0 100)
+        (q/end-shape :close))
+
+      (q/with-translation [125 375]
+        (q/begin-shape)
+        (q/texture gr)
+        (q/texture-mode :normal)
+        (q/vertex 0 0 0 0)
+        (q/vertex 100 100 1 1)
+        (q/vertex 0 100 0 1)
+        (q/end-shape :close)))))
 
 #+clj
 (defsnippet texture-wrap {:renderer :p2d}
