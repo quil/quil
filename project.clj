@@ -45,28 +45,28 @@
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
+                                  [compojure "1.1.8"]
+                                  [javax.servlet/servlet-api "2.5"]
+                                  [ring-mock "0.1.5"]
                                   [clj-http "0.9.1"]]
-                   :plugins [[com.keminglabs/cljx "0.4.0"]]}
+                   :plugins [[com.keminglabs/cljx "0.4.0"]
+                             [lein-ring "0.8.11"]]}
 
-             :cljs-testing {:hooks [leiningen.cljsbuild]
-                            :plugins [[lein-cljsbuild "1.0.3"]
-                                      [lein-ring "0.8.11"]]
-                            :source-paths ["test/clj"]
-                            :ring {:handler test-server/app}
-                            :dependencies [[prismatic/dommy "0.1.2"]
-                                           [compojure "1.1.8"]
-                                           [javax.servlet/servlet-api "2.5"]
-                                           [ring-mock "0.1.5"]
-                                           [clj-http "0.9.2"]]
+             :cljs-testing [:dev
+                            {:hooks [leiningen.cljsbuild]
+                             :plugins [[lein-cljsbuild "1.0.3"]]
+                             :source-paths ["test/clj"]
+                             :ring {:handler test-server/app}
+                             :dependencies [[prismatic/dommy "0.1.2"]]
 
-                            :cljsbuild
-                            {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
-                                       :compiler
-                                       {:output-to "target/js/main.js"
-                                        :optimizations :advanced
-                                        :preamble ["processing.min.js"]
-                                        :externs ["externs/processing.js"]
-                                        :pretty-print true}}]}}
+                             :cljsbuild
+                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
+                                        :compiler
+                                        {:output-to "target/js/main.js"
+                                         :optimizations :advanced
+                                         :preamble ["processing.min.js"]
+                                         :externs ["externs/processing.js"]
+                                         :pretty-print true}}]}}]
 
              :test-1.5.1 [:cljs-testing
                           {:dependencies [[org.clojure/clojure "1.5.1"]
