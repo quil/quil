@@ -46,8 +46,6 @@
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [garden "1.1.6"]
                                   [compojure "1.1.8"]
-                                  [javax.servlet/servlet-api "2.5"]
-                                  [ring-mock "0.1.5"]
                                   [clj-http "0.9.1"]]
                    :plugins [[com.keminglabs/cljx "0.4.0"]
                              [lein-ring "0.8.11"]]}

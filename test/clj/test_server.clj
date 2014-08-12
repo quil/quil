@@ -2,8 +2,7 @@
   (:require ring.util.response
             [compojure.core :refer :all]
             [compojure.handler :as handler]
-            [compojure.route :as route]
-            [clj-http.client :as client]))
+            [compojure.route :as route]))
 
 (defroutes app-routes
   (GET "/" req (ring.util.response/redirect "/test.html"))
