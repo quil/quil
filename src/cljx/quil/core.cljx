@@ -4162,7 +4162,6 @@
   #+cljs [img]
   (.texture (current-graphics) img))
 
-#+clj
 (defn
     ^{:requires-bindings true
      :processing-name "textureMode()"
