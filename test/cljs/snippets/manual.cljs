@@ -2,6 +2,13 @@
   (:require [quil.core :as q :include-macros true]
             [quil.middlewares.fun-mode :as fm]))
 
+(defn ^:export sketch-start [id]
+  (q/with-sketch (q/get-sketch-by-id id)
+    (q/start-loop)))
+
+(defn ^:export sketch-stop [id]
+  (q/with-sketch (q/get-sketch-by-id id)
+    (q/no-loop)))
 
 (q/defsketch redraw-on-key
   :size [500 200]
@@ -50,3 +57,18 @@
   :key-released (single-fn :key-released)
   :key-typed (double-fn :key-typed)
   :middleware [fm/fun-mode])
+
+(q/defsketch extern-control
+  :size [500 500]
+  :draw (fn []
+          (q/background 255)
+
+          (q/stroke 200 60 5)
+          (q/stroke-weight 2)
+          (q/line 0 150 (- 300 (mod (q/millis) 300))
+                  (- 300 (mod (q/millis) 300)))
+
+          (q/stroke 60 50 200)
+          (q/stroke-weight 3)
+          (q/line (mod (q/millis) 300) (mod (q/millis) 300)
+                  300 150)))

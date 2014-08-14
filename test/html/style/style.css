@@ -41,3 +41,8 @@ hr.symbol {
   width: 1200px;
   height: 500px;
 }
+
+.cbox {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
