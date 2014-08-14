@@ -94,7 +94,9 @@
 
 (defn empty-body? []
   (let [child (.-childNodes (.-body js/document))]
-    (= 1 (.-length child))))
+    ; seems hacky, we should come up with better way of
+    ; checking whether body is empty or not
+    (<= (.-length child) 1)))
 
 (defn add-canvas [canvas-id]
   (let [canvas (.createElement js/document "canvas")]
