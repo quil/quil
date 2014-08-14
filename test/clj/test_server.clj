@@ -34,10 +34,10 @@
      [:table
       [:tr
        [:td
-        [:canvas {:id "extern-control"}]]
+        [:canvas {:id "external-control"}]]
        [:td
-        [:p [:button {:onclick "snippets.manual.sketch_start('extern-control')"} "Start"]]
-        [:p [:button {:onclick "snippets.manual.sketch_stop('extern-control')"} "Stop"]]]]]]]))
+        [:p [:button {:onclick "snippets.manual.sketch_start('external-control')"} "Start"]]
+        [:p [:button {:onclick "snippets.manual.sketch_stop('external-control')"} "Stop"]]]]]]]))
 
 (defroutes app-routes
   (GET "/" req root-page)

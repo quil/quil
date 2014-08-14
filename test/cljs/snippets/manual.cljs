@@ -58,7 +58,7 @@
   :key-typed (double-fn :key-typed)
   :middleware [fm/fun-mode])
 
-(q/defsketch extern-control
+(q/defsketch external-control
   :size [500 500]
   :draw (fn []
           (q/background 255)
