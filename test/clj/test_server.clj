@@ -28,6 +28,8 @@
    [:div.centerLayer {:align "center"}
     (gen-test-canvas "redraw-on-key")
     (gen-test-canvas "fun-mode")
+    (gen-test-canvas "get-pixel")
+    (gen-test-canvas "set-pixel")
 
     [:div.cbox
      [:p "extern-control test"]
