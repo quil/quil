@@ -139,7 +139,6 @@
     (q/filter-shader shd)
     (q/image orig 100 100)))
 
-#+clj
 (defsnippet get-pixel {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
@@ -149,6 +148,8 @@
       (q/ellipse 50 50 70 70))
 
     (q/image gr 0 0)
+
+    #+cljs (q/load-pixels gr)
 
     (q/image (q/get-pixel gr) 0 120)
     (q/fill (q/get-pixel gr 50 50))
@@ -194,16 +195,18 @@
 
     (q/set-image 10 10 gr)))
 
-#+clj
 (defsnippet set-pixel {:renderer :p2d}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
       (q/background 255))
 
+    #+cljs (q/load-pixels gr)
+
     (doseq [i (range 30)
             j (range 30)]
       (q/set-pixel gr i j (q/color (* 7 i) (* 7 j) 0)))
+    (q/update-pixels gr)
     (q/image gr 0 0)
 
     (doseq [i (range 30)

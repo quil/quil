@@ -162,8 +162,8 @@
   you must first call loadPixels(), and after changes have been made, call updatePixels().
   Even if the renderer may not seem to use this function in the current Processing release,
   this will always be subject to change."
-  []
-  (.loadPixels (current-graphics)))
+  ([] (.loadPixels (current-graphics)))
+  ([gr] (.loadPixels gr)))
 
 #+cljs
 (defn
