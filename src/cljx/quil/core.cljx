@@ -150,6 +150,24 @@
 #+cljs
 (defn
   ^{:require-bindings true
+    :category "Image"
+    :subcategory "Pixels"
+    :added "1.0"}
+  load-pixels
+  "Loads the pixel data for the display window (or an image) into the pixels[] array.
+  This function must always be called before reading from or writing to pixels[].
+
+  Certain renderers may or may not seem to require loadPixels() or updatePixels().
+  However, the rule is that any time you want to manipulate the pixels[] array,
+  you must first call loadPixels(), and after changes have been made, call updatePixels().
+  Even if the renderer may not seem to use this function in the current Processing release,
+  this will always be subject to change."
+  []
+  (.loadPixels (current-graphics)))
+
+#+cljs
+(defn
+  ^{:require-bindings true
     :category "Output"
     :subcategory "Text area"
     :added "1.0"}
