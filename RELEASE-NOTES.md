@@ -1,3 +1,8 @@
+## UNRELEASED
+_TBD_
+
+* Processing.js is shipped in a jar to make it possible to include it using `:preamble` option.
+
 ## 2.2.1
 _5th August 2014_
 
