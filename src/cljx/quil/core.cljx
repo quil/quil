@@ -150,24 +150,6 @@
 #+cljs
 (defn
   ^{:require-bindings true
-    :category "Image"
-    :subcategory "Pixels"
-    :added "1.0"}
-  load-pixels
-  "Loads the pixel data for the display window (or an image) into the pixels[] array.
-  This function must always be called before reading from or writing to pixels[].
-
-  Certain renderers may or may not seem to require loadPixels() or updatePixels().
-  However, the rule is that any time you want to manipulate the pixels[] array,
-  you must first call loadPixels(), and after changes have been made, call updatePixels().
-  Even if the renderer may not seem to use this function in the current Processing release,
-  this will always be subject to change."
-  ([] (.loadPixels (current-graphics)))
-  ([gr] (.loadPixels gr)))
-
-#+cljs
-(defn
-  ^{:require-bindings true
     :category "Output"
     :subcategory "Text area"
     :added "1.0"}
@@ -2801,9 +2783,18 @@
 
   Only works with P2D and P3D renderer if used without arguments."
   ([] (pixels (current-graphics)))
+
+  #+clj
   ([^PImage img]
-    (.loadPixels img)
-    (.-pixels img)))
+   (.loadPixels img)
+   (.-pixels img))
+
+  #+cljs
+  ([proc]
+   (.loadPixels proc)
+   (let [pix-array (.toArray (.-pixels proc))]
+     (set! (.-stored-pix-array proc) pix-array)
+     pix-array)))
 
 (defn
   ^{:requires-bindings true
@@ -4383,7 +4374,17 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   ([] (update-pixels (current-graphics)))
-  ([^PImage img] (.updatePixels img)))
+  #+clj ([^PImage img] (.updatePixels img))
+
+  #+cljs
+  ([proc]
+   (let [pix-array (.-stored-pix-array proc)]
+     (if pix-array
+       (do
+         (.set (.-pixels proc) pix-array)
+         (set! (.-stored-pix-array proc) nil)
+         (.updatePixels proc))
+       (.updatePixels proc)))))
 
 (defn
   ^{:requires-bindings true

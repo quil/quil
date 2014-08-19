@@ -30,6 +30,7 @@
     (gen-test-canvas "fun-mode")
     (gen-test-canvas "get-pixel")
     (gen-test-canvas "set-pixel")
+    (gen-test-canvas "pixels-update-pixels")
 
     [:div.cbox
      [:p "extern-control test"]

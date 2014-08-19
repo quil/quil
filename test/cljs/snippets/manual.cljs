@@ -103,8 +103,6 @@
             (q/with-graphics gr
               (q/background 255))
 
-            (q/load-pixels gr)
-
             (doseq [i (range 30)
                     j (range 30)]
               (q/set-pixel gr i j (q/color (* 7 i) (* 7 j) 0)))
@@ -114,3 +112,19 @@
             (doseq [i (range 30)
                     j (range 30)]
               (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))))
+
+
+(q/defsketch pixels-update-pixels
+  :size [500 500]
+  :draw (fn []
+          (q/background 55)
+          (let [gr (q/create-graphics 100 100)]
+            (q/with-graphics gr
+              (q/background 55))
+
+            (let [px (q/pixels gr)]
+              (dotimes [i 200]
+                (aset px i (q/color 255))))
+            (q/update-pixels gr)
+
+            (q/image gr 10 10))))
