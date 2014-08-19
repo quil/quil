@@ -72,3 +72,59 @@
           (q/stroke-weight 3)
           (q/line (mod (q/millis) 300) (mod (q/millis) 300)
                   300 150)))
+
+(q/defsketch get-pixel
+  :site [500 500]
+  :draw (fn []
+          (q/background 255)
+          (let [gr (q/create-graphics 100 100)]
+            (q/with-graphics gr
+              (q/background 255)
+              (q/fill 127 255 180)
+              (q/ellipse 50 50 70 70))
+
+            (q/image gr 0 0)
+
+            (q/image (q/get-pixel gr) 0 120)
+            (q/fill (q/get-pixel gr 50 50))
+            (q/rect 120 120 100 100)
+            (q/image (q/get-pixel gr 0 0 50 50) 240 120)
+
+            (q/image (q/get-pixel) 400 400)
+            (q/fill (q/get-pixel 50 50))
+            (q/rect 120 240 100 100)
+            (q/image (q/get-pixel 0 0 50 50) 240 240))))
+
+(q/defsketch set-pixel
+  :size [500 500]
+  :draw (fn []
+          (q/background 255)
+          (let [gr (q/create-graphics 100 100)]
+            (q/with-graphics gr
+              (q/background 255))
+
+            (doseq [i (range 30)
+                    j (range 30)]
+              (q/set-pixel gr i j (q/color (* 7 i) (* 7 j) 0)))
+            (q/update-pixels gr)
+            (q/image gr 0 0)
+
+            (doseq [i (range 30)
+                    j (range 30)]
+              (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))))
+
+
+(q/defsketch pixels-update-pixels
+  :size [500 500]
+  :draw (fn []
+          (q/background 55)
+          (let [gr (q/create-graphics 100 100)]
+            (q/with-graphics gr
+              (q/background 55))
+
+            (let [px (q/pixels gr)]
+              (dotimes [i 200]
+                (aset px i (q/color 255))))
+            (q/update-pixels gr)
+
+            (q/image gr 10 10))))

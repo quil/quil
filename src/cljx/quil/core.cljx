@@ -2783,9 +2783,18 @@
 
   Only works with P2D and P3D renderer if used without arguments."
   ([] (pixels (current-graphics)))
+
+  #+clj
   ([^PImage img]
-    (.loadPixels img)
-    (.-pixels img)))
+   (.loadPixels img)
+   (.-pixels img))
+
+  #+cljs
+  ([proc]
+   (.loadPixels proc)
+   (let [pix-array (.toArray (.-pixels proc))]
+     (set! (.-stored-pix-array proc) pix-array)
+     pix-array)))
 
 (defn
   ^{:requires-bindings true
@@ -4365,7 +4374,17 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   ([] (update-pixels (current-graphics)))
-  ([^PImage img] (.updatePixels img)))
+  #+clj ([^PImage img] (.updatePixels img))
+
+  #+cljs
+  ([proc]
+   (let [pix-array (.-stored-pix-array proc)]
+     (if pix-array
+       (do
+         (.set (.-pixels proc) pix-array)
+         (set! (.-stored-pix-array proc) nil)
+         (.updatePixels proc))
+       (.updatePixels proc)))))
 
 (defn
   ^{:requires-bindings true
