@@ -4378,13 +4378,10 @@
 
   #+cljs
   ([proc]
-   (let [pix-array (.-stored-pix-array proc)]
-     (if pix-array
-       (do
-         (.set (.-pixels proc) pix-array)
-         (set! (.-stored-pix-array proc) nil)
-         (.updatePixels proc))
-       (.updatePixels proc)))))
+   (when-let [pix-array (.-stored-pix-array proc)]
+     (.set (.-pixels proc) pix-array)
+     (set! (.-stored-pix-array proc) nil))
+   (.updatePixels proc)))
 
 (defn
   ^{:requires-bindings true

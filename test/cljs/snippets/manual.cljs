@@ -123,8 +123,8 @@
               (q/background 55))
 
             (let [px (q/pixels gr)]
-              (dotimes [i 200]
-                (aset px i (q/color 255))))
+              (dotimes [i 100]
+                (aset px (* i i) (q/color 255))))
             (q/update-pixels gr)
 
             (q/image gr 10 10))))
