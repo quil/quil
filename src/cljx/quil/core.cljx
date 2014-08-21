@@ -486,7 +486,6 @@
   #+clj (PApplet/atan2 (float y) (float x))
   #+cljs (.atan2 (current-applet) y x))
 
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "PFont.list()"
@@ -505,7 +504,8 @@
   their computer. Only fonts that can legally be distributed should be
   included with a sketch."
   []
-  (seq (PFont/list)))
+  #+clj (seq (PFont/list))
+  #+cljs (seq (.list js/PFont)))
 
 (defn
   ^{:requires-bindings true

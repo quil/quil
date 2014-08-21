@@ -5,7 +5,6 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-#+clj
 (defsnippet available-fonts {}
   (q/background 255)
   (q/fill 0)
