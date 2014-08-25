@@ -46,7 +46,7 @@
 
     ;; ClojureScript version
     `(do
-       (defn ~snip-name []
+       (defn ~(vary-meta snip-name assoc :export true) []
          (quil.core/sketch
            :size ~(:size opts default-size)
            :renderer ~(:renderer opts :p2d)
