@@ -72,7 +72,8 @@
 (defsnippet text-font {}
   (q/background 255)
   (q/fill 0)
-  (let [font (q/create-font "Courier New" 20)]
+  (let [font #+clj (q/create-font "Courier New" 20)
+             #+cljs (q/create-font "serif" 20)]
     (q/text-font font)
     (q/text "(print :hello)" 20 30)
     (q/text-font font 30)
