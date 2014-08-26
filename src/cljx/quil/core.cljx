@@ -3442,11 +3442,6 @@
     (.getScreenSize default-toolkit)))
 
 #+clj
-(def ^{:private true} orig-screen-width
-  (let [screen (current-screen)]
-    (.width screen)))
-
-#+clj
 (defn
   ^{:requires-bindings false
     :processing-name "displayWidth"
@@ -3456,12 +3451,7 @@
   screen-width
   "Returns the width of the main screen in pixels."
   []
-  orig-screen-width)
-
-#+clj
-(def ^{:private true} orig-screen-height
-  (let [screen (current-screen)]
-    (.height screen)))
+  (.width (current-screen)))
 
 #+clj
 (defn
@@ -3473,7 +3463,7 @@
   screen-height
   "Returns the height of the main screen in pixels."
   []
-  orig-screen-height)
+  (.height (current-screen)))
 
 (defn
   ^{:requires-bindings true
