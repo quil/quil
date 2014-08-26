@@ -45,7 +45,6 @@
   (q/reset-matrix)
   (q/rect 0 0 50 100))
 
-#+clj
 (defsnippet rotate {:renderer :p3d}
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
