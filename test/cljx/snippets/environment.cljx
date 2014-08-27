@@ -39,6 +39,15 @@
     (q/cursor-image curs)
     (q/cursor-image curs 16 16)))
 
+#+cljs
+(defsnippet cursor-image
+  {:setup (q/set-state! :image (q/request-image "texture.jpg"))}
+  (if (zero? (.-width (q/state :image)))
+    (q/text "Loading" 10 10)
+    (do
+      (q/cursor-image (q/state :image) 16 16)
+      (q/image (q/state :image) 0 0))))
+
 (defsnippet focused {}
   (q/background 255)
   (q/fill 0)
