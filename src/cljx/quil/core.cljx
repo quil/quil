@@ -2779,9 +2779,7 @@
   "Array containing the values for all the pixels in the display
   window or image. This array is therefore the size of the display window. If
   this array is modified, the update-pixels fn must be called to update
-  the changes. Calls .loadPixels before obtaining the pixel array.
-
-  Only works with P2D and P3D renderer if used without arguments."
+  the changes. Calls .loadPixels before obtaining the pixel array."
   ([] (pixels (current-graphics)))
 
   #+clj
