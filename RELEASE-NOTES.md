@@ -1,7 +1,11 @@
-## UNRELEASED
-_TBD_
+## 2.2.2
+_8th September 2014_
 
 * Processing.js is shipped in a jar to make it possible to include it using `:preamble` option.
+* Support `available-fonts`, `load-pixels` and `pixels` functions in cljs version.
+* Fix bug that prevented from using Quil cljs on headless servers.
+* Fix bugs that prevented Quil from automatically adding canvas to a page if the page is empty.
+* Fixed documentation for `pixels` function.
 
 ## 2.2.1
 _5th August 2014_

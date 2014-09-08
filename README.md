@@ -27,7 +27,7 @@ Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "2.2.1"]
+[quil "2.2.2"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
