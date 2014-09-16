@@ -2788,10 +2788,10 @@
    (.-pixels img))
 
   #+cljs
-  ([proc]
-   (.loadPixels proc)
-   (let [pix-array (.toArray (.-pixels proc))]
-     (set! (.-stored-pix-array proc) pix-array)
+  ([img]
+   (.loadPixels img)
+   (let [pix-array (.toArray (.-pixels img))]
+     (set! (.-stored-pix-array img) pix-array)
      pix-array)))
 
 (defn
@@ -4365,11 +4365,11 @@
   #+clj ([^PImage img] (.updatePixels img))
 
   #+cljs
-  ([proc]
-   (when-let [pix-array (.-stored-pix-array proc)]
-     (.set (.-pixels proc) pix-array)
-     (set! (.-stored-pix-array proc) nil))
-   (.updatePixels proc)))
+  ([img]
+   (when-let [pix-array (.-stored-pix-array img)]
+     (.set (.-pixels img) pix-array)
+     (set! (.-stored-pix-array img) nil))
+   (.updatePixels img)))
 
 (defn
   ^{:requires-bindings true
