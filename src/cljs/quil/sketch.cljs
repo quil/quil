@@ -3,7 +3,6 @@
             [quil.util :refer [no-fn resolve-constant-key]]
             [quil.middlewares.deprecated-options :refer [deprecated-options]])
   (:use-macros [quil.sketch :only [with-sketch]]
-               [quil.helpers.tools :only [bind-handlers]]
                [quil.util :only [generate-quil-constants]]))
 
 (def ^:dynamic
@@ -28,6 +27,28 @@
   supported-features
   #{:no-start})
 
+(defn- bind-handlers [prc opts]
+  (doseq [[processing-name quil-name] {:setup :setup
+                                       :draw :draw
+
+                                       :keyPressed :key-pressed
+                                       :keyReleased :key-released
+                                       :keyTyped :key-typed
+
+                                       :mouseClicked :mouse-clicked
+                                       :mouseDragged :mouse-dragged
+                                       :mouseMoved :mouse-moved
+                                       :mousePressed :mouse-pressed
+                                       :mouseReleased :mouse-released
+                                       :mouseOut :mouse-exited
+                                       :mouseOver :mouse-entered
+                                       :mouseScrolled :mouse-wheel}]
+        (when-let [handler (opts quil-name)]
+          (aset prc (name processing-name)
+                (fn []
+                  (with-sketch prc
+                    (handler)))))))
+
 (defn make-sketch [options]
   (let [opts            (->> (:middleware options [])
                           (cons deprecated-options)
@@ -35,43 +56,23 @@
                           (#(% options))
                           (merge {:size [500 300]}))
 
-        draw-fn         (or (:draw opts) no-fn)
-        setup-fn        (or (:setup opts) no-fn)
-
         sketch-size     (or (:size opts) [200 200])
         renderer        (:renderer opts)
 
-        key-pressed     (or (:key-pressed opts) no-fn)
-        key-released    (or (:key-released opts) no-fn)
-        key-typed       (or (:key-typed opts) no-fn)
-
-        mouse-clicked   (or (:mouse-clicked opts) no-fn)
-        mouse-dragged   (or (:mouse-dragged opts) no-fn)
-        mouse-moved     (or (:mouse-moved opts) no-fn)
-        mouse-pressed   (or (:mouse-pressed opts) no-fn)
-        mouse-released  (or (:mouse-released opts) no-fn)
-        mouse-out       (or (:mouse-exited opts) no-fn)
-        mouse-over      (or (:mouse-entered opts) no-fn)
-        mouse-scrolled  (or (:mouse-wheel opts) (fn [x] ))]
+        opts (-> opts
+                 (update-in [:setup]
+                            #(fn []
+                               (->> (if renderer [renderer] [])
+                                    (concat sketch-size)
+                                    (apply size))
+                               (when % (%))))
+                 (update-in [:mouse-wheel]
+                            #(when %
+                               (fn []
+                                 ;; -1 need for compability to Clojure version
+                                 (% (* -1 (.-mouseScroll *applet*)))))))]
     (fn [prc]
-      (bind-handlers prc
-                     :setup  (do
-                                (apply size (concat sketch-size (if renderer [renderer] [])))
-                                (setup-fn))
-                     :draw draw-fn
-
-                     :keyPressed key-pressed
-                     :keyReleased key-released
-                     :keyTyped key-typed
-
-                     :mouseClicked mouse-clicked
-                     :mouseDragged mouse-dragged
-                     :mouseMoved mouse-moved
-                     :mousePressed mouse-pressed
-                     :mouseReleased mouse-released
-                     :mouseOut mouse-out
-                     :mouseOver mouse-over
-                     :mouseScrolled (mouse-scrolled (* -1 (.-mouseScroll prc)))) ;; -1 need for compability to Clojure version
+      (bind-handlers prc opts)
       (set! (.-quil prc) (atom nil))
       (set! (.-target-frame-rate prc) (atom 60)))))
 
