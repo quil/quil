@@ -1371,12 +1371,12 @@
   curve-vertex
   "Specifies vertex coordinates for curves. This function may only be
   used between begin-shape and end-shape and only when there is no
-  mode keyword specified to begin-hape. The first and last points in a
+  mode keyword specified to begin-shape. The first and last points in a
   series of curve-vertex lines will be used to guide the beginning and
   end of a the curve. A minimum of four points is required to draw a
   tiny curve between the second and third points. Adding a fifth point
-  with curveVertex will draw the curve between the second, third, and
-  fourth points. The curveVertex function is an implementation of
+  with curve-vertex will draw the curve between the second, third, and
+  fourth points. The curve-vertex function is an implementation of
   Catmull-Rom splines."
   ([x y] (.curveVertex (current-graphics) (float x) (float y)))
   ([x y z] (.curveVertex (current-graphics) (float x) (float y) (float z))))
