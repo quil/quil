@@ -20,21 +20,31 @@
           (q/text (str (q/hour) ":" (q/minute) ":" (q/seconds)) 20 50))
   :key-pressed #(q/redraw))
 
+(defn add-event [state data]
+  (update-in state [:last-events]
+             #(take 10 (cons data %))))
+
+(defn print-state [state]
+  (q/text (str ":round " (:round state)) 50 50)
+  (doseq [[ind event] (map vector
+                           (range)
+                           (:last-events state))]
+    (q/text (pr-str event) 50 (+ 70 (* ind 15)))))
 
 (defn single-fn [n]
   (fn [state]
     (q/background 255)
-    (q/text (str n) 50 20)
-    (q/text (str state) 50 50)
-    state))
+    (q/text (pr-str n) 50 20)
+    (print-state state)
+    (add-event state n)))
 
 (defn double-fn [n]
   (fn [state event]
     (q/background 255)
-    (q/text (str n) 50 20)
-    (q/text (str event) 50 35)
-    (q/text (str state) 50 50)
-    state))
+    (q/text (pr-str n) 50 20)
+    (q/text (pr-str event) 50 35)
+    (print-state state)
+    (add-event state [n event])))
 
 (q/defsketch fun-mode
   :size [500 500]
