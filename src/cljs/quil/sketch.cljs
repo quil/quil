@@ -76,14 +76,16 @@
       (set! (.-quil prc) (atom nil))
       (set! (.-target-frame-rate prc) (atom 60)))))
 
-(defn sketch
-  [& opts]
+(defn sketch [& opts]
   (let [opts-map (apply hash-map opts)
-        host-elem (dom/get-element (:host opts-map))
-        processing-fn (make-sketch opts-map)]
+        host-elem (.getElementById js/document (:host opts-map))
+        renderer (or (:renderer opts-map) :p2d)]
     (when host-elem
-      (js/Processing. host-elem processing-fn))))
-
+      (if (.-processing-context host-elem)
+        (when-not (= renderer (.-processing-context host-elem))
+          (.warn js/console "WARNING: Using different context on one canvas!"))
+        (set! (.-processing-context host-elem) renderer))
+      (js/Processing. host-elem (make-sketch opts-map)))))
 
 (def sketch-init-list (atom (list )))
 
