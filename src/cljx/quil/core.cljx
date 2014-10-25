@@ -480,7 +480,7 @@
   returned as a float in the range from PI to -PI. The atan2 function
   is most often used for orienting geometry to the position of the
   cursor. Note: The y-coordinate of the point is the first parameter
-  and the x-coordinate is the second due the the structure of
+  and the x-coordinate is the second due to the structure of
   calculating the tangent."
   [y x]
   #+clj (PApplet/atan2 (float y) (float x))
@@ -1437,7 +1437,7 @@
   directional-light
   "Adds a directional light. Directional light comes from one
   direction and is stronger when hitting a surface squarely and weaker
-  if it hits at a a gentle angle. After hitting a surface, a
+  if it hits at a gentle angle. After hitting a surface, a
   directional lights scatters in all directions. Lights need to be
   included in the draw fn to remain persistent in a looping
   program. Placing them in the setup fn of a looping program will cause
@@ -1762,7 +1762,7 @@
   frame-count
   "The system variable frameCount contains the number of frames
   displayed since the program started. Inside setup() the value is 0
-  and and after the first iteration of draw it is 1, etc."
+  and after the first iteration of draw it is 1, etc."
   []
   #+clj (.frameCount (current-applet))
   #+cljs (.-frameCount (current-applet)))
@@ -3041,7 +3041,7 @@
   zero and the value of the high parameter. The function call (random
   5) returns values between 0 and 5 (starting at zero, up to but not
   including 5). If two parameters are passed, it will return a float
-  with a value between the the parameters. The function call
+  with a value between the parameters. The function call
   (random -5 10.2) returns values starting at -5 up to (but not
   including) 10.2."
   ([max] (.random (current-applet) (float max)))
@@ -4112,12 +4112,12 @@
   In the default configuration (the :model mode), it's possible to
   rotate, scale, and place letters in two and three dimensional space.
 
-  The :shape mode draws text using the the glyph outlines of
-  individual characters rather than as textures. This mode is only
-  only supported with the PDF and OPENGL renderer settings. With the
-  PDF renderer, you must specify the :shape text-mode before any other
-  drawing occurs. If the outlines are not available, then
-  :shape will be ignored and :model will be used instead.
+  The :shape mode draws text using the glyph outlines of individual
+  characters rather than as textures. This mode is only supported with
+  the PDF and OPENGL renderer settings. With the PDF renderer, you
+  must specify the :shape text-mode before any other drawing occurs.
+  If the outlines are not available, then :shape will be ignored and
+  :model will be used instead.
 
   The :shape option in OPENGL mode can be combined with begin-raw to
   write vector-accurate text to 2D and 3D output files, for instance

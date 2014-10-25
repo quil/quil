@@ -27,7 +27,7 @@
             str [(format "Sketch was paused due to an exception thrown in %s" name)
                  (str "Check REPL or console for stacktrace")
                  (str "Time: " time)
-                 (str "Fix the the error and then press any key to unpause sketch.")]]
+                 (str "Fix the error and then press any key to unpause sketch.")]]
         (q/text (join \newline str) 10 20))
       (q/pop-style))
     (q/set-image 0 0 error)))
