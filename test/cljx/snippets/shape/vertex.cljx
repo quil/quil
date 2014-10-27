@@ -46,6 +46,20 @@
       (q/end-shape close-mode)
       (q/end-shape))))
 
+(defsnippet begin-shape-end-shape-in-graphics {:renderer :p2d}
+  (let [gr (q/create-graphics 400 400 :p2d)]
+    (q/with-graphics gr
+      (q/stroke 255 0 0)
+      (q/begin-shape :triangles)
+      (q/vertex 200 40)
+      (q/vertex 320 120)
+      (q/vertex 320 280)
+      (q/vertex 200 360)
+      (q/vertex 80 280)
+      (q/vertex 80 120)
+      (q/end-shape))
+    (q/image gr 0 0)))
+
 (defsnippet bezier-vertex {:renderer :p3d}
   (q/camera -400 250 -100 500 250 0 0 0 1)
   (q/begin-shape)
