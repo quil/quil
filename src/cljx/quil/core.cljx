@@ -656,10 +656,7 @@
 
   Transformations such as translate, rotate, and scale do not work
   within begin-shape. It is also not possible to use other shapes,
-  such as ellipse or rect within begin-shape.
-
-  Doesn't work inside with-graphics macro: shape is not drawn on
-  provided graphics."
+  such as ellipse or rect within begin-shape."
   ([] (.beginShape (current-graphics)))
   ([mode]
      (let [mode (resolve-constant-key mode shape-modes)]
@@ -1596,12 +1593,12 @@
   all of image data defined since the previous call to begin-shape is
   written into the image buffer. The keyword :close may be passed to
   close the shape (to connect the beginning and the end)."
-  ([] (.endShape (current-applet)))
+  ([] (.endShape (current-graphics)))
   ([mode]
      (when-not (= :close mode)
        #+clj (throw (Exception. (str "Unknown mode value: " mode ". Expected :close")))
        #+cljs nil)
-     (.endShape (current-applet)
+     (.endShape (current-graphics)
                 #+clj PApplet/CLOSE
                 #+cljs 2)))
 
