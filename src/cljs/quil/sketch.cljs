@@ -1,7 +1,7 @@
 (ns quil.sketch
-  (:require [clojure.browser.dom  :as dom]
-            [quil.util :refer [no-fn resolve-constant-key]]
-            [quil.middlewares.deprecated-options :refer [deprecated-options]])
+  (:require [quil.util :refer [no-fn resolve-constant-key]]
+            [quil.middlewares.deprecated-options :refer [deprecated-options]]
+            [goog.dom :as dom])
   (:use-macros [quil.sketch :only [with-sketch]]
                [quil.util :only [generate-quil-constants]]))
 
@@ -78,14 +78,16 @@
 
 (defn sketch [& opts]
   (let [opts-map (apply hash-map opts)
-        host-elem (.getElementById js/document (:host opts-map))
+        host-elem (dom/getElement (:host opts-map))
         renderer (or (:renderer opts-map) :p2d)]
-    (when host-elem
-      (if (.-processing-context host-elem)
-        (when-not (= renderer (.-processing-context host-elem))
-          (.warn js/console "WARNING: Using different context on one canvas!"))
-        (set! (.-processing-context host-elem) renderer))
-      (js/Processing. host-elem (make-sketch opts-map)))))
+    (if host-elem
+      (do
+        (if (.-processing-context host-elem)
+          (when-not (= renderer (.-processing-context host-elem))
+            (.warn js/console "WARNING: Using different context on one canvas!"))
+          (set! (.-processing-context host-elem) renderer))
+        (js/Processing. host-elem (make-sketch opts-map)))
+      (.warn js/console "WARNING: Cannot create sketch. :host is not specified."))))
 
 (def sketch-init-list (atom (list )))
 

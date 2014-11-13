@@ -342,6 +342,13 @@
                      second where n is the target frame-rate set for
                      the visualisation.
 
+   :host           - String id of canvas element or DOM element itself.
+                     Specifies host for the sketch. Must be specified in sketch,
+                     may be omitted in defsketch. If ommitted in defsketch,
+                     :host is set to the name of the sketch. If element with
+                     specified id is not found on the page and page is empty -
+                     new canvas element will be created. Used in clojurescript.
+
    :focus-gained   - Called when the sketch gains focus.
                      Not supported in clojurescript.
 
