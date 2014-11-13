@@ -1177,6 +1177,10 @@
   to use create-graphics with the :opengl renderer, because it doesn't
   allow offscreen use. The :pdf renderer requires the filename parameter.
 
+  Note: don't use create-graphics in draw in clojurescript, it leaks memory.
+  You should create graphic in setup and reuse it in draw instead of creating
+  a new one.
+
   It's important to call any drawing commands between (.beginDraw graphics) and
   (.endDraw graphics) statements or use with-graphics macro. This is also true
   for any commands that affect drawing, such as smooth or color-mode.
