@@ -1,7 +1,9 @@
 (ns quil.sketch
   (:require [quil.util :refer [no-fn resolve-constant-key]]
             [quil.middlewares.deprecated-options :refer [deprecated-options]]
-            [goog.dom :as dom])
+            [goog.dom :as dom]
+            [goog.events :as events]
+            [goog.events.EventType :as EventType])
   (:use-macros [quil.sketch :only [with-sketch]]
                [quil.util :only [generate-quil-constants]]))
 
@@ -91,12 +93,6 @@
 
 (def sketch-init-list (atom (list )))
 
-(defn add-js-event [event fun]
-  (if (.-addEventListener js/window)
-      (.addEventListener js/window event fun false)
-      (if (.-attachEvent js/window)
-          (.attachEvent js/window (str "on" event) fun))))
-
 (defn empty-body? []
   (let [child (.-childNodes (.-body js/document))]
     ; seems hacky, we should come up with better way of
@@ -118,4 +114,4 @@
 (defn add-sketch-to-init-list [sk]
   (swap! sketch-init-list conj sk))
 
-(add-js-event "load" init-sketches)
+(events/listenOnce js/window EventType/LOAD init-sketches)
