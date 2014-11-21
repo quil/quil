@@ -1,3 +1,12 @@
+## 2.2.3
+_21st November 2014_
+
+* Make end-shape to work inside with-graphics macro.
+* Allow to pass DOM element as :host in cljs. It used to allow only element ids.
+* Add runtime warning when sketches with different context (2D and 3D) are used on same canvas element.
+* Improve support for latest clojurescript 0.0-2371.
+* Documentation changes.
+
 ## 2.2.2
 _8th September 2014_
 
