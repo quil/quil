@@ -57,7 +57,7 @@
                              :plugins [[lein-cljsbuild "1.0.3"]]
                              :source-paths ["test/clj"]
                              :ring {:handler test-server/app}
-                             :dependencies [[prismatic/dommy "0.1.2"]]
+                             :dependencies [[prismatic/dommy "1.0.0"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]

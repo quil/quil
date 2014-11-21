@@ -1,8 +1,7 @@
 (ns quil.snippet
   (:require [quil.core :as q :include-macros true]
             [dommy.utils :as utils]
-            [dommy.core :as dommy])
-  (:use-macros [dommy.macros :only [node sel sel1]]))
+            [dommy.core :as d :include-macros true]))
 
 (def test-data (atom (list)))
 
@@ -29,8 +28,8 @@
   (log "end of tests")
   (log "Total tested: " @total "   Accepted: " (- @total @failed) "   Failed: " @failed)
 
-  (dommy/set-text! (sel1 :#results)
-                   (str "Total tested: " @total ";   Accepted: " (- @total @failed) ";   Failed: " @failed))
+  (d/set-text! (d/sel1 :#results)
+               (str "Total tested: " @total ";   Accepted: " (- @total @failed) ";   Failed: " @failed))
   (reset! test-indx 0)
   (reset! failed 0)
   (reset! total 0))
@@ -59,6 +58,6 @@
 (defn ^:export run-tests []
   (log "run tests...")
 
-  (dommy/set-text! (sel1 :#results) "Test started")
+  (d/set-text! (d/sel1 :#results) "Test started")
   (reset! test-indx 0)
   (js/setTimeout run-single-test 100))
