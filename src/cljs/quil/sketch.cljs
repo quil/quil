@@ -1,29 +1,28 @@
 (ns quil.sketch
-  (:require [quil.util :refer [no-fn resolve-constant-key]]
+  (:require [quil.util :as u :include-macros true]
             [quil.middlewares.deprecated-options :refer [deprecated-options]]
             [goog.dom :as dom]
             [goog.events :as events]
             [goog.events.EventType :as EventType])
-  (:use-macros [quil.sketch :only [with-sketch]]
-               [quil.util :only [generate-quil-constants]]))
+  (:use-macros [quil.sketch :only [with-sketch]]))
 
 (def ^:dynamic
   *applet* nil)
 
 (defn current-applet [] *applet*)
 
-(generate-quil-constants
+(u/generate-quil-constants
   rendering-modes (:java2d :p2d :p3d :opengl))
 
 (defn resolve-renderer [mode]
-  (resolve-constant-key mode rendering-modes))
+  (u/resolve-constant-key mode rendering-modes))
 
 (defn size
   ([width height]
     (.size (current-applet) (int width) (int height)))
 
   ([width height mode]
-    (.size (current-applet) (int width) (int height) (resolve-constant-key mode rendering-modes))))
+    (.size (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
 
 (def ^{:private true}
   supported-features

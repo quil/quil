@@ -7,19 +7,15 @@
   (:require quil.sketch
             [clojure.set]
             [quil.helpers.docs :as docs]
-            [quil.util :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
-                               absolute-path clj-compilation? generate-quil-constants]]
+            [quil.util :as u :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
+                               absolute-path clj-compilation?]]
             [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
 
 #+cljs
 (ns quil.core
   (:require clojure.string
-            [quil.sketch :as applet]
-            [clojure.browser.dom  :as dom])
-  (:use-macros [quil.sketch :only [defsketch]]
-               [quil.util :only [generate-quil-constants]])
-  (:use [quil.sketch :only [current-applet resolve-renderer]]
-        [quil.util :only [resolve-constant-key]]))
+            [quil.sketch :as applet :refer [current-applet resolve-renderer] :include-macros true]
+            [quil.util :as u :refer [resolve-constant-key] :include-macros true]))
 
 (def ^{:dynamic true
        :private true}
@@ -44,7 +40,7 @@
 
 ;; -------------------- PConstants section -----------------------
 
-(generate-quil-constants
+(u/generate-quil-constants
  arc-modes (:open :chord :pie)
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply

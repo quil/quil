@@ -1,5 +1,6 @@
 (ns ^{:doc "Utility fns"}
-  quil.util)
+  quil.util
+  (:require [clojure.string :as cstr]))
 
 (defn no-fn
   "Function that does nothing."
@@ -23,7 +24,6 @@
     (or (= java.lang.Long t)
         (= java.lang.Integer t))))
 
-#+clj
 (defn resolve-constant-key
   "Returns the val associated with key in mappings or key directly if it
   is one of the vals in mappings. Otherwise throws an exception."
@@ -32,14 +32,9 @@
     (get mappings key)            (get mappings key)
     (some #{key} (vals mappings)) key
 
-    :else                         (throw (Exception. (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
-
-#+cljs 
-(defn resolve-constant-key
-  ""
-  [key mappings]
-  (aget (quil.sketch/current-applet) (get mappings key)))
-
+    :else                         (throw (#+clj Exception.
+                                          #+cljs js/Error.
+                                          (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
 (defn length-of-longest-key
   "Returns the length of the longest key of map m. Assumes m's keys are strings
@@ -83,8 +78,8 @@
 
 
 (defn prepare-quil-name [const-keyword]
-  (clojure.string/replace
-   (clojure.string/upper-case (name const-keyword))
+  (cstr/replace
+   (cstr/upper-case (name const-keyword))
    #"-" "_"))
 
 #+clj
@@ -97,9 +92,13 @@
 #+clj
 (defn prepare-quil-cljs-constants [constants]
   (into {}
-    (map 
-      #(vector % (prepare-quil-name %))
-      constants)))
+        (map 
+         #(vector % `(-> js/window
+                         (aget "Processing")
+                         (aget "prototype")
+                         (aget "PConstants")
+                         (aget ~(prepare-quil-name %))))
+         constants)))
 
 #+clj
 (defn make-quil-constant-map [const-map-name const-map]

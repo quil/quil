@@ -60,7 +60,7 @@
                              :dependencies [[prismatic/dommy "0.1.2"]]
 
                              :cljsbuild
-                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs"]
+                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
@@ -74,4 +74,4 @@
 
              :test-1.6.0 [:cljs-testing
                           {:dependencies [[org.clojure/clojure "1.6.0"]
-                                          [org.clojure/clojurescript "0.0-2280"]]}]})
+                                          [org.clojure/clojurescript "0.0-2371"]]}]})
