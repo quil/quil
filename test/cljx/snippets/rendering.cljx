@@ -5,7 +5,7 @@
   #+cljs
   (:use-macros [quil.snippet :only [defsnippet]]))
 
-(defsnippet hint {}
+(defsnippet hint {:renderer :p3d}
   (let [hints [:enable-native-fonts
                :disable-native-fonts
                :enable-depth-test
