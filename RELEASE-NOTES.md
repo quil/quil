@@ -1,3 +1,9 @@
+## 2.2.4
+_21st November 2014_
+
+* Fix warnings introduced by 2.2.3.
+* Fix cljs build failures in rare conditions.
+
 ## 2.2.3
 _21st November 2014_
 
