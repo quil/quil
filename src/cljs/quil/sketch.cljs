@@ -11,7 +11,7 @@
 
 (defn current-applet [] *applet*)
 
-(u/generate-quil-constants
+(u/generate-quil-constants :cljs
   rendering-modes (:java2d :p2d :p3d :opengl))
 
 (defn resolve-renderer [mode]
