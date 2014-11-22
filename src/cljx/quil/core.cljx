@@ -14,7 +14,7 @@
 #+cljs
 (ns quil.core
   (:require clojure.string
-            [quil.sketch :as applet :refer [current-applet resolve-renderer] :include-macros true]
+            [quil.sketch :as applet :refer [current-applet resolve-renderer]]
             [quil.util :as u :refer [resolve-constant-key] :include-macros true]))
 
 (def ^{:dynamic true
@@ -40,7 +40,7 @@
 
 ;; -------------------- PConstants section -----------------------
 
-(u/generate-quil-constants
+(u/generate-quil-constants #+clj :clj #+cljs :cljs
  arc-modes (:open :chord :pie)
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply

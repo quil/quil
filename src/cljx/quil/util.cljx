@@ -101,16 +101,16 @@
          constants)))
 
 #+clj
-(defn make-quil-constant-map [const-map-name const-map]
-  `(def ^{:private true} 
+(defn make-quil-constant-map [target const-map-name const-map]
+  `(def ^{:private true}
      ~const-map-name
-     ~(if (clj-compilation?) 
-            (prepare-quil-clj-constants const-map)
-            (prepare-quil-cljs-constants const-map))))
+     ~(if (= target :clj)
+        (prepare-quil-clj-constants const-map)
+        (prepare-quil-cljs-constants const-map))))
 
 
-(defmacro generate-quil-constants [& opts]
+(defmacro generate-quil-constants [target & opts]
   `(do
      ~@(map 
-        #(make-quil-constant-map (first %) (second %)) 
+        #(make-quil-constant-map target (first %) (second %)) 
         (partition 2 opts))))
