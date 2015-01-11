@@ -93,11 +93,7 @@
 (defn prepare-quil-cljs-constants [constants]
   (into {}
         (map 
-         #(vector % `(-> js/window
-                         (aget "Processing")
-                         (aget "prototype")
-                         (aget "PConstants")
-                         (aget ~(prepare-quil-name %))))
+         #(vector % `(aget js/Processing.prototype.PConstants ~(prepare-quil-name %)))
          constants)))
 
 #+clj

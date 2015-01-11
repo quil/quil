@@ -15,7 +15,7 @@
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
-                 [quil/processing-js "1.4.8"]
+                 [quil/processing-js "1.4.8.1"]
                  [com.lowagie/itext "2.1.7"]]
 
   :hooks [cljx.hooks]
@@ -65,7 +65,6 @@
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
                                          :preamble ["processing.min.js"]
-                                         :externs ["externs/processing.js"]
                                          :pretty-print true}}]}}]
 
              :test-1.5.1 [:cljs-testing
@@ -74,4 +73,4 @@
 
              :test-1.6.0 [:cljs-testing
                           {:dependencies [[org.clojure/clojure "1.6.0"]
-                                          [org.clojure/clojurescript "0.0-2371"]]}]})
+                                          [org.clojure/clojurescript "0.0-2657"]]}]})

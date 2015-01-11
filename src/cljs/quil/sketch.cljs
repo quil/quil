@@ -73,11 +73,7 @@
                           (bind-handlers prc opts)
                           (set! (.-quil prc) (atom nil))
                           (set! (.-target-frame-rate prc) (atom 60)))
-        ; Hackish way to get construction. Processing.Sketch is not on externs
-        ; so compiler will rename if we access using js/Processing.Sketch.
-        ; TODO: update externs and add Processing.Sketch.
-        sketch-constructor (aget js/Processing "Sketch")
-        sketch (new sketch-constructor attach-function)]
+        sketch (js/Processing.Sketch. attach-function)]
     (when (contains? features :global-key-events)
       (aset (aget sketch "options") "globalKeyEvents" true))
     sketch))
