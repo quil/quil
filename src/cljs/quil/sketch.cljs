@@ -24,10 +24,6 @@
   ([width height mode]
     (.size (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
 
-(def ^{:private true}
-  supported-features
-  #{:no-start})
-
 (defn- bind-handlers [prc opts]
   (doseq [[processing-name quil-name] {:setup :setup
                                        :draw :draw
@@ -59,6 +55,7 @@
 
         sketch-size     (or (:size opts) [200 200])
         renderer        (:renderer opts)
+        features        (set (:features opts))
 
         opts (-> opts
                  (update-in [:setup]
@@ -71,11 +68,19 @@
                             #(when %
                                (fn []
                                  ;; -1 need for compability to Clojure version
-                                 (% (* -1 (.-mouseScroll *applet*)))))))]
-    (fn [prc]
-      (bind-handlers prc opts)
-      (set! (.-quil prc) (atom nil))
-      (set! (.-target-frame-rate prc) (atom 60)))))
+                                 (% (* -1 (.-mouseScroll *applet*)))))))
+        attach-function (fn [prc]
+                          (bind-handlers prc opts)
+                          (set! (.-quil prc) (atom nil))
+                          (set! (.-target-frame-rate prc) (atom 60)))
+        ; Hackish way to get construction. Processing.Sketch is not on externs
+        ; so compiler will rename if we access using js/Processing.Sketch.
+        ; TODO: update externs and add Processing.Sketch.
+        sketch-constructor (aget js/Processing "Sketch")
+        sketch (new sketch-constructor attach-function)]
+    (when (contains? features :global-key-events)
+      (aset (aget sketch "options") "globalKeyEvents" true))
+    sketch))
 
 (defn sketch [& opts]
   (let [opts-map (apply hash-map opts)

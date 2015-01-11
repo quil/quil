@@ -138,3 +138,16 @@
             (q/update-pixels gr)
 
             (q/image gr 10 10))))
+
+(let [counter (atom 0)]
+  (q/defsketch global-key-events
+    :size [500 500]
+    :key-pressed (fn []
+                   (swap! counter inc))
+    :features [:global-key-events]
+    :draw (fn []
+            (q/background 255)
+            (q/text-size 30)
+            (q/fill 0)
+            (q/text-align :center :center)
+            (q/text (str "Key events: " @counter) 250 250))))

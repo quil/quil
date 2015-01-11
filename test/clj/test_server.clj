@@ -31,6 +31,7 @@
     (gen-test-canvas "get-pixel")
     (gen-test-canvas "set-pixel")
     (gen-test-canvas "pixels-update-pixels")
+    (gen-test-canvas "global-key-events")
 
     [:div.cbox
      [:p "extern-control test"]
