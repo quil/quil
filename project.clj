@@ -1,4 +1,4 @@
-(defproject quil "2.2.4"
+(defproject quil "2.2.5-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -15,7 +15,7 @@
                  [quil/processing-dxf "2.2.1"]
                  [quil/jogl-all-fat "2.1.5"]
                  [quil/gluegen-rt-fat "2.1.5"]
-                 [quil/processing-js "1.4.8.1"]
+                 [quil/processing-js "1.4.8.2"]
                  [com.lowagie/itext "2.1.7"]]
 
   :hooks [cljx.hooks]
@@ -57,20 +57,13 @@
                              :plugins [[lein-cljsbuild "1.0.3"]]
                              :source-paths ["test/clj"]
                              :ring {:handler test-server/app}
-                             :dependencies [[prismatic/dommy "1.0.0"]]
+                             :dependencies [[prismatic/dommy "1.0.0"]
+                                            [org.clojure/clojure "1.6.0"]
+                                            [org.clojure/clojurescript "0.0-2740"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
-                                         :preamble ["processing.min.js"]
-                                         :pretty-print true}}]}}]
-
-             :test-1.5.1 [:cljs-testing
-                          {:dependencies [[org.clojure/clojure "1.5.1"]
-                                          [org.clojure/clojurescript "0.0-2234"]]}]
-
-             :test-1.6.0 [:cljs-testing
-                          {:dependencies [[org.clojure/clojure "1.6.0"]
-                                          [org.clojure/clojurescript "0.0-2657"]]}]})
+                                         :pretty-print true}}]}}]})

@@ -14,6 +14,7 @@
 #+cljs
 (ns quil.core
   (:require clojure.string
+            org.processingjs.Processing
             [quil.sketch :as applet :refer [current-applet resolve-renderer]]
             [quil.util :as u :refer [resolve-constant-key] :include-macros true]))
 
