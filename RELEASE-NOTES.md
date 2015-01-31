@@ -1,3 +1,9 @@
+## 2.2.5
+_31st January 2015_
+
+* Add `global-key-events` option for cljs sketches.
+* Use latest cljs capabilites to simplify setting up cljs project: no more externs, preamble and easy-to-use `:none` optimization level.
+
 ## 2.2.4
 _21st November 2014_
 
