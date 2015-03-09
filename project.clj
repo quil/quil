@@ -59,7 +59,7 @@
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.0.0"]
                                             [org.clojure/clojure "1.6.0"]
-                                            [org.clojure/clojurescript "0.0-2740"]]
+                                            [org.clojure/clojurescript "0.0-3030"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
