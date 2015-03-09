@@ -314,7 +314,7 @@
   alpha
   "Extracts the alpha value from a color."
   [color]
-  (.alpha (current-graphics) (int color)))
+  (.alpha (current-graphics) (unchecked-int color)))
 
 (defn
   ^{:requires-bindings true
@@ -539,8 +539,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (current-graphics) (int rgb)))
-  ([rgb alpha] (.background (current-graphics) (int rgb) (float alpha))))
+  ([rgb] (.background (current-graphics) (unchecked-int rgb)))
+  ([rgb alpha] (.background (current-graphics) (unchecked-int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -859,7 +859,7 @@
                 Photoshop."
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
-    #+clj (PApplet/blendColor (int c1) (int c2) (int mode)))
+    #+clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))
     #+cljs (.blendColor (current-graphics) c1 c2 mode))
 
 #+clj
@@ -907,7 +907,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (current-graphics) (int color)))
+  (.blue (current-graphics) (unchecked-int color)))
 
 (defn
   ^{:requires-bindings true
@@ -929,7 +929,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (current-graphics) (int color)))
+  (.brightness (current-graphics) (unchecked-int color)))
 
 (defn
   ^{:requires-bindings true
@@ -1653,8 +1653,8 @@
     :added "1.0"}
   fill-int
   "Sets the color used to fill shapes."
-  ([rgb] (.fill (current-graphics) (int rgb)))
-  ([rgb alpha] (.fill (current-graphics) (int rgb) (float alpha))))
+  ([rgb] (.fill (current-graphics) (unchecked-int rgb)))
+  ([rgb alpha] (.fill (current-graphics) (unchecked-int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -1848,7 +1848,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (current-graphics) (int col)))
+  (.green (current-graphics) (unchecked-int col)))
 
 (defn
   ^{:require-binding false
@@ -1972,7 +1972,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (current-graphics) (int col)))
+  (.hue (current-graphics) (unchecked-int col)))
 
 
 (defn
@@ -2142,7 +2142,7 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-graphics) (int c1) (int c2) (float amt)))
+  (.lerpColor (current-graphics) (unchecked-int c1) (unchecked-int c2) (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -3161,7 +3161,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (current-graphics) (int c)))
+  (.red (current-graphics) (unchecked-int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3368,7 +3368,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (current-graphics) (int c)))
+  (.saturation (current-graphics) (unchecked-int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3853,8 +3853,8 @@
   stroke-int
   "Sets the color used to draw lines and borders around
   shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (current-graphics) (int rgb)))
-  ([rgb alpha] (.stroke (current-graphics) (int rgb) (float alpha))))
+  ([rgb] (.stroke (current-graphics) (unchecked-int rgb)))
+  ([rgb alpha] (.stroke (current-graphics) (unchecked-int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true
@@ -4248,8 +4248,8 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  ([rgb] (.tint (current-graphics) (int rgb)))
-  ([rgb alpha] (.tint (current-graphics) (int rgb) (float alpha))))
+  ([rgb] (.tint (current-graphics) (unchecked-int rgb)))
+  ([rgb alpha] (.tint (current-graphics) (unchecked-int rgb) (float alpha))))
 
 (defn
   ^{:requires-bindings true

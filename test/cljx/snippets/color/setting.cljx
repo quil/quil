@@ -7,6 +7,10 @@
 
 (defsnippet background {}
   (q/background 255 0 0)
+
+  ; check that no exception thrown
+  (q/background 0xFF112233)
+
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
       (q/background 120))
@@ -45,7 +49,10 @@
   (q/rect 140 140 100 100)
 
   (q/fill 255 0 0 120)
-  (q/rect 210 210 100 100))
+  (q/rect 210 210 100 100)
+
+  (q/fill 0xFF00FF00)
+  (q/rect 280 280 100 100))
 
 (defsnippet no-fill {}
   (q/background 255)
@@ -81,4 +88,7 @@
   (q/rect 140 140 100 100)
 
   (q/stroke 255 0 0 120)
-  (q/rect 210 210 100 100))
+  (q/rect 210 210 100 100)
+
+  (q/stroke 0xFF00FF00)
+  (q/rect 280 280 100 100))

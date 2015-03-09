@@ -128,6 +128,11 @@
 
 (defsnippet tint {}
   (q/background 127)
+
+  ; check that no exception thrown
+  (q/tint 0xFF112233)
+  (q/no-tint)
+
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
       (q/background 0 0)

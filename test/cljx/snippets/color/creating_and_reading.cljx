@@ -8,6 +8,9 @@
 (defsnippet alpha {}
   (q/background 255)
 
+  ; check that no exception thrown
+  (q/alpha 0xFF00FF00)
+
   (let [semi-red (q/color 255 0 0 120)
         alph (q/alpha semi-red)
         semi-blue (q/color 0 0 255 alph)]
@@ -19,6 +22,9 @@
 
 (defsnippet blend-color {}
   (q/background 255)
+
+  ; check that no exception thrown
+  (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
 
   (let [c1 (q/color 255 100 20 50) ; very transparent red
         c2 (q/color 40 200 255 200) ; not very transparent blue
@@ -41,6 +47,11 @@
 (defsnippet red-green-blue {}
   (q/background 255)
 
+  ; check that no exception thrown
+  (q/red 0xFF112233)
+  (q/green 0xFF112233)
+  (q/blue 0xFF112233)
+
   (let [col (q/color 123 50 220)]
     (q/fill col)
     (q/rect 0 0 100 100)
@@ -56,8 +67,13 @@
 
 (defsnippet hue-saturation-brightness {}
   (q/background 255)
-  (q/color-mode :hsb)
 
+  ; check that no exception thrown
+  (q/hue 0xFF112233)
+  (q/saturation 0xFF112233)
+  (q/brightness 0xFF112233)
+
+  (q/color-mode :hsb)
   (let [col (q/color 100 230 100)]
     (q/fill col)
     (q/rect 0 0 100 100)
@@ -138,6 +154,10 @@
 
 (defsnippet lerp-color {}
   (q/background 255)
+
+  ; check that no exception thrown
+  (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
+
   (let [c1 (q/color 255 0 0)
         c2 (q/color 0 0 255)]
     (dotimes [i 6]
