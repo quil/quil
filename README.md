@@ -1,4 +1,6 @@
-# Quil
+# Quil 
+
+http://quil.info
 
 <img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
 
