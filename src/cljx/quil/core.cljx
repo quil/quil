@@ -4475,9 +4475,11 @@
   [translation-vector & body]
   `(let [tr# ~translation-vector]
      (push-matrix)
-     (translate tr#)
-     ~@body
-     (pop-matrix)))
+     (try
+       (translate tr#)
+       ~@body
+       (finally
+         (pop-matrix)))))
 
 #+clj
 (defmacro
@@ -4496,9 +4498,11 @@
   [rotation & body]
   `(let [tr# ~rotation]
      (push-matrix)
-     (apply rotate tr#)
-     ~@body
-     (pop-matrix)))
+     (try
+       (apply rotate tr#)
+       ~@body
+          (finally
+            (pop-matrix)))))
 
 (defmacro
   ^{:requires-bindings true
