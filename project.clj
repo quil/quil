@@ -18,8 +18,6 @@
                  [quil/processing-js "1.4.8.2"]
                  [com.lowagie/itext "2.1.7"]]
 
-  :hooks [cljx.hooks]
-
   :aot [quil.helpers.applet-listener quil.applet]
 
   :test-selectors {:default (complement :manual)
@@ -44,22 +42,22 @@
   :resource-paths ["resources"]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [garden "1.1.6"]
-                                  [compojure "1.1.8"]
-                                  [clj-http "0.9.1"]
+                                  [garden "1.2.5"]
+                                  [compojure "1.3.4"]
+                                  [clj-http "1.1.2"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [org.clojure/tools.reader "0.8.8"]]
-                   :plugins [[com.keminglabs/cljx "0.4.0"]
-                             [lein-ring "0.8.11"]]}
+                                  [org.clojure/tools.reader "0.9.2"]]
+                   :plugins [[com.keminglabs/cljx "0.6.0"]
+                             [lein-ring "0.9.4"]]}
 
              :cljs-testing [:dev
                             {:hooks [leiningen.cljsbuild]
-                             :plugins [[lein-cljsbuild "1.0.3"]]
+                             :plugins [[lein-cljsbuild "1.0.6"]]
                              :source-paths ["test/clj"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.0.0"]
-                                            [org.clojure/clojure "1.6.0"]
-                                            [org.clojure/clojurescript "0.0-3030"]]
+                                            [org.clojure/clojure "1.7.0-beta3"]
+                                            [org.clojure/clojurescript "0.0-3291"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
