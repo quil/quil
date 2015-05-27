@@ -20,6 +20,8 @@
 
   :aot [quil.helpers.applet-listener quil.applet]
 
+  :prep-tasks [["cljx" "once"] "compile"]
+
   :test-selectors {:default (complement :manual)
                    :manual :manual}
 
