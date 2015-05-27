@@ -859,8 +859,8 @@
                 Photoshop."
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
-    #+clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))
-    #+cljs (.blendColor (current-graphics) c1 c2 mode))
+    #+clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode))
+    #+cljs (.blendColor (current-graphics) c1 c2 mode)))
 
 #+clj
 (defn
