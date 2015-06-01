@@ -1,6 +1,18 @@
 (ns quil.middlewares.navigation-3d
   (:require [quil.core :as q]))
 
+(def ^:private missing-navigation-key-error
+  (str "state map is missing :navigation-3d key. "
+       "Did you accidentally removed it from the state in "
+       ":update or any other handler?"))
+
+(defn- assert-state-has-navigation
+  "Asserts that state map contains :navigation-2d object."
+  [state]
+  (when-not (:navigation-3d state)
+    (throw #+clj (RuntimeException. missing-navigation-key-error)
+           #+cljs (js/Error. missing-navigation-key-error))))
+
 (defn- default-position
   "Default position configuration. Check default configuration in
   'camera' function."
@@ -95,6 +107,7 @@
   It uses mouse from event object and pixels-in-360 to calculate
   angles to rotate."
   [state event pixels-in-360]
+  (assert-state-has-navigation state)
   (if (= 0 (:p-x event) (:p-y event))
     state
     (let [dx (- (:p-x event) (:x event))
@@ -113,6 +126,7 @@
   It uses keyboard key from event object to determing in which
   direction to move."
   [state event step-size]
+  (assert-state-has-navigation state)
   (let [{:keys [up straight]} (:navigation-3d state)]
     (if-let [dir (condp = (:key event)
                    :w straight
@@ -160,6 +174,7 @@
       :setup (partial setup-3d-nav setup user-settings)
 
       :draw (fn [state]
+              (assert-state-has-navigation state)
               (let [{[c-x c-y c-z] :straight
                      [u-x u-y u-z] :up
                      [p-x p-y p-z] :position} (:navigation-3d state)]
