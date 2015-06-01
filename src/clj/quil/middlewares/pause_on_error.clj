@@ -25,9 +25,10 @@
       (q/text-size 15)
       (let [{:keys [name exception time]} @pause
             str [(format "Sketch was paused due to an exception thrown in %s" name)
-                 (str "Check REPL or console for stacktrace")
                  (str "Time: " time)
-                 (str "Fix the error and then press any key to unpause sketch.")]]
+                 (str "Fix the error and then press any key to unpause sketch.")
+                 (str "Stacktrace (or check REPL output):")
+                 (with-out-str (print-cause-trace exception))]]
         (q/text (join \newline str) 10 20))
       (q/pop-style))
     (q/set-image 0 0 error)))
