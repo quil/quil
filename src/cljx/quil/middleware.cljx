@@ -3,6 +3,7 @@
   (:require [quil.middlewares.fun-mode :as fun-mode]
             #+clj [quil.middlewares.pause-on-error :as pause-on-error]
             [quil.middlewares.navigation-3d :as navigation-3d]
+            [quil.middlewares.navigation-2d :as navigation-2d]
             ))
 
 (defn fun-mode
@@ -71,14 +72,53 @@
 
   Accessing position information from sketch
 
-  navigation-3d uses fun-mode underneath so all position-related information
-  is stored in the state map. It means that you can access in draw/update/any
-  handler and modify it if you need to. Position information is a map which
-  is stored under :navigation-3d key in the state map. Position consists of
-  3 values: :position, :straight and :up. See \"Customization\" section above
-  for more details.
+  navigation-3d uses fun-mode under the hood  so all position-related
+  information is stored in the state map. It means that you can access in
+  draw/update/any handler and modify it if you need to. Position
+  information is a map which is stored under :navigation-3d key in the
+  state map. Position consists of 3 values: :position, :straight and :up.
+  See \"Customization\" section above for more details.
+
+  Usage example:
+
+  (q/defsketch my-sketch
+    ...
+    :middleware [m/fun-mode m/navigation-3d])
 
   See wiki article for more(?) details:
   https://github.com/quil/quil/wiki/Navigation-3D"
   [options]
   (navigation-3d/navigation-3d options))
+
+(defn navigation-2d
+  "Enables navigation over 2D sketch. Drag mouse to change the center of the
+  sketch and mouse wheel controls zoom. This middleware requires fun-mode.
+
+  Customization
+
+  You can customize this middleware by providing map as
+  :navigation-2d option in defsketch/sketch. Map can have following
+  optional keys:
+
+  :position - vector of 2 numbers, x and y - center of the screen.
+              Default is width/2, height/2.
+
+  :zoom - number indicating current zoom level. Default is 1.
+
+  Accessing position information from sketch
+
+  navigation-2d uses fun-mode under the hood so all position-related
+  information is stored in the state map. It means that you can access in
+  draw/update/any handler and modify it if you need to. Position
+  information is a map which is stored under :navigation-2d key in the
+  state map. Position consists of 2 values: :position and :zoom.
+  See \"Customization\" section above for more details.
+
+  Usage example:
+
+  (q/defsketch my-sketch
+    ...
+    :middleware [m/fun-mode m/navigation-2d])
+"
+  [options]
+  (navigation-2d/navigation-2d options))
