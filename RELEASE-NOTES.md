@@ -1,3 +1,12 @@
+## 2.2.6
+_2nd June 2015_
+
+* Fix bug with hex colours. Issue [#71](https://github.com/quil/quil/issues/71).
+* Make `with-translation` and `with-rotation` macros handle exceptions properly. Issue [#154](https://github.com/quil/quil/issues/154).
+* Fix `blend-color` function in cljs. Issue [#156](https://github.com/quil/quil/issues/156).
+* Add Navigation 2D middleware.
+* Pass draw/update/other functions by name, not by value in cljs to make live-reloading easier.
+
 ## 2.2.5
 _31st January 2015_
 
