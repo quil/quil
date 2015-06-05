@@ -6,7 +6,12 @@
             [quil.middlewares.navigation-2d :as navigation-2d]
             ))
 
-(defn fun-mode
+(defn ^{:requires-bindings false
+        :category "Middleware"
+        :subcategory nil
+        :ns "quil.middleware"
+        :added "2.1.0"}
+  fun-mode
   "Introduces function mode. Adds 'update' function which takes current
   state and returns new state. Makes all other functions (setup, draw,
   mouse-click, etc) state-aware. See wiki for more details."
@@ -14,7 +19,12 @@
   (fun-mode/fun-mode options))
 
 #+clj
-(defn pause-on-error
+(defn ^{:requires-bindings false
+        :category "Middleware"
+        :subcategory nil
+        :ns "quil.middleware"
+        :added "2.2.0"}
+  pause-on-error
   "Pauses sketch if any of user-provided handlers throws error.
   It allows to fix the error on the fly and continue sketch.
   May be good alternative to default '500ms pause if exception'
@@ -22,7 +32,12 @@
   [options]
   (pause-on-error/pause-on-error options))
 
-(defn navigation-3d
+(defn ^{:requires-bindings false
+        :category "Middleware"
+        :subcategory nil
+        :ns "quil.middleware"
+        :added "2.2.0"}
+  navigation-3d
   "Enables navigation in 3D space. Similar to how it is done in
   shooters: WASD navigation, space is go up, drag mouse to look around.
   This middleware requires fun-mode.
@@ -90,7 +105,12 @@
   [options]
   (navigation-3d/navigation-3d options))
 
-(defn navigation-2d
+(defn ^{:requires-bindings false
+        :category "Middleware"
+        :subcategory nil
+        :ns "quil.middleware"
+        :added "2.2.6"}
+  navigation-2d
   "Enables navigation over 2D sketch. Drag mouse to change the center of the
   sketch and mouse wheel controls zoom. This middleware requires fun-mode.
 

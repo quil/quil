@@ -16,9 +16,6 @@
          (take-while #(not= % endof))
          (doall))))
 
-(def clj (read-all "quil/core.clj"))
-(def cljs (read-all "quil/core.cljs"))
-
 (defn get-public-fns [all-forms]
   (filter #(-> % second meta (contains? :category))
           all-forms))
@@ -58,9 +55,14 @@
 (defn merge-all-metas [metas1 metas2]
   (merge-with merge-metas metas1 metas2))
 
+(def clj-files ["quil/core.clj" "quil/middleware.clj"])
+(def cljs-files ["quil/core.cljs" "quil/middleware.cljs"])
+
 (defn generate-metas-to-file [file]
-  (let [clj (-> "quil/core.clj" read-all (get-metas :clj))
-        cljs (-> "quil/core.cljs" read-all (get-metas :cljs))
+  (let [clj (-> (mapcat read-all clj-files)
+                (get-metas :clj))
+        cljs (-> (mapcat read-all cljs-files)
+                 (get-metas :cljs))
         merged (merge-all-metas clj cljs)]
     (with-open [wtr (io/writer file)]
       (clojure.pprint/pprint merged wtr))))
