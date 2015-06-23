@@ -118,19 +118,16 @@
         (first old)))))
 
 (defn tally
-  "Cumulative tally. Takes a sequence of numbers and returns a new
-  sequence which is a cumulative tally of the successive additions of
-  each element in the original seq.
+  "Cumulative tally. Returns a lazy sequence of the successive sums
+  of coll, starting with init plus the first element.
 
-  (take 5 (tally (range))) ;=> [0 1 3 6 10]"
-  ([s] (tally s 0))
-  ([s amount]
-     (lazy-seq
-      (let [nxt-amount (+ (first s) amount)
-            nxt-s (next s)]
-        (cons nxt-amount (if nxt-s
-                           (tally nxt-s nxt-amount)
-                           []))))))
+  (take 5 (tally (range)))   ;=> (0 1 3 6 10)
+  (take 5 (tally 3 (range))) ;=> (3 4 6 9 13)
+  (tally [])                 ;=> ()
+  (tally 100 [])             ;=> ()"
+  ([coll] (tally 0 coll))
+  ([init coll]
+     (rest (reductions + init coll))))
 
 (defn perlin-noise-seq
   "Generate a lazy infinite sequence of perlin noise values starting from
