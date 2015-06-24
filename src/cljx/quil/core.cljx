@@ -22,6 +22,8 @@
        :private true}
   *graphics* nil)
 
+(def ^{:private true} no-fill-prop "no-fill-quil")
+
 (defn
   ^{:requires-bindings true
     :category "Environment"
@@ -1631,6 +1633,12 @@
   #+clj (PApplet/exp (float val))
   #+cljs (.exp (current-applet) val))
 
+(defn- clear-no-fill-cljs
+  "Sets custom property on graphcis object indicating that it has
+  fill color."
+  [graphics]
+  (aset graphics no-fill-prop false))
+
 (defn
   ^{:requires-bindings true
     :processing-name "fill()"
@@ -1640,10 +1648,18 @@
   fill-float
   "Sets the color used to fill shapes. For example, (fill 204 102 0),
   will specify that all subsequent shapes will be filled with orange."
-  ([gray] (.fill (current-graphics) (float gray)))
-  ([gray alpha] (.fill (current-graphics) (float gray) (float alpha)))
-  ([r g b] (.fill (current-graphics) (float r) (float g) (float b)))
-  ([r g b alpha] (.fill (current-graphics) (float r) (float g) (float b) (float alpha))))
+  ([gray]
+   (.fill (current-graphics) (float gray))
+   #+cljs (clear-no-fill-cljs (current-graphics)))
+  ([gray alpha]
+   (.fill (current-graphics) (float gray) (float alpha))
+   #+cljs (clear-no-fill-cljs (current-graphics)))
+  ([r g b]
+   (.fill (current-graphics) (float r) (float g) (float b))
+   #+cljs (clear-no-fill-cljs (current-graphics)))
+  ([r g b alpha]
+   (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
+   #+cljs (clear-no-fill-cljs (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -1653,8 +1669,12 @@
     :added "1.0"}
   fill-int
   "Sets the color used to fill shapes."
-  ([rgb] (.fill (current-graphics) (unchecked-int rgb)))
-  ([rgb alpha] (.fill (current-graphics) (unchecked-int rgb) (float alpha))))
+  ([rgb]
+   (.fill (current-graphics) (unchecked-int rgb))
+   #+cljs (clear-no-fill-cljs (current-graphics)))
+  ([rgb alpha]
+   (.fill (current-graphics) (unchecked-int rgb) (float alpha))
+   #+cljs (clear-no-fill-cljs (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2538,7 +2558,8 @@
   no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
- (.noFill (current-graphics)))
+ (.noFill (current-graphics))
+ #+cljs (aset (current-graphics) no-fill-prop true))
 
 (defn
   ^{:requires-bindings true
@@ -3948,6 +3969,12 @@
   #+clj @(quil.applet/target-frame-rate)
   #+cljs @(.-target-frame-rate (current-applet)))
 
+(defn- no-fill?
+  "Returns whether fill is disabled for current graphics."
+  [graphics]
+  #+clj (not (.-fill graphics))
+  #+cljs (true? (aget graphics no-fill-prop)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "text()"
@@ -3957,8 +3984,12 @@
   text-char
   "Draws a char to the screen in the specified position. See text fn
   for more details."
-  ([c x y] (.text (current-graphics) (char c) (float x) (float y)))
-  ([c x y z] (.text (current-graphics) (char c) (float x) (float y) (float z))))
+  ([c x y]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) (char c) (float x) (float y))))
+  ([c x y z]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) (char c) (float x) (float y) (float z)))))
 
 (defn
   ^{:requires-bindings true
@@ -3969,8 +4000,12 @@
   text-num
   "Draws a number to the screen in the specified position. See text fn
   for more details."
-  ([num x y] (.text (current-graphics) (float num) (float x) (float y)))
-  ([num x y z] (.text (current-graphics) (float num) (float x) (float y) (float z))))
+  ([num x y]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) (float num) (float x) (float y))))
+  ([num x y z]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) (float num) (float x) (float y) (float z)))))
 
 (defn
   ^{:requires-bindings true
@@ -3990,9 +4025,15 @@
   rectangular area to display within and may only be used with string
   data. For text drawn inside a rectangle, the coordinates are
   interpreted based on the current rect-mode setting."
-  ([^String s x y] (.text (current-graphics) s (float x) (float y)))
-  ([^String s x y z] (.text (current-graphics) s (float x) (float y) (float z)))
-  ([^String s x1 y1 x2 y2] (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2))))
+  ([^String s x y]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) s (float x) (float y))))
+  ([^String s x y z]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) s (float x) (float y) (float z))))
+  ([^String s x1 y1 x2 y2]
+   (when-not (no-fill? (current-graphics))
+     (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2)))))
 
 (defn
   ^{:requires-bindings true
