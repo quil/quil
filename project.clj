@@ -9,7 +9,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.6.0"]
                  [quil/processing-core "2.2.1"]
                  [quil/processing-pdf "2.2.1"]
                  [quil/processing-dxf "2.2.1"]
@@ -44,7 +44,6 @@
   :resource-paths ["resources"]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [garden "1.2.5"]
                                   [compojure "1.3.4"]
                                   [clj-http "1.1.2"]
                                   [javax.servlet/servlet-api "2.5"]
@@ -58,8 +57,8 @@
                              :source-paths ["test/clj"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.0.0"]
-                                            [org.clojure/clojure "1.7.0-RC1"]
-                                            [org.clojure/clojurescript "0.0-3308"]]
+                                            [org.clojure/clojure "1.7.0"]
+                                            [org.clojure/clojurescript "1.7.107"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
