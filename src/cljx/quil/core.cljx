@@ -3461,7 +3461,7 @@
 #+clj
 (defn
   ^{:requires-bindings false
-    :processing-name "displayWidth"
+    :processing-name nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -3473,7 +3473,7 @@
 #+clj
 (defn
   ^{:requires-bindings false
-    :processing-name "displayHeight"
+    :processing-name nil
     :category "Environment"
     :subcategory nil
     :added "1.0"}

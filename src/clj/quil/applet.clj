@@ -473,5 +473,4 @@
               ; In this case we should not wrap it with (var ...)
               `(if (fn? ~v) (var ~v) ~v)
               v))]
-    `(def ~app-name (applet ~@(concat (map wrap opts)
-                                      [::defapplet true])))))
+    `(def ~app-name (applet ~@(map wrap opts)))))
