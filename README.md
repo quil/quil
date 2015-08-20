@@ -105,7 +105,7 @@ Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
 Quil supports an explorable API. For a full list of API categories and subcategories simply type `(show-cats)` at the REPL.
 
-    user=> (show-cats)
+    user=> (q/show-cats)
     1 Color (0)
        1.1 Creating & Reading (11)
        1.2 Loading & Displaying (1)
