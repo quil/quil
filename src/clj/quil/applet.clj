@@ -5,8 +5,10 @@
            [java.awt Dimension GraphicsEnvironment]
            [java.awt.event WindowListener])
   (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
-            [quil.middlewares.deprecated-options :refer [deprecated-options]]
-            [quil.middlewares.safe-fns :refer [safe-fns]]
+            [quil.middlewares
+             [deprecated-options :refer [deprecated-options]]
+             [safe-fns :refer [safe-fns]]
+             [bind-output :refer [bind-output]]]
             [clojure.string :as string]))
 
 (defonce untitled-applet-id* (atom 0))
@@ -268,7 +270,8 @@
 
 (def ^{:private true}
   supported-features
-  #{:resizable :exit-on-close :keep-on-top :present :no-safe-fns})
+  #{:resizable :exit-on-close :keep-on-top :present :no-safe-fns
+    :no-bind-output})
 
 (defn applet
   "Create and start a new visualisation applet.
@@ -309,7 +312,7 @@
                                     other). By default all exceptions thrown
                                     inside these functions are catched. This
                                     prevents sketch from breaking when bad
-                                    function was provided and allows user to
+                                    function was provided and allows you to
                                     fix it and reload it on fly. You can
                                     disable this behaviour by enabling
                                     :no-safe-fns feature.
@@ -414,6 +417,10 @@
                       options
                       (safe-fns options))
 
+        options     (if (:no-bind-output features)
+                      options
+                      (bind-output options))
+
         options           (merge (dissoc options :features)
                                  features)
 
@@ -466,4 +473,5 @@
               ; In this case we should not wrap it with (var ...)
               `(if (fn? ~v) (var ~v) ~v)
               v))]
-    `(def ~app-name (applet ~@(map wrap opts)))))
+    `(def ~app-name (applet ~@(concat (map wrap opts)
+                                      [::defapplet true])))))

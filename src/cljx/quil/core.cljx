@@ -4603,7 +4603,7 @@
                                     other). By default all exceptions thrown
                                     inside these functions are catched. This
                                     prevents sketch from breaking when bad
-                                    function was provided and allows user to
+                                    function was provided and allows you to
                                     fix it and reload it on fly. You can
                                     disable this behaviour by enabling
                                     :no-safe-fns feature.
