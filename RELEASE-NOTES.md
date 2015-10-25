@@ -1,3 +1,9 @@
+## 2.3.0
+_TBD_
+
+* Migrated to Processing 3.0.
+* Removed following hints: :enable-retina-pixels :disable-retina-pixels
+
 ## 2.2.6
 _2nd June 2015_
 

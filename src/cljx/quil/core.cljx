@@ -9,7 +9,7 @@
             [quil.helpers.docs :as docs]
             [quil.util :as u :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
                                absolute-path clj-compilation?]]
-            [quil.applet :refer [current-applet applet-state applet-close applet defapplet resolve-renderer]]))
+            [quil.applet :refer [current-applet applet-state applet defapplet resolve-renderer]]))
 
 #+cljs
 (ns quil.core
@@ -52,15 +52,14 @@
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
  hint-options (:enable-native-fonts :disable-native-fonts
-                            :enable-depth-test :disable-depth-test
-                            :enable-depth-sort :disable-depth-sort
-                            :enable-depth-mask :disable-depth-mask
-                            :enable-opengl-errors :disable-opengl-errors
-                            :enable-optimized-stroke :disable-optimized-stroke
-                            :enable-retina-pixels :disable-retina-pixels
-                            :enable-stroke-perspective :disable-stroke-perspective
-                            :enable-stroke-pure :disable-stroke-pure
-                            :enable-texture-mipmaps :disable-texture-mipmaps)
+               :enable-depth-test :disable-depth-test
+               :enable-depth-sort :disable-depth-sort
+               :enable-depth-mask :disable-depth-mask
+               :enable-opengl-errors :disable-opengl-errors
+               :enable-optimized-stroke :disable-optimized-stroke
+               :enable-stroke-perspective :disable-stroke-perspective
+               :enable-stroke-pure :disable-stroke-pure
+               :enable-texture-mipmaps :disable-texture-mipmaps)
  image-modes (:corner :corners :center)
  rect-modes (:corner :corners :center :radius)
  p-shape-modes (:corner :corners :center)
@@ -1617,8 +1616,7 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  #+clj (applet-close (current-applet))
-  #+cljs (.exit (current-applet)))
+  (.exit (current-applet)))
 
 (defn
   ^{:requires-bindings false

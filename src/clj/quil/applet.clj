@@ -33,18 +33,12 @@
   [applet]
   (with-applet applet
     ((:on-close (meta applet))))
-  (-> applet .frame .dispose))
+  (-> applet .getSurface(.setVisible false)))
 
 (defn applet-state
   "Fetch an element of state from within the applet"
   [applet k]
   (get @(:state (meta applet)) k))
-
-(defn applet-close
-  "Sets 'finished' field in applet to true. Main run loop in applet
-   should stop as soon as finished == true and then call dispose."
-  [applet]
-  (set! (.finished applet) true))
 
 (defn- prepare-applet-frame
   [applet title]
@@ -52,19 +46,7 @@
         keep-on-top?   (:keep-on-top m)
         frame          (.frame applet)
         resizable?     (:resizable m)]
-    (doseq [listener (.getWindowListeners frame)]
-      (.removeWindowListener frame listener))
-    (doto frame
-      (.addWindowListener  (reify WindowListener
-                             (windowActivated [this e])
-                             (windowClosing [this e]
-                               (applet-close applet))
-                             (windowDeactivated [this e])
-                             (windowDeiconified [this e])
-                             (windowIconified [this e])
-                             (windowOpened [this e])
-                             (windowClosed [this e])))
-      (.setDefaultCloseOperation JFrame/DO_NOTHING_ON_CLOSE))
+    ; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
      (fn []
        (when resizable?
@@ -167,7 +149,6 @@
   :extends processing.core.PApplet
   :state state
   :init quil-applet-init
-  :post-init quil-applet-post-init
   :constructors {[java.util.Map] []}
   :exposes-methods {keyTyped keyTypedParent
                     loop loopParent
@@ -184,23 +165,26 @@
                     mouseReleased mouseReleasedParent
                     focusLost focusLostParent
                     noLoop noLoopParent
-                    sketchFullScreen sketchFullScreenParent
-                    exit exitParent})
+                    sketchFullScreen sketchFullScreenParent})
 
-(defn -exit [this]
-  (applet-close this))
+(defn -exitActual
+  "Overriding PApplet.exitActual because we don't want it to call
+   System.exit()."
+  [this])
 
 (defn -sketchFullScreen [this] (:present (meta this)))
 
 (defn -quil-applet-init [state]
   [[] state])
 
-(defn -quil-applet-post-init [this _]
-  (let [[width height] (:size (meta this))]
-    (.resize this width height)))
-
 (defn -meta [this]
   (.state this))
+
+(defn -settings
+  "Overriding PApplet.settings() to set size."
+  [this]
+  (let [[width height] (:size (meta this))]
+    (.size this width height)))
 
 (defn -setup [this]
   ; If renderer is :pdf - we need to set it via size method,

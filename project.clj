@@ -10,11 +10,11 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [quil/processing-core "2.2.1"]
-                 [quil/processing-pdf "2.2.1"]
-                 [quil/processing-dxf "2.2.1"]
-                 [quil/jogl-all-fat "2.1.5"]
-                 [quil/gluegen-rt-fat "2.1.5"]
+                 [org.processing/core "3.0"]
+;                 [quil/processing-pdf "2.2.1"]
+;                 [quil/processing-dxf "2.2.1"]
+;                 [quil/jogl-all-fat "2.1.5"]
+;                 [quil/gluegen-rt-fat "2.1.5"]
                  [quil/processing-js "1.4.8.2"]
                  [com.lowagie/itext "2.1.7"]]
 

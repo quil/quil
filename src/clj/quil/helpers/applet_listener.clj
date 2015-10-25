@@ -1,4 +1,5 @@
-(ns quil.helpers.applet-listener
+(ns ^{:doc "Class that contains listener methods for PApplet. Instance of this class is passed to PApplet.registerMethod()"}
+  quil.helpers.applet-listener
   (:gen-class
     :name quil.helpers.AppletListener
     :main false
