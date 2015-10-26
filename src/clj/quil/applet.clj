@@ -40,18 +40,18 @@
   [applet k]
   (get @(:state (meta applet)) k))
 
-(defn- prepare-applet-frame
+(defn- prepare-applet-surface
   [applet title]
   (let [m              (meta applet)
         keep-on-top?   (:keep-on-top m)
+        surface        (.getSurface applet)
         frame          (.frame applet)
         resizable?     (:resizable m)]
     ; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
      (fn []
-       (when resizable?
-         (.setResizable frame resizable?))
-       (.setAlwaysOnTop frame keep-on-top?)))
+       (.setResizable surface resizable?)
+       (.setAlwaysOnTop surface keep-on-top?)))
     applet))
 
 
@@ -65,10 +65,12 @@
                                (str "--display=" (:display (meta applet))))
                              (when (and (:bgcolor (meta applet))
                                         (:present (meta applet)))
-                               (str "--bgcolor" "=" (str (:bgcolor (meta applet)))))
+                               (str "--window-color" "=" (str (:bgcolor (meta applet)))))
+                             (when (:present (meta applet))
+                               (str "--present"))
                              "--hide-stop" title])))
    applet)
-  (prepare-applet-frame applet title))
+  (prepare-applet-surface applet title))
 
 
 (def ^{:private true}
