@@ -90,34 +90,17 @@
         (string? renderer) renderer
         :default (throw (RuntimeException. ":renderer should be keyword or string"))))
 
-(defn- display-size
-  "Returns size of screen. If there are 2 or more screens it probably return size of
-  default one whatever it means."
-  ([]
-   (let [bounds (.. (java.awt.GraphicsEnvironment/getLocalGraphicsEnvironment)
-                    getDefaultScreenDevice
-                    getDefaultConfiguration
-                    getBounds)]
-     [(.-width bounds) (.-height bounds)]))
-
-  ([display]
-   (if-let [bounds (some->
-                    (get (.getScreenDevices (GraphicsEnvironment/getLocalGraphicsEnvironment)) display)
-                    .getDefaultConfiguration
-                    .getBounds)]
-     [(.-width bounds) (.-height bounds)]
-     (throw (IllegalArgumentException.
-             (str "Invalid display index: " display ". Displays are numbered starting from 0"))))))
-
-(defn- process-size
+(defn- validate-size
   "Checks that the size vector is exactly two elements. If not, throws
   an exception, otherwise returns the size vector unmodified."
-  [size display]
-  (cond (= size :fullscreen) (if (= :default display) (display-size)
-                               (display-size display))
-        (and (coll? size) (= 2 (count size))) size
-        :else (throw (IllegalArgumentException.
-                      (str "Invalid size definition: " size ". Was expecting :fullscreen or 2 elements vector: [x-size y-size].")))))
+  [size]
+  (if (or (= size :fullscreen)
+          (and (coll? size) (= 2 (count size))))
+    size
+    (throw (IllegalArgumentException.
+            (str "Invalid size definition: " size
+                 ". Was expecting :fullscreen or 2 elements vector: "
+                 "[width height].")))))
 
 (defn- to-method-name [keyword]
   "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
@@ -185,8 +168,10 @@
 (defn -settings
   "Overriding PApplet.settings() to set size."
   [this]
-  (let [[width height] (:size (meta this))]
-    (.size this width height)))
+  (let [size (:size (meta this))]
+    (if (= size :fullscreen)
+      (.fullScreen this)
+      (.size this (first size) (second size)))))
 
 (defn -setup [this]
   ; If renderer is :pdf - we need to set it via size method,
@@ -411,7 +396,7 @@
                                  features)
 
         display           (or (:display options) :default)
-        size              (process-size (:size options) display)
+        size              (validate-size (:size options))
 
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
