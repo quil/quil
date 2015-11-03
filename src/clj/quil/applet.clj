@@ -168,10 +168,13 @@
 (defn -settings
   "Overriding PApplet.settings() to set size."
   [this]
-  (let [size (:size (meta this))]
+  (let [{:keys [renderer size output-file]} (meta this)
+        renderer (resolve-renderer renderer)
+        output-file (absolute-path output-file)]
     (if (= size :fullscreen)
-      (.fullScreen this)
-      (.size this (first size) (second size)))))
+      (.fullScreen this renderer)
+      (.size this (int (first size)) (int (second size))
+             renderer output-file))))
 
 (defn -setup [this]
   ; If renderer is :pdf - we need to set it via size method,
@@ -180,11 +183,7 @@
   ; (don't know why, but let's trust Processing guys).
   ; Technically it's not first (there are 'when' and 'let' before 'size'),
   ; but hopefully it will work fine.
-  (when (= (:renderer (meta this)) :pdf)
-    (let [[width height] (:size (meta this))
-          renderer (resolve-renderer (:renderer (meta this)))
-          file (-> this meta :output-file absolute-path)]
-      (.size this (int width) (int height) renderer file)))
+  
   (with-applet this
     ((:setup-fn (meta this)))))
 
