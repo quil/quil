@@ -89,7 +89,6 @@
 (defsnippet display-filter {}
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
-        dest (q/create-graphics 100 100)
         modes [[:threshold]
                [:threshold 0.7]
                [:gray]
@@ -114,9 +113,10 @@
     (q/image orig 0 0)
     (dotimes [row (count splitted)]
       (dotimes [col (count (nth splitted row))]
-        (let [mode (nth (nth splitted row) col)]
-          (q/copy orig dest [0 0 100 100] [0 0 100 100])
+        (let [mode (nth (nth splitted row) col)
+              dest (q/create-graphics 100 100)]
           (q/with-graphics dest
+            (q/image orig 0 0)
             (apply q/display-filter mode))
           (q/image dest (* col 120) (* 120 (inc row))))))))
 
@@ -124,7 +124,7 @@
 (defsnippet filter-shader {:renderer :p2d}
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
-        shd (q/load-shader (str (clojure.java.io/resource "SimpleShader.glsl")))]
+        shd (q/load-shader (.getPath (clojure.java.io/resource "SimpleShader.glsl")))]
     (q/with-graphics orig
       (q/color-mode :rgb 1.0)
       (q/background 1)

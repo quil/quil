@@ -98,17 +98,6 @@
 (defsnippet no-tint {}
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
-    (q/with-graphics (q/create-graphics 100 100)
-      (q/background 0 255)
-      (q/fill 255)
-      (q/ellipse 25 25 20 20)
-      (q/fill 255 0 0)
-      (q/ellipse 75 25 20 20)
-      (q/fill 0 255 0)
-      (q/ellipse 25 75 20 20)
-      (q/fill 0 0 255)
-      (q/ellipse 75 75 20 20))
-
     (q/with-graphics gr
       (q/background 0 0)
       (q/fill 255)
