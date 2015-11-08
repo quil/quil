@@ -6,9 +6,7 @@
   (:use-macros [quil.snippet :only [defsnippet]]))
 
 (defsnippet hint {:renderer :p3d}
-  (let [hints [:enable-native-fonts
-               :disable-native-fonts
-               :enable-depth-test
+  (let [hints [:enable-depth-test
                :disable-depth-test
                :enable-depth-sort
                :disable-depth-sort
@@ -18,8 +16,6 @@
                :disable-depth-mask
                :enable-optimized-stroke
                :disable-optimized-stroke
-               :enable-retina-pixels
-               :disable-retina-pixels
                :enable-stroke-perspective
                :disable-stroke-perspective
                :enable-stroke-pure
@@ -45,7 +41,7 @@
 (defsnippet load-shader {:renderer :p2d}
   (let [gr (q/create-graphics 250 250)
         path (clojure.java.io/resource "SimpleShader.glsl")
-        shd (q/load-shader (str path))]
+        shd (q/load-shader (.getPath path))]
     (q/with-graphics gr
       (q/background 255)
       (q/fill 255 0 0)
