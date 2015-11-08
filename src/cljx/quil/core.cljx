@@ -1896,8 +1896,7 @@
   "Height of the display window. The value of height is zero until
   size is called."
   []
-  #+clj (.getHeight (current-applet))
-  #+cljs (.-height (current-applet)))
+  (.-height (current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -4458,8 +4457,7 @@
   "Width of the display window. The value of width is zero until size is
   called."
   []
-  #+clj (.getWidth (current-applet))
-  #+cljs (.-width (current-applet)))
+  (.-width (current-applet)))
 
 #+clj
 (defmacro
