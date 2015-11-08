@@ -29,22 +29,14 @@
   (doseq [type [:arrow :cross :hand :move :text :wait]]
     (q/cursor type)))
 
-#+clj
-(defsnippet cursor-image {}
-  (let [curs (q/create-graphics 32 32)]
-    (q/with-graphics curs
-      (q/fill 0 0)
-      (q/ellipse 16 16 32 32)
-      (q/ellipse 16 16 8 8))
-    (q/cursor-image curs)
-    (q/cursor-image curs 16 16)))
-
-#+cljs
 (defsnippet cursor-image
-  {:setup (q/set-state! :image (q/request-image "texture.jpg"))}
+  {:setup (q/set-state! :image (q/request-image
+                                #+cljs "texture.jpg"
+                                #+clj "test/html/texture.jpg"))}
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (do
+      (q/cursor-image (q/state :image))
       (q/cursor-image (q/state :image) 16 16)
       (q/image (q/state :image) 0 0))))
 
