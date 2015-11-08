@@ -51,8 +51,7 @@
  color-modes (:rgb :hsb)
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
- hint-options (:enable-native-fonts :disable-native-fonts
-               :enable-depth-test :disable-depth-test
+ hint-options (:enable-depth-test :disable-depth-test
                :enable-depth-sort :disable-depth-sort
                :enable-depth-mask :disable-depth-mask
                :enable-opengl-errors :disable-opengl-errors
