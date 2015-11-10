@@ -1223,8 +1223,8 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "fillColor()"
-    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#fillColor"
+    :processing-name "PGraphics.fillColor"
+    :processing-link "http://processing.github.io/processing-javadocs/core/processing/core/PGraphics.html#fillColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-fill
@@ -1234,8 +1234,8 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "strokeColor()"
-    :processing-link "http://processing.org/reference/javadoc/core/processing/core/PGraphics.html#strokeColor"
+    :processing-name "PGraphics.strokeColor"
+    :processing-link "http://processing.github.io/processing-javadocs/core/processing/core/PGraphics.html#strokeColor"
     :category "Color"
     :subcategory "Creating & Reading"}
   current-stroke
