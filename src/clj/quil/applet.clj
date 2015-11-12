@@ -26,6 +26,28 @@
 (defn target-frame-rate []
   (:target-frame-rate (meta (current-applet))))
 
+(def ^:private  executor (java.util.concurrent.Executors/newSingleThreadScheduledExecutor))
+
+(defn- destroy-window
+  "Cleanup native window object once sketch was closed. Processing doesn't perform cleanups
+  because its probably assumes that when sketch is closed - JVM is closed as well which is
+  not the case for clojure. So here we're performing renderer-specific cleanups. "
+  [applet]
+  (let [native (-> applet .getSurface .getNative)]
+    (condp = (.getClass native)
+
+      com.jogamp.newt.opengl.GLWindow
+      ; Cannot destroy GLWindow right away because there is some callbacks going on
+      ; and NPE is thrown when they execute if window is destroyed. It doesn't seem
+      ; to affect anything, but annoying to have NPE in logs. Delaying destroying
+      ; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
+      (.schedule executor #(.destroy native) 1 java.util.concurrent.TimeUnit/SECONDS)
+
+      processing.awt.PSurfaceAWT$SmoothCanvas
+      (-> native .getFrame .dispose)
+
+      :nothing)))
+
 (defn applet-disposed
   "This function is called when PApplet executes 'dispose' method.
   It means we can dispose frame, call on-close function and perform other
@@ -33,7 +55,8 @@
   [applet]
   (with-applet applet
     ((:on-close (meta applet))))
-  (-> applet .getSurface(.setVisible false)))
+  (-> applet .getSurface(.setVisible false))
+  (destroy-window applet))
 
 (defn applet-state
   "Fetch an element of state from within the applet"
