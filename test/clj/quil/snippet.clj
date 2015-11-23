@@ -2,11 +2,14 @@
   (:require [quil.util :refer [clj-compilation?]]
             [quil.core :as q]
             [quil.util :refer [no-fn]]
-            [clojure.test :refer [is]]))
+            [clojure.test :refer [is]]
+            clojure.pprint))
 
 (def default-size [500 500])
 (def default-host {:p2d "quil-test-2d"
                    :p3d "quil-test-3d"})
+
+(def manual? (-> (System/getenv) (get "MANUAL") boolean))
 
 (def tests-in-set 50)
 (def current-test (atom -1))
@@ -14,6 +17,9 @@
 (defmacro snippet-as-test [snip-name opts & draw-fn-body]
   `(let [result# (promise)]
      (Thread/sleep 100)
+     (when manual?
+       (println "Test:" '~snip-name)
+       (clojure.pprint/pprint '~draw-fn-body))
      (q/sketch
       :title (str '~snip-name)
       :size ~(:size opts default-size)
@@ -28,7 +34,7 @@
                   (println "Error" e#)
                   (.printStackTrace e#)
                   (deliver result# e#))
-                (finally (q/exit))))
+                (finally (when-not manual? (q/exit)))))
       :on-close #(deliver result# nil))
      (is (nil? @result#))))
 
