@@ -34,18 +34,20 @@
   (q/fill 0)
   (q/text (str "'Courier New' available: " (q/font-available? "Courier New"))
         20 20)
+  (q/text (str "'Ubuntu' available: " (q/font-available? "Ubuntu"))
+        20 40)
   (q/text (str "'My Custom Font' available: " (q/font-available? "My Custom Font"))
-        20 40))
+        20 60))
 
 #+clj
 (defsnippet load-font {}
   (q/background 255)
   (q/fill 0)
-  (let [font (q/load-font (clojure.java.io/resource "ComicSansMS-48.vlw"))]
-    (->> (clojure.java.io/resource "ComicSansMS-48.vlw")
-         (q/load-font)
-         (q/text-font))
-    (q/text "CoMiC SaNs HeRe" 20 100)))
+  (->> (clojure.java.io/resource "ComicSansMS-48.vlw")
+       (.getPath)
+       (q/load-font)
+       (q/text-font))
+  (q/text "CoMiC SaNs HeRe" 20 100))
 
 (defsnippet text {:renderer :p3d}
   (q/background 255)
