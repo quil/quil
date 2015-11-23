@@ -23,7 +23,11 @@
   :prep-tasks [["cljx" "once"] "compile"]
 
   :test-selectors {:default (complement :manual)
-                   :manual :manual}
+                   :manual :manual
+                   :set-0 #(= 0 (:test-set %))
+                   :set-1 #(= 1 (:test-set %))
+                   :set-2 #(= 2 (:test-set %))
+                   :set-3 #(= 3 (:test-set %))}
 
   :cljx {:builds [{:source-paths ["src/cljx/quil"]
                    :output-path "target/gen/clj/quil"

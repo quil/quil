@@ -8,6 +8,9 @@
 (def default-host {:p2d "quil-test-2d"
                    :p3d "quil-test-3d"})
 
+(def tests-in-set 50)
+(def current-test (atom -1))
+
 (defmacro snippet-as-test [snip-name opts & draw-fn-body]
   `(let [result# (promise)]
      (Thread/sleep 100)
@@ -33,7 +36,12 @@
   (if (clj-compilation?)
     ;; Clojure version
     `(def ~(vary-meta snip-name assoc
-                      :test `(fn [] (snippet-as-test ~snip-name ~opts ~@body)))
+                      :test `(fn [] (snippet-as-test ~snip-name ~opts ~@body))
+                      :test-set (let [cur (swap! current-test inc)
+                                      set (quot cur tests-in-set)]
+                                  (when (zero? (mod cur tests-in-set))
+                                    (println "Test set" set (str " Run with: lein test :set-" set)))
+                                  set))
        (fn []
          (q/sketch
           :title (str '~snip-name)
