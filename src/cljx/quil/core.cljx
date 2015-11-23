@@ -3737,8 +3737,11 @@
   machine that is running the software.
 
   Note that smooth will also improve image quality of resized images."
-  ([] (.smooth (current-graphics)))
-  ([level] (.smooth (current-graphics) (int level))))
+  ([] (.smooth #+clj (current-applet)
+               #+cljs (current-graphics)))
+  ([level] (.smooth  #+clj (current-applet)
+                     #+cljs (current-graphics)
+                     (int level))))
 
 (defn
   ^{:requires-bindings true
@@ -4562,7 +4565,25 @@
         :subcategory nil
         :added "1.0"}
   sketch
-  "Create and start a new visualisation applet.
+  "Create and start a new visualisation applet. Can be used to create
+  new sketches programmatically. See documentation for 'defsketch' for
+  list of available options."
+    [& opts]
+    #+clj (apply applet opts)
+    #+cljs (apply applet/sketch opts))
+
+(defmacro ^{:requires-bindings false
+            :category "Environment"
+            :subcategory nil
+            :added "1.0"}
+  defsketch
+  "Define and start a sketch and bind it to a var with the symbol
+  app-name. If any of the options to the various callbacks are
+  symbols, it wraps them in a call to var to ensure they aren't
+  inlined and that redefinitions to the original fns are reflected in
+  the visualisation.
+
+  Available options:
 
    :size           - A vector of width and height for the sketch or :fullscreen.
                      Defaults to [500 300]. If you're using :fullscreen you may
@@ -4687,21 +4708,14 @@
 
    :middleware     - Vector of middleware to be applied to the sketch.
                      Middleware will be applied in the same order as in comp
-                     function: [f g] will be applied as (f (g options))."
-    [& opts]
-    #+clj (apply applet opts)
-    #+cljs (apply applet/sketch opts))
+                     function: [f g] will be applied as (f (g options)).
 
-(defmacro ^{:requires-bindings false
-            :category "Environment"
-            :subcategory nil
-            :added "1.0"}
-  defsketch
-  "Define and start a sketch and bind it to a var with the symbol
-  app-name. If any of the options to the various callbacks are
-  symbols, it wraps them in a call to var to ensure they aren't
-  inlined and that redefinitions to the original fns are reflected in
-  the visualisation. See sketch for the available options."
+   :settings       - cousin of :setup. A function to be called once when
+                     setting sketch up. Should be used only for (smooth) and
+                     (no-smooth). Due to Processing limitations these functions
+                     cannot be used neither in :setup nor in :draw.
+                     Not supported in clojurescript. In clojurescript smooth
+                     can be used anywhere."
   [app-name & options]
   (if (clj-compilation?)
     `(defapplet ~app-name ~@options)

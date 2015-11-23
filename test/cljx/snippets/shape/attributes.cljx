@@ -29,18 +29,13 @@
     (q/point -50 -35)
     (q/point 50 35)))
 
-(defsnippet smooth-no-smooth {:renderer :p2d}
-  (q/smooth)
+(defsnippet smooth-no-smooth {:renderer :p2d
+                              :settings (fn []
+                                          (q/smooth 2)
+                                          (q/no-smooth)
+                                          (q/smooth 2))}
   (q/with-translation [125 125]
-   (q/ellipse 0 0 200 200))
-
-  (q/smooth 2)
-  (q/with-translation [125 375]
-   (q/ellipse 0 0 200 200))
-
-  (q/no-smooth)
-  (q/with-translation [375 125]
-    (q/ellipse 0 0 200 200)))
+   (q/ellipse 0 0 200 200)))
 
 (defsnippet rect-mode {}
   (q/stroke-weight 5)

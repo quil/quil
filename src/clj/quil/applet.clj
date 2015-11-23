@@ -191,13 +191,15 @@
 (defn -settings
   "Overriding PApplet.settings() to set size."
   [this]
-  (let [{:keys [renderer size output-file]} (meta this)
+  (let [{:keys [renderer size output-file settings-fn]} (meta this)
         renderer (resolve-renderer renderer)
         output-file (absolute-path output-file)]
     (if (= size :fullscreen)
       (.fullScreen this renderer)
       (.size this (int (first size)) (int (second size))
-             renderer output-file))))
+             renderer output-file))
+    (with-applet this
+      (settings-fn))))
 
 (defn -setup [this]
   ; If renderer is :pdf - we need to set it via size method,
@@ -267,132 +269,8 @@
     :no-bind-output})
 
 (defn applet
-  "Create and start a new visualisation applet.
-
-   :size           - A vector of width and height for the sketch or :fullscreen.
-                     Defaults to [500 300]. If you're using :fullscreen you may
-                     want to enable present mode - :features [:present]
-
-   :renderer       - Specifies the renderer type. One of :p2d, :p3d, :java2d,
-                     :opengl, :pdf). Defaults to :java2d. :dxf renderer
-                     can't be used as sketch renderer. Use begin-raw method
-                     instead. In clojurescript only :p2d and :p3d renderers
-                     are supported.
-
-   :output-file    - Specifies an output file path. Only used in :pdf mode.
-                     Not supported in clojurescript.
-
-   :title          - A string which will be displayed at the top of
-                     the sketch window. Not supported in clojurescript.
-
-   :features       - A vector of keywords customizing sketch behaviour.
-                     Supported features:
-
-                     :keep-on-top - Sketch window will always be above other
-                                    windows. Note: some platforms might not
-                                    support always-on-top windows.
-                                    Not supported in clojurescript.
-
-                     :exit-on-close - Shutdown JVM  when sketch is closed.
-                                      Not supported in clojurescript.
-
-                     :resizable - Makes sketch resizable.
-                                  Not supported in clojurescript.
-
-                     :no-safe-fns - Do not catch and print exceptions thrown
-                                    inside functions provided to sketch (like
-                                    draw, mouse-click, key-pressed and
-                                    other). By default all exceptions thrown
-                                    inside these functions are catched. This
-                                    prevents sketch from breaking when bad
-                                    function was provided and allows you to
-                                    fix it and reload it on fly. You can
-                                    disable this behaviour by enabling
-                                    :no-safe-fns feature.
-                                    Not supported in clojurescript.
-
-                     :present - Switch to present mode (fullscreen without
-                                borders, OS panels). You may want to use
-                                this feature together with :size :fullscreen.
-                                Not supported in clojurescript.
-
-                     :no-start - Disables autostart if sketch was created using
-                                 defsketch macro. To start sketch you have to
-                                 call function created defsketch.
-                                 Supported only in clojurescript.
-
-                     :global-key-events - Allows a sketch to receive any
-                                          keyboard event sent to the page,
-                                          regardless of whether the canvas it is
-                                          loaded in has focus or not.
-                                          Supported only in clojurescript.
-
-                     Usage example: :features [:keep-on-top :present]
-
-   :bgcolor        - Sets background color for unused space in present mode.
-                     Color is specified in hex format: #XXXXXX.
-                     Example: :bgcolor \"#00FFFF\" (cyan background)
-                     Not supported in clojurescript.
-
-   :display        - Sets what display should be used by this sketch.
-                     Displays are numbered starting from 0. Example: :display 1.
-                     Not supported in clojurescript.
-
-   :setup          - A function to be called once when setting the sketch up.
-
-   :draw           - A function to be repeatedly called at most n times per
-                     second where n is the target frame-rate set for
-                     the visualisation.
-
-   :host           - String id of canvas element or DOM element itself.
-                     Specifies host for the sketch. Must be specified in sketch,
-                     may be omitted in defsketch. If ommitted in defsketch,
-                     :host is set to the name of the sketch. If element with
-                     specified id is not found on the page and page is empty -
-                     new canvas element will be created. Used in clojurescript.
-
-   :focus-gained   - Called when the sketch gains focus.
-                     Not supported in clojurescript.
-
-   :focus-lost     - Called when the sketch loses focus.
-                     Not supported in clojurescript.
-
-   :mouse-entered  - Called when the mouse enters the sketch window.
-
-   :mouse-exited   - Called when the mouse leaves the sketch window
-
-   :mouse-pressed  - Called every time a mouse button is pressed.
-
-   :mouse-released - Called every time a mouse button is released.
-
-   :mouse-clicked  - called once after a mouse button has been pressed
-                     and then released.
-
-   :mouse-moved    - Called every time the mouse moves and a button is
-                     not pressed.
-
-   :mouse-dragged  - Called every time the mouse moves and a button is
-                     pressed.
-
-   :mouse-wheel    - Called every time mouse wheel is rotated.
-                     Takes 1 argument - wheel rotation, an int.
-                     Negative values if the mouse wheel was rotated
-                     up/away from the user, and positive values
-                     if the mouse wheel was rotated down/ towards the user
-
-   :key-pressed    - Called every time any key is pressed.
-
-   :key-released   - Called every time any key is released.
-
-   :key-typed      - Called once every time non-modifier keys are
-                     pressed.
-
-   :on-close       - Called once, when sketch is closed
-                     Not supported in clojurescript.
-
-   :middleware     - Vector of middleware to be applied to the sketch.
-                     Middleware will be applied in the same order as in comp
-                     function: [f g] will be applied as (f (g options))."
+  "Create and start a new visualisation applet. All options used
+  here should be documented in 'defsketch' docstring."
   [& opts]
   (let [options (apply hash-map opts)
 
@@ -424,6 +302,7 @@
         renderer          (or (:renderer options) :java2d)
         draw-fn           (or (:draw options) no-fn)
         setup-fn          (or (:setup options) no-fn)
+        settings-fn       (or (:settings options) no-fn)
         on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
                             (if (:exit-on-close options)
                               (fn []
@@ -441,6 +320,7 @@
                                   :looping? looping?
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
+                                  :settings-fn settings-fn
                                   :draw-fn draw-fn
                                   :renderer renderer
                                   :size size

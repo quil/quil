@@ -27,6 +27,8 @@
       :setup (fn []
                ~(:setup opts)
                (q/frame-rate 5))
+      :settings (fn []
+                  ~(:settings opts))
       :draw (fn []
               (try
                 ~@draw-fn-body
