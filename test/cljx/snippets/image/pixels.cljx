@@ -48,11 +48,13 @@
       (q/stroke 255 0 0)
       (q/line 0 0 100 100)
       (q/line 100 0 0 100))
-
-    (q/image gr 0 0)
-    (q/copy gr gr [0 0 50 50] [50 0 50 50])
-    (q/copy gr [0 0 100 100] [120 0 100 100])
-    (q/copy [0 0 50 50] [240 0 100 100])))
+    ; Processing 3 can't treat PGraphics as PImage
+    ; so we have to get create PImage from PGraphics ourselves.
+    (let [im (.copy gr)]
+      (q/image im 0 0)
+      (q/copy im im [0 0 50 50] [50 0 50 50])
+      (q/copy im [0 0 100 100] [120 0 100 100])
+      (q/copy [0 0 50 50] [240 0 100 100]))))
 
 (defsnippet image-filter {}
   (q/background 255)

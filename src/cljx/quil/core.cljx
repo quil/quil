@@ -1086,7 +1086,9 @@
   alpha information is used in the process, however if the source
   image has an alpha channel set, it will be copied as well. "
   ([[sx sy swidth sheight] [dx dy dwidth dheight]]
-     (copy (current-graphics) (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+   (.copy (current-graphics)
+          (int sx) (int sy) (int swidth) (int sheight)
+          (int dx) (int dy) (int dwidth) (int dheight)))
 
   ([^PImage src-img [sx sy swidth sheight] [dx dy dwidth dheight]]
      (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))

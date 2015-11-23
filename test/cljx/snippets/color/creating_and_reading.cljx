@@ -103,6 +103,7 @@
   (q/rect 210 210 100 100))
 
 (defsnippet color-mode {}
+  (q/color-mode :rgb 255)
   (q/background 255)
 
   ; Result image is total mess, as apparently color-mode is global
