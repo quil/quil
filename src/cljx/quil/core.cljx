@@ -2715,7 +2715,9 @@
     :subcategory "Attributes"
     :added "1.0"}
   no-smooth
-  "Draws all geometry with jagged (aliased) edges."
+  "Draws all geometry with jagged (aliased) edges. Clojure: must be
+  called inside :settings function. ClojureScript: can be called
+  anywhere."
   [] (.noSmooth (current-graphics)))
 
 (defn
@@ -3725,6 +3727,9 @@
   "Draws all geometry with smooth (anti-aliased) edges. This will slow
   down the frame rate of the application, but will enhance the visual
   refinement.
+
+  Clojure: must be called inside :settings function.
+  ClojureScript: can be called anywhere.
 
   The level parameter (int) increases the level of smoothness with the
   P2D and P3D renderers. This is the level of over sampling applied to
