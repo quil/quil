@@ -1,8 +1,14 @@
 (ns docs.cheat-sheet-gen
-  (:require [processing.core]))
+  (:require [quil.helpers.docs :as docs]))
+
+(def fns 'quil.core)
+(require fns)
+(def fn-metas
+  (->> fns ns-publics vals (map meta)))
 
 (def cheat-sheet-start
-  "
+  (str
+    "
 \\documentclass[footexclude,twocolumn,DIV40,fontsize=8.7pt]{scrreprt}
 
 % Author: Sam Aaron
@@ -27,7 +33,7 @@
 \\usepackage[table]{xcolor}
 
 % Set column space
-\\setlength{\\columnsep}{0.25em}
+\\setlength{\\columnsep}{2em}
 
 % Define colours
 \\definecolorset{hsb}{}{}{red,0,.4,0.95;orange,.1,.4,0.95;green,.25,.4,0.95;grey,0.0,0.0,0.1;yellow,.15,.4,0.95}
@@ -64,7 +70,7 @@
 
 \\newcommand{\\colouredbox}[2] {
   \\colorbox{#1!40}{
-    \\begin{minipage}{0.95\\linewidth}
+    \\begin{minipage}{\\linewidth}
       {
         \\rowcolors[]{1}{#1!20}{#1!10}
         #2
@@ -78,9 +84,9 @@
 
 \\begin{document}
 
- {\\Large{\\textbf{Quil 1.0.0}}}
+ {\\Large{\\textbf{Quil " (System/getProperty "quil.version") "}}}
 
-")
+"))
 
 (def cheat-sheet-end
   "
@@ -98,7 +104,7 @@
 
 (def cheat-sheet-applet
   "
-\\colouredbox{blue1}{
+\\colouredbox{blue}{
   \\section{Applet}
   \\begin{tabularx}{\\hsize}{lX}
  Creation & \\cmd{applet defapplet} \\\\
@@ -127,35 +133,40 @@ Version & \\cmd{processing-version} \\\\
 (defn cheat-sheet-dynamic
   []
   (let [colours (cycle ["blue2" "yellow" "purple" "green" "orange" "pink" "blue" "yellow" "grey" "red" "green" "blue" "pink" "yellow"])
-        info    (#'processing.core/sorted-category-map)
+        info    (#'docs/sorted-category-map fn-metas)
         clean   (fn [s] (.replaceAll s "&" "\\\\&"))]
-    (dorun
-     (map (fn [[cat-idx cat-info] colour]
-            (println (str "\\colouredbox{" colour "}{"))
-            (println (str "  \\section{"(clean (:name cat-info)) "}"))
-            (println "  \\begin{tabularx}{\\hsize}{lX}")
-            (when (> (count (:fns cat-info)) 0)
-              (print (str "   & \\cmd{" ))
-              (dorun (map (fn [f] (print f " ")) (:fns cat-info)))
-              (println "} \\\\"))
-            (dorun
-             (map (fn [[subcat-idx {:keys [name fns]}]]
-                    (when (> (count fns) 0)
-                      (print (str "   " (clean name) " & \\cmd{" ))
-                      (dorun (map (fn [f] (print f " ")) fns))
-                      (println "} \\\\")))
-                  (:subcategories cat-info)))
-            (println "  \\end{tabularx}")
-            (println "}"))
-          info colours))))
+    (apply str
+      (map (fn [[cat-idx cat-info] colour]
+              (str
+                "\\colouredbox{" colour "}{\n"
+                "  \\section{" (clean (:name cat-info)) "}\n"
+                "  \\begin{tabularx}{\\hsize}{lX}\n"
+                (when (> (count (:fns cat-info)) 0)
+                  (str
+                    "   & \\cmd{"
+                    (apply str (map (fn [f] (str f " ")) (:fns cat-info)))
+                    "} \\\\\n"))
+                (apply str
+                 (map (fn [[subcat-idx {:keys [name fns]}]]
+                        (when (> (count fns) 0)
+                          (str
+                            "   " (clean name) " & \\cmd{"
+                            (apply str (map (fn [f] (str f " ")) fns))
+                            "} \\\\\n")))
+                      (:subcategories cat-info)))
+                "  \\end{tabularx}\n"
+                "}\n"))
+           info colours))))
 
 
 
 (defn mk-cheat-sheet
   []
-  (println cheat-sheet-start)
-  (cheat-sheet-dynamic)
-  (println cheat-sheet-applet)
-  (println cheat-sheet-docs)
-  (println  cheat-sheet-end)
-)
+  (str
+    cheat-sheet-start
+    (cheat-sheet-dynamic)
+    cheat-sheet-applet
+    cheat-sheet-docs
+    cheat-sheet-end))
+
+(spit "docs/cheatsheet/cheat-sheet.tex" (mk-cheat-sheet))
