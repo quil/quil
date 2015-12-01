@@ -1,8 +1,12 @@
 ## 2.3.0
-_TBD_
+_1st December 2015_
 
-* Migrated to Processing 3.0.
-* Removed following hints: :enable-retina-pixels :disable-retina-pixels
+* Migrated to Processing 3.0. See relevant Processing [page](https://github.com/processing/processing/wiki/Changes-in-3.0).
+* Switch to Clojure 1.6. Makes it incompatible with Clojure 1.5.1.
+* Optimizations in helper seqs functions. See #160.
+* Fix #161: don't draw text when no-fill is set.
+* Fix #115: bind *out* to REPL to make errors more visible when using emacs.
+* Removed hints (due to Processing 3.0): `:enable-retina-pixels`, `:disable-retina-pixels`, `:enable-native-fonts`, `:disable-native-fonts`.
 
 ## 2.2.6
 _2nd June 2015_
