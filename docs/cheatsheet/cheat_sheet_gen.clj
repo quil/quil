@@ -3,8 +3,7 @@
 
 (def fns 'quil.core)
 (require fns)
-(def fn-metas
-  (->> fns ns-publics vals (map meta)))
+(def fn-metas (->> fns ns-publics vals (map meta)))
 
 (def cheat-sheet-start
   (str
@@ -88,30 +87,14 @@
 
 "))
 
-(def cheat-sheet-end
-  "
- \\begin{flushright}
-  \\footnotesize
-  \\rule{0.7\\linewidth}{0.25pt}
-  \\verb!$Revision: 1.0.0.0, $Date: 5th March, 2012!\\\\
-  \\verb!Sam Aaron (sam.aaron gmail com)!
- \\end{flushright}
-
-\\end{document}
-
-
-")
-
 (def cheat-sheet-applet
   "
 \\colouredbox{blue}{
-  \\section{Applet}
+  \\section{Sketch options}
   \\begin{tabularx}{\\hsize}{lX}
- Creation & \\cmd{applet defapplet} \\\\
- Control & \\cmd{applet-stop applet-start applet-exit applet-close} \\\\
- Config Keywords & \\cmd{:title :size} \\\\
- Draw Callback Keywords & \\cmd{:setup :draw} \\\\
- Mouse Callback Keywords & \\cmd{:mouse-pressed :mouse-released :mouse-moved :mouse-dragged :mouse-entered :mouse-exited :mouse-clicked} \\\\
+ Config Keywords & \\cmd{:title :size :renderer :output-file :features :bgcolor :display :host :middleware} \\\\
+ Draw Callback Keywords & \\cmd{:setup :draw :on-close :settings} \\\\
+ Mouse Callback Keywords & \\cmd{:mouse-pressed :mouse-released :mouse-moved :mouse-dragged :mouse-entered :mouse-exited :mouse-clicked :mouse-wheel} \\\\
  Keyboard Callback Keywords & \\cmd{:key-pressed :key-released :key-typed } \\\\
  Window Callback Keywords & \\cmd{:focus-gained :focus-lost} \\\\
   \\end{tabularx}
@@ -124,9 +107,10 @@
   \\section{Reflection}
   \\begin{tabularx}{\\hsize}{lX}
 API Exploration & \\cmd{doc-cats doc-fns doc-meths} \\\\
-Version & \\cmd{processing-version} \\\\
   \\end{tabularx}
 }
+
+\\end{document}
 
 ")
 
@@ -166,7 +150,6 @@ Version & \\cmd{processing-version} \\\\
     cheat-sheet-start
     (cheat-sheet-dynamic)
     cheat-sheet-applet
-    cheat-sheet-docs
-    cheat-sheet-end))
+    cheat-sheet-docs))
 
 (spit "docs/cheatsheet/cheat-sheet.tex" (mk-cheat-sheet))
