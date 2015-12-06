@@ -978,6 +978,21 @@
   #+clj (PApplet/ceil (float n))
   #+cljs (.ceil (current-applet) n))
 
+#+clj
+(defn
+  ^{:requires-bindings true
+    :processing-name "clip()"
+    :category "Rendering"
+    :subcategory nil
+    :added "2.3.0"}
+  clip
+  "Limits the rendering to the boundaries of a rectangle defined by
+  the parameters. The boundaries are drawn based on the state of
+  the (image-mode) fuction, either :corner, :corners, or :center.
+  To disable use (no-clip)."
+  [x y w h]
+  (.clip (current-graphics) (float x) (float y) (float w) (float h)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "color()"
@@ -2551,6 +2566,18 @@
   []
   (.-mouseY (current-applet)))
 
+#+clj
+(defn
+  ^{:requires-bindings true
+    :processing-name "noClip()"
+    :category "Rendering"
+    :subcategory nil
+    :added "2.3.0"}
+  no-clip
+  "Disables the clipping previously started by the clip() function."
+  []
+  (.noClip (current-graphics)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "noCursor()"
@@ -2807,7 +2834,7 @@
 #+clj
 (defn
   ^{:requires-bindings true
-    :processing-name "pixelsDensity()"
+    :processing-name "pixelDensity()"
     :category "Environment"
     :subcategory nil
     :added "2.3.0"}

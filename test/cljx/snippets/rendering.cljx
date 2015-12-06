@@ -52,3 +52,14 @@
     (q/image gr 0 250)
     (q/reset-shader)
     (q/image gr 250 250)))
+
+#+clj
+(defsnippet clip-no-clip {}
+  (q/no-clip)
+  (q/background 255)
+  (q/fill 0)
+  (q/clip 50 100 100 100)
+  (q/triangle 100 70 170 180 30 180)
+  (q/no-clip)
+  (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
+    (q/triangle 100 70 170 180 30 180)))
