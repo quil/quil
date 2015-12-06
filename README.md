@@ -90,9 +90,6 @@ Quil supports ClojureScript! Check [wiki article](https://github.com/quil/quil/w
 
 ## Documentation
 
-
-<a href="https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf"><img src="https://github.com/downloads/quil/quil/readme-cheatsheet.png" alt="Cheatsheet" title="Cheatsheet" align="right" /></a>
-
 When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
 
 For up-to-date documentation please check [quil.info](http://quil.info).
