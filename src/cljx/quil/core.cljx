@@ -1694,6 +1694,22 @@
   ([r g b] (fill-float r g b))
   ([r g b a] (fill-float r g b a)))
 
+#+clj
+(defn
+  ^{:requires-bindings true
+    :processing-name "displayDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.3.0"}
+  display-density
+  "This function returns the number 2 if the screen is a high-density
+  screen (called a Retina display on OS X or high-dpi on Windows and
+  Linux) and a 1 if not. This information is useful for a program to
+  adapt to run at double the pixel density on a screen that supports
+  it. Can be used in conjunction with (pixel-density)"
+  ([] (.displayDensity (current-applet)))
+  ([display] (.displayDensity (current-applet) display)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "filter()"
@@ -2787,6 +2803,22 @@
   ([fovy aspect z-near z-far]
      (.perspective (current-graphics) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
+
+#+clj
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixelsDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.3.0"}
+  pixel-density
+  "It makes it possible for Processing to render using all of the pixels
+  on high resolutions screens like Apple Retina displays and Windows
+  High-DPI displays. Possible values 1 or 2. Must be called only from
+  :settings handler. To get density of the current screen you can use
+  (display-density) function."
+  [density]
+  (.pixelDensity (current-applet) density))
 
 (defn
   ^{:requires-bindings true
