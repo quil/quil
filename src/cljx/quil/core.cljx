@@ -1275,7 +1275,11 @@
   See cursor-image for specifying a generic image as the cursor
   symbol."
   ([] (.cursor (current-applet)))
-  ([cursor-mode] (.cursor (current-applet) (int (resolve-constant-key cursor-mode cursor-modes)))))
+  ([cursor-mode]
+   (let [cursor-mode (resolve-constant-key cursor-mode cursor-modes)]
+     (.cursor (current-applet)
+              #+clj (int cursor-mode)
+              #+cljs (str cursor-mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -3976,7 +3980,9 @@
   parameters :square, :project, and :round. The default cap is :round."
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
-    (.strokeCap (current-graphics) (int cap-mode))))
+    (.strokeCap (current-graphics)
+                #+clj (int cap-mode)
+                #+cljs (str cap-mode))))
 
 (defn
   ^{:requires-bindings true
@@ -3994,7 +4000,9 @@
   renderers."
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
-    (.strokeJoin (current-graphics) (int join-mode))))
+    (.strokeJoin (current-graphics)
+                 #+clj (int join-mode)
+                 #+cljs (str join-mode))))
 
 (defn
   ^{:requires-bindings true
