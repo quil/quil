@@ -92,3 +92,22 @@
 
   (q/stroke 0xFF00FF00)
   (q/rect 280 280 100 100))
+
+#+clj
+(defsnippet clear {:renderer :p2d}
+  (let [g (q/create-graphics 200 200 :p2d)]
+    (q/background 255)
+    (q/with-graphics g
+      (q/fill 255 0 0)
+      (q/rect 25 25 150 150))
+    (q/image g 0 0)
+    (q/with-graphics g
+      (q/clear)
+      (q/fill 0 255 0)
+      (q/ellipse 100 100 150 150))
+    (q/image g 50 50)
+    (q/with-graphics g
+      (q/clear)
+      (q/fill 0 0 255)
+      (q/triangle 25 25 175 25 25 175))
+    (q/image g 100 100)))
