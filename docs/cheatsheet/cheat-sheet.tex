@@ -23,7 +23,7 @@
 \usepackage[table]{xcolor}
 
 % Set column space
-\setlength{\columnsep}{0.25em}
+\setlength{\columnsep}{2em}
 
 % Define colours
 \definecolorset{hsb}{}{}{red,0,.4,0.95;orange,.1,.4,0.95;green,.25,.4,0.95;grey,0.0,0.0,0.1;yellow,.15,.4,0.95}
@@ -60,7 +60,7 @@
 
 \newcommand{\colouredbox}[2] {
   \colorbox{#1!40}{
-    \begin{minipage}{0.95\linewidth}
+    \begin{minipage}{\linewidth}
       {
         \rowcolors[]{1}{#1!20}{#1!10}
         #2
@@ -74,156 +74,138 @@
 
 \begin{document}
 
- {\Large{\textbf{Quil 1.0.0}}}
-
+ {\Large{\textbf{Quil 2.3.0}}}
 
 \colouredbox{blue2}{
   \section{Color}
   \begin{tabularx}{\hsize}{lX}
-   Creating \& Reading & \cmd{alpha  blend-color  blue  brightness  color  color-mode  green  hue  lerp-color  red  saturation  } \\
-   Loading \& Displaying & \cmd{no-tint  } \\
-   Pixels & \cmd{blend  } \\
-   Setting & \cmd{background  background-float  background-image  background-int  fill  fill-float  fill-int  no-fill  no-stroke  stroke  stroke-float  stroke-int  } \\
+   Creating \& Reading & \cmd{alpha blend-color blue brightness color color-mode current-fill current-stroke green hue lerp-color red saturation } \\
+   Setting & \cmd{background background-float background-image background-int fill fill-float fill-int no-fill no-stroke stroke stroke-float stroke-int } \\
+   Utility Macros & \cmd{with-fill with-stroke } \\
   \end{tabularx}
 }
 \colouredbox{yellow}{
   \section{Data}
   \begin{tabularx}{\hsize}{lX}
-   Conversion & \cmd{binary  hex  unbinary  unhex  } \\
+   Conversion & \cmd{binary hex unbinary unhex } \\
   \end{tabularx}
 }
 \colouredbox{purple}{
-  \section{Environment}
+  \section{Debugging}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{current-frame-rate  cursor  cursor-image  focused  frame-count  frame-rate  height  no-cursor  screen-height  screen-width  width  } \\
+   & \cmd{debug } \\
   \end{tabularx}
 }
 \colouredbox{green}{
-  \section{Image}
+  \section{Environment}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{create-image  } \\
-   Loading \& Displaying & \cmd{image  image-mode  load-image  mask-image  request-image  tint  tint-float  tint-int  } \\
-   Pixels & \cmd{copy  display-filter  get-pixel  load-pixels  pixels  set-image  set-pixel  update-pixels  } \\
+   & \cmd{current-frame-rate current-graphics cursor cursor-image defsketch focused frame-count frame-rate height no-cursor screen-height screen-width sketch target-frame-rate width } \\
   \end{tabularx}
 }
 \colouredbox{orange}{
-  \section{Input}
+  \section{Image}
   \begin{tabularx}{\hsize}{lX}
-   Files & \cmd{create-input  create-input-raw  load-bytes  load-strings  } \\
-   Keyboard & \cmd{key-code  key-pressed?  raw-key  } \\
-   Mouse & \cmd{mouse-button  mouse-state  mouse-x  mouse-y  pmouse-x  pmouse-y  } \\
-   Time \& Date & \cmd{day  hour  millis  minute  month  seconds  year  } \\
+   & \cmd{create-image resize } \\
+   Loading \& Displaying & \cmd{image image-mode load-image mask-image no-tint request-image tint tint-float tint-int } \\
+   Pixels & \cmd{blend copy display-filter filter-shader get-pixel image-filter pixels set-image set-pixel update-pixels } \\
+   Rendering & \cmd{blend-mode create-graphics } \\
   \end{tabularx}
 }
 \colouredbox{pink}{
-  \section{Lights, Camera}
+  \section{Input}
   \begin{tabularx}{\hsize}{lX}
-   Camera & \cmd{begin-camera  camera  end-camera  frustum  ortho  perspective  print-camera  print-projection  } \\
-   Coordinates & \cmd{model-x  model-y  model-z  screen-x  screen-y  screen-z  } \\
-   Lights & \cmd{ambient-light  directional-light  light-falloff  light-specular  lights  no-lights  normal  point-light  spot-light  } \\
-   Material Properties & \cmd{ambient  ambient-float  ambient-int  emissive  emissive-float  emissive-int  shininess  specular  } \\
+   Keyboard & \cmd{key-as-keyword key-code key-coded? key-pressed? raw-key } \\
+   Mouse & \cmd{mouse-button mouse-pressed? mouse-x mouse-y pmouse-x pmouse-y } \\
+   Time \& Date & \cmd{day hour millis minute month seconds year } \\
   \end{tabularx}
 }
 \colouredbox{blue}{
-  \section{Math}
+  \section{Lights, Camera}
   \begin{tabularx}{\hsize}{lX}
-   Calculation & \cmd{abs  abs-float  abs-int  ceil  constrain  constrain-float  constrain-int  dist  exp  lerp  log  mag  map-range  norm  pow  round  sq  sqrt  } \\
-   Random & \cmd{noise  noise-detail  noise-seed  random  random-seed  } \\
-   Trigonometry & \cmd{acos  asin  atan  atan2  cos  degrees  radians  sin  tan  } \\
-   Trig Constants & \cmd{PI HALF-PI THIRD-PI QUARTER-PI TWO-PI DEG-TO-RAD RAD-TO-DEG } \\
+   Camera & \cmd{begin-camera camera end-camera frustum ortho perspective print-camera print-projection } \\
+   Coordinates & \cmd{model-x model-y model-z screen-x screen-y screen-z } \\
+   Lights & \cmd{ambient-light directional-light light-falloff light-specular lights no-lights normal point-light spot-light } \\
+   Material Properties & \cmd{ambient ambient-float ambient-int emissive emissive-float emissive-int shininess specular } \\
   \end{tabularx}
 }
 \colouredbox{yellow}{
-  \section{Output}
+  \section{Math}
   \begin{tabularx}{\hsize}{lX}
-   Files & \cmd{begin-raw  begin-record  create-output  end-raw  end-record  } \\
-   Image & \cmd{save  save-frame  } \\
+   Calculation & \cmd{abs abs-float abs-int ceil constrain constrain-float constrain-int dist exp floor lerp log mag map-range norm pow round sq sqrt } \\
+   Random & \cmd{noise noise-detail noise-seed random random-gaussian random-seed } \\
+   Trigonometry & \cmd{acos asin atan atan2 cos degrees radians sin tan } \\
   \end{tabularx}
 }
 \colouredbox{grey}{
-  \section{Rendering}
+  \section{Output}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{create-graphics  hint  } \\
+   Files & \cmd{begin-raw end-raw } \\
+   Image & \cmd{save save-frame } \\
   \end{tabularx}
 }
 \colouredbox{red}{
-  \section{Shape}
+  \section{Rendering}
   \begin{tabularx}{\hsize}{lX}
-   2D Primitives & \cmd{arc  ellipse  line  point  quad  rect  triangle  } \\
-   3D Primitives & \cmd{box  sphere  sphere-detail  } \\
-   Attributes & \cmd{ellipse-mode  no-smooth  rect-mode  smooth  stroke-cap  stroke-join  stroke-weight  } \\
-   Curves & \cmd{bezier  bezier-detail  bezier-point  bezier-tangent  curve  curve-detail  curve-point  curve-tangent  curve-tightness  } \\
-   Loading \& Displaying & \cmd{load-shape  shape  shape-mode  } \\
-   Vertex & \cmd{begin-shape  bezier-vertex  curve-vertex  end-shape  texture  texture-mode  vertex  } \\
+   & \cmd{hint with-graphics } \\
+   Shaders & \cmd{load-shader reset-shader shader } \\
   \end{tabularx}
 }
 \colouredbox{green}{
-  \section{State}
+  \section{Shape}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{set-state!  state  } \\
+   2D Primitives & \cmd{arc ellipse line point quad rect triangle } \\
+   3D Primitives & \cmd{box sphere sphere-detail } \\
+   Attributes & \cmd{ellipse-mode no-smooth rect-mode smooth stroke-cap stroke-join stroke-weight } \\
+   Curves & \cmd{bezier bezier-detail bezier-point bezier-tangent curve curve-detail curve-point curve-tangent curve-tightness } \\
+   Loading \& Displaying & \cmd{load-shape shape shape-mode } \\
+   Vertex & \cmd{begin-contour begin-shape bezier-vertex curve-vertex end-contour end-shape quadratic-vertex texture texture-mode texture-wrap vertex } \\
   \end{tabularx}
 }
 \colouredbox{blue}{
-  \section{Structure}
+  \section{State}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{delay-frame  exit  no-loop  pop-style  push-style  redraw  start-loop  } \\
+   & \cmd{set-state! state state-atom } \\
   \end{tabularx}
 }
 \colouredbox{pink}{
-  \section{Transform}
+  \section{Structure}
   \begin{tabularx}{\hsize}{lX}
-   & \cmd{apply-matrix  pop-matrix  print-matrix  push-matrix  reset-matrix  rotate  rotate-x  rotate-y  rotate-z  scale  shear-x  shear-y  translate  } \\
-   Utility Macros & \cmd{with-rotation  with-translation  } \\
+   & \cmd{delay-frame exit no-loop pop-style push-style redraw start-loop } \\
   \end{tabularx}
 }
 \colouredbox{yellow}{
+  \section{Transform}
+  \begin{tabularx}{\hsize}{lX}
+   & \cmd{apply-matrix pop-matrix print-matrix push-matrix reset-matrix rotate rotate-x rotate-y rotate-z scale shear-x shear-y translate } \\
+   Utility Macros & \cmd{with-rotation with-translation } \\
+  \end{tabularx}
+}
+\colouredbox{blue2}{
   \section{Typography}
   \begin{tabularx}{\hsize}{lX}
-   Attributes & \cmd{text-align  text-leading  text-mode  text-size  text-width  } \\
-   Loading \& Displaying & \cmd{available-fonts  create-font  font-available?  load-font  text  text-char  text-font  text-num  } \\
-   Metrics & \cmd{text-ascent  text-descent  } \\
+   Attributes & \cmd{text-align text-leading text-mode text-size text-width } \\
+   Loading \& Displaying & \cmd{available-fonts create-font font-available? load-font text text-char text-font text-num } \\
+   Metrics & \cmd{text-ascent text-descent } \\
   \end{tabularx}
 }
 
-\colouredbox{blue2}{
-  \section{Sketch}
+\colouredbox{blue}{
+  \section{Sketch options}
   \begin{tabularx}{\hsize}{lX}
- Creation & \cmd{sketch defsketch} \\
- Control & \cmd{sketch-stop sketch-start sketch-close} \\
- State   & \cmd{sketch-state} \\
- Config Keywords & \cmd{:title :size :renderer} \\
- Draw Callback Keywords & \cmd{:setup :draw} \\
- Mouse Callback Keywords & \cmd{:mouse-pressed :mouse-released :mouse-moved :mouse-dragged :mouse-entered :mouse-exited :mouse-clicked} \\
+ Config Keywords & \cmd{:title :size :renderer :output-file :features :bgcolor :display :host :middleware} \\
+ Draw Callback Keywords & \cmd{:setup :draw :on-close :settings} \\
+ Mouse Callback Keywords & \cmd{:mouse-pressed :mouse-released :mouse-moved :mouse-dragged :mouse-entered :mouse-exited :mouse-clicked :mouse-wheel} \\
  Keyboard Callback Keywords & \cmd{:key-pressed :key-released :key-typed } \\
  Window Callback Keywords & \cmd{:focus-gained :focus-lost} \\
   \end{tabularx}
 }
 
-
 \colouredbox{grey}{
   \section{Reflection}
   \begin{tabularx}{\hsize}{lX}
-API Exploration & \cmd{show-cats show-fns show-meths} \\
-Version & \cmd{processing-version} \\
+API Exploration & \cmd{doc-cats doc-fns doc-meths} \\
   \end{tabularx}
 }
-
-\colouredbox{orange}{
-  \section{Helper Namespaces (not included by default)}
-  \begin{tabularx}{\hsize}{lX}
-quil.helpers.calc & \cmd{mul-add mode-range} \\
-quil.helpers.drawing & \cmd{line-join-points} \\
-quil.helpers.seqs & \cmd{range-incl indexed-range-incl indexed-range steps cycle-between tap seq->stream tally perlin-noise-seq} \\
-  \end{tabularx}
-}
-
-
-
- \begin{flushright}
-  \footnotesize
-  \rule{0.7\linewidth}{0.25pt}
-  \verb!$Revision: 1.0.0.0, $Date: 7th April, 2012!\\
-  \verb!Sam Aaron (sam.aaron gmail com)!
- \end{flushright}
 
 \end{document}
+
