@@ -57,18 +57,19 @@
         renderer        (:renderer opts)
         features        (set (:features opts))
 
-        opts (-> opts
-                 (update-in [:setup]
-                            #(fn []
-                               (->> (if renderer [renderer] [])
-                                    (concat sketch-size)
-                                    (apply size))
-                               (when % (%))))
-                 (update-in [:mouse-wheel]
-                            #(when %
-                               (fn []
-                                 ;; -1 need for compability to Clojure version
-                                 (% (* -1 (.-mouseScroll *applet*)))))))
+        setup (fn []
+                (->> (if renderer [renderer] [])
+                     (concat sketch-size)
+                     (apply size))
+                (when (:settings opts) ((:settings opts)))
+                (when (:setup opts) ((:setup opts))))
+        mouse-wheel (when (:mouse-wheel opts)
+                      ;; -1 need for compability with Clojure version
+                      #((:mouse-wheel opts) (* -1 (.-mouseScroll *applet*))))
+
+        opts (assoc opts
+                    :setup setup
+                    :mouse-wheel mouse-wheel)
         attach-function (fn [prc]
                           (bind-handlers prc opts)
                           (set! (.-quil prc) (atom nil))

@@ -2780,9 +2780,8 @@
     :subcategory "Attributes"
     :added "1.0"}
   no-smooth
-  "Draws all geometry with jagged (aliased) edges. Clojure: must be
-  called inside :settings function. ClojureScript: can be called
-  anywhere."
+  "Draws all geometry with jagged (aliased) edges. Must be called inside
+  :settings handler."
   [] (.noSmooth (current-graphics)))
 
 (defn
@@ -3809,8 +3808,7 @@
   down the frame rate of the application, but will enhance the visual
   refinement.
 
-  Clojure: must be called inside :settings function.
-  ClojureScript: can be called anywhere.
+  Must be called inside :settings handler.
 
   The level parameter (int) increases the level of smoothness with the
   P2D and P3D renderers. This is the level of over sampling applied to
@@ -4803,9 +4801,7 @@
    :settings       - cousin of :setup. A function to be called once when
                      setting sketch up. Should be used only for (smooth) and
                      (no-smooth). Due to Processing limitations these functions
-                     cannot be used neither in :setup nor in :draw.
-                     Not supported in clojurescript. In clojurescript smooth
-                     can be used anywhere."
+                     cannot be used neither in :setup nor in :draw."
   [app-name & options]
   (if (clj-compilation?)
     `(defapplet ~app-name ~@options)

@@ -12,7 +12,8 @@
 
 (q/defsketch redraw-on-key
   :size [500 200]
-  :setup q/no-loop
+  ; Just to try :settings instead of usual :setup
+  :settings q/no-loop
   :draw (fn []
           (q/fill 0)
           (q/background 220)
