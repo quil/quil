@@ -9,7 +9,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  [quil/processing-core "3.0.1"]
                  [quil/processing-pdf "3.0.1"]
                  [quil/processing-dxf "3.0.1"]
@@ -43,7 +43,7 @@
                    :output-path "target/gentest/cljs"
                    :rules :cljs}]}
 
-  :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs"]
+  :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs" "src/cljc"]
   :test-paths ["test/clj" "target/gentest/clj"]
   :resource-paths ["resources"]
 

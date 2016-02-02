@@ -1,7 +1,7 @@
 (ns ^{:doc "Quil middleware."}
   quil.middleware
   (:require [quil.middlewares.fun-mode :as fun-mode]
-            #+clj [quil.middlewares.pause-on-error :as pause-on-error]
+            #?(:clj [quil.middlewares.pause-on-error :as pause-on-error])
             [quil.middlewares.navigation-3d :as navigation-3d]
             [quil.middlewares.navigation-2d :as navigation-2d]
             ))
@@ -18,7 +18,7 @@
   [options]
   (fun-mode/fun-mode options))
 
-#+clj
+#?(:clj
 (defn ^{:requires-bindings false
         :category "Middleware"
         :subcategory nil
@@ -30,7 +30,7 @@
   May be good alternative to default '500ms pause if exception'
   behaviour."
   [options]
-  (pause-on-error/pause-on-error options))
+  (pause-on-error/pause-on-error options)))
 
 (defn ^{:requires-bindings false
         :category "Middleware"

@@ -10,8 +10,8 @@
   "Asserts that state map contains :navigation-2d object."
   [state]
   (when-not (:navigation-3d state)
-    (throw #+clj (RuntimeException. missing-navigation-key-error)
-           #+cljs (js/Error. missing-navigation-key-error))))
+    (throw #?(:clj (RuntimeException. missing-navigation-key-error)
+              :cljs (js/Error. missing-navigation-key-error)))))
 
 (defn- default-position
   "Default position configuration. Check default configuration in
