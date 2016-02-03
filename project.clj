@@ -43,8 +43,8 @@
                    :output-path "target/gentest/cljs"
                    :rules :cljs}]}
 
-  :source-paths ["src/clj" "target/gen/clj" "src/cljs" "target/gen/cljs" "src/cljc"]
-  :test-paths ["test/clj" "target/gentest/clj"]
+  :source-paths ["src/clj" "src/cljs" "src/cljc"]
+  :test-paths ["test/clj" "test/cljc"]
   :resource-paths ["resources"]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
@@ -65,7 +65,7 @@
                                             [org.clojure/clojurescript "1.7.107"]]
 
                              :cljsbuild
-                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "target/gentest/cljs" "src/cljs"]
+                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "test/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
