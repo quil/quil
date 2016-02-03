@@ -1,22 +1,22 @@
-#+clj
-(ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
-  quil.core
-  (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
-           [processing.opengl PShader]
-           [java.awt.event KeyEvent])
-  (:require quil.sketch
-            [clojure.set]
-            [quil.helpers.docs :as docs]
-            [quil.util :as u :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
-                               absolute-path clj-compilation?]]
-            [quil.applet :refer [current-applet applet-state applet defapplet resolve-renderer]]))
+#?(:clj
+   (ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
+       quil.core
+     (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+              [processing.opengl PShader]
+              [java.awt.event KeyEvent])
+     (:require quil.sketch
+               [clojure.set]
+               [quil.helpers.docs :as docs]
+               [quil.util :as u :refer [int-like? resolve-constant-key length-of-longest-key gen-padding print-definition-list
+                                        absolute-path clj-compilation?]]
+               [quil.applet :refer [current-applet applet-state applet defapplet resolve-renderer]]))
 
-#+cljs
-(ns quil.core
-  (:require clojure.string
-            org.processingjs.Processing
-            [quil.sketch :as applet :refer [current-applet resolve-renderer]]
-            [quil.util :as u :refer [resolve-constant-key] :include-macros true]))
+   :cljs
+   (ns quil.core
+     (:require clojure.string
+               org.processingjs.Processing
+               [quil.sketch :as applet :refer [current-applet resolve-renderer]]
+               [quil.util :as u :refer [resolve-constant-key] :include-macros true])))
 
 (def ^{:dynamic true
        :private true}
@@ -38,12 +38,12 @@
   (.beginDraw (current-graphics))."
   []
   (or *graphics*
-    #+clj (.-g (current-applet))
-    #+cljs (current-applet)))
+      #?(:clj (.-g (current-applet))
+         :cljs (current-applet))))
 
 ;; -------------------- PConstants section -----------------------
 
-(u/generate-quil-constants #+clj :clj #+cljs :cljs
+(u/generate-quil-constants #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
@@ -73,8 +73,8 @@
  cursor-modes (:arrow :cross :hand :move :text :wait))
 
 ;;; Useful trig constants
-#+clj (def PI  (float Math/PI))
-#+cljs (def PI  (.-PI js/Math))
+#?(:clj (def PI  (float Math/PI))
+   :cljs (def PI  (.-PI js/Math)))
 (def HALF-PI    (/ PI (float 2.0)))
 (def THIRD-PI   (/ PI (float 3.0)))
 (def QUARTER-PI (/ PI (float 4.0)))
@@ -83,75 +83,75 @@
 (def DEG-TO-RAD (/ PI (float 180.0)))
 (def RAD-TO-DEG (/ (float 180.0) PI))
 
-#+clj
-(def  ^{:private true}
-  KEY-CODES {KeyEvent/VK_UP      :up
-             KeyEvent/VK_DOWN    :down
-             KeyEvent/VK_LEFT    :left
-             KeyEvent/VK_RIGHT   :right
-             KeyEvent/VK_ALT     :alt
-             KeyEvent/VK_CONTROL :control
-             KeyEvent/VK_SHIFT   :shift
-             KeyEvent/VK_WINDOWS :command
-             KeyEvent/VK_META    :command
-             KeyEvent/VK_F1      :f1
-             KeyEvent/VK_F2      :f2
-             KeyEvent/VK_F3      :f3
-             KeyEvent/VK_F4      :f4
-             KeyEvent/VK_F5      :f5
-             KeyEvent/VK_F6      :f6
-             KeyEvent/VK_F7      :f7
-             KeyEvent/VK_F8      :f8
-             KeyEvent/VK_F9      :f9
-             KeyEvent/VK_F10     :f10
-             KeyEvent/VK_F11     :f11
-             KeyEvent/VK_F12     :f12
-             KeyEvent/VK_F13     :f13
-             KeyEvent/VK_F14     :f14
-             KeyEvent/VK_F15     :f15
-             KeyEvent/VK_F16     :f16
-             KeyEvent/VK_F17     :f17
-             KeyEvent/VK_F18     :f18
-             KeyEvent/VK_F19     :f19
-             KeyEvent/VK_F20     :f20
-             KeyEvent/VK_F21     :f21
-             KeyEvent/VK_F22     :f22
-             KeyEvent/VK_F23     :f23
-             KeyEvent/VK_F24     :f24})
+#?(:clj
+   (def  ^{:private true}
+     KEY-CODES {KeyEvent/VK_UP      :up
+                KeyEvent/VK_DOWN    :down
+                KeyEvent/VK_LEFT    :left
+                KeyEvent/VK_RIGHT   :right
+                KeyEvent/VK_ALT     :alt
+                KeyEvent/VK_CONTROL :control
+                KeyEvent/VK_SHIFT   :shift
+                KeyEvent/VK_WINDOWS :command
+                KeyEvent/VK_META    :command
+                KeyEvent/VK_F1      :f1
+                KeyEvent/VK_F2      :f2
+                KeyEvent/VK_F3      :f3
+                KeyEvent/VK_F4      :f4
+                KeyEvent/VK_F5      :f5
+                KeyEvent/VK_F6      :f6
+                KeyEvent/VK_F7      :f7
+                KeyEvent/VK_F8      :f8
+                KeyEvent/VK_F9      :f9
+                KeyEvent/VK_F10     :f10
+                KeyEvent/VK_F11     :f11
+                KeyEvent/VK_F12     :f12
+                KeyEvent/VK_F13     :f13
+                KeyEvent/VK_F14     :f14
+                KeyEvent/VK_F15     :f15
+                KeyEvent/VK_F16     :f16
+                KeyEvent/VK_F17     :f17
+                KeyEvent/VK_F18     :f18
+                KeyEvent/VK_F19     :f19
+                KeyEvent/VK_F20     :f20
+                KeyEvent/VK_F21     :f21
+                KeyEvent/VK_F22     :f22
+                KeyEvent/VK_F23     :f23
+                KeyEvent/VK_F24     :f24})
 
-#+cljs
-(def ^{:private true}
-  KEY-CODES {38 :up
-             40 :down
-             37 :left
-             39 :right
-             18 :alt
-             17 :control
-             16 :shift
-             157 :command
-             112 :f1
-             113 :f2
-             114 :f3
-             115 :f4
-             116 :f5
-             117 :f6
-             118 :f7
-             119 :f8
-             120 :f9
-             121 :f10
-             122 :f11
-             123 :f12})
+   :cljs
+   (def ^{:private true}
+     KEY-CODES {38 :up
+                40 :down
+                37 :left
+                39 :right
+                18 :alt
+                17 :control
+                16 :shift
+                157 :command
+                112 :f1
+                113 :f2
+                114 :f3
+                115 :f4
+                116 :f5
+                117 :f6
+                118 :f7
+                119 :f8
+                120 :f9
+                121 :f10
+                122 :f11
+                123 :f12}))
 
 ;; ------------------ end PConstants section ---------------------
 
-#+cljs
-(defn
-  ^{:require-bindings true
-    :category "Output"
-    :subcategory "Text area"
-    :added "1.0"}
-  prc-println
-  "Writes to the text area of the Processing environment's console.
+#?(:cljs
+   (defn
+     ^{:require-bindings true
+       :category "Output"
+       :subcategory "Text area"
+       :added "1.0"}
+     prc-println
+     "Writes to the text area of the Processing environment's console.
   This is often helpful for looking at the data a program is producing.
   Each call to this function creates a new line of output.
   Individual elements can be separated with quotes (\"\") and joined with the string concatenation operator (+).
@@ -159,38 +159,39 @@
   This is often helpful for looking at the data a program is producing.
   A new line is put between each element of the array. This function can only print 1D arrays,
   but can test to see if the content are null or not null for 2+ dimensional arrays."
-  [msg]
-  (.println (current-applet) msg))
+     [msg]
+     (.println (current-applet) msg)))
 
-#+cljs
-(defn
-  ^{:require-bindings true
-    :category "Output"
-    :subcategory "Text area"
-    :added "1.0"}
-  prc-print
-  "Writes to the console area of the Processing environment.
+#?(:cljs
+   (defn
+     ^{:require-bindings true
+       :category "Output"
+       :subcategory "Text area"
+       :added "1.0"}
+     prc-print
+     "Writes to the console area of the Processing environment.
   This is often helpful for looking at the data a program is producing.
   The companion function println() works like print(), but creates a new line of text for each call to the function.
    Individual elements can be separated with quotes (\"\") and joined with the addition operator (+). "
-  [msg]
-  (.print (current-applet) msg))
+     [msg]
+     (.print (current-applet) msg)))
 
-#+cljs
-(defn
-  ^{:requires-bindings true
-    :processing-name "getSketchById()"
-    :category nil
-    :subcategory nil
-    :added "1.0"}
-  get-sketch-by-id
-  "Returns sketch object by id of canvas element of sketch."
-  [id]
-  (.getInstanceById js/Processing id))
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "getSketchById()"
+       :category nil
+       :subcategory nil
+       :added "1.0"}
+     get-sketch-by-id
+     "Returns sketch object by id of canvas element of sketch."
+     [id]
+     (.getInstanceById js/Processing id)))
 
-(defmacro with-sketch [applet & body]
-  (when-not (clj-compilation?)
-    `(quil.sketch/with-sketch ~applet ~@body)))
+#?(:clj
+   (defmacro with-sketch [applet & body]
+     (when-not (clj-compilation?)
+       `(quil.sketch/with-sketch ~applet ~@body))))
 
 (defn
   ^{:requires-bindings true
@@ -205,8 +206,8 @@
   (state :foo) ;=> 1
   (swap! (state-atom) update-in [:foo] inc)
   (state :foo) ;=> 2"
-  #+clj ([] (-> (current-applet) meta :state))
-  #+cljs ([] (. (current-applet) -quil)))
+  #?(:clj ([] (-> (current-applet) meta :state))
+     :cljs ([] (. (current-applet) -quil))))
 
 (defn
   ^{:requires-bindings true
@@ -225,8 +226,8 @@
 
   ([key] (let [state (state)]
            (when-not (contains? state key)
-             (throw #+clj (Exception. (str "Unable to find state with key: " key))
-                    #+cljs (js/Error (str "Unable to find state with key: " key))))
+             (throw #?(:clj (Exception. (str "Unable to find state with key: " key))
+                       :cljs (js/Error (str "Unable to find state with key: " key)))))
            (get state key))))
 
 (defn
@@ -246,31 +247,31 @@
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name "abs()"
-    :category "Math"
-    :subcategory "Calculation"
-    :added "1.0"}
-  abs-int
-  "Calculates the absolute value (magnitude) of a number. The absolute
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "abs()"
+       :category "Math"
+       :subcategory "Calculation"
+       :added "1.0"}
+     abs-int
+     "Calculates the absolute value (magnitude) of a number. The absolute
   value of a number is always positive. Takes and returns an int."
-  [n]
-  (PApplet/abs (int n)))
+     [n]
+     (PApplet/abs (int n))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name "abs()"
-    :category "Math"
-    :subcategory "Calculation"
-    :added "1.0"}
-  abs-float
-  "Calculates the absolute value (magnitude) of a number. The absolute
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "abs()"
+       :category "Math"
+       :subcategory "Calculation"
+       :added "1.0"}
+     abs-float
+     "Calculates the absolute value (magnitude) of a number. The absolute
   value of a number is always positive. Takes and returns a float."
-  [n]
-  (PApplet/abs (float n)))
+     [n]
+     (PApplet/abs (float n))))
 
 
 (defn
@@ -283,13 +284,13 @@
   "Calculates the absolute value (magnitude) of a number. The
   absolute value of a number is always positive. Dynamically casts to
   an int or float appropriately"
-    [n]
-    #+clj
-    (if (int-like? n)
-      (abs-int n)
-      (abs-float n))
-    #+cljs
-    (.abs (current-applet) n))
+  [n]
+  #?(:clj
+     (if (int-like? n)
+       (abs-int n)
+       (abs-float n))
+     :cljs
+     (.abs (current-applet) n)))
 
 (defn
   ^{:requires-bindings false
@@ -302,8 +303,8 @@
   function expects the values in the range of -1 to 1 and values are
   returned in the range 0 to Math/PI (3.1415927)."
   [n]
-  #+clj (PApplet/acos (float n))
-  #+cljs (.acos (current-applet) n))
+  #?(:clj (PApplet/acos (float n))
+     :cljs (.acos (current-applet) n)))
 
 (defn
   ^{:requires-bindings true
@@ -363,8 +364,8 @@
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
   ([rgb]
-    #+clj (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb))
-    #+cljs (ambient-float rgb))
+   #?(:clj (if (int-like? rgb) (ambient-int rgb) (ambient-float rgb))
+      :cljs (ambient-float rgb)))
   ([x y z] (ambient-float x y z)))
 
 (defn
@@ -399,11 +400,11 @@
   parameters. This is very slow because it will try to calculate the
   inverse of the transform, so avoid it whenever possible. The
   equivalent function in OpenGL is glMultMatrix()."
-  #+clj
-  ([n00 n01 n02 n10 n11 n12]
-     (.applyMatrix (current-graphics)
-                   (float n00) (float n01) (float n02)
-                   (float n10) (float n11) (float n12)))
+  #?(:clj
+     ([n00 n01 n02 n10 n11 n12]
+      (.applyMatrix (current-graphics)
+                    (float n00) (float n01) (float n02)
+                    (float n10) (float n11) (float n12))))
   ([n00 n01 n02 n03
     n10 n11 n12 n13
     n20 n21 n22 n23
@@ -430,11 +431,11 @@
     (.arc (current-applet) (float x) (float y) (float width) (float height)
         (float start) (float stop)))
 
-  #+clj
-  ([x y width height start stop mode]
-    (let [arc-mode (resolve-constant-key mode arc-modes)]
-      (.arc (current-applet) (float x) (float y) (float width) (float height)
-        (float start) (float stop) (int arc-mode)))))
+  #?(:clj
+     ([x y width height start stop mode]
+      (let [arc-mode (resolve-constant-key mode arc-modes)]
+        (.arc (current-applet) (float x) (float y) (float width) (float height)
+              (float start) (float stop) (int arc-mode))))))
 
 (defn
   ^{:requires-bindings false
@@ -447,8 +448,8 @@
   expects the values in the range of -1 to 1 and values are returned
   in the range -PI/2 to PI/2."
   [n]
-  #+clj (PApplet/asin (float n))
-  #+cljs (.asin (current-applet) n))
+  #?(:clj (PApplet/asin (float n))
+     :cljs (.asin (current-applet) n)))
 
 (defn
   ^{:requires-bindings false
@@ -462,8 +463,8 @@
   Infinity (exclusive) and values are returned in the range -PI/2 to
   PI/2 ."
   [n]
-  #+clj (PApplet/atan (float n))
-  #+cljs (.atan (current-applet) n))
+  #?(:clj (PApplet/atan (float n))
+     :cljs (.atan (current-applet) n)))
 
 (defn
   ^{:requires-bindings false
@@ -480,8 +481,8 @@
   and the x-coordinate is the second due to the structure of
   calculating the tangent."
   [y x]
-  #+clj (PApplet/atan2 (float y) (float x))
-  #+cljs (.atan2 (current-applet) y x))
+  #?(:clj (PApplet/atan2 (float y) (float x))
+     :cljs (.atan2 (current-applet) y x)))
 
 (defn
   ^{:requires-bindings false
@@ -501,8 +502,8 @@
   their computer. Only fonts that can legally be distributed should be
   included with a sketch."
   []
-  #+clj (seq (PFont/list))
-  #+cljs (seq (.list js/PFont)))
+  #?(:clj (seq (PFont/list))
+     :cljs (seq (.list js/PFont))))
 
 (defn
   ^{:requires-bindings true
@@ -557,10 +558,10 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   create-graphics. Converts args to floats."
-  #+clj ([rgb] (if (int-like? rgb) (background-int rgb) (background-float rgb)))
-  #+cljs ([rgb] (.background (current-graphics) rgb))
-  #+clj ([rgb alpha] (if (int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
-  #+cljs ([rgb alpha] (.background (current-graphics) rgb alpha))
+  #?(:clj ([rgb] (if (int-like? rgb) (background-int rgb) (background-float rgb)))
+     :cljs ([rgb] (.background (current-graphics) rgb)))
+  #?(:clj ([rgb alpha] (if (int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
+     :cljs ([rgb alpha] (.background (current-graphics) rgb alpha)))
   ([r g b] (background-float r g b))
   ([r g b a] (background-float r g b a)))
 
@@ -608,15 +609,15 @@
   []
   (.beginContour (current-graphics)))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "beginRaw()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  begin-raw
-  "Enables the creation of vectors from 3D data. Requires
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "beginRaw()"
+       :category "Output"
+       :subcategory "Files"
+       :added "1.0"}
+     begin-raw
+     "Enables the creation of vectors from 3D data. Requires
   corresponding end-raw command. These commands will grab the shape
   data just before it is rendered to the screen. At this stage, your
   entire scene is nothing but a long list of individual lines and
@@ -624,8 +625,8 @@
   be made up of hundreds of triangles, rather than a single object. Or
   that a multi-segment line shape (such as a curve) will be rendered
   as individual segments."
-  ([renderer filename]
-     (.beginRaw (current-applet) (resolve-renderer renderer) (absolute-path filename))))
+     ([renderer filename]
+      (.beginRaw (current-applet) (resolve-renderer renderer) (absolute-path filename)))))
 
 (defn
   ^{:requires-bindings true
@@ -764,11 +765,11 @@
   byte. When converting an int to a string, it is possible to specify
   the number of digits used."
   ([val]
-    #+clj (PApplet/binary (int val))
-    #+cljs (.binary (current-applet) val))
+   #?(:clj (PApplet/binary (int val))
+      :cljs (.binary (current-applet) val)))
   ([val num-digits]
-    #+clj (PApplet/binary (int val) (int num-digits))
-    #+cljs (.binary (current-applet) val num-digits)))
+   #?(:clj (PApplet/binary (int val) (int num-digits))
+      :cljs (.binary (current-applet) val num-digits))))
 
 (defn
   ^{:requires-bindings true
@@ -859,18 +860,18 @@
                 Photoshop."
   [c1 c2 mode]
   (let [mode (resolve-constant-key mode blend-modes)]
-    #+clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode))
-    #+cljs (.blendColor (current-graphics) c1 c2 mode)))
+    #?(:clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode))
+       :cljs (.blendColor (current-graphics) c1 c2 mode))))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "blendMode()"
-    :category "Image"
-    :subcategory "Rendering"
-    :added "2.0"}
-  blend-mode
-  "Blends the pixels in the display window according to the defined mode.
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "blendMode()"
+       :category "Image"
+       :subcategory "Rendering"
+       :added "2.0"}
+     blend-mode
+     "Blends the pixels in the display window according to the defined mode.
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
@@ -893,9 +894,9 @@
   modes are not supported by this function.
 
   factor is alpha value of pixel being drawed"
-  ([mode]
-    (let [mode (resolve-constant-key mode blend-modes)]
-      (.blendMode (current-graphics) mode))))
+     ([mode]
+      (let [mode (resolve-constant-key mode blend-modes)]
+        (.blendMode (current-graphics) mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -975,41 +976,41 @@
   the value of the parameter. For example, (ceil 9.03) returns the
   value 10."
   [n]
-  #+clj (PApplet/ceil (float n))
-  #+cljs (.ceil (current-applet) n))
+  #?(:clj (PApplet/ceil (float n))
+     :cljs (.ceil (current-applet) n)))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "clear()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "2.3.0"}
-  clear
-  "Clears the pixels within a buffer. This function only works on
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "clear()"
+       :category "Color"
+       :subcategory "Setting"
+       :added "2.3.0"}
+     clear
+     "Clears the pixels within a buffer. This function only works on
   graphics objects created with the (create-graphics) function meaning
   that you should call it only inside (with-graphics) macro. Unlike
   the main graphics context (the display window), pixels in additional
   graphics areas created with (create-graphics) can be entirely or
   partially transparent. This function clears everything in a graphics
   object to make all of the pixels 100% transparent."
-  []
-  (.clear (current-graphics)))
+     []
+     (.clear (current-graphics))))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "clip()"
-    :category "Rendering"
-    :subcategory nil
-    :added "2.3.0"}
-  clip
-  "Limits the rendering to the boundaries of a rectangle defined by
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "clip()"
+       :category "Rendering"
+       :subcategory nil
+       :added "2.3.0"}
+     clip
+     "Limits the rendering to the boundaries of a rectangle defined by
   the parameters. The boundaries are drawn based on the state of
   the (image-mode) fuction, either :corner, :corners, or :center.
   To disable use (no-clip)."
-  [x y w h]
-  (.clip (current-graphics) (float x) (float y) (float w) (float h)))
+     [x y w h]
+     (.clip (current-graphics) (float x) (float y) (float w) (float h))))
 
 (defn
   ^{:requires-bindings true
@@ -1062,31 +1063,31 @@
      (let [mode (resolve-constant-key mode color-modes)]
        (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name "constrain()"
-    :category "Math"
-    :subcategory "Calculation"
-    :added "1.0"}
-  constrain-float
-  "Constrains a value to not exceed a maximum and minimum value. All
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "constrain()"
+       :category "Math"
+       :subcategory "Calculation"
+       :added "1.0"}
+     constrain-float
+     "Constrains a value to not exceed a maximum and minimum value. All
   args are cast to floats."
-  [amt low high]
-  (PApplet/constrain (float amt) (float low) (float high)))
+     [amt low high]
+     (PApplet/constrain (float amt) (float low) (float high))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name "constrain()"
-    :category "Math"
-    :subcategory "Calculation"
-    :added "1.0"}
-  constrain-int
-  "Constrains a value to not exceed a maximum and minimum value. All
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "constrain()"
+       :category "Math"
+       :subcategory "Calculation"
+       :added "1.0"}
+     constrain-int
+     "Constrains a value to not exceed a maximum and minimum value. All
   args are cast to ints."
-  [amt low high]
-  (PApplet/constrain (int amt) (int low) (int high)))
+     [amt low high]
+     (PApplet/constrain (int amt) (int low) (int high))))
 
 
 (defn
@@ -1098,11 +1099,11 @@
   constrain
   "Constrains a value to not exceed a maximum and minimum value."
   [amt low high]
-  #+clj
-  (if (int-like? amt)
-    (constrain-int amt low high)
-    (constrain-float amt low high))
-  #+cljs (.constrain (current-applet) amt low high))
+  #?(:clj
+     (if (int-like? amt)
+       (constrain-int amt low high)
+       (constrain-float amt low high))
+     :cljs (.constrain (current-applet) amt low high)))
 
 (defn
   ^{:requires-bindings true
@@ -1141,23 +1142,23 @@
   of the angle parameter to be provided in radians (values from 0 to
   Math/PI*2). Values are returned in the range -1 to 1."
   [angle]
-  #+clj (PApplet/cos (float angle))
-  #+cljs (.cos (current-applet) angle))
+  #?(:clj (PApplet/cos (float angle))
+     :cljs (.cos (current-applet) angle)))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name nil
-    :category "Typography"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  font-available?
-  "Returns true if font (specified as a string) is available on this
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name nil
+       :category "Typography"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     font-available?
+     "Returns true if font (specified as a string) is available on this
   system, false otherwise"
-  [font-str]
-  (if (some #{font-str} (available-fonts))
-    true
-    false))
+     [font-str]
+     (if (some #{font-str} (available-fonts))
+       true
+       false)))
 
 (defn
   ^{:requires-bindings true
@@ -1227,13 +1228,13 @@
   using save to write a PNG or TGA file, the transparency of the
   graphics object will be honored."
   ([w h]
-     (.createGraphics (current-applet) (int w) (int h) #+cljs :p2d))
+   (.createGraphics (current-applet) (int w) (int h) #?(:cljs :p2d)))
   ([w h renderer]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
+   (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)))
   ([w h renderer path]
-     (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
-                      #+clj (absolute-path path)
-                      #+cljs path)))
+   (.createGraphics (current-applet) (int w) (int h) (resolve-renderer renderer)
+                    #?(:clj (absolute-path path)
+                       :cljs path))))
 
 (defn
   ^{:requires-bindings true
@@ -1296,8 +1297,8 @@
   ([cursor-mode]
    (let [cursor-mode (resolve-constant-key cursor-mode cursor-modes)]
      (.cursor (current-applet)
-              #+clj (int cursor-mode)
-              #+cljs (str cursor-mode)))))
+              #?(:clj (int cursor-mode)
+                 :cljs (str cursor-mode))))))
 
 (defn
   ^{:requires-bindings true
@@ -1427,8 +1428,8 @@
   day
   "Get the current day of the month (1 through 31)."
   []
-  #+clj (PApplet/day)
-  #+cljs (.day (current-applet)))
+  #?(:clj (PApplet/day)
+     :cljs (.day (current-applet))))
 
 (defn
   ^{:requires-bindings false
@@ -1444,8 +1445,8 @@
   trigonometric methods in Processing require their parameters to be
   specified in radians."
   [radians]
-  #+clj (PApplet/degrees (float radians))
-  #+cljs (.degrees (current-applet) radians))
+  #?(:clj (PApplet/degrees (float radians))
+     :cljs (.degrees (current-applet) radians)))
 
 (defn
   ^{:requires-bindings true
@@ -1496,11 +1497,11 @@
   dist
   "Calculates the distance between two points"
   ([x1 y1 x2 y2]
-    #+clj (PApplet/dist (float x1) (float y1) (float x2) (float y2))
-    #+cljs (.dist (current-applet) x1 y1 x2 y2))
+   #?(:clj (PApplet/dist (float x1) (float y1) (float x2) (float y2))
+      :cljs (.dist (current-applet) x1 y1 x2 y2)))
   ([x1 y1 z1 x2 y2 z2]
-    #+clj (PApplet/dist (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))
-    #+cljs (.dist (current-applet) x1 y1 z1 x2 y2 z2)))
+   #?(:clj (PApplet/dist (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))
+      :cljs (.dist (current-applet) x1 y1 z1 x2 y2 z2))))
 
 (defn
   ^{:requires-bindings true
@@ -1579,8 +1580,8 @@
   If passed one arg - it is assumed to be an int (i.e. a color),
   multiple args are converted to floats."
   ([c]
-    #+clj (if (int-like? c) (emissive-int c) (emissive-float c))
-    #+cljs (emissive-float c))
+   #?(:clj (if (int-like? c) (emissive-int c) (emissive-float c))
+      :cljs (emissive-float c)))
   ([r g b] (emissive-float r g b)))
 
 (defn
@@ -1635,12 +1636,12 @@
   close the shape (to connect the beginning and the end)."
   ([] (.endShape (current-graphics)))
   ([mode]
-     (when-not (= :close mode)
-       #+clj (throw (Exception. (str "Unknown mode value: " mode ". Expected :close")))
-       #+cljs nil)
-     (.endShape (current-graphics)
-                #+clj PApplet/CLOSE
-                #+cljs 2)))
+   (when-not (= :close mode)
+     #?(:clj (throw (Exception. (str "Unknown mode value: " mode ". Expected :close")))
+        :cljs nil))
+   (.endShape (current-graphics)
+              #?(:clj PApplet/CLOSE
+                 :cljs 2))))
 
 (defn
   ^{:requires-bindings true
@@ -1666,8 +1667,8 @@
   "Returns Euler's number e (2.71828...) raised to the power of the
   value parameter."
   [val]
-  #+clj (PApplet/exp (float val))
-  #+cljs (.exp (current-applet) val))
+  #?(:clj (PApplet/exp (float val))
+     :cljs (.exp (current-applet) val)))
 
 (defn- clear-no-fill-cljs
   "Sets custom property on graphcis object indicating that it has
@@ -1686,16 +1687,16 @@
   will specify that all subsequent shapes will be filled with orange."
   ([gray]
    (.fill (current-graphics) (float gray))
-   #+cljs (clear-no-fill-cljs (current-graphics)))
+   #?(:cljs (clear-no-fill-cljs (current-graphics))))
   ([gray alpha]
    (.fill (current-graphics) (float gray) (float alpha))
-   #+cljs (clear-no-fill-cljs (current-graphics)))
+   #?(:cljs (clear-no-fill-cljs (current-graphics))))
   ([r g b]
    (.fill (current-graphics) (float r) (float g) (float b))
-   #+cljs (clear-no-fill-cljs (current-graphics)))
+   #?(:cljs (clear-no-fill-cljs (current-graphics))))
   ([r g b alpha]
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
-   #+cljs (clear-no-fill-cljs (current-graphics))))
+   #?(:cljs (clear-no-fill-cljs (current-graphics)))))
 
 (defn
   ^{:requires-bindings true
@@ -1707,10 +1708,10 @@
   "Sets the color used to fill shapes."
   ([rgb]
    (.fill (current-graphics) (unchecked-int rgb))
-   #+cljs (clear-no-fill-cljs (current-graphics)))
+   #?(:cljs (clear-no-fill-cljs (current-graphics))))
   ([rgb alpha]
    (.fill (current-graphics) (unchecked-int rgb) (float alpha))
-   #+cljs (clear-no-fill-cljs (current-graphics))))
+   #?(:cljs (clear-no-fill-cljs (current-graphics)))))
 
 (defn
   ^{:requires-bindings true
@@ -1721,31 +1722,31 @@
   fill
   "Sets the color used to fill shapes."
   ([rgb]
-    #+clj (if (int-like? rgb) (fill-int rgb) (fill-float rgb))
-    #+cljs (fill-float rgb))
+   #?(:clj (if (int-like? rgb) (fill-int rgb) (fill-float rgb))
+      :cljs (fill-float rgb)))
 
   ([rgb alpha]
-    #+clj (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha))
-    #+cljs (fill-float rgb alpha))
+   #?(:clj (if (int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha))
+      :cljs (fill-float rgb alpha)))
 
   ([r g b] (fill-float r g b))
   ([r g b a] (fill-float r g b a)))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "displayDensity()"
-    :category "Environment"
-    :subcategory nil
-    :added "2.3.0"}
-  display-density
-  "This function returns the number 2 if the screen is a high-density
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "displayDensity()"
+       :category "Environment"
+       :subcategory nil
+       :added "2.3.0"}
+     display-density
+     "This function returns the number 2 if the screen is a high-density
   screen (called a Retina display on OS X or high-dpi on Windows and
   Linux) and a 1 if not. This information is useful for a program to
   adapt to run at double the pixel density on a screen that supports
   it. Can be used in conjunction with (pixel-density)"
-  ([] (.displayDensity (current-applet)))
-  ([display] (.displayDensity (current-applet) display)))
+     ([] (.displayDensity (current-applet)))
+     ([display] (.displayDensity (current-applet) display))))
 
 (defn
   ^{:requires-bindings true
@@ -1788,17 +1789,17 @@
      (let [mode (resolve-constant-key mode filter-modes)]
        (.filter (current-graphics) (int mode) (float level)))))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "filter()"
-    :category "Image"
-    :subcategory "Pixels"
-    :added "2.0"}
-  filter-shader
-  "Originally named filter in Processing Language.
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "filter()"
+       :category "Image"
+       :subcategory "Pixels"
+       :added "2.0"}
+     filter-shader
+     "Originally named filter in Processing Language.
   Filters the display window with given shader (only in :p2d and :p3d modes)."
-  [^PShader shader-obj] (.filter (current-graphics) shader-obj))
+     [^PShader shader-obj] (.filter (current-graphics) shader-obj)))
 
 (defn
   ^{:requires-bindings false
@@ -1810,8 +1811,8 @@
   "Calculates the closest int value that is less than or equal to the
   value of the parameter. For example, (floor 9.03) returns the value 9."
   [n]
-  #+clj (PApplet/floor (float n))
-  #+cljs (.floor (current-applet) n))
+  #?(:clj (PApplet/floor (float n))
+     :cljs (.floor (current-applet) n)))
 
 (defn
   ^{:requires-bindings true
@@ -1834,8 +1835,8 @@
   displayed since the program started. Inside setup() the value is 0
   and after the first iteration of draw it is 1, etc."
   []
-  #+clj (.frameCount (current-applet))
-  #+cljs (.-frameCount (current-applet)))
+  #?(:clj (.frameCount (current-applet))
+     :cljs (.-frameCount (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -1846,8 +1847,8 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  #+clj (.frameRate (current-applet))
-  #+cljs (.-__frameRate (current-applet)))
+  #?(:clj (.frameRate (current-applet))
+     :cljs (.-__frameRate (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -1864,7 +1865,7 @@
   is 60 frames per second."
   [new-rate]
   (do
-    #+cljs (reset! (.-target-frame-rate (current-applet)) new-rate)
+    #?(:cljs (reset! (.-target-frame-rate (current-applet)) new-rate))
     (.frameRate (current-applet) (float new-rate))))
 
 (defn
@@ -1933,11 +1934,11 @@
   convert to the String \"FF006699\". This function can help make your
   geeky debugging sessions much happier. "
   ([val]
-    #+clj (PApplet/hex (int val))
-    #+cljs (.hex (current-applet) val))
+   #?(:clj (PApplet/hex (int val))
+      :cljs (.hex (current-applet) val)))
   ([val num-digits]
-    #+clj (PApplet/hex (int val) (int num-digits))
-    #+cljs (.hex (current-applet) val num-digits)))
+   #?(:clj (PApplet/hex (int val) (int num-digits))
+      :cljs (.hex (current-applet) val num-digits))))
 
 (defn
   ^{:requires-bindings true
@@ -2031,8 +2032,8 @@
   hour
   "Returns the current hour as a value from 0 - 23."
   []
-  #+clj (PApplet/hour)
-  #+cljs (.hour (current-applet)))
+  #?(:clj (PApplet/hour)
+     :cljs (.hour (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2067,12 +2068,12 @@
   Starting with release 0124, when using the default (JAVA2D)
   renderer, smooth will also improve image quality of resized
   images."
-  (#+clj [^PImage img x y]
-   #+cljs [img x y]
+  (#?(:clj [^PImage img x y]
+      :cljs [img x y])
    (.image (current-graphics) img (float x) (float y)))
 
-  (#+clj [^PImage img x y c d]
-   #+cljs [img x y c d]
+  (#?(:clj [^PImage img x y c d]
+      :cljs [img x y c d])
    (.image (current-graphics) img (float x) (float y) (float c) (float d))))
 
 (defn
@@ -2229,8 +2230,8 @@
   is convenient for creating motion along a straight path and for
   drawing dotted lines."
   [start stop amt]
-  #+clj (PApplet/lerp (float start) (float stop) (float amt))
-  #+cljs (.lerp (current-applet) start stop amt))
+  #?(:clj (PApplet/lerp (float start) (float stop) (float amt))
+     :cljs (.lerp (current-applet) start stop amt)))
 
 (defn
   ^{:requires-bindings true
@@ -2386,8 +2387,8 @@
   "Calculates the natural logarithm (the base-e logarithm) of a
   number. This function expects the values greater than 0.0."
   [val]
-  #+clj (PApplet/log (float val))
-  #+cljs (.log (current-applet) val))
+  #?(:clj (PApplet/log (float val))
+     :cljs (.log (current-applet) val)))
 
 (defn
   ^{:requires-bindings false
@@ -2402,11 +2403,11 @@
   can be thought of as the distance from coordinate (0,0) to its (x,y)
   value. Therefore, mag is a shortcut for writing (dist 0 0 x y)."
   ([a b]
-    #+clj (PApplet/mag (float a) (float b))
-    #+cljs (.mag (current-applet) a b))
+   #?(:clj (PApplet/mag (float a) (float b))
+      :cljs (.mag (current-applet) a b)))
   ([a b c]
-    #+clj (PApplet/mag (float a) (float b) (float c))
-    #+cljs (.mag (current-applet) a b c)))
+   #?(:clj (PApplet/mag (float a) (float b) (float c))
+      :cljs (.mag (current-applet) a b c))))
 
 (defn
   ^{:requires-bindings false
@@ -2420,18 +2421,18 @@
   Numbers outside the range are not clamped to 0 and 1, because
   out-of-range values are often intentional and useful."
   [val low1 high1 low2 high2]
-  #+clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
-  #+cljs (.map (current-applet) val low1 high1 low2 high2))
+  #?(:clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
+     :cljs (.map (current-applet) val low1 high1 low2 high2)))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name "PImage.mask()"
-    :category "Image"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  mask-image
-  "Masks part of an image from displaying by loading another image and
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "PImage.mask()"
+       :category "Image"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     mask-image
+     "Masks part of an image from displaying by loading another image and
   using it as an alpha channel.  This mask image should only contain
   grayscale data, but only the blue color channel is used. The mask
   image needs to be the same size as the image to which it is
@@ -2443,8 +2444,8 @@
 
   This method is useful for creating dynamically generated alpha
   masks."
-  ([^PImage mask] (mask-image (current-graphics) mask))
-  ([^PImage img ^PImage mask] (.mask img mask)))
+     ([^PImage mask] (mask-image (current-graphics) mask))
+     ([^PImage img ^PImage mask] (.mask img mask))))
 
 (defn
   ^{:requires-bindings true
@@ -2468,8 +2469,8 @@
   minute
   "Returns the current minute as a value from 0 - 59"
   []
-  #+clj (PApplet/minute)
-  #+cljs (.minute (current-applet)))
+  #?(:clj (PApplet/minute)
+     :cljs (.minute (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2525,8 +2526,8 @@
   month
   "Returns the current month as a value from 1 - 12."
   []
-  #+clj (PApplet/month)
-  #+cljs (.month (current-applet)))
+  #?(:clj (PApplet/month)
+     :cljs (.month (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2539,19 +2540,19 @@
   or :center depending on which button is pressed. nil if no button pressed"
   []
   (let [button-code   (.-mouseButton (current-applet))]
-    #+clj
-    (condp = button-code
-      PConstants/LEFT :left
-      PConstants/RIGHT :right
-      PConstants/CENTER :center
-      nil)
+    #?(:clj
+       (condp = button-code
+         PConstants/LEFT :left
+         PConstants/RIGHT :right
+         PConstants/CENTER :center
+         nil)
 
-    #+cljs
-    (condp = button-code
-      37 :left
-      39 :right
-      3  :center
-      nil)))
+       :cljs
+       (condp = button-code
+         37 :left
+         39 :right
+         3  :center
+         nil))))
 
 (defn
   ^{:requires-bindings true
@@ -2588,17 +2589,17 @@
   []
   (.-mouseY (current-applet)))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "noClip()"
-    :category "Rendering"
-    :subcategory nil
-    :added "2.3.0"}
-  no-clip
-  "Disables the clipping previously started by the clip() function."
-  []
-  (.noClip (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "noClip()"
+       :category "Rendering"
+       :subcategory nil
+       :added "2.3.0"}
+     no-clip
+     "Disables the clipping previously started by the clip() function."
+     []
+     (.noClip (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2621,8 +2622,8 @@
   no-fill
  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
- (.noFill (current-graphics))
- #+cljs (aset (current-graphics) no-fill-prop true))
+  (.noFill (current-graphics))
+  #?(:cljs (aset (current-graphics) no-fill-prop true)))
 
 (defn
   ^{:requires-bindings true
@@ -2754,8 +2755,8 @@
   norm
   "Normalize a value to exist between 0 and 1 (inclusive)."
   [val start stop]
-  #+clj (PApplet/norm (float val) (float start) (float stop))
-  #+cljs (.norm (current-applet) val start stop))
+  #?(:clj (PApplet/norm (float val) (float start) (float stop))
+     :cljs (.norm (current-applet) val start stop)))
 
 (defn
   ^{:requires-bindings true
@@ -2852,21 +2853,21 @@
      (.perspective (current-graphics) (float fovy) (float aspect)
                    (float z-near) (float z-far))))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "pixelDensity()"
-    :category "Environment"
-    :subcategory nil
-    :added "2.3.0"}
-  pixel-density
-  "It makes it possible for Processing to render using all of the pixels
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "pixelDensity()"
+       :category "Environment"
+       :subcategory nil
+       :added "2.3.0"}
+     pixel-density
+     "It makes it possible for Processing to render using all of the pixels
   on high resolutions screens like Apple Retina displays and Windows
   High-DPI displays. Possible values 1 or 2. Must be called only from
   :settings handler. To get density of the current screen you can use
   (display-density) function."
-  [density]
-  (.pixelDensity (current-applet) density))
+     [density]
+     (.pixelDensity (current-applet) density)))
 
 (defn
   ^{:requires-bindings true
@@ -2881,17 +2882,17 @@
   the changes. Calls .loadPixels before obtaining the pixel array."
   ([] (pixels (current-graphics)))
 
-  #+clj
-  ([^PImage img]
-   (.loadPixels img)
-   (.-pixels img))
+  #?(:clj
+     ([^PImage img]
+      (.loadPixels img)
+      (.-pixels img))
 
-  #+cljs
-  ([img]
-   (.loadPixels img)
-   (let [pix-array (.toArray (.-pixels img))]
-     (set! (.-stored-pix-array img) pix-array)
-     pix-array)))
+     :cljs
+     ([img]
+      (.loadPixels img)
+      (let [pix-array (.toArray (.-pixels img))]
+        (set! (.-stored-pix-array img) pix-array)
+        pix-array))))
 
 (defn
   ^{:requires-bindings true
@@ -2993,8 +2994,8 @@
   equivalent to the expression (* 3 3 3 3 3) and (pow 3 -5) is
   equivalent to (/ 1 (* 3 3 3 3 3))."
   [num exponent]
-  #+clj (PApplet/pow (float num) (float exponent))
-  #+cljs (.pow (current-applet) num exponent))
+  #?(:clj (PApplet/pow (float num) (float exponent))
+     :cljs (.pow (current-applet) num exponent)))
 
 (defn
   ^{:requires-bindings true
@@ -3124,8 +3125,8 @@
   methods in Processing require their parameters to be specified in
   radians."
   [degrees]
-  #+clj (PApplet/radians (float degrees))
-  #+cljs (.radians (current-applet) degrees))
+  #?(:clj (PApplet/radians (float degrees))
+     :cljs (.radians (current-applet) degrees)))
 
 (defn
   ^{:requires-bindings true
@@ -3315,27 +3316,27 @@
   []
   (.resetMatrix (current-graphics)))
 
-#+clj
-(def ^{:private true}
+#?(:clj
+   (def ^{:private true}
      shader-modes {:points PApplet/POINTS
                    :lines PApplet/LINES
-                   :triangles PApplet/TRIANGLES})
+                   :triangles PApplet/TRIANGLES}))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "resetShader()"
-    :category "Rendering"
-    :subcategory "Shaders"
-    :added "2.0"}
-  reset-shader
-  "Restores the default shaders. Code that runs after (reset-shader) will
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "resetShader()"
+       :category "Rendering"
+       :subcategory "Shaders"
+       :added "2.0"}
+     reset-shader
+     "Restores the default shaders. Code that runs after (reset-shader) will
   not be affected by previously defined shaders. Optional 'kind' parameter -
   type of shader, either :points, :lines, or :triangles"
-  ([] (.resetShader (current-graphics)))
-  ([kind]
-    (let [mode (resolve-constant-key kind shader-modes)]
-      (.resetShader (current-graphics) mode))))
+     ([] (.resetShader (current-graphics)))
+     ([kind]
+      (let [mode (resolve-constant-key kind shader-modes)]
+        (.resetShader (current-graphics) mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -3457,8 +3458,8 @@
   "Calculates the integer closest to the value parameter. For example,
   (round 9.2) returns the value 9."
   [val]
-  #+clj (PApplet/round (float val))
-  #+cljs (.round (current-applet) val))
+  #?(:clj (PApplet/round (float val))
+     :cljs (.round (current-applet) val)))
 
 (defn
   ^{:requires-bindings true
@@ -3532,35 +3533,35 @@
   ([sx sy] (.scale (current-graphics) (float sx) (float sy)))
   ([sx sy sz] (.scale (current-graphics) (float sx) (float sy) (float sz))))
 
-#+clj
-(defn- ^java.awt.Dimension current-screen
-  []
-  (let [default-toolkit (java.awt.Toolkit/getDefaultToolkit)]
-    (.getScreenSize default-toolkit)))
+#?(:clj
+   (defn- ^java.awt.Dimension current-screen
+     []
+     (let [default-toolkit (java.awt.Toolkit/getDefaultToolkit)]
+       (.getScreenSize default-toolkit))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name nil
-    :category "Environment"
-    :subcategory nil
-    :added "1.0"}
-  screen-width
-  "Returns the width of the main screen in pixels."
-  []
-  (.width (current-screen)))
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name nil
+       :category "Environment"
+       :subcategory nil
+       :added "1.0"}
+     screen-width
+     "Returns the width of the main screen in pixels."
+     []
+     (.width (current-screen))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name nil
-    :category "Environment"
-    :subcategory nil
-    :added "1.0"}
-  screen-height
-  "Returns the height of the main screen in pixels."
-  []
-  (.height (current-screen)))
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name nil
+       :category "Environment"
+       :subcategory nil
+       :added "1.0"}
+     screen-height
+     "Returns the height of the main screen in pixels."
+     []
+     (.height (current-screen))))
 
 (defn
   ^{:requires-bindings true
@@ -3613,8 +3614,8 @@
   seconds
   "Returns the current second as a value from 0 - 59."
   []
-  #+clj (PApplet/second)
-  #+cljs (.second (current-applet)))
+  #?(:clj (PApplet/second)
+     :cljs (.second (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -3655,21 +3656,21 @@
   [x y ^PImage src]
   (.set (current-graphics) (int x) (int y) src))
 
-#+clj
-(defn
-  ^{:requires-bindings true
-    :processing-name "shader()"
-    :category "Rendering"
-    :subcategory "Shaders"
-    :added "2.0"}
-  shader
-  "Applies the shader specified by the parameters. It's compatible with the :p2d
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "shader()"
+       :category "Rendering"
+       :subcategory "Shaders"
+       :added "2.0"}
+     shader
+     "Applies the shader specified by the parameters. It's compatible with the :p2d
   and :p3drenderers, but not with the default :java2d renderer. Optional 'kind'
   parameter - type of shader, either :points, :lines, or :triangles"
-  ([shader] (.shader (current-graphics) shader))
-  ([shader kind]
-    (let [mode (resolve-constant-key kind shader-modes)]
-      (.shader (current-graphics) shader mode))))
+     ([shader] (.shader (current-graphics) shader))
+     ([shader kind]
+      (let [mode (resolve-constant-key kind shader-modes)]
+        (.shader (current-graphics) shader mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -3794,8 +3795,8 @@
   of the angle parameter to be provided in radians (values from 0 to
   6.28). A float within the range -1 to 1 is returned."
   [angle]
-  #+clj (PApplet/sin (float angle))
-  #+cljs (.sin (current-applet) angle))
+  #?(:clj (PApplet/sin (float angle))
+     :cljs (.sin (current-applet) angle)))
 
 (defn
   ^{:requires-bindings true
@@ -3821,10 +3822,10 @@
   machine that is running the software.
 
   Note that smooth will also improve image quality of resized images."
-  ([] (.smooth #+clj (current-applet)
-               #+cljs (current-graphics)))
-  ([level] (.smooth  #+clj (current-applet)
-                     #+cljs (current-graphics)
+  ([] (.smooth #?(:clj (current-applet)
+                  :cljs (current-graphics))))
+  ([level] (.smooth #?(:clj (current-applet)
+                       :cljs (current-graphics))
                      (int level))))
 
 (defn
@@ -3906,8 +3907,8 @@
   always a positive number, as multiplying two negative numbers always
   yields a positive result. For example, -1 * -1 = 1."
   [a]
-  #+clj (PApplet/sq (float a))
-  #+cljs (.sq (current-applet) a))
+  #?(:clj (PApplet/sq (float a))
+     :cljs (.sq (current-applet) a)))
 
 (defn
   ^{:requires-bindings false
@@ -3921,8 +3922,8 @@
   root. The square root s of number a is such that (= a (* s s)) . It
   is the opposite of squaring."
   [a]
-  #+clj (PApplet/sqrt (float a))
-  #+cljs (.sqrt (current-applet) a))
+  #?(:clj (PApplet/sqrt (float a))
+     :cljs (.sqrt (current-applet) a)))
 
 (defn
   ^{:requires-bindings true
@@ -3974,12 +3975,12 @@
   on the current color-mode (the default color space is RGB, with
   each value in the range from 0 to 255)."
   ([rgb]
-    #+clj (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb))
-    #+cljs (stroke-float rgb))
+   #?(:clj (if (int-like? rgb) (stroke-int rgb) (stroke-float rgb))
+      :cljs (stroke-float rgb)))
 
   ([rgb alpha]
-    #+clj (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha))
-    #+cljs (stroke-float rgb alpha))
+   #?(:clj (if (int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha))
+      :cljs (stroke-float rgb alpha)))
 
   ([x y z] (stroke-float x y z))
   ([x y z a] (stroke-float x y z a)))
@@ -3997,8 +3998,8 @@
   [cap-mode]
   (let [cap-mode (resolve-constant-key cap-mode stroke-cap-modes)]
     (.strokeCap (current-graphics)
-                #+clj (int cap-mode)
-                #+cljs (str cap-mode))))
+                #?(:clj (int cap-mode)
+                   :cljs (str cap-mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -4017,8 +4018,8 @@
   [join-mode]
   (let [join-mode (resolve-constant-key join-mode stroke-join-modes)]
     (.strokeJoin (current-graphics)
-                 #+clj (int join-mode)
-                 #+cljs (str join-mode))))
+                 #?(:clj (int join-mode)
+                    :cljs (str join-mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -4044,8 +4045,8 @@
   radians (values from 0 to PI*2). Values are returned in the range
   infinity to -infinity."
   [angle]
-  #+clj (PApplet/tan (float angle))
-  #+cljs (.tan (current-applet) angle))
+  #?(:clj (PApplet/tan (float angle))
+     :cljs (.tan (current-applet) angle)))
 
 (defn
   ^{:requires-bindings true
@@ -4055,14 +4056,14 @@
   target-frame-rate
   "Returns the target framerate specified with the fn frame-rate"
   []
-  #+clj @(quil.applet/target-frame-rate)
-  #+cljs @(.-target-frame-rate (current-applet)))
+  #?(:clj @(quil.applet/target-frame-rate)
+     :cljs @(.-target-frame-rate (current-applet))))
 
 (defn- no-fill?
   "Returns whether fill is disabled for current graphics."
   [graphics]
-  #+clj (not (.-fill graphics))
-  #+cljs (true? (aget graphics no-fill-prop)))
+  #?(:clj (not (.-fill graphics))
+     :cljs (true? (aget graphics no-fill-prop))))
 
 (defn
   ^{:requires-bindings true
@@ -4283,8 +4284,8 @@
   When textures are in use, the fill color is ignored. Instead, use
   tint to specify the color of the texture as it is applied to the
   shape."
-  #+clj [^PImage img]
-  #+cljs [img]
+  #?(:clj [^PImage img]
+     :cljs [img])
   (.texture (current-graphics) img))
 
 (defn
@@ -4307,20 +4308,20 @@
   (let [mode (resolve-constant-key mode texture-modes)]
     (.textureMode (current-graphics) (int mode))))
 
-#+clj
-(defn
-    ^{:requires-bindings true
-     :processing-name "textureWrap()"
-     :category "Shape"
-     :subcategory "Vertex"
-     :added "2.0"}
-  texture-wrap
-  "Defines if textures repeat or draw once within a texture map. The two
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textureWrap()"
+       :category "Shape"
+       :subcategory "Vertex"
+       :added "2.0"}
+     texture-wrap
+     "Defines if textures repeat or draw once within a texture map. The two
   parameters are :clamp (the default behavior) and :repeat. This function
   only works with the :p2d and :p3d renderers."
-  [mode]
-  (let [mode (resolve-constant-key mode texture-wrap-modes)]
-    (.textureWrap (current-graphics) mode)))
+     [mode]
+     (let [mode (resolve-constant-key mode texture-wrap-modes)]
+       (.textureWrap (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
@@ -4401,10 +4402,10 @@
   maximum value is 255.
 
   Also used to control the coloring of textures in 3D."
-  #+clj ([rgb] (if (int-like? rgb) (tint-int rgb) (tint-float rgb)))
-  #+clj ([rgb alpha] (if (int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
-  #+cljs ([rgb] (.tint (current-graphics) rgb))
-  #+cljs ([rgb alpha] (.tint (current-graphics) rgb alpha))
+  #?(:clj ([rgb] (if (int-like? rgb) (tint-int rgb) (tint-float rgb)))
+     :cljs ([rgb] (.tint (current-graphics) rgb)))
+  #?(:clj ([rgb alpha] (if (int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
+     :cljs ([rgb alpha] (.tint (current-graphics) rgb alpha)))
   ([r g b] (tint-float r g b))
   ([r g b a] (tint-float r g b a)))
 
@@ -4456,8 +4457,8 @@
   "Unpack a binary string to an integer. See binary for converting
   integers to strings."
   [str-val]
-  #+clj (PApplet/unbinary (str str-val))
-  #+cljs (.unbinary (current-applet) (str str-val)))
+  #?(:clj (PApplet/unbinary (str str-val))
+     :cljs (.unbinary (current-applet) (str str-val))))
 
 (defn
   ^{:require-binding false
@@ -4468,8 +4469,8 @@
   "Converts a String representation of a hexadecimal number to its
   equivalent integer value."
   [hex-str]
-  #+clj (PApplet/unhex (str hex-str))
-  #+cljs (.unhex (current-applet) (str hex-str)))
+  #?(:clj (PApplet/unhex (str hex-str))
+     :cljs (.unhex (current-applet) (str hex-str))))
 
 (defn
   ^{:requires-bindings true
@@ -4490,14 +4491,15 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   ([] (update-pixels (current-graphics)))
-  #+clj ([^PImage img] (.updatePixels img))
+  #?(:clj
+     ([^PImage img] (.updatePixels img))
 
-  #+cljs
-  ([img]
-   (when-let [pix-array (.-stored-pix-array img)]
-     (.set (.-pixels img) pix-array)
-     (set! (.-stored-pix-array img) nil))
-   (.updatePixels img)))
+     :cljs
+     ([img]
+      (when-let [pix-array (.-stored-pix-array img)]
+        (.set (.-pixels img) pix-array)
+        (set! (.-stored-pix-array img) nil))
+      (.updatePixels img))))
 
 (defn
   ^{:requires-bindings true
@@ -4535,8 +4537,8 @@
   year
   "Returns the current year as an integer (2003, 2004, 2005, etc)."
   []
-  #+clj (PApplet/year)
-  #+cljs (.year (current-applet)))
+  #?(:clj (PApplet/year)
+     :cljs (.year (current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -4551,87 +4553,87 @@
   []
   (.-width (current-applet)))
 
-#+clj
-(defmacro
-  ^{:requires-bindings true
-    :processing-name nil
-    :category "Color"
-    :subcategory "Utility Macros"
-    :added "1.7"}
-  with-fill
-  "Temporarily set the fill color for the body of this macro.
+#?(:clj
+   (defmacro
+     ^{:requires-bindings true
+       :processing-name nil
+       :category "Color"
+       :subcategory "Utility Macros"
+       :added "1.7"}
+     with-fill
+     "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
 
    The fill color has to be in a vector!
    Example: (with-fill [255] ...)
             (with-fill [10 80 98] ...)"
-  [fill-args & body]
-  `(let [old-fill# (current-fill)]
-     (apply fill ~fill-args)
-     ~@body
-     (fill old-fill#)))
+     [fill-args & body]
+     `(let [old-fill# (current-fill)]
+        (apply fill ~fill-args)
+        ~@body
+        (fill old-fill#))))
 
-#+clj
-(defmacro
-  ^{:requires-bindings true
-    :processing-name nil
-    :category "Color"
-    :subcategory "Utility Macros"
-    :added "1.7"}
-  with-stroke
-  "Temporarily set the stroke color for the body of this macro.
+#?(:clj
+   (defmacro
+     ^{:requires-bindings true
+       :processing-name nil
+       :category "Color"
+       :subcategory "Utility Macros"
+       :added "1.7"}
+     with-stroke
+     "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
 
    The stroke color has to be in a vector!
    Example: (with-stroke [255] ...)
             (with-stroke [10 80 98] ...)"
-  [stroke-args & body]
-  `(let [old-stroke# (current-stroke)]
-     (apply stroke ~stroke-args)
-     ~@body
-     (stroke old-stroke#)))
+     [stroke-args & body]
+     `(let [old-stroke# (current-stroke)]
+        (apply stroke ~stroke-args)
+        ~@body
+        (stroke old-stroke#))))
 
-#+clj
-(defmacro
-  ^{:requires-bindings true
-    :processing-name nil
-    :category "Transform"
-    :subcategory "Utility Macros"
-    :added "1.0"}
-  with-translation
-  "Performs body with translation, restores current transformation on
+#?(:clj
+   (defmacro
+     ^{:requires-bindings true
+       :processing-name nil
+       :category "Transform"
+       :subcategory "Utility Macros"
+       :added "1.0"}
+     with-translation
+     "Performs body with translation, restores current transformation on
   exit."
-  [translation-vector & body]
-  `(let [tr# ~translation-vector]
-     (push-matrix)
-     (try
-       (translate tr#)
-       ~@body
-       (finally
-         (pop-matrix)))))
+     [translation-vector & body]
+     `(let [tr# ~translation-vector]
+        (push-matrix)
+        (try
+          (translate tr#)
+          ~@body
+          (finally
+            (pop-matrix))))))
 
-#+clj
-(defmacro
-  ^{:requires-bindings true
-    :processing-name nil
-    :category "Transform"
-    :subcategory "Utility Macros"
-    :added "1.0"}
-  with-rotation
-  "Performs body with rotation, restores current transformation on exit.
+#?(:clj
+   (defmacro
+     ^{:requires-bindings true
+       :processing-name nil
+       :category "Transform"
+       :subcategory "Utility Macros"
+       :added "1.0"}
+     with-rotation
+     "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
 
   Example:
     (with-rotation [angle]
       (vertex 1 2))"
-  [rotation & body]
-  `(let [tr# ~rotation]
-     (push-matrix)
-     (try
-       (apply rotate tr#)
-       ~@body
+     [rotation & body]
+     `(let [tr# ~rotation]
+        (push-matrix)
+        (try
+          (apply rotate tr#)
+          ~@body
           (finally
-            (pop-matrix)))))
+            (pop-matrix))))))
 
 (defmacro
   ^{:requires-bindings true
@@ -4656,16 +4658,17 @@
   "Create and start a new visualisation applet. Can be used to create
   new sketches programmatically. See documentation for 'defsketch' for
   list of available options."
-    [& opts]
-    #+clj (apply applet opts)
-    #+cljs (apply applet/sketch opts))
+  [& opts]
+  #?(:clj (apply applet opts)
+     :cljs (apply applet/sketch opts)))
 
-(defmacro ^{:requires-bindings false
-            :category "Environment"
-            :subcategory nil
-            :added "1.0"}
-  defsketch
-  "Define and start a sketch and bind it to a var with the symbol
+#?(:clj
+  (defmacro ^{:requires-bindings false
+              :category "Environment"
+              :subcategory nil
+              :added "1.0"}
+    defsketch
+    "Define and start a sketch and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
   symbols, it wraps them in a call to var to ensure they aren't
   inlined and that redefinitions to the original fns are reflected in
@@ -4802,10 +4805,10 @@
                      setting sketch up. Should be used only for (smooth) and
                      (no-smooth). Due to Processing limitations these functions
                      cannot be used neither in :setup nor in :draw."
-  [app-name & options]
-  (if (clj-compilation?)
-    `(defapplet ~app-name ~@options)
-    `(quil.sketch/defsketch ~app-name ~@options)))
+    [app-name & options]
+    (if (clj-compilation?)
+      `(defapplet ~app-name ~@options)
+      `(quil.sketch/defsketch ~app-name ~@options))))
 
 (defn ^{:requires-bindings false
         :processing-name nil
@@ -4817,8 +4820,8 @@
   fetch the key-code as an integer and use that to determine the
   specific key pressed. See key-keyword."
   [c]
-  #+clj (= PConstants/CODED (int c))
-  #+cljs (= 65535 (.charCodeAt (str c))))
+  #?(:clj (= PConstants/CODED (int c))
+     :cljs (= 65535 (.charCodeAt (str c)))))
 
 (defn ^{:requires-bindings true
         :processing-name nil
@@ -4836,42 +4839,42 @@
       (get KEY-CODES code :unknown-key)
       (keyword (str key-char)))))
 
-#+clj
-(defn
-  ^{:requires-bindings false
-    :processing-name nil
-    :category "Debugging"
-    :added "1.6"}
-  debug
-  "Prints msg and then sleeps the current thread for delay-ms. Useful
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name nil
+       :category "Debugging"
+       :added "1.6"}
+     debug
+     "Prints msg and then sleeps the current thread for delay-ms. Useful
   for debugging live running sketches. delay-ms defaults to 300. "
-  ([msg] (debug msg 300))
-  ([msg delay-ms]
-     (println msg)
-     (Thread/sleep delay-ms)))
+     ([msg] (debug msg 300))
+     ([msg delay-ms]
+      (println msg)
+      (Thread/sleep delay-ms))))
 
 ;;; doc utils
 
-#+clj
-(def ^{:private true}
-  fn-metas
-  "Returns a seq of metadata maps for all fns related to the original
+#?(:clj
+   (def ^{:private true}
+     fn-metas
+     "Returns a seq of metadata maps for all fns related to the original
   Processing API (but may not have a direct Processing API equivalent)."
-  (->> *ns* ns-publics vals (map meta)))
+     (->> *ns* ns-publics vals (map meta))))
 
-#+clj
-(defn show-cats
-  "Print out a list of all the categories and subcategories,
+#?(:clj
+   (defn show-cats
+     "Print out a list of all the categories and subcategories,
   associated index nums and fn count (in parens)."
-  []
-  (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
-    (println cat-idx (:name cat))
-    (doseq [[subcat-idx subcat] (:subcategories cat)]
-      (println "  " subcat-idx (:name subcat)))))
+     []
+     (doseq [[cat-idx cat] (docs/sorted-category-map fn-metas)]
+       (println cat-idx (:name cat))
+       (doseq [[subcat-idx subcat] (:subcategories cat)]
+         (println "  " subcat-idx (:name subcat))))))
 
-#+clj
-(defn show-fns
-  "If given a number, print all the functions within category or
+#?(:clj
+   (defn show-fns
+     "If given a number, print all the functions within category or
   subcategory specified by the category index (use show-cats to see a
   list of index nums).
 
@@ -4880,38 +4883,38 @@
 
   If a category is specified, it will not print out the fns in any of
   cat's subcategories."
-  [q]
-  (letfn [(list-category [cid c & {:keys [only]}]
-            (let [category-fns (:fns c)
-                  display-fns (if (nil? only)
-                                category-fns
-                                (clojure.set/intersection
-                                 (set only) (set category-fns)))
-                  names (sort (map str display-fns))]
-              (when-not (empty? names))
-                (println cid (:name c))
-                (docs/pprint-wrapped-lines names :fromcolumn 4)))
-          (show-fns-by-cat-idx [cat-idx]
-            (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
-              (list-category cat-idx c)))
-          (show-fns-by-name-regex [re]
-            (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
-              (let [in-cat-name? (re-find re (:name c))
-                    matching-fns (filter #(re-find re (str %)) (:fns c))
-                    in-fn-names? (not (empty? matching-fns))]
-                (cond
-                 in-cat-name? (list-category cid c) ;; print an entire category
-                 in-fn-names? (list-category cid c :only matching-fns)))))]
-    (cond
-      (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
-      (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
-      :else (show-fns-by-cat-idx q))))
+     [q]
+     (letfn [(list-category [cid c & {:keys [only]}]
+               (let [category-fns (:fns c)
+                     display-fns (if (nil? only)
+                                   category-fns
+                                   (clojure.set/intersection
+                                    (set only) (set category-fns)))
+                     names (sort (map str display-fns))]
+                 (when-not (empty? names))
+                 (println cid (:name c))
+                 (docs/pprint-wrapped-lines names :fromcolumn 4)))
+             (show-fns-by-cat-idx [cat-idx]
+               (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
+                 (list-category cat-idx c)))
+             (show-fns-by-name-regex [re]
+               (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
+                 (let [in-cat-name? (re-find re (:name c))
+                       matching-fns (filter #(re-find re (str %)) (:fns c))
+                       in-fn-names? (not (empty? matching-fns))]
+                   (cond
+                     in-cat-name? (list-category cid c) ;; print an entire category
+                     in-fn-names? (list-category cid c :only matching-fns)))))]
+       (cond
+         (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
+         (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
+         :else (show-fns-by-cat-idx q)))))
 
-#+clj
-(defn show-meths
-  "Takes a string representing the start of a method name in the
+#?(:clj
+   (defn show-meths
+     "Takes a string representing the start of a method name in the
   original Processing API and prints out all matches alongside the
   Processing-core equivalent."
-  [orig-name]
-  (let [res (docs/matching-processing-methods fn-metas orig-name)]
-    (print-definition-list res)))
+     [orig-name]
+     (let [res (docs/matching-processing-methods fn-metas orig-name)]
+       (print-definition-list res))))

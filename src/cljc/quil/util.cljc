@@ -6,23 +6,23 @@
   "Function that does nothing."
   [])
 
-#+clj
-(defn callable? [value]
-  (or (fn? value) 
-      (var? value)))
+#?(:clj
+   (defn callable? [value]
+     (or (fn? value)
+         (var? value))))
 
-#+clj
-(defn absolute-path [path]
-  (-> (str path)
-      (java.io.File.)
-      (.getAbsolutePath)))
+#?(:clj
+   (defn absolute-path [path]
+     (-> (str path)
+         (java.io.File.)
+         (.getAbsolutePath))))
 
-#+clj
-(defn int-like?
-  [val]
-  (let [t (type val)]
-    (or (= java.lang.Long t)
-        (= java.lang.Integer t))))
+#?(:clj
+   (defn int-like?
+     [val]
+     (let [t (type val)]
+       (or (= java.lang.Long t)
+           (= java.lang.Integer t)))))
 
 (defn resolve-constant-key
   "Returns the val associated with key in mappings or key directly if it
@@ -32,8 +32,8 @@
     (get mappings key)            (get mappings key)
     (some #{key} (vals mappings)) key
 
-    :else                         (throw (#+clj Exception.
-                                          #+cljs js/Error.
+    :else                         (throw (#?(:clj Exception.
+                                             :cljs js/Error.)
                                           (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
 (defn length-of-longest-key
@@ -68,13 +68,13 @@
               (println k pad "- " v)))
           definitions))))
 
-#+clj
-(defn clj-compilation? [] 
-  (not 
-    (boolean
-     (when-let [n (find-ns 'cljs.analyzer)]
-       (when-let [v (ns-resolve n '*cljs-file*)]
-         @v)))))
+#?(:clj
+   (defn clj-compilation? []
+     (not
+      (boolean
+       (when-let [n (find-ns 'cljs.analyzer)]
+         (when-let [v (ns-resolve n '*cljs-file*)]
+           @v))))))
 
 
 (defn prepare-quil-name [const-keyword]
@@ -82,31 +82,32 @@
    (cstr/upper-case (name const-keyword))
    #"-" "_"))
 
-#+clj
-(defn prepare-quil-clj-constants [constants]
-  (into {}
-        (map 
-         #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
-         constants)))
+#?(:clj
+   (defn prepare-quil-clj-constants [constants]
+     (into {}
+           (map
+            #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
+            constants))))
 
-#+clj
-(defn prepare-quil-cljs-constants [constants]
-  (into {}
-        (map 
-         #(vector % `(aget js/Processing.prototype.PConstants ~(prepare-quil-name %)))
-         constants)))
+#?(:clj
+   (defn prepare-quil-cljs-constants [constants]
+     (into {}
+           (map
+            #(vector % `(aget js/Processing.prototype.PConstants ~(prepare-quil-name %)))
+            constants))))
 
-#+clj
-(defn make-quil-constant-map [target const-map-name const-map]
-  `(def ^{:private true}
-     ~const-map-name
-     ~(if (= target :clj)
-        (prepare-quil-clj-constants const-map)
-        (prepare-quil-cljs-constants const-map))))
+#?(:clj
+   (defn make-quil-constant-map [target const-map-name const-map]
+     `(def ^{:private true}
+        ~const-map-name
+        ~(if (= target :clj)
+           (prepare-quil-clj-constants const-map)
+           (prepare-quil-cljs-constants const-map)))))
 
 
-(defmacro generate-quil-constants [target & opts]
-  `(do
-     ~@(map 
-        #(make-quil-constant-map target (first %) (second %)) 
-        (partition 2 opts))))
+#?(:clj
+   (defmacro generate-quil-constants [target & opts]
+     `(do
+        ~@(map
+           #(make-quil-constant-map target (first %) (second %))
+           (partition 2 opts)))))
