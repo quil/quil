@@ -20,28 +20,12 @@
 
   :aot [quil.helpers.applet-listener quil.applet]
 
-  :prep-tasks [["cljx" "once"] "compile"]
-
   :test-selectors {:default (complement :manual)
                    :manual :manual
                    :set-0 #(= 0 (:test-set %))
                    :set-1 #(= 1 (:test-set %))
                    :set-2 #(= 2 (:test-set %))
                    :set-3 #(= 3 (:test-set %))}
-
-  :cljx {:builds [{:source-paths ["src/cljx/quil"]
-                   :output-path "target/gen/clj/quil"
-                   :rules :clj}
-                  {:source-paths ["src/cljx/quil"]
-                   :output-path "target/gen/cljs/quil"
-                   :rules :cljs}
-
-                  {:source-paths ["test/cljx"]
-                   :output-path "target/gentest/clj"
-                   :rules :clj}
-                  {:source-paths ["test/cljx"]
-                   :output-path "target/gentest/cljs"
-                   :rules :cljs}]}
 
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj" "test/cljc"]
@@ -52,8 +36,7 @@
                                   [clj-http "1.1.2"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [org.clojure/tools.reader "0.9.2"]]
-                   :plugins [[com.keminglabs/cljx "0.6.0"]
-                             [lein-ring "0.9.4"]]}
+                   :plugins [[lein-ring "0.9.4"]]}
 
              :cljs-testing [:dev
                             {:hooks [leiningen.cljsbuild]
