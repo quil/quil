@@ -4,7 +4,7 @@
             [goog.dom :as dom]
             [goog.events :as events]
             [goog.events.EventType :as EventType])
-  (:use-macros [quil.sketch :only [with-sketch]]))
+  (:require-macros [quil.sketch :as sketch]))
 
 (def ^:dynamic
   *applet* nil)
@@ -43,7 +43,7 @@
         (when-let [handler (opts quil-name)]
           (aset prc (name processing-name)
                 (fn []
-                  (with-sketch prc
+                  (sketch/with-sketch prc
                     (handler)))))))
 
 (defn make-sketch [options]
