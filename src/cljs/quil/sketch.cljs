@@ -1,6 +1,6 @@
 (ns quil.sketch
   (:require [quil.util :as u :include-macros true]
-            [quil.middlewares.deprecated-options :refer [deprecated-options]]
+            [quil.middlewares.deprecated-options :as do]
             [goog.dom :as dom]
             [goog.events :as events]
             [goog.events.EventType :as EventType])
@@ -48,7 +48,7 @@
 
 (defn make-sketch [options]
   (let [opts            (->> (:middleware options [])
-                          (cons deprecated-options)
+                          (cons do/deprecated-options)
                           (apply comp)
                           (#(% options))
                           (merge {:size [500 300]}))

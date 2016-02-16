@@ -1,5 +1,5 @@
 (ns quil.helpers.seqs
-  (:require [quil.core :refer [noise]]))
+  (:require [quil.core :as q]))
 
 (defn range-incl
   "Returns a lazy seq of nums from start (inclusive) to end
@@ -133,4 +133,4 @@
   "Generate a lazy infinite sequence of perlin noise values starting from
   the specified seed with incr added to the seed for each successive value."
   [seed incr]
-  (lazy-seq (cons (noise seed) (perlin-noise-seq (+ seed incr) incr))))
+  (lazy-seq (cons (q/noise seed) (perlin-noise-seq (+ seed incr) incr))))

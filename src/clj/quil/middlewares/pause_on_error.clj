@@ -1,8 +1,8 @@
 (ns quil.middlewares.pause-on-error
   (:require [quil.core :as q]
             [quil.util :as u]
-            [clojure.string :refer [join]]
-            [clojure.stacktrace :refer [print-cause-trace]]))
+            [clojure.string :as cstr]
+            [clojure.stacktrace :as sttr]))
 
 (defn- wrap-fn [pause name function do-on-pause]
   (fn [& args]
@@ -11,7 +11,7 @@
       (try
         (apply function args)
         (catch Exception e
-          (println "Exception in " name " function: " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
+          (println "Exception in " name " function: " e "\nstacktrace: " (with-out-str (sttr/print-cause-trace e)))
           (reset! pause {:name name
                          :exception e
                          :time (java.util.Date.)}))))))
@@ -28,8 +28,8 @@
                  (str "Time: " time)
                  (str "Fix the error and then press any key to unpause sketch.")
                  (str "Stacktrace (or check REPL output):")
-                 (with-out-str (print-cause-trace exception))]]
-        (q/text (join \newline str) 10 20))
+                 (with-out-str (sttr/print-cause-trace exception))]]
+        (q/text (cstr/join \newline str) 10 20))
       (q/pop-style))
     (q/set-image 0 0 error)))
 
