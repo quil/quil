@@ -36,7 +36,7 @@
                                              :cljs js/Error.)
                                           (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
-(defn length-of-longest-key
+(defn- length-of-longest-key
   "Returns the length of the longest key of map m. Assumes m's keys are strings
    and returns 0 if map is empty:
    (length-of-longest-key {\"foo\" 1 \"barr\" 2 \"bazzz\" 3}) ;=> 5
@@ -45,7 +45,7 @@
   (or (last (sort (map #(.length %) (keys m))))
       0))
 
-(defn gen-padding
+(defn- gen-padding
   "Generates a padding string starting concatting s with len times pad:
    (gen-padding \"\" 5 \"b\") ;=> \"bbbbb\"
    May be called without starting string s in which case it defaults to the
@@ -68,13 +68,14 @@
               (println k pad "- " v)))
           definitions))))
 
-#?(:clj
-   (defn clj-compilation? []
+(defn clj-compilation? []
+  #?(:clj
      (not
       (boolean
        (when-let [n (find-ns 'cljs.analyzer)]
          (when-let [v (ns-resolve n '*cljs-file*)]
-           @v))))))
+           @v))))
+     :cljs false))
 
 
 (defn prepare-quil-name [const-keyword]
@@ -82,32 +83,27 @@
    (cstr/upper-case (name const-keyword))
    #"-" "_"))
 
-#?(:clj
-   (defn prepare-quil-clj-constants [constants]
-     (into {}
-           (map
-            #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
-            constants))))
+(defn prepare-quil-clj-constants [constants]
+  (into {}
+        (map
+         #(vector % (symbol (str "PConstants/" (prepare-quil-name %))))
+         constants)))
 
-#?(:clj
-   (defn prepare-quil-cljs-constants [constants]
-     (into {}
-           (map
-            #(vector % `(aget js/Processing.prototype.PConstants ~(prepare-quil-name %)))
-            constants))))
+(defn prepare-quil-cljs-constants [constants]
+  (into {}
+        (map
+         #(vector % `(aget js/Processing.prototype.PConstants ~(prepare-quil-name %)))
+         constants)))
 
-#?(:clj
-   (defn make-quil-constant-map [target const-map-name const-map]
-     `(def ^{:private true}
-        ~const-map-name
-        ~(if (= target :clj)
-           (prepare-quil-clj-constants const-map)
-           (prepare-quil-cljs-constants const-map)))))
+(defn make-quil-constant-map [target const-map-name const-map]
+  `(def ^{:private true}
+     ~const-map-name
+     ~(if (= target :clj)
+        (prepare-quil-clj-constants const-map)
+        (prepare-quil-cljs-constants const-map))))
 
-
-#?(:clj
-   (defmacro generate-quil-constants [target & opts]
-     `(do
-        ~@(map
-           #(make-quil-constant-map target (first %) (second %))
-           (partition 2 opts)))))
+(defmacro generate-quil-constants [target & opts]
+  `(do
+     ~@(map
+        #(make-quil-constant-map target (first %) (second %))
+        (partition 2 opts))))

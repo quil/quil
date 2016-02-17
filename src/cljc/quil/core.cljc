@@ -187,10 +187,9 @@
      [id]
      (.getInstanceById js/Processing id)))
 
-#?(:clj
-   (defmacro with-sketch [applet & body]
-     (when-not (u/clj-compilation?)
-       `(quil.sketch/with-sketch ~applet ~@body))))
+(defmacro with-sketch [applet & body]
+   (when-not (u/clj-compilation?)
+     `(quil.sketch/with-sketch ~applet ~@body)))
 
 (defn
   ^{:requires-bindings true
@@ -1437,12 +1436,14 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   degrees
-  "Converts a radian measurement to its corresponding value in
+  ; Disable comment for cljs http://dev.clojure.org/jira/browse/CLJS-1573
+  #?(:clj
+     "Converts a radian measurement to its corresponding value in
   degrees. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and (* 2 Math/PI) radians
   in a circle. For example, (= 90° (/ Math/PI 2) 1.5707964). All
   trigonometric methods in Processing require their parameters to be
-  specified in radians."
+  specified in radians.")
   [radians]
   #?(:clj (PApplet/degrees (float radians))
      :cljs (.degrees (ap/current-applet) radians)))
@@ -3117,12 +3118,14 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   radians
-  "Converts a degree measurement to its corresponding value in
+  ; Disable comment for cljs http://dev.clojure.org/jira/browse/CLJS-1573
+  #?(:clj
+     "Converts a degree measurement to its corresponding value in
   radians. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and 2*PI radians in a
   circle. For example, 90° = PI/2 = 1.5707964. All trigonometric
   methods in Processing require their parameters to be specified in
-  radians."
+  radians.")
   [degrees]
   #?(:clj (PApplet/radians (float degrees))
      :cljs (.radians (ap/current-applet) degrees)))
@@ -4552,87 +4555,83 @@
   []
   (.-width (ap/current-applet)))
 
-#?(:clj
-   (defmacro
-     ^{:requires-bindings true
-       :processing-name nil
-       :category "Color"
-       :subcategory "Utility Macros"
-       :added "1.7"}
-     with-fill
-     "Temporarily set the fill color for the body of this macro.
+(defmacro
+   ^{:requires-bindings true
+     :processing-name nil
+     :category "Color"
+     :subcategory "Utility Macros"
+     :added "1.7"}
+   with-fill
+   "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
 
    The fill color has to be in a vector!
    Example: (with-fill [255] ...)
             (with-fill [10 80 98] ...)"
-     [fill-args & body]
-     `(let [old-fill# (current-fill)]
-        (apply fill ~fill-args)
-        ~@body
-        (fill old-fill#))))
+   [fill-args & body]
+   `(let [old-fill# (quil.core/current-fill)]
+      (apply quil.core/fill ~fill-args)
+      ~@body
+      (quil.core/fill old-fill#)))
 
-#?(:clj
-   (defmacro
-     ^{:requires-bindings true
-       :processing-name nil
-       :category "Color"
-       :subcategory "Utility Macros"
-       :added "1.7"}
-     with-stroke
-     "Temporarily set the stroke color for the body of this macro.
+(defmacro
+   ^{:requires-bindings true
+     :processing-name nil
+     :category "Color"
+     :subcategory "Utility Macros"
+     :added "1.7"}
+   with-stroke
+   "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
 
    The stroke color has to be in a vector!
    Example: (with-stroke [255] ...)
             (with-stroke [10 80 98] ...)"
-     [stroke-args & body]
-     `(let [old-stroke# (current-stroke)]
-        (apply stroke ~stroke-args)
-        ~@body
-        (stroke old-stroke#))))
+   [stroke-args & body]
+   `(let [old-stroke# (quil.core/current-stroke)]
+      (apply quil.core/stroke ~stroke-args)
+      ~@body
+      (quil.core/stroke old-stroke#)))
 
-#?(:clj
-   (defmacro
-     ^{:requires-bindings true
-       :processing-name nil
-       :category "Transform"
-       :subcategory "Utility Macros"
-       :added "1.0"}
-     with-translation
-     "Performs body with translation, restores current transformation on
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Transform"
+    :subcategory "Utility Macros"
+    :added "1.0"}
+  with-translation
+  "Performs body with translation, restores current transformation on
   exit."
-     [translation-vector & body]
-     `(let [tr# ~translation-vector]
-        (push-matrix)
-        (try
-          (translate tr#)
-          ~@body
-          (finally
-            (pop-matrix))))))
+  [translation-vector & body]
+  `(let [tr# ~translation-vector]
+     (quil.core/push-matrix)
+     (try
+       (quil.core/translate tr#)
+       ~@body
+       (finally
+         (quil.core/pop-matrix)))))
 
-#?(:clj
-   (defmacro
-     ^{:requires-bindings true
-       :processing-name nil
-       :category "Transform"
-       :subcategory "Utility Macros"
-       :added "1.0"}
-     with-rotation
-     "Performs body with rotation, restores current transformation on exit.
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Transform"
+    :subcategory "Utility Macros"
+    :added "1.0"}
+  with-rotation
+  "Performs body with rotation, restores current transformation on exit.
   Accepts a vector [angle] or [angle x-axis y-axis z-axis].
 
   Example:
     (with-rotation [angle]
       (vertex 1 2))"
-     [rotation & body]
-     `(let [tr# ~rotation]
-        (push-matrix)
-        (try
-          (apply rotate tr#)
-          ~@body
-          (finally
-            (pop-matrix))))))
+  [rotation & body]
+  `(let [tr# ~rotation]
+     (quil.core/push-matrix)
+     (try
+       (apply quil.core/rotate tr#)
+       ~@body
+       (finally
+         (quil.core/pop-matrix)))))
 
 (defmacro
   ^{:requires-bindings true
@@ -4644,7 +4643,7 @@
   graphics. 'with-graphics' cannot be nested (you can draw simultaneously
   only on 1 graphics)"
   [graphics & body]
-  `(binding [*graphics* ~graphics]
+  `(binding [quil.core/*graphics* ~graphics]
      (.beginDraw ~graphics)
      ~@body
      (.endDraw ~graphics)))
@@ -4661,13 +4660,12 @@
   #?(:clj (apply ap/applet opts)
      :cljs (apply ap/sketch opts)))
 
-#?(:clj
-  (defmacro ^{:requires-bindings false
+(defmacro ^{:requires-bindings false
               :category "Environment"
               :subcategory nil
               :added "1.0"}
-    defsketch
-    "Define and start a sketch and bind it to a var with the symbol
+   defsketch
+   "Define and start a sketch and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
   symbols, it wraps them in a call to var to ensure they aren't
   inlined and that redefinitions to the original fns are reflected in
@@ -4804,10 +4802,13 @@
                      setting sketch up. Should be used only for (smooth) and
                      (no-smooth). Due to Processing limitations these functions
                      cannot be used neither in :setup nor in :draw."
-    [app-name & options]
-    (if (u/clj-compilation?)
-      `(ap/defapplet ~app-name ~@options)
-      `(quil.sketch/defsketch ~app-name ~@options))))
+   [app-name & options]
+  #?(:clj
+     (if (u/clj-compilation?)
+       `(ap/defapplet ~app-name ~@options)
+       `(quil.sketch/defsketch ~app-name ~@options))
+     :cljs
+     `(quil.sketch$macros/defsketch ~app-name ~@options)))
 
 (defn ^{:requires-bindings false
         :processing-name nil

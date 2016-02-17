@@ -4,7 +4,7 @@
             [goog.dom :as dom]
             [goog.events :as events]
             [goog.events.EventType :as EventType])
-  (:require-macros [quil.sketch :as sketch]))
+  (:require-macros [quil.sketch]))
 
 (def ^:dynamic
   *applet* nil)
@@ -43,7 +43,7 @@
         (when-let [handler (opts quil-name)]
           (aset prc (name processing-name)
                 (fn []
-                  (sketch/with-sketch prc
+                  (quil.sketch/with-sketch prc
                     (handler)))))))
 
 (defn make-sketch [options]
@@ -110,9 +110,13 @@
     (doseq [sk @sketch-init-list]
       (when add-elem?
         (add-canvas (:host-id sk)))
-      ((:fn sk)))))
+      ((:fn sk))))
+  (reset! sketch-init-list []))
 
 (defn add-sketch-to-init-list [sk]
-  (swap! sketch-init-list conj sk))
+  (swap! sketch-init-list conj sk)
+  ; if page already loaded immediately init sketch we just added
+  (when (= (.-readyState js/document) "complete")
+    (init-sketches)))
 
 (events/listenOnce js/window EventType/LOAD init-sketches)
