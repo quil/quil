@@ -95,14 +95,14 @@
             (fn [state]
               (background 255)
               (text (str name) 50 20)
-              (text (pr-str state) 50 50)
+              (text (pr-str state) 50 100)
               state))
           (double-fn [name]
             (fn [state event]
               (background 255)
               (text (str name) 50 20)
-              (text (pr-str event) 50 35)
-              (text (pr-str state) 50 50)
+              (text (pr-str event) 50 55)
+              (text (pr-str state) 50 100)
               state))]
     (let [lock (promise)]
      (sketch

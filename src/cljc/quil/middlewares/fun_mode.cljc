@@ -30,7 +30,8 @@
 (defn- key-event []
   {:key (q/key-as-keyword)
    :key-code (q/key-code)
-   :raw-key (q/raw-key)})
+   :raw-key (q/raw-key)
+   #?@(:clj [:modifiers (q/key-modifiers)])})
 
 (defn- wrap-handler
   ([options handler-key]

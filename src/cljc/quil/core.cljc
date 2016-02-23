@@ -1,21 +1,21 @@
-#?(:clj
-   (ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
-       quil.core
-     (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
-              [processing.opengl PShader]
-              [java.awt.event KeyEvent])
-     (:require quil.sketch
-               [clojure.set]
-               [quil.helpers.docs :as docs]
-               [quil.util :as u]
-               [quil.applet :as ap]))
+(ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
+   quil.core
+   #?(:clj
+      (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+               [processing.opengl PShader]
+               [java.awt.event KeyEvent]))
+   #?(:clj
+      (:require quil.sketch
+                [clojure.set]
+                [quil.helpers.docs :as docs]
+                [quil.util :as u]
+                [quil.applet :as ap])
 
-   :cljs
-   (ns quil.core
-     (:require clojure.string
-               org.processingjs.Processing
-               [quil.sketch :as ap :include-macros true]
-               [quil.util :as u :include-macros true])))
+      :cljs
+      (:require clojure.string
+                org.processingjs.Processing
+                [quil.sketch :as ap :include-macros true]
+                [quil.util :as u :include-macros true])))
 
 (def ^{:dynamic true
        :private true}
@@ -2165,6 +2165,27 @@
   KeyEvent reference."
   []
   (.-keyCode (ap/current-applet)))
+
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name nil
+       :category "Input"
+       :subcategory "Keyboard"
+       :added "2.4.0"}
+     key-modifiers
+     "Set of key modifiers that were pressed when event happened.
+  Possible modifiers :ctrl, :alt, :shift, :meta. Not available in
+  ClojureScript."
+     []
+     (let [modifiers
+           (if-let [event (-> (ap/current-applet) meta :key-event deref)]
+             [(if (.isAltDown event) :alt nil)
+              (if (.isShiftDown event) :shift nil)
+              (if (.isControlDown event) :control nil)
+              (if (.isMetaDown event) :meta nil)]
+             [])]
+       (set (remove nil? modifiers)))))
 
 (defn
   ^{:requires-bindings true

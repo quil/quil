@@ -12,7 +12,8 @@
                          [1 "key-code" q/key-code]
                          [2 "key-coded?" #(q/key-coded? (q/raw-key))]
                          [3 "key-pressed?" q/key-pressed?]
-                         [4 "raw-key" q/raw-key]]]
+                         [4 "raw-key" q/raw-key]
+                         [5 "key-modifiers" q/key-modifiers]]]
     (q/text (str capt " " (fn)) 10 (+ (* 20 ind) 20))))
 
 (defsnippet mouse {}

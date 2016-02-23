@@ -249,8 +249,16 @@
             (let [method (to-method-name listener)
                   parent-method-name (prefix "." (parent-method method))]
                `(defn ~(prefix "-" method)
-                  ([this#] (with-applet this# ((~listener (meta this#)))))
-                  ([this# evt#] (~parent-method-name this# evt#)))))]
+                  ([~'this] (with-applet ~'this ((~listener (meta ~'this)))))
+                  ([~'this ~'evt]
+                   ; For all :key-xyz listeners we have to store event object
+                   ; in applet state because later it might be used to
+                   ; build set of key modifiers currently pressed.
+                   ~(if (or (= listener :key-typed)
+                            (= listener :key-pressed))
+                      `(reset! (:key-event (meta ~'this)) ~'evt)
+                      nil)
+                   (~parent-method-name ~'this ~'evt)))))]
     `(do ~@(map generate-listener listeners))))
 
 (generate-listeners)
@@ -328,7 +336,8 @@
                                   :renderer renderer
                                   :size size
                                   :display (:display options)
-                                  :target-frame-rate (atom 60)}
+                                  :target-frame-rate (atom 60)
+                                  :key-event (atom nil)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]
     (doto prx-obj
