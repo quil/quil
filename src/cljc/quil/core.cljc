@@ -426,13 +426,13 @@
   ellipse-mode function. The start and stop parameters specify the
   angles at which to draw the arc. The mode is either :open, :chord or :pie."
   ([x y width height start stop]
-    (.arc (ap/current-applet) (float x) (float y) (float width) (float height)
+    (.arc (current-graphics) (float x) (float y) (float width) (float height)
         (float start) (float stop)))
 
   #?(:clj
      ([x y width height start stop mode]
       (let [arc-mode (u/resolve-constant-key mode arc-modes)]
-        (.arc (ap/current-applet) (float x) (float y) (float width) (float height)
+        (.arc (current-graphics) (float x) (float y) (float width) (float height)
               (float start) (float stop) (int arc-mode))))))
 
 (defn
