@@ -79,6 +79,10 @@
       (aset (aget sketch "options") "globalKeyEvents" true))
     sketch))
 
+(defn destroy-previous-sketch [host-elem]
+  (when-let [proc-obj (.-processing-obj host-elem)]
+    (.exit proc-obj)))
+
 (defn sketch [& opts]
   (let [opts-map (apply hash-map opts)
         host-elem (dom/getElement (:host opts-map))
@@ -89,8 +93,10 @@
           (when-not (= renderer (.-processing-context host-elem))
             (.warn js/console "WARNING: Using different context on one canvas!"))
           (set! (.-processing-context host-elem) renderer))
-        (js/Processing. host-elem (make-sketch opts-map)))
-      (.warn js/console "WARNING: Cannot create sketch. :host is not specified."))))
+        (destroy-previous-sketch host-elem)
+        (set! (.-processing-obj host-elem)
+              (js/Processing. host-elem (make-sketch opts-map))))
+      (.error js/console "ERROR: Cannot create sketch. :host is not specified."))))
 
 (def sketch-init-list (atom (list )))
 
