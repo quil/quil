@@ -15,7 +15,7 @@
                  [quil/processing-dxf "3.0.2.1"]
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
-                 [quil/processing-js "1.4.8.2"]
+                 [quil/processing-js "1.4.16.0"]
                  [com.lowagie/itext "2.1.7"]]
 
   :aot [quil.helpers.applet-listener quil.applet]
