@@ -1436,14 +1436,12 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   degrees
-  ; Disable comment for cljs http://dev.clojure.org/jira/browse/CLJS-1573
-  #?(:clj
-     "Converts a radian measurement to its corresponding value in
+  "Converts a radian measurement to its corresponding value in
   degrees. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and (* 2 Math/PI) radians
   in a circle. For example, (= 90° (/ Math/PI 2) 1.5707964). All
   trigonometric methods in Processing require their parameters to be
-  specified in radians.")
+  specified in radians."
   [radians]
   #?(:clj (PApplet/degrees (float radians))
      :cljs (.degrees (ap/current-applet) radians)))
@@ -3139,14 +3137,12 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   radians
-  ; Disable comment for cljs http://dev.clojure.org/jira/browse/CLJS-1573
-  #?(:clj
-     "Converts a degree measurement to its corresponding value in
+  "Converts a degree measurement to its corresponding value in
   radians. Radians and degrees are two ways of measuring the same
   thing. There are 360 degrees in a circle and 2*PI radians in a
   circle. For example, 90° = PI/2 = 1.5707964. All trigonometric
   methods in Processing require their parameters to be specified in
-  radians.")
+  radians."
   [degrees]
   #?(:clj (PApplet/radians (float degrees))
      :cljs (.radians (ap/current-applet) degrees)))
@@ -4858,7 +4854,10 @@
         code     (key-code)]
     (if (key-coded? key-char)
       (get KEY-CODES code :unknown-key)
-      (keyword (str key-char)))))
+      ; Workaround for closure compiler incorrect string casts.
+      ; See https://github.com/google/closure-compiler/issues/1676
+      (keyword #?(:clj (str key-char)
+                  :cljs (js/String key-char))))))
 
 #?(:clj
    (defn
