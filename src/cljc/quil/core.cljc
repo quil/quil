@@ -4838,7 +4838,8 @@
   specific key pressed. See key-keyword."
   [c]
   #?(:clj (= PConstants/CODED (int c))
-     :cljs (= 65535 (.charCodeAt (str c)))))
+     ; See https://github.com/google/closure-compiler/issues/1676
+     :cljs (= 65535 (.charCodeAt (js/String c)))))
 
 (defn ^{:requires-bindings true
         :processing-name nil
