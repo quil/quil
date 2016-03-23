@@ -1,3 +1,13 @@
+## 2.4.0
+_23rd March 2016_
+
+* Updated cheatsheet. Thanks to @SevereOverfl0w.
+* Added support for some new processing functions: `pixel-density`, `display-density`, `clip`, `no-clip`, `key-modifiers`.
+* Fixes: [#170](https://github.com/quil/quil/issues/170), [#179](https://github.com/quil/quil/issues/179).
+* Upgraded to ProcessingJS 1.4.16 and Processing 3.0.2.
+* Drop support of Clojure 1.6.0.
+* Migrated from cljx to cljc and various refactorings to make Quil compile with self-hosted cljs.
+
 ## 2.3.0
 _1st December 2015_
 

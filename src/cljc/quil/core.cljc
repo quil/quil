@@ -983,7 +983,7 @@
        :processing-name "clear()"
        :category "Color"
        :subcategory "Setting"
-       :added "2.3.0"}
+       :added "2.4.0"}
      clear
      "Clears the pixels within a buffer. This function only works on
   graphics objects created with the (create-graphics) function meaning
@@ -1001,7 +1001,7 @@
        :processing-name "clip()"
        :category "Rendering"
        :subcategory nil
-       :added "2.3.0"}
+       :added "2.4.0"}
      clip
      "Limits the rendering to the boundaries of a rectangle defined by
   the parameters. The boundaries are drawn based on the state of
@@ -1736,7 +1736,7 @@
        :processing-name "displayDensity()"
        :category "Environment"
        :subcategory nil
-       :added "2.3.0"}
+       :added "2.4.0"}
      display-density
      "This function returns the number 2 if the screen is a high-density
   screen (called a Retina display on OS X or high-dpi on Windows and
@@ -2614,7 +2614,7 @@
        :processing-name "noClip()"
        :category "Rendering"
        :subcategory nil
-       :added "2.3.0"}
+       :added "2.4.0"}
      no-clip
      "Disables the clipping previously started by the clip() function."
      []
@@ -2878,7 +2878,7 @@
        :processing-name "pixelDensity()"
        :category "Environment"
        :subcategory nil
-       :added "2.3.0"}
+       :added "2.4.0"}
      pixel-density
      "It makes it possible for Processing to render using all of the pixels
   on high resolutions screens like Apple Retina displays and Windows
