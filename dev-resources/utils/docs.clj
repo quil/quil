@@ -5,13 +5,13 @@
             [clojure.set :refer [union]]
             [quil.helpers.docs :refer [link-to-processing-reference]]))
 
-(defn read-all [file]
+(defn read-all [file feature]
   (let [reader (->> file
                     io/resource
                     io/input-stream
                     input-stream-push-back-reader)
         endof (gensym)]
-    (->> #(rdr/read reader false endof)
+    (->> #(rdr/read {:eof endof :read-cond :allow :features #{feature}} reader)
          (repeatedly)
          (take-while #(not= % endof))
          (doall))))
@@ -55,13 +55,12 @@
 (defn merge-all-metas [metas1 metas2]
   (merge-with merge-metas metas1 metas2))
 
-(def clj-files ["quil/core.clj" "quil/middleware.clj"])
-(def cljs-files ["quil/core.cljs" "quil/middleware.cljs"])
+(def files ["quil/core.cljc" "quil/middleware.cljc"])
 
 (defn generate-metas-to-file [file]
-  (let [clj (-> (mapcat read-all clj-files)
+  (let [clj (-> (mapcat #(read-all % :clj) files)
                 (get-metas :clj))
-        cljs (-> (mapcat read-all cljs-files)
+        cljs (-> (mapcat #(read-all % :cljs) files)
                  (get-metas :cljs))
         merged (merge-all-metas clj cljs)]
     (with-open [wtr (io/writer file)]
