@@ -15,8 +15,8 @@
 (def current-test (atom -1))
 
 (defmacro snippet-as-test [snip-name opts & draw-fn-body]
-  `(let [result# (promise)]
-     (Thread/sleep 100)
+  `(let [result# (promise)
+         time# (System/currentTimeMillis)]
      (when manual?
        (println "Test:" '~snip-name)
        (clojure.pprint/pprint '~draw-fn-body))
@@ -31,12 +31,17 @@
                   ~(:settings opts))
       :draw (fn []
               (try
+                (q/background 255)
                 ~@draw-fn-body
                 (catch Exception e#
                   (println "Error" e#)
                   (.printStackTrace e#)
                   (deliver result# e#))
-                (finally (when-not manual? (q/exit)))))
+                (finally
+                  (when (and (> (- (System/currentTimeMillis) time#)
+                                1000)
+                             (not manual?))
+                    (q/exit)))))
       :on-close #(deliver result# nil))
      (is (nil? @result#))))
 
