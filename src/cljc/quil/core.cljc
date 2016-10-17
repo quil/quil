@@ -1501,6 +1501,27 @@
    #?(:clj (PApplet/dist (float x1) (float y1) (float z1) (float x2) (float y2) (float z2))
       :cljs (.dist (ap/current-applet) x1 y1 z1 x2 y2 z2))))
 
+(defmacro
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Output"
+    :subcategory "Files"
+    :added "2.5"}
+  do-record
+  "Macro for drawing on graphics which saves result in the file at the end.
+  Similar to 'with-graphics' macro. do-record assumed to be used with :pdf
+  graphics. Example:
+
+  (q/do-record (q/create-graphics 200 200 :pdf \"output.pdf\")
+    (q/fill 250 0 0)
+    (q/ellipse 100 100 150 150))
+  "
+  [graphics & body]
+  `(let [gr# ~graphics]
+     (with-graphics gr#
+       ~@body)
+     (.dispose gr#)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "ellipse()"
@@ -4660,10 +4681,11 @@
   graphics. 'with-graphics' cannot be nested (you can draw simultaneously
   only on 1 graphics)"
   [graphics & body]
-  `(binding [quil.core/*graphics* ~graphics]
-     (.beginDraw ~graphics)
-     ~@body
-     (.endDraw ~graphics)))
+  `(let [gr# ~graphics]
+     (binding [quil.core/*graphics* gr#]
+       (.beginDraw gr#)
+       ~@body
+       (.endDraw gr#))))
 
 (defn ^{:requires-bindings false
         :category "Environment"
