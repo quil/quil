@@ -16,7 +16,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil works with Clojure 1.5.1 and 1.6.0.
+Quil works with Clojure 1.7, 1.8 and ClojureScript 1.8.x.
 
 ## Installation
 
