@@ -32,6 +32,8 @@
 #?(:clj
    (defsnippet do-record {}
      (dotimes [i 3]
+       ; render 3 pdf files and check that each is non-empty
+       ; at the end
        (let [file (str "generated/record_" i ".pdf")]
         (q/do-record (q/create-graphics 200 200 :pdf file)
                      (q/fill 255 0 0)

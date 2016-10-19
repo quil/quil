@@ -1689,11 +1689,12 @@
   #?(:clj (PApplet/exp (float val))
      :cljs (.exp (ap/current-applet) val)))
 
-(defn- clear-no-fill-cljs
-  "Sets custom property on graphcis object indicating that it has
+#?(:cljs
+   (defn- clear-no-fill-cljs
+     "Sets custom property on graphcs object indicating that it has
   fill color."
-  [graphics]
-  (aset graphics no-fill-prop false))
+     [graphics]
+     (aset graphics no-fill-prop false)))
 
 (defn
   ^{:requires-bindings true
@@ -1765,7 +1766,7 @@
   adapt to run at double the pixel density on a screen that supports
   it. Can be used in conjunction with (pixel-density)"
      ([] (.displayDensity (ap/current-applet)))
-     ([display] (.displayDensity (ap/current-applet) display))))
+     ([display] (PApplet/displayDensity display))))
 
 (defn
   ^{:requires-bindings true
@@ -2198,7 +2199,8 @@
   ClojureScript."
      []
      (let [modifiers
-           (if-let [event (-> (ap/current-applet) meta :key-event deref)]
+           (if-let [^java.awt.event.InputEvent
+                    event (-> (ap/current-applet) meta :key-event deref)]
              [(if (.isAltDown event) :alt nil)
               (if (.isShiftDown event) :shift nil)
               (if (.isControlDown event) :control nil)
@@ -4101,7 +4103,7 @@
 
 (defn- no-fill?
   "Returns whether fill is disabled for current graphics."
-  [graphics]
+  [^PGraphics graphics]
   #?(:clj (not (.-fill graphics))
      :cljs (true? (aget graphics no-fill-prop))))
 
