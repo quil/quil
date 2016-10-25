@@ -102,6 +102,7 @@
                   :java2d PApplet/JAVA2D
                   :opengl PApplet/OPENGL
                   :pdf    PApplet/PDF
+                  :svg    PApplet/SVG
                   :dxf    PApplet/DXF})
 
 (defn resolve-renderer

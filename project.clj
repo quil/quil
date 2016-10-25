@@ -17,7 +17,11 @@
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
                  [quil/processing-js "1.6.3.0"]
-                 [com.lowagie/itext "4.2.1"]]
+                 [com.lowagie/itext "4.2.1"]
+
+                 ; svg
+                 [org.apache.xmlgraphics/batik-svggen "1.8"]
+                 [org.apache.xmlgraphics/batik-dom "1.8"]]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
