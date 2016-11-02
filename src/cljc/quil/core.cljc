@@ -2199,7 +2199,7 @@
   ClojureScript."
      []
      (let [modifiers
-           (if-let [^java.awt.event.InputEvent
+           (if-let [^processing.event.Event
                     event (-> (ap/current-applet) meta :key-event deref)]
              [(if (.isAltDown event) :alt nil)
               (if (.isShiftDown event) :shift nil)
