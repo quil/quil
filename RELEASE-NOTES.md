@@ -1,3 +1,14 @@
+## 2.5.0
+_5th November 2016_
+
+* Support svg rendering. [#188](https://github.com/quil/quil/issues/188).
+* Add `do-record` macro to simplify svg/pdf generation. [#189](https://github.com/quil/quil/issues/189).
+* Update Processing to 3.2.2 and Processing.js to 1.6.3.
+* Fix `mouse-wheel` event propagation outside of sketch. [#175](https://github.com/quil/quil/issues/175)
+* Fix reflection warnings. [#185](https://github.com/quil/quil/issues/185)
+
+Issues: might not be compatible with Java 7 and below. Processing 3.2.2 requires Java 8+.
+
 ## 2.4.0
 _23rd March 2016_
 
