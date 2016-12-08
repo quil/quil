@@ -1264,7 +1264,7 @@
   current-fill
   "Return the current fill color."
   []
-  (.fillColor (current-graphics)))
+  (.-fillColor (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -1275,7 +1275,7 @@
   current-stroke
   "Return the current stroke color."
   []
-  (.strokeColor (current-graphics)))
+  (.-strokeColor (current-graphics)))
 
 (defn
   ^{:requires-bindings true
