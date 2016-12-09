@@ -125,33 +125,31 @@
   (q/fill 5 10 0 15)
   (q/rect 210 210 100 100))
 
-#?(:clj
-   (defsnippet current-fill {}
-     (q/background 255)
+(defsnippet current-fill {}
+  (q/background 255)
 
-     (q/fill 255 0 0)
-     (q/rect 0 0 100 100)
+  (q/fill 255 0 0)
+  (q/rect 0 0 100 100)
 
-     (let [cur-fill (q/current-fill)]
-       (q/fill 0 0 255)
-       (q/rect 70 70 100 100)
+  (let [cur-fill (q/current-fill)]
+    (q/fill 0 0 255)
+    (q/rect 70 70 100 100)
 
-       (q/fill cur-fill)
-       (q/rect 140 140 100 100))))
+    (q/fill cur-fill)
+    (q/rect 140 140 100 100)))
 
-#?(:clj
-   (defsnippet current-stroke {}
-     (q/background 255)
+(defsnippet current-stroke {}
+  (q/background 255)
 
-     (q/stroke 255 0 0)
-     (q/rect 0 0 100 100)
+  (q/stroke 255 0 0)
+  (q/rect 0 0 100 100)
 
-     (let [cur-stroke (q/current-stroke)]
-       (q/stroke 0 0 255)
-       (q/rect 70 70 100 100)
+  (let [cur-stroke (q/current-stroke)]
+    (q/stroke 0 0 255)
+    (q/rect 70 70 100 100)
 
-       (q/stroke cur-stroke)
-       (q/rect 140 140 100 100))))
+    (q/stroke cur-stroke)
+    (q/rect 140 140 100 100)))
 
 (defsnippet lerp-color {}
   (q/background 255)
