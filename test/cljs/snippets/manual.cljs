@@ -152,3 +152,21 @@
             (q/fill 0)
             (q/text-align :center :center)
             (q/text (str "Key events: " @counter) 250 250))))
+
+
+(q/defsketch mouse-and-key-pressed-variable
+  :size [500 500]
+  :draw (fn []
+          (q/background 240)
+          (q/fill 0 255 255)
+          (let [angle 0
+                x (* 150 (q/cos angle))
+                y (* 150 (q/sin angle))]
+            (when (q/mouse-pressed?) 
+                (q/with-translation [(/ (q/width) 2)
+                                     (/ (q/height) 2)]
+                (q/rect x y 50 100)))
+            (when (q/key-pressed?) 
+                (q/with-translation [(/ (q/width) 2)
+                                     (/ (q/height) 2)]
+                (q/ellipse x y 100 100))))))
