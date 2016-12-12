@@ -2217,7 +2217,8 @@
   key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
-  (.-keyPressed (ap/current-applet)))
+  #?(:clj (.-keyPressed (ap/current-applet))
+     :cljs (.-__keyPressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2607,7 +2608,8 @@
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
   []
-  (.-mousePressed (ap/current-applet)))
+  #?(:clj (.-mousePressed (ap/current-applet))
+     :cljs (.-__mousePressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
