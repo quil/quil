@@ -43,13 +43,17 @@
   (q/random-seed 42)
   (q/text (str "(q/random 42) = " (q/random 42)) 10 20))
 
+(defn- unit-vector? [v]
+  (let [n (->> v (map q/sq) (apply +))]
+    (< (Math/abs (- n 1.0)) 0.001)))
+
 (defsnippet random-2d {}
-  (q/background 255)
-  (q/fill 0)
-  (q/text (str "(q/random-2d) = " (q/random-2d)) 10 20))
+    (q/background 255)
+    (q/fill 0)
+    (q/text (str "unit 2D vector? " (unit-vector? (q/random-2d))) 10 20))
 
 (defsnippet random-3d {}
   (q/background 255)
   (q/fill 0)
-  (q/text (str "(q/random-3d) = " (q/random-3d)) 10 20))
+  (q/text (str "unit 3D vector? " (unit-vector? (q/random-3d))) 10 20))
 
