@@ -42,3 +42,23 @@
   (q/fill 0)
   (q/random-seed 42)
   (q/text (str "(q/random 42) = " (q/random 42)) 10 20))
+
+(defn- unit-vector? [v]
+  (let [n (->> v (map q/sq) (apply +))]
+    (< (Math/abs (- n 1.0)) 0.001)))
+
+(defsnippet random-2d {}
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/random-2d) = " (q/random-2d)) 10 20)
+  (dotimes [_ 100]
+    (when-not (unit-vector? (q/random-2d))
+        (throw (Exception. "random-2d doesn't return a unit vector")))))
+
+(defsnippet random-3d {}
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/random-3d) = " (q/random-3d)) 10 20)
+  (dotimes [_ 100]
+    (when-not (unit-vector? (q/random-3d))
+        (throw (Exception. "random-3d doesn't return a unit vector")))))
