@@ -48,12 +48,17 @@
     (< (Math/abs (- n 1.0)) 0.001)))
 
 (defsnippet random-2d {}
-    (q/background 255)
-    (q/fill 0)
-    (q/text (str "unit 2D vector? " (unit-vector? (q/random-2d))) 10 20))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/random-2d) = " (q/random-2d)) 10 20)
+  (dotimes [_ 100]
+    (when-not (unit-vector? (q/random-2d))
+        (throw (Exception. "random-2d doesn't return a unit vector")))))
 
 (defsnippet random-3d {}
   (q/background 255)
   (q/fill 0)
-  (q/text (str "unit 3D vector? " (unit-vector? (q/random-3d))) 10 20))
-
+  (q/text (str "(q/random-3d) = " (q/random-3d)) 10 20)
+  (dotimes [_ 100]
+    (when-not (unit-vector? (q/random-3d))
+        (throw (Exception. "random-3d doesn't return a unit vector")))))
