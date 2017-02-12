@@ -152,3 +152,12 @@
             (q/fill 0)
             (q/text-align :center :center)
             (q/text (str "Key events: " @counter) 250 250))))
+
+
+(q/defsketch mouse-and-key-pressed-variable
+  :size [500 500]
+  :draw (fn []
+          (q/background 240)
+          (q/fill 0 0 0)
+          (q/text (str "mouse pressed: "  (q/mouse-pressed?)) 0 20)
+          (q/text (str "key pressed: " (q/key-pressed?)) 0 40)))

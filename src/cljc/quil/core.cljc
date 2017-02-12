@@ -1264,7 +1264,7 @@
   current-fill
   "Return the current fill color."
   []
-  (.fillColor (current-graphics)))
+  (.-fillColor (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -1275,7 +1275,7 @@
   current-stroke
   "Return the current stroke color."
   []
-  (.strokeColor (current-graphics)))
+  (.-strokeColor (current-graphics)))
 
 (defn
   ^{:requires-bindings true
@@ -2217,7 +2217,8 @@
   key-pressed?
   "true if any key is currently pressed, false otherwise."
   []
-  (.-keyPressed (ap/current-applet)))
+  #?(:clj (.-keyPressed (ap/current-applet))
+     :cljs (.-__keyPressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2607,7 +2608,8 @@
   system variable mousePressed is true if a mouse button is pressed
   and false if a button is not pressed."
   []
-  (.-mousePressed (ap/current-applet)))
+  #?(:clj (.-mousePressed (ap/current-applet))
+     :cljs (.-__mousePressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -2666,6 +2668,32 @@
   nothing will be drawn to the screen."  []
   (.noFill (current-graphics))
   #?(:cljs (aset (current-graphics) no-fill-prop true)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "random2d()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.6"}
+  random-2d
+  "Returns a new 2D unit vector in a random direction" []
+  (let [theta (.random (ap/current-applet) TWO-PI)]
+    [(Math/cos theta) (Math/sin theta)]))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "random3d()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.6"}
+  random-3d
+  "Returns a new 3D unit vector in a random direction" []
+  (let [theta (.random (ap/current-applet) TWO-PI)
+        phi   (.random (ap/current-applet) (- HALF-PI) HALF-PI)
+        vx    (* (Math/cos theta) (Math/sin phi))
+        vy    (* (Math/sin theta) (Math/sin phi))
+        vz    (Math/cos phi)]
+    [vx vy vz]))
 
 (defn
   ^{:requires-bindings true
