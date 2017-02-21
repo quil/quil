@@ -4963,3 +4963,20 @@
      [orig-name]
      (let [res (docs/matching-processing-methods fn-metas orig-name)]
        (u/print-definition-list res))))
+
+
+#?(:cljs 
+    (defn preload-font
+      "Fonts can be preloaded from URL, such as \"Arial.ttf\".
+      Be careful! Font name must be the same in preload-font call and in create-font call.
+
+      Sample:
+      (q/preload-font \"ComicSans.ttf\")
+      (q/text-font 
+        (q/create-font \"ComicSans.ttf\" 14))
+
+      Processing.js analog: http://processingjs.org/reference/font/"
+      [font-url]
+      (.add 
+        (aget js/Processing "prototype" "PFont" "preloading")
+              font-url)))

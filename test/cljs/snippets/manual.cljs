@@ -152,3 +152,16 @@
             (q/fill 0)
             (q/text-align :center :center)
             (q/text (str "Key events: " @counter) 250 250))))
+
+
+(q/defsketch custom-fonts
+  :size [500 500]
+  :setup (fn []    
+    (q/preload-font "ComicSans.ttf")
+    (q/text-font 
+      (q/create-font "ComicSans.ttf" 14)))
+
+  :draw (fn []
+    (q/background 200)
+    (q/fill 0)
+    (q/text (str "List of available fonts: " (vec (q/available-fonts))) 50 20)))

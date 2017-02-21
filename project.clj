@@ -16,7 +16,7 @@
                  [quil/processing-svg "3.2.2"]
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
-                 [quil/processing-js "1.6.3.0"]
+                 [quil/processing-js "1.6.4.1"]
                  [com.lowagie/itext "2.1.7"]
 
                  ; svg
