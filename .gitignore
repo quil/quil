@@ -16,3 +16,5 @@ target
 *.idea
 generated/
 examples/
+pom.xml.asc
+screen-*.tif

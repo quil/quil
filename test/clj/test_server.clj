@@ -33,6 +33,7 @@
     (gen-test-canvas "pixels-update-pixels")
     (gen-test-canvas "global-key-events")
     (gen-test-canvas "custom-fonts")
+    (gen-test-canvas "mouse-and-key-pressed-variable")
 
     [:div.cbox
      [:p "extern-control test"]

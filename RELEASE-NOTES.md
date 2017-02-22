@@ -1,3 +1,12 @@
+## 2.6.0
+_12th February 2017_
+
+* Add `random-2d` and `random-2d` functions to generate random vectors. [#201](https://github.com/quil/quil/pull/201) by [@prakhar1989](https://github.com/prakhar1989)
+* Fixes `current-fill` and `current-stroke` on cljs. [#196](https://github.com/quil/quil/pull/196) by [@satchit8](https://github.com/satchit8)
+* Fixes `mouse-pressed?` and `key-pressed?` on cljs. [#198](https://github.com/quil/quil/pull/198) by [@Norgat](https://github.com/Norgat)
+* Fixes console.log problem that logged every call to `rect`. [Bug](https://github.com/quil/processing-js/pull/2).
+* Update Processing to 3.2.4 and Processing.js to 1.6.4.
+
 ## 2.5.0
 _5th November 2016_
 
