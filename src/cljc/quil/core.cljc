@@ -2671,32 +2671,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "random2d()"
-    :category "Math"
-    :subcategory "Random"
-    :added "2.6"}
-  random-2d
-  "Returns a new 2D unit vector in a random direction" []
-  (let [theta (.random (ap/current-applet) TWO-PI)]
-    [(Math/cos theta) (Math/sin theta)]))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "random3d()"
-    :category "Math"
-    :subcategory "Random"
-    :added "2.6"}
-  random-3d
-  "Returns a new 3D unit vector in a random direction" []
-  (let [theta (.random (ap/current-applet) TWO-PI)
-        phi   (.random (ap/current-applet) (- HALF-PI) HALF-PI)
-        vx    (* (Math/cos theta) (Math/sin phi))
-        vy    (* (Math/sin theta) (Math/sin phi))
-        vz    (Math/cos phi)]
-    [vx vy vz]))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "noise()"
     :category "Math"
     :subcategory "Random"
@@ -3216,6 +3190,36 @@
   including) 10.2."
   ([max] (.random (ap/current-applet) (float max)))
   ([min max] (.random (ap/current-applet) (float min) (float max))))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "random2d()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.6.1"}
+  random-2d
+  "Returns a new 2D unit vector in a random direction"
+  []
+  (let [theta (random TWO-PI)]
+    [(Math/cos theta) (Math/sin theta)]))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name "random3d()"
+    :category "Math"
+    :subcategory "Random"
+    :added "2.6.1"}
+  random-3d
+  "Returns a new 3D unit vector in a random direction"
+  []
+  ; Algorithm: http://mathworld.wolfram.com/SpherePointPicking.html
+  (let [theta (random TWO-PI)
+        u (random -1 1)
+        xy (Math/sqrt (- 1 (* u u)))
+        vx (* xy (Math/cos theta))
+        vy (* xy (Math/sin theta))
+        vz u]
+    [vx vy vz]))
 
 (defn
   ^{:requires-bindings true
