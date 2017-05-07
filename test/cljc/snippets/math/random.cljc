@@ -53,7 +53,7 @@
   (q/text (str "(q/random-2d) = " (q/random-2d)) 10 20)
   (dotimes [_ 100]
     (when-not (unit-vector? (q/random-2d))
-        (throw (Exception. "random-2d doesn't return a unit vector")))))
+        (throw (ex-info "random-2d doesn't return a unit vector" {})))))
 
 (defsnippet random-3d {}
   (q/background 255)
@@ -61,4 +61,4 @@
   (q/text (str "(q/random-3d) = " (q/random-3d)) 10 20)
   (dotimes [_ 100]
     (when-not (unit-vector? (q/random-3d))
-        (throw (Exception. "random-3d doesn't return a unit vector")))))
+        (throw (ex-info "random-3d doesn't return a unit vector" {})))))

@@ -17,7 +17,7 @@
                          :time (java.util.Date.)}))))))
 
 (defn- draw-error-message [pause]
-  (let [error (q/create-graphics (q/width) (q/height))]
+  (let [^processing.core.PGraphics error (q/create-graphics (q/width) (q/height))]
     (q/with-graphics error
       (q/push-style)
       (q/background 255)

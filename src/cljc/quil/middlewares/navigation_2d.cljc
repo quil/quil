@@ -1,7 +1,7 @@
 (ns quil.middlewares.navigation-2d
   (:require [quil.core :as q :include-macros true]))
 
-(def ^:private missing-navigation-key-error
+(def ^:private ^String missing-navigation-key-error
   (str "state map is missing :navigation-2d key. "
        "Did you accidentally removed it from the state in "
        ":update or any other handler?"))
