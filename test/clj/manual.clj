@@ -1,20 +1,24 @@
 (ns ^:manual
   manual
-  (:require [quil.core :refer :all]
+  (:require [quil.core :as q]
             [quil.middlewares.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
 
-(defn draw-text-fn [& txt]
-  (fn []
-    (fill 0)
-    (background 255)
-    (text (apply str txt) 20 20)))
+(defn draw-text [& txt]
+  (q/fill 0)
+  (q/background 255)
+  (q/text-size 20)
+  (q/fill 0)
+  (q/text-align :center :center)
+  (q/text (apply str txt)
+          (/ (q/width) 2)
+          (/ (q/height) 2)))
 
 (defn resizable-and-keep-on-top []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "Resizable and keep-on-top"
-     :draw (draw-text-fn "Sketch should be resizable and keep-on-top.")
+     :draw #(draw-text "Sketch should be resizable and keep-on-top.")
      :size [500 500]
      :features [:resizable :keep-on-top]
      :on-close #(deliver lock true))
@@ -22,52 +26,52 @@
 
 (defn no-loop-with-start-loop []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "no-loop with start-loop"
      :draw (fn []
-             (fill 0)
-             (background 255)
-             (text (str "This sketch should update seconds fields until it reaches number divisible by 10.\n"
-                        "After this it should stop updating. To continue updating press any key")
-                   20 20)
-             (let [sec (seconds)]
-               (text (str sec) 20 50)
+             (q/fill 0)
+             (q/background 255)
+             (q/text (str "This sketch should update seconds fields until it reaches number divisible by 10.\n"
+                          "After this it should stop updating. To continue updating press any key")
+                     20 20)
+             (let [sec (q/seconds)]
+               (q/text (str sec) 20 50)
                (when (zero? (rem sec 10))
-                 (no-loop))))
+                 (q/no-loop))))
      :on-close #(deliver lock true)
-     :key-pressed #(start-loop))
+     :key-pressed #(q/start-loop))
     @lock))
 
 (defn redraw-on-key []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "no-loop with start-loop"
-     :setup #(no-loop)
+     :setup #(q/no-loop)
      :draw (fn []
-             (fill 0)
-             (background 255)
-             (text (str "This sketch should show current time but update it only on key press.")
+             (q/fill 0)
+             (q/background 255)
+             (q/text (str "This sketch should show current time but update it only on key press.")
                    20 20)
-             (text (format "%02d:%02d:%02d" (hour) (minute) (seconds))
+             (q/text (format "%02d:%02d:%02d" (q/hour) (q/minute) (q/seconds))
                    20 50))
      :on-close #(deliver lock true)
-     :key-pressed #(redraw))
+     :key-pressed #(q/redraw))
     @lock))
 
 (defn fullscreen []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "Fullscreen"
-     :draw (draw-text-fn "Sketch should be fullscreen and not in present mode.")
+     :draw #(draw-text "Sketch should be fullscreen\nand not in present mode.")
      :size :fullscreen
      :on-close #(deliver lock true))
     @lock))
 
 (defn present-and-bgcolor []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "Present and bgcolor"
-     :draw (draw-text-fn "Sketch should in present mode with cyan background around sketch.")
+     :draw #(draw-text "Sketch should in present mode with\ncyan background around sketch.")
      :size [500 500]
      :features [:present]
      :bgcolor "#00FFFF"
@@ -76,56 +80,71 @@
 
 (defn on-close-and-exit-on-close []
   (let [lock (promise)]
-    (sketch
+    (q/sketch
      :title "on-close and exit-on-close"
-     :draw (draw-text-fn "This is last test. When you close sketch JVM should shut down \nand you won't see tests summary.\n"
-                         "Also you should see 'on-close called' message in console.")
+     :draw #(draw-text "This is last test.\nWhen you close sketch JVM should shut down \nand you won't see tests summary.\n"
+                         "Also you should see 'on-close called'\nmessage in console.")
      :on-close (fn [] (println "on-close called"))
      :features [:exit-on-close])
     @lock))
 
 (defn fun-mode []
   (letfn [(setup []
-            (frame-rate 30)
-            (fill 0)
+            (q/frame-rate 30)
+            (q/fill 0)
             {:round 0})
           (update [state]
             (update-in state [:round] inc))
           (single-fn [name]
             (fn [state]
-              (background 255)
-              (text (str name) 50 20)
-              (text (pr-str state) 50 100)
+              (q/background 255)
+              (q/text (str name) 50 20)
+              (q/text (pr-str state) 50 100)
               state))
           (double-fn [name]
             (fn [state event]
-              (background 255)
-              (text (str name) 50 20)
-              (text (pr-str event) 50 55)
-              (text (pr-str state) 50 100)
+              (q/background 255)
+              (q/text (str name) 50 20)
+              (q/text (pr-str event) 50 55)
+              (q/text (pr-str state) 50 100)
               state))]
     (let [lock (promise)]
-     (sketch
-      :title "Functional mode"
-      :size [500 500]
-      :setup setup
-      :update update
-      :focus-gained (single-fn :focus-gained)
-      :focus-lost (single-fn :focus-lost)
-      :mouse-entered (double-fn :mouse-entered)
-      :mouse-exited (double-fn :mouse-exited)
-      :mouse-pressed (double-fn :mouse-pressed)
-      :mouse-released (double-fn :mouse-released)
-      :mouse-clicked (double-fn :mouse-clicked)
-      :mouse-moved (double-fn :mouse-moved)
-      :mouse-dragged (double-fn :mouse-dragged)
-      :mouse-wheel (double-fn :mouse-wheel)
-      :key-pressed (double-fn :key-pressed)
-      :key-released (single-fn :key-released)
-      :key-typed (double-fn :key-typed)
-      :on-close #(do (println ":on-close in fun-mode. State is:" %) (deliver lock true))
-      :middleware [fm/fun-mode])
-     @lock)))
+      (q/sketch
+       :title "Functional mode"
+       :size [500 500]
+       :setup setup
+       :update update
+       :focus-gained (single-fn :focus-gained)
+       :focus-lost (single-fn :focus-lost)
+       :mouse-entered (double-fn :mouse-entered)
+       :mouse-exited (double-fn :mouse-exited)
+       :mouse-pressed (double-fn :mouse-pressed)
+       :mouse-released (double-fn :mouse-released)
+       :mouse-clicked (double-fn :mouse-clicked)
+       :mouse-moved (double-fn :mouse-moved)
+       :mouse-dragged (double-fn :mouse-dragged)
+       :mouse-wheel (double-fn :mouse-wheel)
+       :key-pressed (double-fn :key-pressed)
+       :key-released (single-fn :key-released)
+       :key-typed (double-fn :key-typed)
+       :on-close #(do (println ":on-close in fun-mode. State is:" %) (deliver lock true))
+       :middleware [fm/fun-mode])
+      @lock)))
+
+(defn resize-sketch []
+  (let [lock (promise)]
+    (q/sketch
+     :title "Resize"
+     :draw #(draw-text
+             "On click sketch should increase size\nby 50px width and 20px height."
+             "\nwidth: " (q/width)
+             "\nheight: " (q/height))
+     :mouse-clicked #(q/resize-sketch
+                      (+ (q/width) 50)
+                      (+ (q/height) 20))
+     :size [500 500]
+     :on-close #(deliver lock true))
+    @lock))
 
 (deftest run-all
   (doseq [fn [resizable-and-keep-on-top
@@ -133,5 +152,6 @@
               no-loop-with-start-loop
               redraw-on-key
               fun-mode
+              resize-sketch
               on-close-and-exit-on-close]]
     (fn)))

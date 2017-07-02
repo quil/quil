@@ -1,3 +1,8 @@
+## 2.7.0 In progress
+__TODO DATE__
+
+* Add `resize-sketch` function. [#212](https://github.com/quil/quil/issues/212)
+
 ## 2.6.0
 _12th February 2017_
 

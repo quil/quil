@@ -68,6 +68,14 @@
      [:p.controls
       [:button {:id "external-control-start"} "Start"]
       [:button {:id "external-control-stop"} "Stop"]])
+
+    (gen-test-canvas
+     "resizing"
+     (str
+      "Sketch should show width number. Upon clicking on button sketch should increase width "
+      "and then after 1 sec back to original 500px width.")
+     [:p.controls
+      [:button {:id "resize-button"} "Resize"]])
 ]))
 
 (defroutes app-routes

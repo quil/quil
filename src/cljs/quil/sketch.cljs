@@ -3,6 +3,7 @@
             [quil.middlewares.deprecated-options :as do]
             [goog.dom :as dom]
             [goog.events :as events]
+            [goog.style :as style]
             [goog.events.EventType :as EventType])
   (:require-macros [quil.sketch]))
 
@@ -16,6 +17,15 @@
 
 (defn resolve-renderer [mode]
   (u/resolve-constant-key mode rendering-modes))
+
+(defn set-size [applet width height]
+  (let [el (.-quil-canvas applet)]
+    (.setAttribute el "width" width)
+    (.setAttribute el "height" height)
+    (set! (.-width applet)
+          (.parseInt js/window (style/getComputedStyle el "width")))
+    (set! (.-height applet)
+          (.parseInt js/window (style/getComputedStyle el "height")))))
 
 (defn size
   ([width height]
@@ -94,9 +104,13 @@
             (.warn js/console "WARNING: Using different context on one canvas!"))
           (set! (.-processing-context host-elem) renderer))
         (destroy-previous-sketch host-elem)
-        (set! (.-processing-obj host-elem)
-              (js/Processing. host-elem (make-sketch opts-map))))
-      (.error js/console "ERROR: Cannot create sketch. :host is not specified."))))
+        (let [proc-obj (js/Processing. host-elem (make-sketch opts-map))]
+          (set! (.-processing-obj host-elem) proc-obj)
+          (set! (.-quil-canvas proc-obj) host-elem)))
+      (.error js/console
+              (if (:host opts-map)
+                (str "ERROR: Cannot find host element: " (:host opts-map))
+                "ERROR: Cannot create sketch. :host is not specified or element not found.")))))
 
 (def sketch-init-list (atom (list )))
 

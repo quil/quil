@@ -3434,6 +3434,22 @@
   (.resize img w h))
 
 (defn
+   ^{:require-bindings true
+     :category "Environment"
+     :added "2.7.0"}
+   resize-sketch
+   "Resizes sketch.
+  Note about ClojureScript version: if canvas element is resized by external
+  reasons (for example from js on a page then you still need to call this
+  method in order to tell Quil that size has changed. Currently there is no
+  good way to automatically detect that size of <canvas> element changed."
+   [width height]
+  #?(:cljs
+     (ap/set-size (ap/current-applet) width height)
+     :clj
+     (.. (ap/current-applet) getSurface (setSize width height))))
+
+(defn
   ^{:requires-bindings true
     :processing-name "rotate()"
     :category "Transform"

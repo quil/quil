@@ -176,6 +176,27 @@
           (q/text (str "mouse pressed: "  (q/mouse-pressed?)) 0 20)
           (q/text (str "key pressed: " (q/key-pressed?)) 0 40)))
 
+(q/defsketch resizing
+  :size [500 500]
+  :draw (fn []
+          (q/background 240)
+          (q/text-size 30)
+          (q/fill 0)
+          (q/text-align :center :center)
+          (q/text (str "width: " (q/width)
+                       "\nheight: " (q/height))
+                  (/ (q/width) 2)
+                  (/ (q/height) 2))))
+
+
+(defn resize-sketch []
+  (let [el (.querySelector js/document "#resizing")]
+    (.setTimeout js/window
+                 #(q/with-sketch (q/get-sketch-by-id "resizing")
+                    (q/resize-sketch 500 500))
+                 2000)
+    (q/with-sketch (q/get-sketch-by-id "resizing")
+     (q/resize-sketch 700 700))))
 
 (defn init []
   (events/listen (.querySelector js/document "#external-control-start")
@@ -183,6 +204,9 @@
                  #(sketch-start "external-control"))
   (events/listen (.querySelector js/document "#external-control-stop")
                  EventType/CLICK
-                 #(sketch-stop "external-control")))
+                 #(sketch-stop "external-control"))
+  (events/listen (.querySelector js/document "#resize-button")
+                 EventType/CLICK
+                 resize-sketch))
 
 (events/listenOnce js/window EventType/LOAD init)
