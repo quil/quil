@@ -37,20 +37,20 @@
   :resource-paths ["resources"]
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [compojure "1.5.2"]
-                                  [clj-http "3.4.1"]
+                                  [compojure "1.6.0"]
+                                  [clj-http "3.6.1"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [org.clojure/tools.reader "0.10.0"]]
-                   :plugins [[lein-ring "0.11.0"]]}
+                                  [org.clojure/tools.reader "1.0.0"]]
+                   :plugins [[lein-ring "0.12.0"]]}
 
              :cljs-testing [:dev
                             {:hooks [leiningen.cljsbuild]
-                             :plugins [[lein-cljsbuild "1.1.5"]]
+                             :plugins [[lein-cljsbuild "1.1.6"]]
                              :source-paths ["test/clj"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
                                             [org.clojure/clojure "1.8.0"]
-                                            [org.clojure/clojurescript "1.9.473"]]
+                                            [org.clojure/clojurescript "1.9.671"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "test/cljc" "src/cljs"]
