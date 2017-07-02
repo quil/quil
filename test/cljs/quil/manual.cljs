@@ -1,4 +1,4 @@
-(ns snippets.manual
+(ns quil.manual
   (:require [quil.core :as q :include-macros true]
             [quil.middlewares.fun-mode :as fm]))
 

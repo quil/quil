@@ -2,11 +2,12 @@
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [hiccup.core :as h]))
+            [hiccup.page :as h]))
 
 (def root-page
-  (h/html
+  (h/html5
    [:head
+    [:meta {:charset "utf-8"}]
     [:title "Quil tests"]
     [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
    [:div.centerLayer {:align "center"}
@@ -14,14 +15,14 @@
     [:p [:a {:href "/manual"} "Manual Quil API tests"]]]))
 
 (defn gen-test-canvas [id]
-  (h/html
-   [:div.cbox
-    [:p (str id " test")]
-    [:canvas {:id id}]]))
+  [:div.cbox
+   [:p (str id " test")]
+   [:canvas {:id id}]])
 
 (def manual-page
-  (h/html
+  (h/html5
    [:head
+    [:meta {:charset "utf-8"}]
     [:title "Manual Quil tests"]
     [:script {:type "text/javascript" :src "js/main.js"}]
     [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
