@@ -75,8 +75,7 @@
       "Sketch should show width number. Upon clicking on button sketch should increase width "
       "and then after 1 sec back to original 500px width.")
      [:p.controls
-      [:button {:id "resize-button"} "Resize"]])
-]))
+      [:button {:id "resize-button"} "Resize"]])]))
 
 (defroutes app-routes
   (GET "/" req root-page)

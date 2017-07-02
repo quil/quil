@@ -2,7 +2,6 @@
   (:require [clojure.stacktrace :refer [print-cause-trace]]
             [quil.util :as u]))
 
-
 (defn- wrap-fn [name function]
   (fn []
     (try

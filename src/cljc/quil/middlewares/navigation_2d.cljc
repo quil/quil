@@ -39,9 +39,9 @@
   (let [dx (- (:p-x event) (:x event))
         dy (- (:p-y event) (:y event))
         zoom (-> state :navigation-2d :zoom)]
-   (-> state
-       (update-in [:navigation-2d :position 0] + (/ dx zoom))
-       (update-in [:navigation-2d :position 1] + (/ dy zoom)))))
+    (-> state
+        (update-in [:navigation-2d :position 0] + (/ dx zoom))
+        (update-in [:navigation-2d :position 1] + (/ dy zoom)))))
 
 (defn- mouse-wheel
   "Changes zoom settings based on scroll."
@@ -79,11 +79,11 @@
         setup (:setup options (fn [] {}))]
     (assoc options
 
-      :setup (partial setup-2d-nav setup user-settings)
+           :setup (partial setup-2d-nav setup user-settings)
 
-      :draw (partial draw user-draw)
+           :draw (partial draw user-draw)
 
-      :mouse-dragged (fn [state event]
-                       (user-mouse-dragged (mouse-dragged state event) event))
-      :mouse-wheel (fn [state event]
-                     (user-mouse-wheel (mouse-wheel state event) event)))))
+           :mouse-dragged (fn [state event]
+                            (user-mouse-dragged (mouse-dragged state event) event))
+           :mouse-wheel (fn [state event]
+                          (user-mouse-wheel (mouse-wheel state event) event)))))

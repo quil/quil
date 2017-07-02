@@ -13,7 +13,7 @@
 (defn current-applet [] *applet*)
 
 (u/generate-quil-constants :cljs
-  rendering-modes (:java2d :p2d :p3d :opengl))
+                           rendering-modes (:java2d :p2d :p3d :opengl))
 
 (defn resolve-renderer [mode]
   (u/resolve-constant-key mode rendering-modes))
@@ -29,10 +29,10 @@
 
 (defn size
   ([width height]
-    (.size (current-applet) (int width) (int height)))
+   (.size (current-applet) (int width) (int height)))
 
   ([width height mode]
-    (.size (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
+   (.size (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
 
 (defn- bind-handlers [prc opts]
   (doseq [[processing-name quil-name] {:setup :setup
@@ -50,18 +50,18 @@
                                        :mouseOut :mouse-exited
                                        :mouseOver :mouse-entered
                                        :mouseScrolled :mouse-wheel}]
-        (when-let [handler (opts quil-name)]
-          (aset prc (name processing-name)
-                (fn []
-                  (quil.sketch/with-sketch prc
-                    (handler)))))))
+    (when-let [handler (opts quil-name)]
+      (aset prc (name processing-name)
+            (fn []
+              (quil.sketch/with-sketch prc
+                (handler)))))))
 
 (defn make-sketch [options]
   (let [opts            (->> (:middleware options [])
-                          (cons do/deprecated-options)
-                          (apply comp)
-                          (#(% options))
-                          (merge {:size [500 300]}))
+                             (cons do/deprecated-options)
+                             (apply comp)
+                             (#(% options))
+                             (merge {:size [500 300]}))
 
         sketch-size     (or (:size opts) [200 200])
         renderer        (:renderer opts)
@@ -112,7 +112,7 @@
                 (str "ERROR: Cannot find host element: " (:host opts-map))
                 "ERROR: Cannot create sketch. :host is not specified or element not found.")))))
 
-(def sketch-init-list (atom (list )))
+(def sketch-init-list (atom (list)))
 
 (defn empty-body? []
   (let [child (.-childNodes (.-body js/document))]

@@ -31,6 +31,6 @@
           ~@(apply concat (seq opts))))
 
        (when-not (some #(= :no-start %) ~(:features opts))
-          (quil.sketch/add-sketch-to-init-list
-            {:fn ~app-name
-             :host-id ~(:host opts)})))))
+         (quil.sketch/add-sketch-to-init-list
+          {:fn ~app-name
+           :host-id ~(:host opts)})))))

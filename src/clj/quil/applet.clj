@@ -1,5 +1,5 @@
 (ns ^{:doc "Functions and macros for initialising and controlling visualisation applets."}
-  quil.applet
+ quil.applet
   (:import [processing.core PApplet]
            [javax.swing JFrame]
            [java.awt Dimension GraphicsEnvironment]
@@ -55,7 +55,7 @@
   [applet]
   (with-applet applet
     ((:on-close (meta applet))))
-  (-> applet .getSurface(.setVisible false))
+  (-> applet .getSurface (.setVisible false))
   (destroy-window applet))
 
 (defn applet-state
@@ -77,7 +77,6 @@
        (.setAlwaysOnTop surface keep-on-top?)))
     applet))
 
-
 (defn- applet-run
   "Launches the applet to the specified target."
   [applet title renderer]
@@ -94,7 +93,6 @@
                              "--hide-stop" title])))
    applet)
   (prepare-applet-surface applet title))
-
 
 (def ^{:private true}
   renderer-modes {:p2d    PApplet/P2D
@@ -153,28 +151,28 @@
                 :focus-lost])
 
 (gen-class
-  :name "quil.Applet"
-  :implements [clojure.lang.IMeta]
-  :extends processing.core.PApplet
-  :state state
-  :init quil-applet-init
-  :constructors {[java.util.Map] []}
-  :exposes-methods {keyTyped keyTypedParent
-                    loop loopParent
-                    mouseDragged mouseDraggedParent
-                    keyPressed keyPressedParent
-                    mouseExited mouseExitedParent
-                    mouseClicked mouseClickedParent
-                    mouseEntered mouseEnteredParent
-                    mouseMoved mouseMovedParent
-                    keyReleased keyReleasedParent
-                    mousePressed mousePressedParent
-                    focusGained focusGainedParent
-                    frameRate frameRateParent
-                    mouseReleased mouseReleasedParent
-                    focusLost focusLostParent
-                    noLoop noLoopParent
-                    sketchFullScreen sketchFullScreenParent})
+ :name "quil.Applet"
+ :implements [clojure.lang.IMeta]
+ :extends processing.core.PApplet
+ :state state
+ :init quil-applet-init
+ :constructors {[java.util.Map] []}
+ :exposes-methods {keyTyped keyTypedParent
+                   loop loopParent
+                   mouseDragged mouseDraggedParent
+                   keyPressed keyPressedParent
+                   mouseExited mouseExitedParent
+                   mouseClicked mouseClickedParent
+                   mouseEntered mouseEnteredParent
+                   mouseMoved mouseMovedParent
+                   keyReleased keyReleasedParent
+                   mousePressed mousePressedParent
+                   focusGained focusGainedParent
+                   frameRate frameRateParent
+                   mouseReleased mouseReleasedParent
+                   focusLost focusLostParent
+                   noLoop noLoopParent
+                   sketchFullScreen sketchFullScreenParent})
 
 (defn -exitActual
   "Overriding PApplet.exitActual because we don't want it to call
@@ -239,7 +237,7 @@
         ; via .size(width, height, renderer, path) method in setup function.
         ; Set :java2d renderer instead and call size method in setup later.
         initial-renderer (if (= renderer :pdf) :java2d renderer)]
-      (resolve-renderer initial-renderer)))
+    (resolve-renderer initial-renderer)))
 
 (defmacro generate-listeners
   "Generates all listeners like onKeyPress, onMouseClick and others."
@@ -247,19 +245,19 @@
   (letfn [(prefix [v method]
             (symbol (str v method)))
           (generate-listener [listener]
-            (let [method (to-method-name listener)
-                  parent-method-name (prefix "." (parent-method method))]
-               `(defn ~(prefix "-" method)
-                  ([~'this] (with-applet ~'this ((~listener (meta ~'this)))))
-                  ([~'this ~'evt]
+                             (let [method (to-method-name listener)
+                                   parent-method-name (prefix "." (parent-method method))]
+                               `(defn ~(prefix "-" method)
+                                  ([~'this] (with-applet ~'this ((~listener (meta ~'this)))))
+                                  ([~'this ~'evt]
                    ; For all :key-xyz listeners we have to store event object
                    ; in applet state because later it might be used to
                    ; build set of key modifiers currently pressed.
-                   ~(if (or (= listener :key-typed)
-                            (= listener :key-pressed))
-                      `(reset! (:key-event (meta ~'this)) ~'evt)
-                      nil)
-                   (~parent-method-name ~'this ~'evt)))))]
+                                   ~(if (or (= listener :key-typed)
+                                            (= listener :key-pressed))
+                                      `(reset! (:key-event (meta ~'this)) ~'evt)
+                                      nil)
+                                   (~parent-method-name ~'this ~'evt)))))]
     `(do ~@(map generate-listener listeners))))
 
 (generate-listeners)

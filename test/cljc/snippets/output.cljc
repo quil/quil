@@ -36,10 +36,10 @@
        ; render 3 pdf files and check that each is non-empty
        ; at the end
        (let [file (str "generated/record_" i "." (name type))]
-        (q/do-record (q/create-graphics 200 200 type file)
-                     (q/fill 255 0 0)
-                     (q/ellipse 100 100
-                                (+ 50 (* 50 i))
-                                (+ 50 (* 50 i))))
-        (is (pos? (.length (io/file file))))))))
+         (q/do-record (q/create-graphics 200 200 type file)
+                      (q/fill 255 0 0)
+                      (q/ellipse 100 100
+                                 (+ 50 (* 50 i))
+                                 (+ 50 (* 50 i))))
+         (is (pos? (.length (io/file file))))))))
 

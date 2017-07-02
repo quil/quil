@@ -1,21 +1,21 @@
 (ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
-   quil.core
-   #?(:clj
-      (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
-               [processing.opengl PShader]
-               [java.awt.event KeyEvent]))
-   #?(:clj
-      (:require quil.sketch
-                [clojure.set]
-                [quil.helpers.docs :as docs]
-                [quil.util :as u]
-                [quil.applet :as ap])
+ quil.core
+  #?(:clj
+     (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
+              [processing.opengl PShader]
+              [java.awt.event KeyEvent]))
+  #?(:clj
+     (:require quil.sketch
+               [clojure.set]
+               [quil.helpers.docs :as docs]
+               [quil.util :as u]
+               [quil.applet :as ap])
 
-      :cljs
-      (:require clojure.string
-                org.processingjs.Processing
-                [quil.sketch :as ap :include-macros true]
-                [quil.util :as u :include-macros true])))
+     :cljs
+     (:require clojure.string
+               org.processingjs.Processing
+               [quil.sketch :as ap :include-macros true]
+               [quil.util :as u :include-macros true])))
 
 (def ^{:dynamic true
        :private true}
@@ -42,22 +42,23 @@
 
 ;; -------------------- PConstants section -----------------------
 
-(u/generate-quil-constants #?(:clj :clj :cljs :cljs)
+(u/generate-quil-constants
+ #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
-                               :screen :overlay :replace :hard-light :soft-light :dodge :burn)
+                     :screen :overlay :replace :hard-light :soft-light :dodge :burn)
  color-modes (:rgb :hsb)
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
  hint-options (:enable-depth-test :disable-depth-test
-               :enable-depth-sort :disable-depth-sort
-               :enable-depth-mask :disable-depth-mask
-               :enable-opengl-errors :disable-opengl-errors
-               :enable-optimized-stroke :disable-optimized-stroke
-               :enable-stroke-perspective :disable-stroke-perspective
-               :enable-stroke-pure :disable-stroke-pure
-               :enable-texture-mipmaps :disable-texture-mipmaps)
+                                  :enable-depth-sort :disable-depth-sort
+                                  :enable-depth-mask :disable-depth-mask
+                                  :enable-opengl-errors :disable-opengl-errors
+                                  :enable-optimized-stroke :disable-optimized-stroke
+                                  :enable-stroke-perspective :disable-stroke-perspective
+                                  :enable-stroke-pure :disable-stroke-pure
+                                  :enable-texture-mipmaps :disable-texture-mipmaps)
  image-modes (:corner :corners :center)
  rect-modes (:corner :corners :center :radius)
  p-shape-modes (:corner :corners :center)
@@ -188,8 +189,8 @@
      (.getInstanceById js/Processing id)))
 
 (defmacro with-sketch [applet & body]
-   (when-not (u/clj-compilation?)
-     `(quil.sketch/with-sketch ~applet ~@body)))
+  (when-not (u/clj-compilation?)
+    `(quil.sketch/with-sketch ~applet ~@body)))
 
 (defn
   ^{:requires-bindings true
@@ -270,7 +271,6 @@
   value of a number is always positive. Takes and returns a float."
      [n]
      (PApplet/abs (float n))))
-
 
 (defn
   ^{:requires-bindings false
@@ -382,10 +382,10 @@
   effect the first time through the loop. The effect of the
   parameters is determined by the current color mode."
   ([red green blue]
-     (.ambientLight (current-graphics) (float red) (float green) (float blue)))
+   (.ambientLight (current-graphics) (float red) (float green) (float blue)))
   ([red green blue x y z]
-     (.ambientLight (current-graphics) (float red) (float green) (float blue)
-                    (float x) (float y) (float z))))
+   (.ambientLight (current-graphics) (float red) (float green) (float blue)
+                  (float x) (float y) (float z))))
 
 (defn
   ^{:requires-bindings true
@@ -407,11 +407,11 @@
     n10 n11 n12 n13
     n20 n21 n22 n23
     n30 n31 n32 n33]
-     (.applyMatrix (current-graphics)
-                   (float n00) (float n01) (float n02) (float n03)
-                   (float n10) (float n11) (float n12) (float n13)
-                   (float n20) (float n21) (float n22) (float n23)
-                   (float n30) (float n31) (float n32) (float n33))))
+   (.applyMatrix (current-graphics)
+                 (float n00) (float n01) (float n02) (float n03)
+                 (float n10) (float n11) (float n12) (float n13)
+                 (float n20) (float n21) (float n22) (float n23)
+                 (float n30) (float n31) (float n32) (float n33))))
 
 (defn
   ^{:requires-bindings true
@@ -426,8 +426,8 @@
   ellipse-mode function. The start and stop parameters specify the
   angles at which to draw the arc. The mode is either :open, :chord or :pie."
   ([x y width height start stop]
-    (.arc (current-graphics) (float x) (float y) (float width) (float height)
-        (float start) (float stop)))
+   (.arc (current-graphics) (float x) (float y) (float width) (float height)
+         (float start) (float stop)))
 
   #?(:clj
      ([x y width height start stop mode]
@@ -655,8 +655,8 @@
   such as ellipse or rect within begin-shape."
   ([] (.beginShape (current-graphics)))
   ([mode]
-     (let [mode (u/resolve-constant-key mode shape-modes)]
-       (.beginShape (current-graphics) (int mode)))))
+   (let [mode (u/resolve-constant-key mode shape-modes)]
+     (.beginShape (current-graphics) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -671,17 +671,17 @@
   the other anchor point. The middle parameters specify the control
   points which define the shape of the curve."
   ([x1 y1 cx1 cy1 cx2 cy2 x2 y2]
-     (.bezier (current-graphics)
-              (float x1) (float y1)
-              (float cx1) (float cy1)
-              (float cx2) (float cy2)
-              (float x2) (float y2)))
+   (.bezier (current-graphics)
+            (float x1) (float y1)
+            (float cx1) (float cy1)
+            (float cx2) (float cy2)
+            (float x2) (float y2)))
   ([x1 y1 z1 cx1 cy1 cz1 cx2 cy2 cz2 x2 y2 z2]
-     (.bezier (current-graphics)
-              (float x1) (float y1) (float z1)
-              (float cx1) (float cy1) (float cz1)
-              (float cx2) (float cy2) (float cz2)
-              (float x2) (float y2) (float z2))))
+   (.bezier (current-graphics)
+            (float x1) (float y1) (float z1)
+            (float cx1) (float cy1) (float cz1)
+            (float cx2) (float cy2) (float cz2)
+            (float x2) (float y2) (float z2))))
 
 (defn
   ^{:requires-bindings true
@@ -742,15 +742,15 @@
   end-shape and only when there is no parameter specified to
   begin-shape."
   ([cx1 cy1 cx2 cy2 x y]
-     (.bezierVertex (current-graphics)
-                    (float cx1) (float cy1)
-                    (float cx2) (float cy2)
-                    (float x) (float y)))
+   (.bezierVertex (current-graphics)
+                  (float cx1) (float cy1)
+                  (float cx2) (float cy2)
+                  (float x) (float y)))
   ([cx1 cy1 cz1 cx2 cy2 cz2 x y z]
-     (.bezierVertex (current-graphics)
-                    (float cx1) (float cy1) (float cz1)
-                    (float cx2) (float cy2) (float cz2)
-                    (float x) (float y) (float z))))
+   (.bezierVertex (current-graphics)
+                  (float cx1) (float cy1) (float cz1)
+                  (float cx2) (float cy2) (float cz2)
+                  (float x) (float y) (float z))))
 
 (defn
   ^{:require-binding false
@@ -814,9 +814,9 @@
   ([^PImage src-img x y width height dx dy dwidth dheight mode]
    (blend src-img (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img ^PImage dest-img x y width height dx dy dwidth dheight mode]
-     (let [mode (u/resolve-constant-key mode blend-modes)]
-       (.blend dest-img src-img (int x) (int y) (int width) (int height)
-               (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
+   (let [mode (u/resolve-constant-key mode blend-modes)]
+     (.blend dest-img src-img (int x) (int y) (int width) (int height)
+             (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
 (defn
   ^{:requires-bindings false
@@ -959,9 +959,9 @@
   current camera settings."
   ([] (.camera (current-graphics)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
-     (.camera (current-graphics) (float eyeX) (float eyeY) (float eyeZ)
-              (float centerX) (float centerY) (float centerZ)
-              (float upX) (float upY) (float upZ))))
+   (.camera (current-graphics) (float eyeX) (float eyeY) (float eyeZ)
+            (float centerX) (float centerY) (float centerZ)
+            (float upX) (float upY) (float upZ))))
 
 (defn
   ^{:requires-bindings false
@@ -1049,17 +1049,17 @@
   0 and 1. The limits for defining colors are altered by setting the
   parameters range1, range2, range3, and range 4."
   ([mode]
-     (let [mode (u/resolve-constant-key mode color-modes)]
-       (.colorMode (current-graphics) (int mode))))
+   (let [mode (u/resolve-constant-key mode color-modes)]
+     (.colorMode (current-graphics) (int mode))))
   ([mode max]
-     (let [mode (u/resolve-constant-key mode color-modes)]
-       (.colorMode (current-graphics) (int mode) (float max))))
+   (let [mode (u/resolve-constant-key mode color-modes)]
+     (.colorMode (current-graphics) (int mode) (float max))))
   ([mode max-x max-y max-z]
-     (let [mode (u/resolve-constant-key mode color-modes)]
-       (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z))))
+   (let [mode (u/resolve-constant-key mode color-modes)]
+     (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
-     (let [mode (u/resolve-constant-key mode color-modes)]
-       (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
+   (let [mode (u/resolve-constant-key mode color-modes)]
+     (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 #?(:clj
    (defn
@@ -1086,7 +1086,6 @@
   args are cast to ints."
      [amt low high]
      (PApplet/constrain (int amt) (int low) (int high))))
-
 
 (defn
   ^{:requires-bindings false
@@ -1123,11 +1122,11 @@
           (int dx) (int dy) (int dwidth) (int dheight)))
 
   ([^PImage src-img [sx sy swidth sheight] [dx dy dwidth dheight]]
-     (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
+   (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
 
   ([^PImage src-img ^PImage dest-img [sx sy swidth sheight] [dx dy dwidth dheight]]
-     (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
-            (int dx) (int dy) (int dwidth) (int dheight))))
+   (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
+          (int dx) (int dy) (int dwidth) (int dheight))))
 
 (defn
   ^{:requires-bindings false
@@ -1193,7 +1192,7 @@
   ([name size] (.createFont (ap/current-applet) (str name) (float size)))
   ([name size smooth] (.createFont (ap/current-applet) (str name) (float size) smooth))
   ([name size smooth ^chars charset]
-     (.createFont (ap/current-applet) (str name) (float size) smooth charset)))
+   (.createFont (ap/current-applet) (str name) (float size) smooth charset)))
 
 (defn
   ^{:requires-bindings true
@@ -1304,7 +1303,7 @@
     :category "Environment"
     :subcategory nil
     :added "1.0"}
-    cursor-image
+  cursor-image
   "Set the cursor to a predefined image. The horizontal and vertical
   active spots of the cursor may be specified with hx and hy.
   It is recommended to make the size 16x16 or 32x32 pixels."
@@ -1327,17 +1326,17 @@
   the curve. The curve fn is an implementation of Catmull-Rom
   splines."
   ([x1 y1 x2 y2 x3 y3 x4 y4]
-     (.curve (current-graphics)
-             (float x1) (float y1)
-             (float x2) (float y2)
-             (float x3) (float y3)
-             (float x4) (float y4)))
+   (.curve (current-graphics)
+           (float x1) (float y1)
+           (float x2) (float y2)
+           (float x3) (float y3)
+           (float x4) (float y4)))
   ([x1 y1 z1 x2 y2 z2 x3 y3 z3 x4 y4 z4]
-     (.curve (current-graphics)
-             (float x1) (float y1) (float z1)
-             (float x2) (float y2) (float z2)
-             (float x3) (float y3) (float z3)
-             (float x4) (float y4) (float z4))))
+   (.curve (current-graphics)
+           (float x1) (float y1) (float z1)
+           (float x2) (float y2) (float z2)
+           (float x3) (float y3) (float z3)
+           (float x4) (float y4) (float z4))))
 
 (defn
   ^{:requires-bindings true
@@ -1382,7 +1381,7 @@
 
 (defn
   ^{:requires-bindings true
-   :processing-name "curveTightness()"
+    :processing-name "curveTightness()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1584,7 +1583,6 @@
   args to ints"
   [int-val] (.emissive (current-graphics) (int int-val)))
 
-
 (defn
   ^{:requires-bindings true
     :processing-name "emissive()"
@@ -1614,7 +1612,6 @@
   []
   (.endCamera (current-graphics)))
 
-
 (defn
   ^{:requires-bindings true
     :processing-name "endContour()"
@@ -1640,7 +1637,6 @@
   the begin-raw docstring for details."
   []
   (.endRaw (current-graphics)))
-
 
 (defn
   ^{:requires-bindings true
@@ -1806,8 +1802,8 @@
             (int (u/resolve-constant-key mode filter-modes))))
 
   ([mode level]
-     (let [mode (u/resolve-constant-key mode filter-modes)]
-       (.filter (current-graphics) (int mode) (float level)))))
+   (let [mode (u/resolve-constant-key mode filter-modes)]
+     (.filter (current-graphics) (int mode) (float level)))))
 
 #?(:clj
    (defn
@@ -2066,7 +2062,6 @@
   [col]
   (.hue (current-graphics) (unchecked-int col)))
 
-
 (defn
   ^{:requires-bindings true
     :processing-name "image()"
@@ -2130,11 +2125,11 @@
   :erode     - reduces the light areas. Doesn't work with level.
   :dilate    - increases the light areas.  Doesn't work with level."
   ([^PImage img mode]
-    (let [mode (u/resolve-constant-key mode filter-modes)]
-      (.filter img (int mode))))
+   (let [mode (u/resolve-constant-key mode filter-modes)]
+     (.filter img (int mode))))
   ([^PImage img mode level]
-     (let [mode (u/resolve-constant-key mode filter-modes)]
-       (.filter img (int mode) (float level)))))
+   (let [mode (u/resolve-constant-key mode filter-modes)]
+     (.filter img (int mode) (float level)))))
 
 (defn
   ^{:requires-bindings true
@@ -2332,8 +2327,8 @@
   ([p1 p2] (apply line (concat p1 p2)))
   ([x1 y1 x2 y2] (.line (current-graphics) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
-     (.line (current-graphics) (float x1) (float y1) (float z1)
-            (float x2) (float y2) (float z2))))
+   (.line (current-graphics) (float x1) (float y1) (float z1)
+          (float x2) (float y2) (float z2))))
 
 (defn
   ^{:requires-bindings true
@@ -2405,9 +2400,9 @@
   "Loads a shader into the PShader object. Shaders are compatible with the
   P2D and P3D renderers, but not with the default renderer."
   ([fragment-filename]
-    (.loadShader (current-graphics) fragment-filename))
+   (.loadShader (current-graphics) fragment-filename))
   ([fragment-filename vertex-filename]
-    (.loadShader (current-graphics) fragment-filename vertex-filename)))
+   (.loadShader (current-graphics) fragment-filename vertex-filename)))
 
 (defn
   ^{:requires-bindings true
@@ -2664,7 +2659,7 @@
     :subcategory "Setting"
     :added "1.0"}
   no-fill
- "Disables filling geometry. If both no-stroke and no-fill are called,
+  "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
   (.noFill (current-graphics))
   #?(:cljs (aset (current-graphics) no-fill-prop true)))
@@ -2872,7 +2867,7 @@
   ([left right bottom top]
    (.ortho (current-graphics) (float left) (float right) (float bottom) (float top)))
   ([left right bottom top near far]
-     (.ortho (current-graphics) (float left) (float right) (float bottom) (float top) (float near) (float far))))
+   (.ortho (current-graphics) (float left) (float right) (float bottom) (float top) (float near) (float far))))
 
 (defn
   ^{:requires-bindings true
@@ -2894,8 +2889,8 @@
   cameraZ is ((height/2.0) / tan(PI*60.0/360.0));"
   ([] (.perspective (current-graphics)))
   ([fovy aspect z-near z-far]
-     (.perspective (current-graphics) (float fovy) (float aspect)
-                   (float z-near) (float z-far))))
+   (.perspective (current-graphics) (float fovy) (float aspect)
+                 (float z-near) (float z-far))))
 
 #?(:clj
    (defn
@@ -2973,7 +2968,7 @@
   optional third value is the depth value. Drawing this shape in 3D
   using the z parameter requires the :P3D or :opengl renderer to be
   used."
-  ([x y] (.point (current-graphics) (float x)(float y)))
+  ([x y] (.point (current-graphics) (float x) (float y)))
   ([x y z] (.point (current-graphics) (float x) (float y) (float z))))
 
 (defn
@@ -3151,7 +3146,7 @@
   when there is no MODE parameter specified to begin-shape. Using the 3D
   version requires rendering with :p3d."
   ([cx cy x3 y3]
-    (.quadraticVertex (current-graphics) (float cx) (float cy) (float x3) (float y3)))
+   (.quadraticVertex (current-graphics) (float cx) (float cy) (float x3) (float y3)))
   ([cx cy cz x3 y3 z3]
    (.quadraticVertex (current-graphics) (float cx) (float cy) (float cz) (float x3) (float y3) (float z3))))
 
@@ -3290,12 +3285,12 @@
   the radius value for all four corners. To use a different radius value
   for each corner, include eight parameters."
   ([x y width height]
-     (.rect (current-graphics) (float x) (float y) (float width) (float height)))
+   (.rect (current-graphics) (float x) (float y) (float width) (float height)))
   ([x y width height r]
-     (.rect (current-graphics) (float x) (float y) (float width) (float height) (float r)))
+   (.rect (current-graphics) (float x) (float y) (float width) (float height) (float r)))
   ([x y width height top-left-r top-right-r bottom-right-r bottom-left-r]
-     (.rect (current-graphics) (float x) (float y) (float width) (float height)
-            (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
+   (.rect (current-graphics) (float x) (float y) (float width) (float height)
+          (float top-left-r) (float top-right-r) (float bottom-right-r) (float bottom-left-r))))
 
 (defn
   ^{:requires-bindings true
@@ -3434,16 +3429,16 @@
   (.resize img w h))
 
 (defn
-   ^{:require-bindings true
-     :category "Environment"
-     :added "2.7.0"}
-   resize-sketch
-   "Resizes sketch.
+  ^{:require-bindings true
+    :category "Environment"
+    :added "2.7.0"}
+  resize-sketch
+  "Resizes sketch.
   Note about ClojureScript version: if canvas element is resized by external
   reasons (for example from js on a page then you still need to call this
   method in order to tell Quil that size has changed. Currently there is no
   good way to automatically detect that size of <canvas> element changed."
-   [width height]
+  [width height]
   #?(:cljs
      (ap/set-size (ap/current-applet) width height)
      :clj
@@ -3731,7 +3726,7 @@
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
   ([^PImage img x y c]
-    (.set img (int x) (int y) (int c))))
+   (.set img (int x) (int y) (int c))))
 
 (defn
   ^{:requires-bindings true
@@ -3916,7 +3911,7 @@
                   :cljs (current-graphics))))
   ([level] (.smooth #?(:clj (ap/current-applet)
                        :cljs (current-graphics))
-                     (int level))))
+                    (int level))))
 
 (defn
   ^{:requires-bindings true
@@ -3982,9 +3977,9 @@
   the direction or light. The angle parameter affects angle of the
   spotlight cone."
   ([r g b x y z nx ny nz angle concentration]
-     (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))
+   (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))
   ([[r g b] [x y z] [nx ny nz] angle concentration]
-     (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration)))
+   (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration)))
 
 (defn
   ^{:requires-bindings false
@@ -4245,12 +4240,12 @@
   text-ascent or text-descent so that the hack works even if you
   change the size of the font."
   ([align]
-     (let [align (u/resolve-constant-key align horizontal-alignment-modes)]
-       (.textAlign (current-graphics) (int align))))
+   (let [align (u/resolve-constant-key align horizontal-alignment-modes)]
+     (.textAlign (current-graphics) (int align))))
   ([align-x align-y]
-     (let [align-x (u/resolve-constant-key align-x horizontal-alignment-modes)
-           align-y (u/resolve-constant-key align-y vertical-alignment-modes)]
-       (.textAlign (current-graphics) (int align-x) (int align-y)))))
+   (let [align-x (u/resolve-constant-key align-x horizontal-alignment-modes)
+         align-y (u/resolve-constant-key align-y vertical-alignment-modes)]
+     (.textAlign (current-graphics) (int align-x) (int align-y)))))
 
 (defn
   ^{:requires-bindings true
@@ -4379,11 +4374,11 @@
   (.texture (current-graphics) img))
 
 (defn
-    ^{:requires-bindings true
-     :processing-name "textureMode()"
-     :category "Shape"
-     :subcategory "Vertex"
-     :added "1.0"}
+  ^{:requires-bindings true
+    :processing-name "textureMode()"
+    :category "Shape"
+    :subcategory "Vertex"
+    :added "1.0"}
   texture-mode
   "Sets the coordinate space for texture mapping. There are two
   options, :image and :normal.
@@ -4446,7 +4441,7 @@
   Also used to control the coloring of textures in 3D."
   ([gray] (.tint (current-graphics) (float gray)))
   ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
-  ([r g b] (.tint (current-graphics) (float r)(float g) (float b)))
+  ([r g b] (.tint (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
 
 (defn
@@ -4616,7 +4611,7 @@
   ([x y z] (.vertex (current-graphics) (float x) (float y) (float z)))
   ([x y u v] (.vertex (current-graphics) (float x) (float y) (float u) (float v)))
   ([x y z u v]
-     (.vertex (current-graphics) (float x) (float y) (float z) (float u) (float v))))
+   (.vertex (current-graphics) (float x) (float y) (float z) (float u) (float v))))
 
 (defn
   ^{:requires-bindings false
@@ -4644,42 +4639,42 @@
   (.-width (ap/current-applet)))
 
 (defmacro
-   ^{:requires-bindings true
-     :processing-name nil
-     :category "Color"
-     :subcategory "Utility Macros"
-     :added "1.7"}
-   with-fill
-   "Temporarily set the fill color for the body of this macro.
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Color"
+    :subcategory "Utility Macros"
+    :added "1.7"}
+  with-fill
+  "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
 
    The fill color has to be in a vector!
    Example: (with-fill [255] ...)
             (with-fill [10 80 98] ...)"
-   [fill-args & body]
-   `(let [old-fill# (quil.core/current-fill)]
-      (apply quil.core/fill ~fill-args)
-      ~@body
-      (quil.core/fill old-fill#)))
+  [fill-args & body]
+  `(let [old-fill# (quil.core/current-fill)]
+     (apply quil.core/fill ~fill-args)
+     ~@body
+     (quil.core/fill old-fill#)))
 
 (defmacro
-   ^{:requires-bindings true
-     :processing-name nil
-     :category "Color"
-     :subcategory "Utility Macros"
-     :added "1.7"}
-   with-stroke
-   "Temporarily set the stroke color for the body of this macro.
+  ^{:requires-bindings true
+    :processing-name nil
+    :category "Color"
+    :subcategory "Utility Macros"
+    :added "1.7"}
+  with-stroke
+  "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
 
    The stroke color has to be in a vector!
    Example: (with-stroke [255] ...)
             (with-stroke [10 80 98] ...)"
-   [stroke-args & body]
-   `(let [old-stroke# (quil.core/current-stroke)]
-      (apply quil.core/stroke ~stroke-args)
-      ~@body
-      (quil.core/stroke old-stroke#)))
+  [stroke-args & body]
+  `(let [old-stroke# (quil.core/current-stroke)]
+     (apply quil.core/stroke ~stroke-args)
+     ~@body
+     (quil.core/stroke old-stroke#)))
 
 (defmacro
   ^{:requires-bindings true
@@ -4750,11 +4745,11 @@
      :cljs (apply ap/sketch opts)))
 
 (defmacro ^{:requires-bindings false
-              :category "Environment"
-              :subcategory nil
-              :added "1.0"}
-   defsketch
-   "Define and start a sketch and bind it to a var with the symbol
+            :category "Environment"
+            :subcategory nil
+            :added "1.0"}
+  defsketch
+  "Define and start a sketch and bind it to a var with the symbol
   app-name. If any of the options to the various callbacks are
   symbols, it wraps them in a call to var to ensure they aren't
   inlined and that redefinitions to the original fns are reflected in
@@ -4891,7 +4886,7 @@
                      setting sketch up. Should be used only for (smooth) and
                      (no-smooth). Due to Processing limitations these functions
                      cannot be used neither in :setup nor in :draw."
-   [app-name & options]
+  [app-name & options]
   #?(:clj
      (if (u/clj-compilation?)
        `(ap/defapplet ~app-name ~@options)
@@ -4988,16 +4983,16 @@
                  (println cid (:name c))
                  (docs/pprint-wrapped-lines names :fromcolumn 4)))
              (show-fns-by-cat-idx [cat-idx]
-               (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
-                 (list-category cat-idx c)))
+                                  (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
+                                    (list-category cat-idx c)))
              (show-fns-by-name-regex [re]
-               (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
-                 (let [in-cat-name? (re-find re (:name c))
-                       matching-fns (filter #(re-find re (str %)) (:fns c))
-                       in-fn-names? (not (empty? matching-fns))]
-                   (cond
-                     in-cat-name? (list-category cid c) ;; print an entire category
-                     in-fn-names? (list-category cid c :only matching-fns)))))]
+                                     (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
+                                       (let [in-cat-name? (re-find re (:name c))
+                                             matching-fns (filter #(re-find re (str %)) (:fns c))
+                                             in-fn-names? (not (empty? matching-fns))]
+                                         (cond
+                                           in-cat-name? (list-category cid c) ;; print an entire category
+                                           in-fn-names? (list-category cid c :only matching-fns)))))]
        (cond
          (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
          (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)

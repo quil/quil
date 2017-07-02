@@ -69,20 +69,20 @@
     `(do
        (defn ~(vary-meta snip-name assoc :export true) []
          (quil.core/sketch
-           :size ~(:size opts default-size)
-           :renderer ~(:renderer opts :p2d)
-           :host ~(or (:host opts)
-                      (get default-host (:renderer opts :p2d)))
+          :size ~(:size opts default-size)
+          :renderer ~(:renderer opts :p2d)
+          :host ~(or (:host opts)
+                     (get default-host (:renderer opts :p2d)))
 
-           :setup (fn [] ~(:setup opts))
+          :setup (fn [] ~(:setup opts))
 
-           :draw (fn []
-                   (try
-                     ~@body
-                     (catch js/Error e#
-                       (swap! quil.snippet/failed inc)
-                       (throw e#))
-                     (finally (q/exit))))))
+          :draw (fn []
+                  (try
+                    ~@body
+                    (catch js/Error e#
+                      (swap! quil.snippet/failed inc)
+                      (throw e#))
+                    (finally (q/exit))))))
 
        (swap! quil.snippet/test-data conj
               {:name (name '~snip-name)

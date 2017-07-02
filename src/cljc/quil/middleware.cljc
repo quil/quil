@@ -1,10 +1,9 @@
 (ns ^{:doc "Quil middleware."}
-  quil.middleware
+ quil.middleware
   (:require [quil.middlewares.fun-mode :as fun-mode]
             #?(:clj [quil.middlewares.pause-on-error :as pause-on-error])
             [quil.middlewares.navigation-3d :as navigation-3d]
-            [quil.middlewares.navigation-2d :as navigation-2d]
-            ))
+            [quil.middlewares.navigation-2d :as navigation-2d]))
 
 (defn ^{:requires-bindings false
         :category "Middleware"
@@ -19,18 +18,18 @@
   (fun-mode/fun-mode options))
 
 #?(:clj
-(defn ^{:requires-bindings false
-        :category "Middleware"
-        :subcategory nil
-        :ns "quil.middleware"
-        :added "2.2.0"}
-  pause-on-error
-  "Pauses sketch if any of user-provided handlers throws error.
+   (defn ^{:requires-bindings false
+           :category "Middleware"
+           :subcategory nil
+           :ns "quil.middleware"
+           :added "2.2.0"}
+     pause-on-error
+     "Pauses sketch if any of user-provided handlers throws error.
   It allows to fix the error on the fly and continue sketch.
   May be good alternative to default '500ms pause if exception'
   behaviour."
-  [options]
-  (pause-on-error/pause-on-error options)))
+     [options]
+     (pause-on-error/pause-on-error options)))
 
 (defn ^{:requires-bindings false
         :category "Middleware"

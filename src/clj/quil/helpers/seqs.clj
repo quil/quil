@@ -31,22 +31,22 @@
   ([] (indexed-range-incl 0 Double/POSITIVE_INFINITY))
   ([end] (indexed-range-incl 0 end))
   ([start end]
-     (if (< start end)
-       (indexed-range-incl start end 1)
-       (indexed-range-incl start end -1)))
+   (if (< start end)
+     (indexed-range-incl start end 1)
+     (indexed-range-incl start end -1)))
   ([start end step]
-     (map list (range) (range-incl start end step))))
+   (map list (range) (range-incl start end step))))
 
 (defn indexed-range
   "Returns a sequence of [idx val] pairs over the specified range"
   ([] (indexed-range 0 Double/POSITIVE_INFINITY))
   ([end] (indexed-range 0 end))
   ([start end]
-     (if (< start end)
-       (indexed-range start end 1)
-       (indexed-range start end -1)))
+   (if (< start end)
+     (indexed-range start end 1)
+     (indexed-range start end -1)))
   ([start end step]
-     (map list (range) (range start end step))))
+   (map list (range) (range start end step))))
 
 (defn steps
   "Returns a lazy sequence of numbers starting at
@@ -55,12 +55,12 @@
   ([] (steps 1))
   ([step] (steps 0 step))
   ([start step]
-     (let [[step next-step] (if (sequential? step)
-                              [(first step) (next step)]
-                              [step step])]
-       (lazy-seq (cons start (if next-step
-                               (steps (+ step start) next-step)
-                               [(+ step start)]))))))
+   (let [[step next-step] (if (sequential? step)
+                            [(first step) (next step)]
+                            [step step])]
+     (lazy-seq (cons start (if next-step
+                             (steps (+ step start) next-step)
+                             [(+ step start)]))))))
 
 (defn cycle-between
   "Cycle between min and max with inc-step and dec-step starting at
@@ -70,23 +70,22 @@
   ([min max inc-step dec-step] (cycle-between min min max inc-step dec-step))
   ([start min max inc-step dec-step] (cycle-between start min max inc-step dec-step :up))
   ([start min max inc-step dec-step direction]
-     (let [inc-step (if (neg? inc-step) (* -1 inc-step) inc-step)
-           dec-step (if (neg? dec-step) (* -1 dec-step) dec-step)
-           next (if (= :up direction)
-                  (+ start inc-step)
-                  (- start dec-step))
-           [next dir] (if (= :up direction)
-                        (if (> next max) [(- start dec-step) :down] [next :up])
-                        (if (< next min) [(+ start inc-step) :up] [next :down]))]
-       (lazy-seq (cons start (cycle-between next min max inc-step dec-step dir))))))
+   (let [inc-step (if (neg? inc-step) (* -1 inc-step) inc-step)
+         dec-step (if (neg? dec-step) (* -1 dec-step) dec-step)
+         next (if (= :up direction)
+                (+ start inc-step)
+                (- start dec-step))
+         [next dir] (if (= :up direction)
+                      (if (> next max) [(- start dec-step) :down] [next :up])
+                      (if (< next min) [(+ start inc-step) :up] [next :down]))]
+     (lazy-seq (cons start (cycle-between next min max inc-step dec-step dir))))))
 
 (defn tap
   "Debug tool for lazy sequences. Apply to a lazy-seq to print out
   current value when each element of the sequence is evaluated."
   ([s] (tap "-->" s))
   ([msg s]
-     (map #(do (println (str msg " " %)) %) s)))
-
+   (map #(do (println (str msg " " %)) %) s)))
 
 (defn- swap-returning-prev!
   "Similar to swap! except returns vector containing the previous and new values
@@ -127,7 +126,7 @@
   (tally 100 [])             ;=> ()"
   ([coll] (tally 0 coll))
   ([init coll]
-     (rest (reductions + init coll))))
+   (rest (reductions + init coll))))
 
 (defn perlin-noise-seq
   "Generate a lazy infinite sequence of perlin noise values starting from

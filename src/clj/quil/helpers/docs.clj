@@ -1,5 +1,5 @@
 (ns ^{:doc "Functions for filtering/displaying docs in REPL and generating wiki pages."}
-  quil.helpers.docs
+ quil.helpers.docs
   (:require [clojure.string :as cstr]
             [clojure.java.io :as io]))
 
@@ -71,8 +71,8 @@
   [fn-metas cat cat-idx]
   (let [subcats (->> (find-subcategories fn-metas cat)
                      (map (fn [subcat]
-                       {:name subcat
-                        :fns (find-fns fn-metas cat subcat)})))
+                            {:name subcat
+                             :fns (find-fns fn-metas cat subcat)})))
         idx (map #(str cat-idx "." %) (rest (range)))]
     (into (sorted-map) (zipmap idx subcats))))
 
@@ -85,10 +85,10 @@
         idxs (map #(format "%2d" %) (rest (range)))
         idxd-cats (zipmap idxs cats)]
     (into (sorted-map)
-      (for [[idx cat] idxd-cats]
-        [idx  {:name cat
-               :fns (find-fns fn-metas cat nil)
-               :subcategories (subcategory-map fn-metas cat idx)}]))))
+          (for [[idx cat] idxd-cats]
+            [idx  {:name cat
+                   :fns (find-fns fn-metas cat nil)
+                   :subcategories (subcategory-map fn-metas cat idx)}]))))
 
 (defn all-category-map
   "Build map idx -> (sub)category. Basically it is merge of category map and all subcategories maps."

@@ -1,5 +1,5 @@
 (ns ^{:doc "Utility fns"}
-  quil.util
+ quil.util
   (:require [clojure.string :as cstr]))
 
 (defn no-fn
@@ -53,9 +53,9 @@
   ([len] (gen-padding "" len " "))
   ([len pad] (gen-padding "" len pad))
   ([s len pad]
-     (if (> len 0)
-       (gen-padding (str s pad) (dec len) pad)
-       s)))
+   (if (> len 0)
+     (gen-padding (str s pad) (dec len) pad)
+     s)))
 
 (defn print-definition-list
   [definitions]
@@ -76,7 +76,6 @@
          (when-let [v (ns-resolve n '*cljs-file*)]
            @v))))
      :cljs false))
-
 
 (defn prepare-quil-name [const-keyword]
   (cstr/replace

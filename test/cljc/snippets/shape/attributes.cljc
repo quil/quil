@@ -5,13 +5,12 @@
   #?(:cljs
      (:use-macros [quil.snippet :only [defsnippet]])))
 
-
 (defsnippet ellipse-mode {}
   (q/stroke-weight 5)
   (q/ellipse-mode :center)
   (q/with-translation [125 125]
-   (q/ellipse 0 0 100 70)
-   (q/point 0 0))
+    (q/ellipse 0 0 100 70)
+    (q/point 0 0))
 
   (q/ellipse-mode :radius)
   (q/with-translation [375 125]
@@ -35,7 +34,7 @@
                                           (q/no-smooth)
                                           (q/smooth 2))}
   (q/with-translation [125 125]
-   (q/ellipse 0 0 200 200)))
+    (q/ellipse 0 0 200 200)))
 
 (defsnippet rect-mode {}
   (q/stroke-weight 5)
@@ -95,5 +94,5 @@
   (doseq [i (range 1 10)]
     (q/stroke-weight i)
     (q/line 230 (+ (* i 30) 100)
-          270 (+ (* i 30) 100))))
+            270 (+ (* i 30) 100))))
 

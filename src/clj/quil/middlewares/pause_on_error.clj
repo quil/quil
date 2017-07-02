@@ -36,7 +36,7 @@
 (defn- wrap-draw [options pause]
   (let [draw (:draw options (fn []))]
     (assoc options
-      :draw (wrap-fn pause :draw draw #(draw-error-message pause)))))
+           :draw (wrap-fn pause :draw draw #(draw-error-message pause)))))
 
 (defn- unpause [pause]
   (reset! pause nil))
@@ -44,7 +44,7 @@
 (defn- wrap-key-pressed [options pause]
   (let [key-pressed (:key-pressed options (fn []))]
     (assoc options
-      :key-pressed (wrap-fn pause :key-pressed key-pressed #(unpause pause)))))
+           :key-pressed (wrap-fn pause :key-pressed key-pressed #(unpause pause)))))
 
 (defn pause-on-error
   "Pauses sketch if any of user-provided handlers throws error."

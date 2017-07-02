@@ -1,5 +1,5 @@
 (ns ^:manual
-  manual
+ manual
   (:require [quil.core :as q]
             [quil.middlewares.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
@@ -51,9 +51,9 @@
              (q/fill 0)
              (q/background 255)
              (q/text (str "This sketch should show current time but update it only on key press.")
-                   20 20)
+                     20 20)
              (q/text (format "%02d:%02d:%02d" (q/hour) (q/minute) (q/seconds))
-                   20 50))
+                     20 50))
      :on-close #(deliver lock true)
      :key-pressed #(q/redraw))
     @lock))
@@ -83,7 +83,7 @@
     (q/sketch
      :title "on-close and exit-on-close"
      :draw #(draw-text "This is last test.\nWhen you close sketch JVM should shut down \nand you won't see tests summary.\n"
-                         "Also you should see 'on-close called'\nmessage in console.")
+                       "Also you should see 'on-close called'\nmessage in console.")
      :on-close (fn [] (println "on-close called"))
      :features [:exit-on-close])
     @lock))
@@ -94,20 +94,20 @@
             (q/fill 0)
             {:round 0})
           (update [state]
-            (update-in state [:round] inc))
+                  (update-in state [:round] inc))
           (single-fn [name]
-            (fn [state]
-              (q/background 255)
-              (q/text (str name) 50 20)
-              (q/text (pr-str state) 50 100)
-              state))
+                     (fn [state]
+                       (q/background 255)
+                       (q/text (str name) 50 20)
+                       (q/text (pr-str state) 50 100)
+                       state))
           (double-fn [name]
-            (fn [state event]
-              (q/background 255)
-              (q/text (str name) 50 20)
-              (q/text (pr-str event) 50 55)
-              (q/text (pr-str state) 50 100)
-              state))]
+                     (fn [state event]
+                       (q/background 255)
+                       (q/text (str name) 50 20)
+                       (q/text (pr-str event) 50 55)
+                       (q/text (pr-str state) 50 100)
+                       state))]
     (let [lock (promise)]
       (q/sketch
        :title "Functional mode"

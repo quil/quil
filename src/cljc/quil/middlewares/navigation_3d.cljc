@@ -171,18 +171,18 @@
         setup (:setup options (fn [] {}))]
     (assoc options
 
-      :setup (partial setup-3d-nav setup user-settings)
+           :setup (partial setup-3d-nav setup user-settings)
 
-      :draw (fn [state]
-              (assert-state-has-navigation state)
-              (let [{[c-x c-y c-z] :straight
-                     [u-x u-y u-z] :up
-                     [p-x p-y p-z] :position} (:navigation-3d state)]
-                (q/camera p-x p-y p-z (+ p-x c-x) (+ p-y c-y) (+ p-z c-z) u-x u-y u-z))
-              (draw state))
+           :draw (fn [state]
+                   (assert-state-has-navigation state)
+                   (let [{[c-x c-y c-z] :straight
+                          [u-x u-y u-z] :up
+                          [p-x p-y p-z] :position} (:navigation-3d state)]
+                     (q/camera p-x p-y p-z (+ p-x c-x) (+ p-y c-y) (+ p-z c-z) u-x u-y u-z))
+                   (draw state))
 
-      :key-pressed (fn [state event]
-                     (key-pressed (move state event step-size) event))
+           :key-pressed (fn [state event]
+                          (key-pressed (move state event step-size) event))
 
-      rotate-on (fn [state event]
-                  (rotate-on-fn (rotate state event pixels-in-360) event)) )))
+           rotate-on (fn [state event]
+                       (rotate-on-fn (rotate state event pixels-in-360) event)))))

@@ -4,7 +4,7 @@
 (defn- wrap-setup [options]
   (let [setup (:setup options (fn [] nil))]
     (assoc options
-      :setup #(reset! (q/state-atom) (setup)))))
+           :setup #(reset! (q/state-atom) (setup)))))
 
 (defn- wrap-draw-update [options]
   (let [draw (:draw options (fn [_]))
@@ -35,14 +35,14 @@
 
 (defn- wrap-handler
   ([options handler-key]
-     (wrap-handler options handler-key nil))
+   (wrap-handler options handler-key nil))
   ([options handler-key event-fn]
-     (if-let [handler (options handler-key)]
-       (assoc options handler-key
-              (if event-fn
-                #(swap! (q/state-atom) handler (event-fn))
-                #(swap! (q/state-atom) handler)))
-       options)))
+   (if-let [handler (options handler-key)]
+     (assoc options handler-key
+            (if event-fn
+              #(swap! (q/state-atom) handler (event-fn))
+              #(swap! (q/state-atom) handler)))
+     options)))
 
 (defn- wrap-handlers [options & handlers]
   (reduce (fn [options handler]

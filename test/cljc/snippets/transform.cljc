@@ -14,10 +14,10 @@
   #?(:clj (q/box 50))
   (let [s (q/sin 1)
         c (q/cos 1)]
-   (q/apply-matrix 1 0 0 0
-                   0 c s 50
-                   0 (- s) c -50
-                   0 0 0 1))
+    (q/apply-matrix 1 0 0 0
+                    0 c s 50
+                    0 (- s) c -50
+                    0 0 0 1))
   (q/box 50))
 
 (defsnippet push-matrix-pop-matrix {}

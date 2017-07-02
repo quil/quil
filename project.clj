@@ -36,12 +36,15 @@
   :test-paths ["test/clj" "test/cljc"]
   :resource-paths ["resources"]
 
+  :cljfmt {:file-pattern #"\.clj[sc]?$"}
+
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [compojure "1.6.0"]
                                   [clj-http "3.6.1"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [org.clojure/tools.reader "1.0.0"]]
-                   :plugins [[lein-ring "0.12.0"]]}
+                   :plugins [[lein-ring "0.12.0"]
+                             [lein-cljfmt "0.5.6"]]}
 
              :cljs-testing [:dev
                             {:hooks [leiningen.cljsbuild]
