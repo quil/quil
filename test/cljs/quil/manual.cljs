@@ -1,12 +1,14 @@
 (ns quil.manual
   (:require [quil.core :as q :include-macros true]
-            [quil.middlewares.fun-mode :as fm]))
+            [quil.middlewares.fun-mode :as fm]
+            [goog.events :as events]
+            [goog.events.EventType :as EventType]))
 
-(defn ^:export sketch-start [id]
+(defn sketch-start [id]
   (q/with-sketch (q/get-sketch-by-id id)
     (q/start-loop)))
 
-(defn ^:export sketch-stop [id]
+(defn sketch-stop [id]
   (q/with-sketch (q/get-sketch-by-id id)
     (q/no-loop)))
 
@@ -17,8 +19,7 @@
   :draw (fn []
           (q/fill 0)
           (q/background 220)
-          (q/text (str "This sketch should show current time but update it only on key press.") 20 20)
-          (q/text (str (q/hour) ":" (q/minute) ":" (q/seconds)) 20 50))
+          (q/text (str (q/hour) ":" (q/minute) ":" (q/seconds)) 20 20))
   :key-pressed #(q/redraw))
 
 (defn add-event [state data]
@@ -84,27 +85,38 @@
           (q/line (mod (q/millis) 300) (mod (q/millis) 300)
                   300 150)))
 
+
 (q/defsketch get-pixel
   :site [500 500]
   :draw (fn []
           (q/background 255)
           (let [gr (q/create-graphics 100 100)]
+
+            ; draw ellipse in gr object
             (q/with-graphics gr
               (q/background 255)
               (q/fill 127 255 180)
               (q/ellipse 50 50 70 70))
 
+            ; draw gr object on screen
             (q/image gr 0 0)
 
+            ; draw gr object on screen using get-pixel
             (q/image (q/get-pixel gr) 0 120)
-            (q/fill (q/get-pixel gr 50 50))
-            (q/rect 120 120 100 100)
-            (q/image (q/get-pixel gr 0 0 50 50) 240 120)
 
-            (q/image (q/get-pixel) 400 400)
-            (q/fill (q/get-pixel 50 50))
-            (q/rect 120 240 100 100)
-            (q/image (q/get-pixel 0 0 50 50) 240 240))))
+            ; set fill color to the same as ellipse and
+            ; draw rectangle
+            (q/fill (q/get-pixel gr 50 50))
+            (q/rect 120 0 100 100)
+
+            ; draw up left quarter of ellipse on screen
+            (q/image (q/get-pixel gr 0 0 50 50) 120 120)
+
+            ; set fill to white using get-pixel of [0, 0]
+            ; point of the screen and draw white rectangle
+            (q/fill (q/get-pixel 0 0))
+            (q/rect 240 0 100 100))
+          (q/no-loop)))
 
 (q/defsketch set-pixel
   :size [500 500]
@@ -122,7 +134,8 @@
 
             (doseq [i (range 30)
                     j (range 30)]
-              (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))))
+              (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))
+          (q/no-loop)))
 
 
 (q/defsketch pixels-update-pixels
@@ -138,7 +151,8 @@
                 (aset px (* i i) (q/color 255))))
             (q/update-pixels gr)
 
-            (q/image gr 10 10))))
+            (q/image gr 10 10))
+          (q/no-loop)))
 
 (let [counter (atom 0)]
   (q/defsketch global-key-events
@@ -161,3 +175,14 @@
           (q/fill 0 0 0)
           (q/text (str "mouse pressed: "  (q/mouse-pressed?)) 0 20)
           (q/text (str "key pressed: " (q/key-pressed?)) 0 40)))
+
+
+(defn init []
+  (events/listen (.querySelector js/document "#external-control-start")
+                 EventType/CLICK
+                 #(sketch-start "external-control"))
+  (events/listen (.querySelector js/document "#external-control-stop")
+                 EventType/CLICK
+                 #(sketch-stop "external-control")))
+
+(events/listenOnce js/window EventType/LOAD init)

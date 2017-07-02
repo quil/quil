@@ -14,10 +14,15 @@
     [:p [:a {:href "/test.html"} "Common Quil API tests"]]
     [:p [:a {:href "/manual"} "Manual Quil API tests"]]]))
 
-(defn gen-test-canvas [id]
-  [:div.cbox
-   [:p (str id " test")]
-   [:canvas {:id id}]])
+(defn gen-test-canvas
+  ([id doc]
+   (gen-test-canvas id doc nil))
+  ([id doc control]
+   [:div.cbox
+    [:p.test-name [:h3  (str id " test")]]
+    [:p.test-doc doc]
+    control
+    [:canvas {:id id}]]))
 
 (def manual-page
   (h/html5
@@ -27,23 +32,43 @@
     [:script {:type "text/javascript" :src "js/main.js"}]
     [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
    [:div.centerLayer {:align "center"}
-    (gen-test-canvas "redraw-on-key")
-    (gen-test-canvas "fun-mode")
-    (gen-test-canvas "get-pixel")
-    (gen-test-canvas "set-pixel")
-    (gen-test-canvas "pixels-update-pixels")
-    (gen-test-canvas "global-key-events")
-    (gen-test-canvas "mouse-and-key-pressed-variable")
+    (gen-test-canvas
+     "redraw-on-key"
+     "Sketch should show current time but update it only on key press.")
 
-    [:div.cbox
-     [:p "extern-control test"]
-     [:table
-      [:tr
-       [:td
-        [:canvas {:id "external-control"}]]
-       [:td
-        [:p [:button {:onclick "snippets.manual.sketch_start('external-control')"} "Start"]]
-        [:p [:button {:onclick "snippets.manual.sketch_stop('external-control')"} "Stop"]]]]]]]))
+    (gen-test-canvas
+     "fun-mode"
+     "Sketch should show recent events like mouse move, click, key click, etc.")
+
+    (gen-test-canvas
+     "get-pixel"
+     "Sketch should show 2 colored ellipses. 1 colored and 1 white rectangular. 1 quarter ellipse.")
+
+    (gen-test-canvas
+     "set-pixel"
+     "Sketch should show 2 rectangulars. The first one is green-red. The second one is blue-green.")
+
+    (gen-test-canvas
+     "pixels-update-pixels"
+     "Sketch should show a bunch of white dots in weird pattern.")
+
+    (gen-test-canvas
+     "global-key-events"
+     (str
+      "Sketch should number of key events. It should increase each time any key is pressed "
+      "on keyboard regardless whether sketch is focused or not."))
+
+    (gen-test-canvas
+     "mouse-and-key-pressed-variable"
+     "Sketch should show whether mouse or key are pressed.")
+
+    (gen-test-canvas
+     "external-control"
+     "Sketch should start/stop when on buttons click."
+     [:p.controls
+      [:button {:id "external-control-start"} "Start"]
+      [:button {:id "external-control-stop"} "Stop"]])
+]))
 
 (defroutes app-routes
   (GET "/" req root-page)
