@@ -125,7 +125,7 @@
        :mouse-dragged (double-fn :mouse-dragged)
        :mouse-wheel (double-fn :mouse-wheel)
        :key-pressed (double-fn :key-pressed)
-       :key-released (single-fn :key-released)
+       :key-released (double-fn :key-released)
        :key-typed (double-fn :key-typed)
        :on-close #(do (println ":on-close in fun-mode. State is:" %) (deliver lock true))
        :middleware [fm/fun-mode])

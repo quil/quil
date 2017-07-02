@@ -66,7 +66,7 @@
   :mouse-dragged (double-fn :mouse-dragged)
   :mouse-wheel (double-fn :mouse-wheel)
   :key-pressed (double-fn :key-pressed)
-  :key-released (single-fn :key-released)
+  :key-released (double-fn :key-released)
   :key-typed (double-fn :key-typed)
   :middleware [fm/fun-mode])
 
