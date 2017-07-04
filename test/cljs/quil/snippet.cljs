@@ -1,7 +1,9 @@
 (ns quil.snippet
   (:require [quil.core :as q :include-macros true]
             [dommy.utils :as utils]
-            [dommy.core :as d :include-macros true]))
+            [dommy.core :as d :include-macros true]
+            [goog.events :as events]
+            [goog.events.EventType :as EventType]))
 
 (def test-data (atom (list)))
 
@@ -61,3 +63,33 @@
   (d/set-text! (d/sel1 :#results) "Test started")
   (reset! test-indx 0)
   (js/setTimeout run-single-test 100))
+
+(defn run-selected-test [event]
+  (let [select (.-target event)
+        option (aget select (.-selectedIndex select))]
+    ((:fn (.-testData option)))))
+
+(defn init-test-selection [input]
+  (doseq [[ns tests] (group-by :ns @test-data)]
+    (let [optgroup (.createElement js/document "optgroup")]
+      (set! (.-label optgroup) ns)
+      (doseq [test tests]
+        (let [option (.createElement js/document "option")]
+          (set! (.-innerHTML option) (:name test))
+          (set! (.-testData option) test)
+          (.appendChild optgroup option)))
+      (.appendChild input optgroup)))
+  (events/listen input EventType/CHANGE
+                 run-selected-test))
+
+(defn init []
+  (when-let [input (.querySelector js/document "#test-select")]
+    (init-test-selection input)))
+
+(events/listenOnce js/window EventType/LOAD
+                   #(when (= (-> js/document
+                                 (.-body)
+                                 (.-dataset)
+                                 (aget "page"))
+                             "automated")
+                      (init)))

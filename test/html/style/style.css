@@ -19,8 +19,12 @@ li.hor {
 }
 
 .table {
-    display: table;
     margin: 0 auto;
+    display: table;
+}
+
+.table > * {
+    margin: 0px 5px;
 }
 
 .cline {
