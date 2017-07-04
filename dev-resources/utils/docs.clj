@@ -26,11 +26,11 @@
                #{args}
                (set (mapv first (drop 3 form))))]
     (assoc mt
-      :args args
-      :name name
-      :docstring docstring
-      :what (if (= 'defmacro type) :macro :fn)
-      :link (link-to-processing-reference mt))))
+           :args args
+           :name name
+           :docstring docstring
+           :what (if (= 'defmacro type) :macro :fn)
+           :link (link-to-processing-reference mt))))
 
 (defn get-metas [forms type]
   (->> forms

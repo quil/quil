@@ -7,7 +7,7 @@
 
 (def cheat-sheet-start
   (str
-    "
+   "
 \\documentclass[footexclude,twocolumn,DIV40,fontsize=8.7pt]{scrreprt}
 
 % Author: Sam Aaron
@@ -120,36 +120,34 @@ API Exploration & \\cmd{doc-cats doc-fns doc-meths} \\\\
         info    (#'docs/sorted-category-map fn-metas)
         clean   (fn [s] (.replaceAll s "&" "\\\\&"))]
     (apply str
-      (map (fn [[cat-idx cat-info] colour]
-              (str
-                "\\colouredbox{" colour "}{\n"
-                "  \\section{" (clean (:name cat-info)) "}\n"
-                "  \\begin{tabularx}{\\hsize}{lX}\n"
-                (when (> (count (:fns cat-info)) 0)
+           (map (fn [[cat-idx cat-info] colour]
                   (str
-                    "   & \\cmd{"
-                    (apply str (map (fn [f] (str f " ")) (:fns cat-info)))
-                    "} \\\\\n"))
-                (apply str
-                 (map (fn [[subcat-idx {:keys [name fns]}]]
-                        (when (> (count fns) 0)
-                          (str
-                            "   " (clean name) " & \\cmd{"
-                            (apply str (map (fn [f] (str f " ")) fns))
-                            "} \\\\\n")))
-                      (:subcategories cat-info)))
-                "  \\end{tabularx}\n"
-                "}\n"))
-           info colours))))
-
-
+                   "\\colouredbox{" colour "}{\n"
+                   "  \\section{" (clean (:name cat-info)) "}\n"
+                   "  \\begin{tabularx}{\\hsize}{lX}\n"
+                   (when (> (count (:fns cat-info)) 0)
+                     (str
+                      "   & \\cmd{"
+                      (apply str (map (fn [f] (str f " ")) (:fns cat-info)))
+                      "} \\\\\n"))
+                   (apply str
+                          (map (fn [[subcat-idx {:keys [name fns]}]]
+                                 (when (> (count fns) 0)
+                                   (str
+                                    "   " (clean name) " & \\cmd{"
+                                    (apply str (map (fn [f] (str f " ")) fns))
+                                    "} \\\\\n")))
+                               (:subcategories cat-info)))
+                   "  \\end{tabularx}\n"
+                   "}\n"))
+                info colours))))
 
 (defn mk-cheat-sheet
   []
   (str
-    cheat-sheet-start
-    (cheat-sheet-dynamic)
-    cheat-sheet-applet
-    cheat-sheet-docs))
+   cheat-sheet-start
+   (cheat-sheet-dynamic)
+   cheat-sheet-applet
+   cheat-sheet-docs))
 
 (spit "docs/cheatsheet/cheat-sheet.tex" (mk-cheat-sheet))

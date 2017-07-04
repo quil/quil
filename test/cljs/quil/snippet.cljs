@@ -18,10 +18,8 @@
 (defn ^:export print-data []
   (.log js/console (str @test-data)))
 
-
 (defn log-sketch-test [sketch]
   (log (str "Testing " (:ns sketch) "/" (:name sketch))))
-
 
 (defn log-sketch-passed [sketch status]
   (log (str (:ns sketch) "/" (:name sketch) " is " (if status "passed." "failed."))))
@@ -51,11 +49,10 @@
           (log e))
 
         (finally
-         (swap! test-indx inc)
-         (js/setTimeout run-single-test 500))))
+          (swap! test-indx inc)
+          (js/setTimeout run-single-test 500))))
 
     (js/setTimeout end-of-tests 500)))
-
 
 (defn ^:export run-tests []
   (log "run tests...")
@@ -70,9 +67,9 @@
     ((:fn (.-testData option)))))
 
 (defn init-test-selection [input]
-  (doseq [[ns tests] (group-by :ns @test-data)]
+  (doseq [[ns tests] (sort-by first (group-by :ns @test-data))]
     (let [optgroup (.createElement js/document "optgroup")]
-      (set! (.-label optgroup) ns)
+      (set! (.-label optgroup) (subs ns (inc (count "snippet."))))
       (doseq [test tests]
         (let [option (.createElement js/document "option")]
           (set! (.-innerHTML option) (:name test))
