@@ -6,7 +6,9 @@
      (:use-macros [quil.snippet :only [defsnippet]])))
 
 (defsnippet hint {:renderer :p3d}
-  (let [hints [:enable-depth-test
+  (let [hints [:enable-async-saveframe
+               :disable-async-saveframe
+               :enable-depth-test
                :disable-depth-test
                :enable-depth-sort
                :disable-depth-sort
