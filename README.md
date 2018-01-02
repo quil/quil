@@ -2,7 +2,7 @@
 
 http://quil.info
 
-<img src="http://cloud.github.com/downloads/quil/quil/quil.png" alt="Quil Painting" title="Quil" align="right" />
+<img src="https://github.com/quil/quil/blob/master/dev-resources/quil.png" alt="Quil Painting" title="Quil" align="right" width="250"/>
 
 Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling paws a distant shepherd called his scribbly sheep in for re-sketching. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
@@ -80,7 +80,7 @@ A simple example is called for:
   :size [323 200])                    ;; You struggle to beat the golden ratio
 ```
 
-<img src="https://cloud.githubusercontent.com/assets/38924/3032404/48f404d8-e057-11e3-88bd-aeefe0859887.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
+<img src="https://github.com/quil/quil/blob/master/dev-resources/grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
 Feast your eyes on this beauty.
 
@@ -92,70 +92,27 @@ Quil supports ClojureScript! Check [wiki article](https://github.com/quil/quil/w
 
 ## Documentation
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
+For up-to-date documentation please check [API page](http://quil.info/api) on quil.info.
 
-For up-to-date documentation please check [quil.info](http://quil.info).
+When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
 
 If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
 
 Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
-## API Exploration
-
-Quil supports an explorable API. For a full list of API categories and subcategories simply type `(show-cats)` at the REPL.
-
-    user=> (q/show-cats)
-    1 Color (0)
-       1.1 Creating & Reading (11)
-       1.2 Loading & Displaying (1)
-       1.3 Pixels (1)
-       1.4 Setting (12)
-    2 Data (0)
-       2.1 Conversion (4)
-       .
-       .
-       . etc
-
-In order to see the fns within a specific category use `(show-fns 11.1)` if `11.1` is the index of the category you wish to examine.
-
-    user=> (q/show-fns 11.1)
-    11.1 2D Primitives
-        arc ellipse line point quad rect triangle
-
-You can also lookup functions by name of the category or function name.
-
-    user=> (q/show-fns "trans")
-    14 Transform
-        apply-matrix pop-matrix print-matrix push-matrix reset-matrix rotate
-        rotate-x rotate-y rotate-z scale shear-x shear-y translate
-    14.1 Utility Macros
-        with-translation
-
-If you know the start of Processing API method name such as `bezier`, you can use `(q/show-meths "bezier")` to list all Processing API methods starting with `bezier` alongside their Quil equivalents:
-
-    user=> (q/show-meths "bezier")
-    bezierPoint()    -  bezier-point
-    bezierDetail()   -  bezier-detail
-    bezier()         -  bezier
-    bezierTangent()  -  bezier-tangent
-    bezierVertex()   -  bezier-vertex
-
-
 ## Examples
 
-<img src="http://cloud.github.com/downloads/quil/quil/readme-wave.png" alt="Wave Clock" title="Wave Clock" align="right" />
-
-<img src="http://cloud.github.com/downloads/quil/quil/readme-spiral.png" alt="Spiral" title="Sprial" align="right" />
-
-<img src="http://cloud.github.com/downloads/quil/quil/readme-lines.png" alt="Lines" title="Lines" align="right" />
+<img src="https://github.com/quil/quil/blob/master/dev-resources/waves.png" alt="Wave Clock" title="Wave Clock" align="right" />
 
 Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author.
 
 Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/tree/master/src/quil_sketches/gen_art/README.md). Instructions of how to run examples you can find in README in [Quil examples](https://github.com/quil/quil-examples) repo.
 
+Also check out awesome gallery of sketches contributed by community members: http://quil.info/examples
+
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `3.0.1` of Processing and `1.4.8` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`. For a full API list (with both Processing and Quil equivalents) see [API.txt](https://github.com/quil/quil/blob/master/API.txt).
+Quil provides support for the standard Processing API - currently version `3.2.4` of Processing and `1.6.4` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
 
 ## Community
 
