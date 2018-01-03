@@ -52,14 +52,14 @@
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
  hint-options (:enable-async-saveframe :disable-async-saveframe
-               :enable-depth-test :disable-depth-test
-                                  :enable-depth-sort :disable-depth-sort
-                                  :enable-depth-mask :disable-depth-mask
-                                  :enable-opengl-errors :disable-opengl-errors
-                                  :enable-optimized-stroke :disable-optimized-stroke
-                                  :enable-stroke-perspective :disable-stroke-perspective
-                                  :enable-stroke-pure :disable-stroke-pure
-                                  :enable-texture-mipmaps :disable-texture-mipmaps)
+                                       :enable-depth-test :disable-depth-test
+                                       :enable-depth-sort :disable-depth-sort
+                                       :enable-depth-mask :disable-depth-mask
+                                       :enable-opengl-errors :disable-opengl-errors
+                                       :enable-optimized-stroke :disable-optimized-stroke
+                                       :enable-stroke-perspective :disable-stroke-perspective
+                                       :enable-stroke-pure :disable-stroke-pure
+                                       :enable-texture-mipmaps :disable-texture-mipmaps)
  image-modes (:corner :corners :center)
  rect-modes (:corner :corners :center :radius)
  p-shape-modes (:corner :corners :center)

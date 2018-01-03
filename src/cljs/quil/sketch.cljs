@@ -7,6 +7,12 @@
             [goog.events.EventType :as EventType])
   (:require-macros [quil.sketch]))
 
+; Processing runs Processing.init() on DOMCOntentLoad event.
+; That function removes all sketches created before that point.
+; This is unexpected behavior from Quil point of view and
+; Processing.init() doesn't do anything relevant to Quil anyway.
+(.disableInit js/Processing)
+
 (def ^:dynamic
   *applet* nil)
 
