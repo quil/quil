@@ -38,12 +38,12 @@
 
 #?(:clj
    (defsnippet load-image {}
-     (let [im (q/load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
+     (let [im (q/load-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png")]
        (q/image im 0 0))))
 
 #?(:clj
    (defsnippet resize-image {}
-     (let [im (q/load-image "https://cloud.github.com/downloads/quil/quil/quil.png")]
+     (let [im (q/load-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png")]
        (q/image im 0 0)
        (q/resize im 50 50)
        (q/image im 0 0))))
@@ -109,7 +109,7 @@
     (q/image gr 200 0)))
 
 (defsnippet request-image
-  {:setup (q/set-state! :image (q/request-image "https://cloud.github.com/downloads/quil/quil/quil.png"))}
+  {:setup (q/set-state! :image (q/request-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png"))}
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (q/image (q/state :image) 0 0)))
