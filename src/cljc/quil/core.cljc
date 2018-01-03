@@ -1763,7 +1763,7 @@
   adapt to run at double the pixel density on a screen that supports
   it. Can be used in conjunction with (pixel-density)"
      ([] (.displayDensity (ap/current-applet)))
-     ([display] (PApplet/displayDensity display))))
+     ([display] (.displayDensity (ap/current-applet) display))))
 
 (defn
   ^{:requires-bindings true
