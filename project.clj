@@ -10,10 +10,10 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [quil/processing-core "3.3.6"]
-                 [quil/processing-pdf "3.3.6"]
-                 [quil/processing-dxf "3.3.6"]
-                 [quil/processing-svg "3.3.6"]
+                 [quil/processing-core "3.3.7"]
+                 [quil/processing-pdf "3.3.7"]
+                 [quil/processing-dxf "3.3.7"]
+                 [quil/processing-svg "3.3.7"]
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
                  [quil/processing-js "1.6.6.0"]
@@ -41,10 +41,10 @@
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
                                   [compojure "1.6.0"]
-                                  [clj-http "3.7.0"]
+                                  [clj-http "3.8.0"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [org.clojure/tools.reader "1.1.1"]]
-                   :plugins [[lein-ring "0.12.2"]
+                                  [org.clojure/tools.reader "1.2.2"]]
+                   :plugins [[lein-ring "0.12.4"]
                              [lein-cljfmt "0.5.7"]]}
 
              :cljs-testing [:dev
@@ -54,7 +54,7 @@
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
                                             [org.clojure/clojure "1.9.0"]
-                                            [org.clojure/clojurescript "1.9.946"]]
+                                            [org.clojure/clojurescript "1.10.217"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "test/cljc" "src/cljs"]
