@@ -3189,24 +3189,24 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "random2d()"
+    :processing-name nil
     :category "Math"
     :subcategory "Random"
     :added "2.6.1"}
   random-2d
-  "Returns a new 2D unit vector in a random direction"
+  "Returns a new 2D unit vector with a random direction"
   []
   (let [theta (random TWO-PI)]
     [(Math/cos theta) (Math/sin theta)]))
 
 (defn
   ^{:requires-bindings true
-    :processing-name "random3d()"
+    :processing-name nil
     :category "Math"
     :subcategory "Random"
     :added "2.6.1"}
   random-3d
-  "Returns a new 3D unit vector in a random direction"
+  "Returns a new 3D unit vector with a random direction"
   []
   ; Algorithm: http://mathworld.wolfram.com/SpherePointPicking.html
   (let [theta (random TWO-PI)
