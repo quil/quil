@@ -73,6 +73,7 @@
     ; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
      (fn []
+       (.setTitle surface title)
        (.setResizable surface resizable?)
        (.setAlwaysOnTop surface keep-on-top?)))
     applet))
