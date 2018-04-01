@@ -112,7 +112,8 @@
         (destroy-previous-sketch host-elem)
         (let [proc-obj (js/Processing. host-elem (make-sketch opts-map))]
           (set! (.-processing-obj host-elem) proc-obj)
-          (set! (.-quil-canvas proc-obj) host-elem)))
+          (set! (.-quil-canvas proc-obj) host-elem)
+          proc-obj))
       (.error js/console
               (if (:host opts-map)
                 (str "ERROR: Cannot find host element: " (:host opts-map))
