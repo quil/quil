@@ -1,4 +1,4 @@
-## 2.7.0 In progress
+## 2.7.0
 _1st April 2018_
 
 * Add `resize-sketch` function. [#212](https://github.com/quil/quil/issues/212).
