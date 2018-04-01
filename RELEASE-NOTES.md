@@ -1,3 +1,8 @@
+## 2.7.1
+_1st April 2018_
+
+* Fix bug when `sketch` in cljs returned canvas instead of sketch. [Commit](https://github.com/quil/quil/commit/22f0dc4f40756e64e1b0e93781353d62fbd62599).
+
 ## 2.7.0
 _1st April 2018_
 
