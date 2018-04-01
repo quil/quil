@@ -198,9 +198,6 @@
       (.fullScreen this renderer)
       (.size this (int (first size)) (int (second size))
              renderer output-file))
-    ; setting pixel-density to support Retina display out-of-box.
-    ; Cannot use quil.core/pixel-density due to cycle dependency.
-    (.pixelDensity this (.displayDensity this))
     ; calling user-provided :settings handler, if any
     (with-applet this
       (settings-fn))))
