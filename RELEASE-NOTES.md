@@ -1,8 +1,15 @@
 ## 2.7.0 In progress
-__TODO DATE__
+_1st April 2018_
 
 * Add `resize-sketch` function. [#212](https://github.com/quil/quil/issues/212).
+* Add `:enable/disable-async-saveframe` hints. Thanks to Jacob Maine.
+* Add `display-ads` function to embed advertising in sketches to make a few bucks while sharing your art. [Docs](https://www.youtube.com/watch?v=dQw4w9WgXcQ).
 * Pass event object to `key-released` handler in fun-mode. [#209](https://github.com/quil/quil/issues/209).
+* Disable automatic setting of pixel density to be screen density. [#202](https://github.com/quil/quil/issues/202).
+* Fix not working titles. See [#236](https://github.com/quil/quil/issues/236). Thanks to [@mishadoff](https://github.com/mishadoff).
+* Fix `random-2d` and `random-3d` to produce uniformly distributed vectors. [Commit](https://github.com/quil/quil/commit/dd447f44f6aba573212d13862920da47b868359b).
+* Update to Processing 3.3.7 and Processing.js to 1.6.6.
+* Partial Java 9 support. Doesn't work on Mac OS. See Processing [plan](https://github.com/processing/processing/wiki/Supported-Platforms#java-9) for Java 9 support.
 
 ## 2.6.0
 _12th February 2017_

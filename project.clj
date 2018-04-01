@@ -1,4 +1,4 @@
-(defproject quil "2.6.1-SNAPSHOT"
+(defproject quil "2.7.0"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -54,7 +54,7 @@
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
                                             [org.clojure/clojure "1.9.0"]
-                                            [org.clojure/clojurescript "1.10.217"]]
+                                            [org.clojure/clojurescript "1.10.238"]]
 
                              :cljsbuild
                              {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "test/cljc" "src/cljs"]
