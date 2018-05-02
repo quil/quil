@@ -29,7 +29,7 @@ Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "2.7.0"]
+[quil "2.7.1"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -112,7 +112,7 @@ Also check out awesome gallery of sketches contributed by community members: htt
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `3.2.4` of Processing and `1.6.4` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
+Quil provides support for the standard Processing API - currently version `3.3.7` of Processing and `1.6.6` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
 
 ## Community
 
