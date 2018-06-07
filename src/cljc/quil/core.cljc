@@ -4356,6 +4356,12 @@
   [size]
   (.textSize (current-graphics) (float size)))
 
+(defn get-text-size
+  "Return the current text size, as a float. Font size is measured in units
+  of pixels."
+  []
+  (.-textSize (current-graphics)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "texture()"
@@ -4419,6 +4425,24 @@
   "Calculates and returns the width of any text string."
   [^String data]
   (.textWidth (current-graphics) data))
+
+(defn get-text-font
+  "Returns the name of the current font, as a string."
+  []
+  ; The story about Processing `PGraphics` and the default font, available
+  ; as the `textFont` public field...
+  ; Since a `PGraphics` starts with a null `textFont`, we need a way to
+  ; actually set it to the, well, default font, so that we can return its
+  ; name 🤪.
+  ; It turns out that `textWidth()` is one of the public methods that in
+  ; their implementation call the protected `defaultFontOrDeath()`, which,
+  ; as its name implies, sets the default font if it was unset.
+  ; So we call `textWidth()` if, when we are called, we are the first
+  ; text-related call and so `textFont` is still null.
+  ;
+  (when (nil? (.-textFont (current-graphics)))
+    (text-width ""))
+  (.getName (.-textFont (current-graphics))))
 
 (defn
   ^{:requires-bindings true
