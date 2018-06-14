@@ -1873,11 +1873,12 @@
     :category "Environment"
     :subcategory nil
     :added "2.7.2"}
-  is-looping
+  looping?
   "Returns whether the sketch is looping."
   []
   #?(:clj (.isLooping (ap/current-applet))
-     :cljs (.-__isLooping (ap/current-applet))))
+     :cljs @(:looping? (meta (qa/current-applet)))
+     ))
 
 
 (defn
