@@ -1869,6 +1869,20 @@
 
 (defn
   ^{:requires-bindings true
+    :processing-name "isLooping()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.7.2"}
+  looping?
+  "Returns whether the sketch is looping."
+  []
+  #?(:clj (.isLooping (ap/current-applet))
+     :cljs @(:looping? (meta (qa/current-applet)))
+     ))
+
+
+(defn
+  ^{:requires-bindings true
     :processing-name "frameRate()"
     :category "Environment"
     :subcategory nil
