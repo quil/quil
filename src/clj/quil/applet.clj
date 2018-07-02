@@ -159,7 +159,6 @@
  :init quil-applet-init
  :constructors {[java.util.Map] []}
  :exposes-methods {keyTyped keyTypedParent
-                   loop loopParent
                    mouseDragged mouseDraggedParent
                    keyPressed keyPressedParent
                    mouseExited mouseExitedParent
@@ -172,7 +171,6 @@
                    frameRate frameRateParent
                    mouseReleased mouseReleasedParent
                    focusLost focusLostParent
-                   noLoop noLoopParent
                    sketchFullScreen sketchFullScreenParent})
 
 (defn -exitActual
@@ -215,14 +213,6 @@
 (defn -draw [this]
   (with-applet this
     ((:draw-fn (meta this)))))
-
-(defn -noLoop [this]
-  (reset! (:looping? (meta this)) false)
-  (.noLoopParent this))
-
-(defn -loop [this]
-  (reset! (:looping? (meta this)) true)
-  (.loopParent this))
 
 (defn -frameRate [this new-rate-target]
   (reset! (target-frame-rate) new-rate-target)
@@ -319,13 +309,11 @@
                               close-fn))
 
         state             (atom nil)
-        looping?          (atom true)
         listeners         (into {} (for [name listeners]
                                      [name (or (options name) no-fn)]))
 
         applet-state      (merge options
                                  {:state state
-                                  :looping? looping?
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
                                   :settings-fn settings-fn

@@ -1877,8 +1877,7 @@
   "Returns whether the sketch is looping."
   []
   #?(:clj (.isLooping (ap/current-applet))
-     :cljs @(:looping? (meta (qa/current-applet)))
-     ))
+     :cljs (.-quil-looping? (ap/current-applet))))
 
 
 (defn
@@ -2798,7 +2797,8 @@
   specified. Otherwise, the sketch would enter an odd state until
   loop was called."
   []
-  (.noLoop (ap/current-applet)))
+  (.noLoop (ap/current-applet))
+  #?(:cljs (set! (.-quil-looping? (ap/current-applet)) false)))
 
 (defn
   ^{:requires-bindings true
@@ -4035,7 +4035,8 @@
   "Causes Processing to continuously execute the code within
   draw. If no-loop is called, the code in draw stops executing."
   []
-  (.loop (ap/current-applet)))
+  (.loop (ap/current-applet))
+  #?(:cljs (set! (.-quil-looping? (ap/current-applet)) true)))
 
 (defn
   ^{:requires-bindings true

@@ -4,13 +4,22 @@
             [goog.events :as events]
             [goog.events.EventType :as EventType]))
 
+(defn update-looping
+  "Updates 'Looping' status for the external-control test."
+  [id]
+  (q/with-sketch (q/get-sketch-by-id id)
+    (set! (.-innerText (.querySelector js/document "#looping-status"))
+          (str (q/looping?)))))
+
 (defn sketch-start [id]
   (q/with-sketch (q/get-sketch-by-id id)
-    (q/start-loop)))
+    (q/start-loop))
+  (update-looping id))
 
 (defn sketch-stop [id]
   (q/with-sketch (q/get-sketch-by-id id)
-    (q/no-loop)))
+    (q/no-loop))
+  (update-looping id))
 
 (defn add-event [state data]
   (update-in state [:last-events]

@@ -20,3 +20,8 @@
      (q/background 127)
      (q/ellipse (* 5 (q/frame-count)) (* 5 (q/frame-count)) 50 50)
      (q/delay-frame (rand-int (* 500 (rand-int 4))))))
+
+(defsnippet looping? {}
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/looping?) = " (q/looping?)) 10 20))

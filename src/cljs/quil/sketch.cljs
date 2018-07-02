@@ -89,6 +89,7 @@
         attach-function (fn [prc]
                           (bind-handlers prc opts)
                           (set! (.-quil prc) (atom nil))
+                          (set! (.-quil-looping? prc) true)
                           (set! (.-target-frame-rate prc) (atom 60)))
         sketch (js/Processing.Sketch. attach-function)]
     (when (contains? features :global-key-events)

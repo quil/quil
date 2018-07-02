@@ -68,7 +68,8 @@
       "Sketch should start/stop when on buttons click."
       [:p.controls
        [:button {:id "external-control-start"} "Start"]
-       [:button {:id "external-control-stop"} "Stop"]])
+       [:button {:id "external-control-stop"} "Stop"]
+       [:p "Looping: " [:span {:id "looping-status"} "true"]]])
 
      (gen-test-canvas
       "resizing"
