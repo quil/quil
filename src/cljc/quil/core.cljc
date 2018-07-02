@@ -2794,7 +2794,7 @@
   can happen, and functions like save-frame may not be used.
 
   Note that if the sketch is resized, redraw will be called to
-  update the sketch, even after no-oop has been
+  update the sketch, even after no-loop has been
   specified. Otherwise, the sketch would enter an odd state until
   loop was called."
   []
