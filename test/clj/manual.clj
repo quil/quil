@@ -37,7 +37,8 @@
              (let [sec (q/seconds)]
                (q/text (str sec) 20 50)
                (when (zero? (rem sec 10))
-                 (q/no-loop))))
+                 (q/no-loop)))
+             (q/text (str "Looping: " (q/looping?)) 20 65))
      :on-close #(deliver lock true)
      :key-pressed #(q/start-loop))
     @lock))
