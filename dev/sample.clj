@@ -1,4 +1,4 @@
-(ns sketch
+(ns sample
   (:require [quil.core :as q :include-macros true]
             [quil.middleware :as m]))
 
@@ -24,7 +24,6 @@
       (q/ellipse x y 100 100))))
 
 (q/defsketch my
-  :host "host"
   :size [500 500]
   :setup setup
   :update update-state

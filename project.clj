@@ -67,4 +67,4 @@
                                         :source-paths ["dev" "src/cljs"]
                                         :compiler {:output-to "target/jsdev/main.js"
                                                    :output-dir "target/jsdev"
-                                                   :main "sketch"}}]}}]})
+                                                   :main "sample"}}]}}]})
