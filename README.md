@@ -122,6 +122,23 @@ https://groups.google.com/forum/?fromgroups#!forum/clj-processing
 
 There is also a small number of people that hang out in `#quil` on freenode. New artworks are show-cased on the @quilist Twitter account: http://twitter.com/quilist
 
+## Developing
+
+Modifying Quil and testing changes is pretty simple. First run `lein compile` to compile some java classes. Then depending on whether you want to test Clojure or ClojureScript:
+
+### Clojure
+
+* If use emacs+cider, open `dev/sketch.clj` and evaluate.
+* Alternatively run `lein run -m sketch` which runs the sketch from `dev/sketch.clj`.
+
+### ClojureScript
+
+* Run `lein with-profile cljs-testing cljsbuild auto development` which compiles Quil to JS and also compiles a sample sketch in `dev/sketch.cljs`. This command also runs a Clojure sketch in new window. Ignore it and close, that's a bug.
+* Run `python -m SimpleHTTPServer` to start local static server. Open [http://localhost:8000/dev/index.html](http://localhost:8000/dev/index.html).
+* Alternatively, if you don't have python, open `dev/index.html` page from browser. It should work as well.
+
+In ClojureScript all changes to cljs files (e.g. `dev/sketch.cljs` or `src/cljs/...`) will be automatically recompiled. You just need to refresh the page.
+
 ## License
 
 Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.

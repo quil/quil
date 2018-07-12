@@ -45,7 +45,8 @@
                                   [javax.servlet/servlet-api "2.5"]
                                   [org.clojure/tools.reader "1.2.2"]]
                    :plugins [[lein-ring "0.12.4"]
-                             [lein-cljfmt "0.5.7"]]}
+                             [lein-cljfmt "0.5.7"]]
+                   :source-paths ["dev"]}
 
              :cljs-testing [:dev
                             {:hooks [leiningen.cljsbuild]
@@ -57,8 +58,13 @@
                                             [org.clojure/clojurescript "1.10.238"]]
 
                              :cljsbuild
-                             {:builds [{:source-paths ["target/classes" "test/clj" "test/cljs" "test/cljc" "src/cljs"]
+                             {:builds [{:source-paths ["test/clj" "test/cljs" "test/cljc"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
-                                         :pretty-print true}}]}}]})
+                                         :pretty-print true}}
+                                       {:id "development"
+                                        :source-paths ["dev" "src/cljs"]
+                                        :compiler {:output-to "target/jsdev/main.js"
+                                                   :output-dir "target/jsdev"
+                                                   :main "sketch"}}]}}]})
