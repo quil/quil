@@ -12,7 +12,8 @@
     [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
    [:div.centerLayer {:align "center"}
     [:p [:a {:href "/test.html"} "Common Quil API tests"]]
-    [:p [:a {:href "/manual"} "Manual Quil API tests"]]]))
+    [:p [:a {:href "/manual"} "Manual Quil API tests"]]
+    [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]))
 
 (defn gen-test-canvas
   ([id doc]
@@ -79,9 +80,23 @@
       [:p.controls
        [:button {:id "resize-button"} "Resize"]])]]))
 
+(def fullscreen-page
+  (h/html5
+   [:head
+    [:meta {:charset "utf-8"}]
+    [:title "Fullscreen Quil tests"]
+    [:script {:type "text/javascript" :src "js/main.js"}]
+    [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
+   [:body {:data-page "fullscreen"}
+    [:div.centerLayer {:align "center"}
+     (gen-test-canvas
+      "fullscreen"
+      "Trigger fullscreen by clicking F11. Exit from it by clicking Esc. Size should change")]]))
+
 (defroutes app-routes
   (GET "/" req root-page)
   (GET "/manual" req manual-page)
+  (GET "/fullscreen" req fullscreen-page)
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))

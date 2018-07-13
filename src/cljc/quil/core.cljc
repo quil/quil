@@ -4775,7 +4775,9 @@
 
    :size           - A vector of width and height for the sketch or :fullscreen.
                      Defaults to [500 300]. If you're using :fullscreen you may
-                     want to enable present mode - :features [:present]
+                     want to enable present mode - :features [:present].
+                     :fullscreen size works only in Clojure. In ClojureScript
+                     all sketches are support fullscreen when you press F11.
 
    :renderer       - Specifies the renderer type. One of :p2d, :p3d, :java2d,
                      :opengl, :pdf). Defaults to :java2d. :dxf renderer
@@ -4818,29 +4820,31 @@
                      :present - Switch to present mode (fullscreen without
                                 borders, OS panels). You may want to use
                                 this feature together with :size :fullscreen.
-                                Not supported in clojurescript.
+                                Not supported in ClojureScript. In ClojureScript
+                                fullscreen is enabled by pressing F11 and it's
+                                enabled on all sketches automatically.
 
                      :no-start - Disables autostart if sketch was created using
                                  defsketch macro. To start sketch you have to
                                  call function created defsketch.
-                                 Supported only in clojurescript.
+                                 Supported only in ClojureScript.
 
                      :global-key-events - Allows a sketch to receive any
                                           keyboard event sent to the page,
                                           regardless of whether the canvas it is
                                           loaded in has focus or not.
-                                          Supported only in clojurescript.
+                                          Supported only in ClojureScript.
 
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.
                      Color is specified in hex format: #XXXXXX.
                      Example: :bgcolor \"#00FFFF\" (cyan background)
-                     Not supported in clojurescript.
+                     Not supported in ClojureScript.
 
    :display        - Sets what display should be used by this sketch.
                      Displays are numbered starting from 0. Example: :display 1.
-                     Not supported in clojurescript.
+                     Not supported in ClojureScript.
 
    :setup          - A function to be called once when setting the sketch up.
 
@@ -4853,13 +4857,13 @@
                      may be omitted in defsketch. If ommitted in defsketch,
                      :host is set to the name of the sketch. If element with
                      specified id is not found on the page and page is empty -
-                     new canvas element will be created. Used in clojurescript.
+                     new canvas element will be created. Used in ClojureScript.
 
    :focus-gained   - Called when the sketch gains focus.
-                     Not supported in clojurescript.
+                     Not supported in ClojureScript.
 
    :focus-lost     - Called when the sketch loses focus.
-                     Not supported in clojurescript.
+                     Not supported in ClojureScript.
 
    :mouse-entered  - Called when the mouse enters the sketch window.
 
@@ -4892,7 +4896,7 @@
                      pressed.
 
    :on-close       - Called once, when sketch is closed
-                     Not supported in clojurescript.
+                     Not supported in ClojureScript.
 
    :middleware     - Vector of middleware to be applied to the sketch.
                      Middleware will be applied in the same order as in comp

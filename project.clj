@@ -58,7 +58,7 @@
                                             [org.clojure/clojurescript "1.10.238"]]
 
                              :cljsbuild
-                             {:builds [{:source-paths ["test/clj" "test/cljs" "test/cljc"]
+                             {:builds [{:source-paths ["test/clj" "test/cljs" "test/cljc" "src/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced

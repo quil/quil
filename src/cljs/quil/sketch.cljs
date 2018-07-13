@@ -62,6 +62,42 @@
               (quil.sketch/with-sketch prc
                 (handler)))))))
 
+(defn in-fullscreen? []
+  (or (.-fullscreenElement js/document)
+      (.-mozFullScreenElement js/document)))
+
+(defn add-fullscreen-support
+  "Adds fullscreen support for provided Processing object.
+  Fullscreen is enabled when user presses F11. We turn
+  sketch <canvas> element to fullscreen storing old size
+  in an atom. When user cancels fullscreen (F11 or Esc)
+  we resize sketch to the old size."
+  [applet]
+  (let [old-size (atom nil)
+        adjust-canvas-size
+        (fn []
+          (if (in-fullscreen?)
+            (do
+              (reset! old-size
+                      [(.-width applet) (.-height applet)])
+              (set-size applet
+                        (-> js/window .-screen .-width)
+                        (-> js/window .-screen .-height)))
+            (apply set-size applet @old-size)))]
+    (events/listen js/window EventType/KEYDOWN
+                   (fn [event]
+                     (when (and (= (.-key event) "F11")
+                                (not (in-fullscreen?)))
+                       (.preventDefault event)
+                       (let [canvas (.-quil-canvas applet)]
+                         (cond (.-requestFullscreen canvas) (.requestFullscreen canvas)
+                               (.-mozRequestFullScreen canvas) (.mozRequestFullScreen canvas)
+                               :else (.warn js/console "Fullscreen mode is not supported in current browser."))))))
+    (events/listen js/document "fullscreenchange" adjust-canvas-size)
+    (events/listen js/document "mozfullscreenchange" adjust-canvas-size)
+    (events/listen js/document "fullscreenerror"
+                   #(.error js/console "Error while switching to/from fullscreen: " %))))
+
 (defn make-sketch [options]
   (let [opts            (->> (:middleware options [])
                              (cons do/deprecated-options)
@@ -69,7 +105,7 @@
                              (#(% options))
                              (merge {:size [500 300]}))
 
-        sketch-size     (or (:size opts) [200 200])
+        sketch-size     (:size opts)
         renderer        (:renderer opts)
         features        (set (:features opts))
 
@@ -114,6 +150,7 @@
         (let [proc-obj (js/Processing. host-elem (make-sketch opts-map))]
           (set! (.-processing-obj host-elem) proc-obj)
           (set! (.-quil-canvas proc-obj) host-elem)
+          (add-fullscreen-support proc-obj)
           proc-obj))
       (.error js/console
               (if (:host opts-map)
