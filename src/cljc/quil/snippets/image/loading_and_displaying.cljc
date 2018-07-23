@@ -1,11 +1,14 @@
-(ns snippets.image.loading-and-displaying
+(ns quil.snippets.image.loading-and-displaying
   (:require #?(:cljs quil.snippet
-               :clj [quil.snippet :refer [defsnippet]])
+               :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])
   #?(:cljs
-     (:use-macros [quil.snippet :only [defsnippet]])))
+     (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-(defsnippet image {}
+(defsnippet image
+  "image"
+  {}
+
   (q/background 255)
   (let [gr (q/create-graphics 70 70)]
     (q/with-graphics gr
@@ -14,7 +17,10 @@
     (q/image gr 0 0)
     (q/image gr 100 0 100 70)))
 
-(defsnippet image-mode {}
+(defsnippet image-mode
+  "image-mode"
+  {}
+
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
@@ -37,19 +43,28 @@
     (q/point 400 150)))
 
 #?(:clj
-   (defsnippet load-image {}
+   (defsnippet load-image
+     "load-image"
+     {}
+
      (let [im (q/load-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png")]
        (q/image im 0 0))))
 
 #?(:clj
-   (defsnippet resize-image {}
+   (defsnippet resize-image
+     "resize"
+     {}
+
      (let [im (q/load-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png")]
        (q/image im 0 0)
        (q/resize im 50 50)
        (q/image im 0 0))))
 
 #?(:clj
-   (defsnippet mask-image {:renderer :p3d}
+   (defsnippet mask-image
+     "mask-image"
+     {:renderer :p3d}
+
      (q/background 255)
      (let [gr (q/create-graphics 100 100 :p3d)
            gr2 (q/create-graphics 100 100 :p3d)
@@ -94,7 +109,10 @@
          (q/mask-image mask))
        (q/image gr2 260 140))))
 
-(defsnippet no-tint {}
+(defsnippet no-tint
+  "no-tint"
+  {}
+
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
@@ -109,12 +127,19 @@
     (q/image gr 200 0)))
 
 (defsnippet request-image
-  {:setup (q/set-state! :image (q/request-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png"))}
+  "image"
+  {:setup
+   (q/set-state! :image
+                 (q/request-image "https://github.com/quil/quil/raw/master/dev-resources/quil.png"))}
+
   (if (zero? (.-width (q/state :image)))
     (q/text "Loading" 10 10)
     (q/image (q/state :image) 0 0)))
 
-(defsnippet tint {}
+(defsnippet tint
+  "tint"
+  {}
+
   (q/background 127)
 
   ; check that no exception thrown

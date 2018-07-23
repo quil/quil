@@ -1,12 +1,15 @@
-(ns snippets.image.pixels
+(ns quil.snippets.image.pixels
   (:require #?(:cljs quil.snippet
-               :clj [quil.snippet :refer [defsnippet]])
+               :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])
   #?(:cljs
-     (:use-macros [quil.snippet :only [defsnippet]])))
+     (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 #?(:clj
-   (defsnippet blend {}
+   (defsnippet blend
+     "blend"
+     {}
+
      (q/background 255 100 20 50)
 
      (let [gr (q/create-graphics 50 50)
@@ -34,7 +37,10 @@
              (q/blend gr (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode)))))))
 
 #?(:clj
-   (defsnippet copy {}
+   (defsnippet copy
+     "copy"
+     {}
+
      (q/background 255)
      (let [gr (q/create-graphics 100 100)]
        (q/with-graphics gr
@@ -56,7 +62,10 @@
          (q/copy im [0 0 100 100] [120 0 100 100])
          (q/copy [0 0 50 50] [240 0 100 100])))))
 
-(defsnippet image-filter {}
+(defsnippet image-filter
+  "image-filter"
+  {}
+
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
         modes [[:threshold]
@@ -88,7 +97,10 @@
           (apply q/image-filter clone mode)
           (q/image clone (* col 120) (* 120 (inc row))))))))
 
-(defsnippet display-filter {}
+(defsnippet display-filter
+  "display-filter"
+  {}
+
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
         modes [[:threshold]
@@ -123,7 +135,10 @@
           (q/image dest (* col 120) (* 120 (inc row))))))))
 
 #?(:clj
-   (defsnippet filter-shader {:renderer :p2d}
+   (defsnippet filter-shader
+     "filter-shader"
+     {:renderer :p2d}
+
      (q/background 255)
      (let [orig (q/create-graphics 100 100)
            shd (q/load-shader (.getPath (clojure.java.io/resource "SimpleShader.glsl")))]
@@ -142,7 +157,10 @@
        (q/image orig 100 100))))
 
 #?(:clj
-   (defsnippet get-pixel {}
+   (defsnippet get-pixel
+     "get-pixel"
+     {}
+
      (q/background 255)
      (let [gr (q/create-graphics 100 100)]
        (q/with-graphics gr
@@ -163,7 +181,10 @@
        (q/image (q/get-pixel 0 0 50 50) 240 240))))
 
 #?(:clj
-   (defsnippet pixels-update-pixels {:renderer :p2d}
+   (defsnippet pixels-update-pixels
+     ["pixels" "update-pixels"]
+     {:renderer :p2d}
+
      (q/background 255)
      (let [size 50
            gr (q/create-graphics size size :p2d)]
@@ -186,7 +207,10 @@
            (aset-int px (+ i half) (aget px i))))
        (q/update-pixels))))
 
-(defsnippet set-image {}
+(defsnippet set-image
+  "set-image"
+  {}
+
   (q/background 255)
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
@@ -197,7 +221,10 @@
     (q/set-image 10 10 gr)))
 
 #?(:clj
-   (defsnippet set-pixel {:renderer :p2d}
+   (defsnippet set-pixel
+     "set-pixel"
+     {:renderer :p2d}
+
      (q/background 255)
      (let [gr (q/create-graphics 100 100)]
        (q/with-graphics gr

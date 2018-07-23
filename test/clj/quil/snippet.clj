@@ -2,8 +2,13 @@
   (:require [quil.util :refer [clj-compilation?]]
             [quil.core :as q]
             [quil.util :refer [no-fn]]
+            [quil.snippets.macro :as snippets]
             [clojure.test :refer [is]]
-            clojure.pprint))
+            clojure.pprint
+
+            ;;; Require tests.
+            quil.snippets.image
+            [quil.snippets.image rendering pixels loading-and-displaying]))
 
 (def default-size [500 500])
 (def default-host {:p2d "quil-test-2d"
@@ -45,7 +50,9 @@
       :on-close #(deliver result# nil))
      (is (nil? @result#))))
 
-(defmacro defsnippet [snip-name opts & body]
+(defmacro defsnippet [snip-name opts & body])
+
+(defmacro deftest-from-snippet [snip-name opts body]
   (if (clj-compilation?)
     ;; Clojure version
     `(def ~(vary-meta snip-name assoc
@@ -88,3 +95,14 @@
               {:name (name '~snip-name)
                :ns ~(str (ns-name *ns*))
                :fn ~snip-name}))))
+
+(defmacro realize-snippets
+  "Generates a test for each snippet stored in snippet collection."
+  []
+  `(do ~@(map (fn [{:keys [name opts body]}]
+                `(deftest-from-snippet ~name ~opts ~body))
+              (snippets/get-snippets))))
+
+(realize-snippets)
+
+

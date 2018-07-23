@@ -1,12 +1,15 @@
-(ns snippets.image.rendering
+(ns quil.snippets.image.rendering
   (:require #?(:cljs quil.snippet
-               :clj [quil.snippet :refer [defsnippet]])
+               :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])
   #?(:cljs
-     (:use-macros [quil.snippet :only [defsnippet]])))
+     (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 #?(:clj
-   (defsnippet blend-mode {:renderer :p2d}
+   (defsnippet blend-mode
+     "blend-mode"
+     {:renderer :p2d}
+
      (q/background 255)
      (let [modes [:replace :blend :add :subtract :darkest
                   :lightest :exclusion :multiply :screen]
@@ -30,7 +33,10 @@
              (q/image gr (* col 120) (* row 120))))))))
 
 #?(:clj
-   (defsnippet create-graphics {}
+   (defsnippet create-graphics
+     "create-graphics"
+     {}
+
      (q/background 255)
      (let [gr (q/create-graphics 100 100)]
        (q/with-graphics gr
