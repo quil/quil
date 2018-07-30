@@ -1,6 +1,7 @@
-(ns quil.snippets.macro)
+(ns quil.snippets.macro
+  (:require [quil.util :as u]))
 
-(def ^{:private true} snippets-coll (atom '()))
+(def snippets-coll (atom '()))
 
 (defmacro defsnippet
   "Defines a snippet by storing it in a list. Note that this macro
@@ -15,14 +16,11 @@
       :setup Setup function to use. Default is empty.
     body Body of draw function of the snippet"
   [name fns opts & body]
+    (println (boolean (:ns &env)))
+
   (swap! snippets-coll conj
          {:name name
           :fns (if (string? fns) [fns] fns)
           :opts opts
           :body body})
   nil)
-
-(defn get-snippets
-  "Returns all stored snippets"
-  []
-  @snippets-coll)

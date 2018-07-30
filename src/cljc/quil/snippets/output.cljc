@@ -1,7 +1,6 @@
 (ns quil.snippets.output
   (:require #?@(:cljs [quil.snippet]
                 :clj [[quil.snippets.macro :refer [defsnippet]]
-                      [clojure.java.io :as io]
                       [clojure.test :refer [is]]])
             [quil.core :as q :include-macros true])
   #?(:cljs
@@ -53,5 +52,5 @@
                       (q/ellipse 100 100
                                  (+ 50 (* 50 i))
                                  (+ 50 (* 50 i))))
-         (is (pos? (.length (io/file file))))))))
+         (is (pos? (.length (clojure.java.io/file file))))))))
 
