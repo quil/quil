@@ -1,4 +1,4 @@
-(ns snippets.environment
+(ns quil.snippets.environment
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

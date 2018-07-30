@@ -1,4 +1,4 @@
-(ns snippets.lights-camera.material-properties
+(ns quil.snippets.lights-camera.material-properties
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

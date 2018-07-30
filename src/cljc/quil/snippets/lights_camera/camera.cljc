@@ -1,4 +1,4 @@
-(ns snippets.lights-camera.camera
+(ns quil.snippets.lights-camera.camera
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

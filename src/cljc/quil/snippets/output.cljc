@@ -1,4 +1,4 @@
-(ns snippets.output
+(ns quil.snippets.output
   (:require #?@(:cljs [quil.snippet]
                 :clj [[quil.snippets.macro :refer [defsnippet]]
                       [clojure.java.io :as io]

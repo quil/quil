@@ -1,4 +1,4 @@
-(ns snippets.color.creating-and-reading
+(ns quil.snippets.color.creating-and-reading
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

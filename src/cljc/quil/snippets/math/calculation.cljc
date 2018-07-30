@@ -1,4 +1,4 @@
-(ns snippets.math.calculation
+(ns quil.snippets.math.calculation
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

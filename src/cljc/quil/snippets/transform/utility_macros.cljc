@@ -1,9 +1,9 @@
-(ns snippets.transform.utility-macros
+(ns quil.snippets.transform.utility-macros
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])
   #?(:cljs
-     (:use-macros [quil.snippets.macro :only [defsnippet]])))
+     (:use-macros [quil.snippets.macro :only [defsnippett]])))
 
 (defsnippet with-rotation
   "with-rotation"

@@ -1,4 +1,4 @@
-(ns snippets.math.random
+(ns quil.snippets.math.random
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

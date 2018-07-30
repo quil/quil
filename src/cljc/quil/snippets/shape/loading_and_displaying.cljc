@@ -1,4 +1,4 @@
-(ns snippets.shape.loading-and-displaying
+(ns quil.snippets.shape.loading-and-displaying
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

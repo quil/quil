@@ -1,4 +1,4 @@
-(ns snippets.lights-camera.coordinates
+(ns quil.snippets.lights-camera.coordinates
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

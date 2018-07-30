@@ -1,4 +1,4 @@
-(ns snippets.math.trigonometry
+(ns quil.snippets.math.trigonometry
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])

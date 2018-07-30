@@ -1,4 +1,4 @@
-(ns snippets.shape.vertex
+(ns quil.snippets.shape.vertex
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true])
