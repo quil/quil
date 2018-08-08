@@ -1,7 +1,8 @@
 (ns quil.snippets.image
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
-            [quil.core :as q :include-macros true])
+            [quil.core :as q :include-macros true]
+            quil.snippets.all-snippets)
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 

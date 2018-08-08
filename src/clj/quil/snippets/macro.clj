@@ -1,12 +1,10 @@
 (ns quil.snippets.macro
   (:require [quil.util :as u]))
 
-(def snippets-coll (atom '()))
-
 (defmacro defsnippet
-  "Defines a snippet by storing it in a list. Note that this macro
-  doesn't generate any side effects and only stores snippet in
-  snippets-coll list. Usages of snippets implemented separately.
+  "Defines a snippet by storing its parts in a list
+  quil.snippets.all-snippets/all-snippets that can be later
+  access from clj or cljs to run tests or prepare samples.
 
   Params:
     name Name of snippet.
@@ -15,12 +13,15 @@
       :renderer Renderer to use for snippet, if not default.
       :setup Setup function to use. Default is empty.
     body Body of draw function of the snippet"
-  [name fns opts & body]
-    (println (boolean (:ns &env)))
-
-  (swap! snippets-coll conj
-         {:name name
-          :fns (if (string? fns) [fns] fns)
-          :opts opts
-          :body body})
-  nil)
+  [snip-name fns opts & body]
+  (let [setup (:setup opts '())]
+    `(swap! quil.snippets.all-snippets/all-snippets
+            conj
+            {:name (name '~snip-name)
+             :fns ~(if (string? fns) [fns] fns)
+             :opts ~(dissoc opts :setup)
+             :setup (fn [] ~setup)
+             :setup-str ~(pr-str setup)
+             :body (fn [] ~@body)
+             :body-str ~(pr-str body)
+             :ns ~(str (ns-name *ns*))})))

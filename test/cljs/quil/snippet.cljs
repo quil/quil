@@ -3,7 +3,8 @@
             [dommy.utils :as utils]
             [dommy.core :as d :include-macros true]
             [goog.events :as events]
-            [goog.events.EventType :as EventType]))
+            [goog.events.EventType :as EventType])
+  (:use-macros [quil.cljs-snippet-macro :only [generate-test-functions]]))
 
 (def test-data (atom (list)))
 
@@ -82,6 +83,8 @@
 (defn init []
   (when-let [input (.querySelector js/document "#test-select")]
     (init-test-selection input)))
+
+(generate-test-functions)
 
 (events/listenOnce js/window EventType/LOAD
                    #(when (= (-> js/document
