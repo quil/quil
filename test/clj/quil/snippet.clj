@@ -4,6 +4,7 @@
             [quil.util :refer [no-fn]]
             [quil.snippets.all-snippets :as as]
             [clojure.test :as t :refer [is]]
+            [clojure.string :as cstr]
             clojure.pprint
 
             ;;; Require all snippets.
@@ -28,10 +29,9 @@
   (let [result (promise)
         time (System/currentTimeMillis)
         snip-name (str ns "/" name)]
+    (println "Test:" snip-name)
      (when manual?
-       (println "Test:" snip-name)
        (clojure.pprint/pprint body-str))
-     (println body-str)
      (q/sketch
       :title snip-name
       :size (:size opts default-size)
@@ -57,24 +57,27 @@
       :on-close #(deliver result nil))
      (t/is (nil? @result))))
 
-(defn define-snippet-as-test [{:keys [name opts setup body body-str] :as snippet}]
-  (intern 'quil.snippet
-          (vary-meta (symbol name) assoc
-                     :test #(run-snippet-as-test snippet)
-                     :test-set (let [cur (swap! current-test inc)
-                                     set (quot cur tests-in-set)]
-                              (when (zero? (mod cur tests-in-set))
-                                  (println "Test set" set (str " Run with: lein test :set-" set)))
-                              set))
-     (fn []
-       (q/sketch
-        :title name
-        :size default-size
-        :setup (fn []
-                 (q/frame-rate 5)
-                 (setup))
-        :renderer (:renderer opts :java2d)
-        :draw body))))
+(defn define-snippet-as-test [{:keys [ns name opts setup body body-str] :as snippet}]
+  (let [test-name (str (cstr/replace ns "." "_")
+                       "_"
+                       name)]
+   (intern 'quil.snippet
+           (vary-meta (symbol test-name) assoc
+                      :test #(run-snippet-as-test snippet)
+                      :test-set (let [cur (swap! current-test inc)
+                                      set (quot cur tests-in-set)]
+                                  (when (zero? (mod cur tests-in-set))
+                                    (println "Test set" set (str " Run with: lein test :set-" set)))
+                                  set))
+           (fn []
+             (q/sketch
+              :title name
+              :size default-size
+              :setup (fn []
+                       (q/frame-rate 5)
+                       (setup))
+              :renderer (:renderer opts :java2d)
+              :draw body)))))
 
 (doseq [snippet @as/all-snippets]
   (define-snippet-as-test snippet))
