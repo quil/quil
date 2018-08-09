@@ -3,7 +3,7 @@
                 :clj [[quil.snippets.macro :refer [defsnippet]]
                       [clojure.test :refer [is]]])
             [quil.core :as q :include-macros true]
-quil.snippets.all-snippets)
+            quil.snippets.all-snippets-internal)
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 

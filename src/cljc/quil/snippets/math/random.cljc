@@ -2,7 +2,7 @@
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-quil.snippets.all-snippets)
+            quil.snippets.all-snippets-internal)
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 

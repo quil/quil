@@ -3,21 +3,46 @@
             [dommy.utils :as utils]
             [dommy.core :as d :include-macros true]
             [goog.events :as events]
-            [goog.events.EventType :as EventType])
-  (:use-macros [quil.cljs-snippet-macro :only [generate-test-functions]]))
+            [goog.events.EventType :as EventType]
+            [quil.snippets.all-snippets :as as]))
 
-(def test-data (atom (list)))
+
+(def default-size [500 500])
+(def default-host {:p2d "quil-test-2d"
+                   :p3d "quil-test-3d"})
 
 (def test-indx (atom 0))
 
 (def failed (atom 0))
 (def total (atom 0))
 
+(defn snippet-to-test-function [snippet]
+  {:name (:name snippet)
+   :ns (:ns snippet)
+   :fn (fn []
+         (let [opts (:opts snippet)]
+           (q/sketch
+            :size (:size opts default-size)
+            :renderer (:renderer opts :p2d)
+            :host (or (:host opts)
+                       (get default-host (:renderer opts :p2d)))
+            :setup (:setup snippet)
+
+            :draw (fn []
+                    (try
+                      (:body snippet)
+                      (catch js/Error e
+                        (swap! failed inc)
+                        (throw e))
+                      (finally (q/exit)))))))})
+
+(def test-functions (mapv snippet-to-test-function @as/all-snippets))
+
 (defn log [& body]
   (.log js/console (apply str body)))
 
 (defn ^:export print-data []
-  (.log js/console (str @test-data)))
+  (.log js/console (str test-functions)))
 
 (defn log-sketch-test [sketch]
   (log (str "Testing " (:ns sketch) "/" (:name sketch))))
@@ -36,8 +61,8 @@
   (reset! total 0))
 
 (defn run-single-test []
-  (if (< @test-indx (count @test-data))
-    (let [sketch (nth @test-data @test-indx)]
+  (if (< @test-indx (count test-functions))
+    (let [sketch (nth test-functions @test-indx)]
       (log-sketch-test sketch)
       (swap! total inc)
 
@@ -46,7 +71,7 @@
 
         (catch js/Error e
           (log-sketch-passed sketch false)
-          (swap! quil.snippet/failed inc)
+          (swap! failed inc)
           (log e))
 
         (finally
@@ -68,7 +93,7 @@
     ((:fn (.-testData option)))))
 
 (defn init-test-selection [input]
-  (doseq [[ns tests] (sort-by first (group-by :ns @test-data))]
+  (doseq [[ns tests] (sort-by first (group-by :ns test-functions))]
     (let [optgroup (.createElement js/document "optgroup")]
       (set! (.-label optgroup) (subs ns (inc (count "snippet."))))
       (doseq [test tests]
@@ -83,8 +108,6 @@
 (defn init []
   (when-let [input (.querySelector js/document "#test-select")]
     (init-test-selection input)))
-
-(generate-test-functions)
 
 (events/listenOnce js/window EventType/LOAD
                    #(when (= (-> js/document

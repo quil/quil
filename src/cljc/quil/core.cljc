@@ -1879,7 +1879,6 @@
   #?(:clj (.isLooping (ap/current-applet))
      :cljs (.-quil-looping? (ap/current-applet))))
 
-
 (defn
   ^{:requires-bindings true
     :processing-name "frameRate()"

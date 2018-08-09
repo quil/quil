@@ -15,7 +15,7 @@
     body Body of draw function of the snippet"
   [snip-name fns opts & body]
   (let [setup (:setup opts '())]
-    `(swap! quil.snippets.all-snippets/all-snippets
+    `(swap! quil.snippets.all-snippets-internal/all-snippets
             conj
             {:name (name '~snip-name)
              :fns ~(if (string? fns) [fns] fns)

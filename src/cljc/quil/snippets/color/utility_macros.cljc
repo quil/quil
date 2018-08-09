@@ -2,14 +2,14 @@
   (:require #?(:cljs quil.snippet
                :clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-quil.snippets.all-snippets)
+            quil.snippets.all-snippets-internal)
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 #?(:clj
    (defsnippet with-fill
-  "with-fill"
-  {}
+     "with-fill"
+     {}
 
      (q/fill 255) ; global white fill
 
@@ -23,8 +23,8 @@ quil.snippets.all-snippets)
 
 #?(:clj
    (defsnippet with-stroke
-  "with-stroke"
-  {}
+     "with-stroke"
+     {}
 
      (q/fill 255) ; global white fill
      (q/stroke-weight 10) ; make borders thicker
