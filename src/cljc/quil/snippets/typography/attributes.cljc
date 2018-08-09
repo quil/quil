@@ -1,6 +1,5 @@
 (ns quil.snippets.typography.attributes
-  (:require #?(:cljs quil.snippet
-               :clj [quil.snippets.macro :refer [defsnippet]])
+  (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
             quil.snippets.all-snippets-internal)
   #?(:cljs

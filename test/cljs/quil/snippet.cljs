@@ -30,13 +30,13 @@
 
             :draw (fn []
                     (try
-                      (:body snippet)
+                      ((:body snippet))
                       (catch js/Error e
                         (swap! failed inc)
                         (throw e))
                       (finally (q/exit)))))))})
 
-(def test-functions (mapv snippet-to-test-function @as/all-snippets))
+(def test-functions (mapv snippet-to-test-function as/all-snippets))
 
 (defn log [& body]
   (.log js/console (apply str body)))

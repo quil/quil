@@ -1,6 +1,5 @@
 (ns quil.snippets.output
-  (:require #?@(:cljs [quil.snippet]
-                :clj [[quil.snippets.macro :refer [defsnippet]]
+  (:require #?@(:clj [[quil.snippets.macro :refer [defsnippet]]
                       [clojure.test :refer [is]]])
             [quil.core :as q :include-macros true]
             quil.snippets.all-snippets-internal)
