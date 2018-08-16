@@ -134,7 +134,7 @@ Modifying Quil and testing changes is pretty simple. First run `lein compile` to
 ### ClojureScript
 
 * Run `lein with-profile cljs-testing cljsbuild auto development` which compiles Quil to JS and also compiles a sample sketch in `dev/sample.cljs`. This command also runs a Clojure sketch in new window. Ignore it and close, that's a bug.
-* Run `python -m SimpleHTTPServer` to start local static server. Open [http://localhost:8000/dev/index.html](http://localhost:8000/dev/index.html).
+* Run `python -m SimpleHTTPServer` (Python 2) or `python -m http.server` (Python 3) to start local static server. Open [http://localhost:8000/dev/index.html](http://localhost:8000/dev/index.html).
 * Alternatively, if you don't have python, open `dev/index.html` page from browser. It should work as well.
 
 In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/...`) will be automatically recompiled. You just need to refresh the page.
