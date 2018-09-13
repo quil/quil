@@ -4663,14 +4663,29 @@
   "Temporarily set the fill color for the body of this macro.
    The code outside of with-fill form will have the previous fill color set.
 
-   The fill color has to be in a vector!
-   Example: (with-fill [255] ...)
-            (with-fill [10 80 98] ...)"
-  [fill-args & body]
-  `(let [old-fill# (quil.core/current-fill)]
-     (apply quil.core/fill ~fill-args)
-     ~@body
-     (quil.core/fill old-fill#)))
+   A fill argument of nil disables the fill.
+
+   Example: (with-fill 255 ...)
+            (with-fill [10 80 98] ...)
+            (with-fill (quil.core/color 13 27 42) ...)
+            (with-fill nil ...)"
+  [fill & body]
+  `(let [fill# ~fill
+         fill-was-enabled# (.fill (quil.core/current-graphics))
+         previous-fill# (quil.core/current-fill)]
+
+     (cond (not fill#) (quil.core/no-fill)
+           (sequential? fill#) (apply quil.core/fill fill#)
+           true (quil.core/fill fill#))
+
+     ;;return the value from body, not from the if after it.
+     (let [return-val# (do ~@body)]
+
+       ;;reset the previous fill even if it was disabled; other code could call (quil.core/current-fill)
+       (quil.core/fill previous-fill#)
+       (if-not fill-was-enabled#
+         (quil.core/no-fill))
+       return-val#)))
 
 (defmacro
   ^{:requires-bindings true
@@ -4682,14 +4697,29 @@
   "Temporarily set the stroke color for the body of this macro.
    The code outside of with-stroke form will have the previous stroke color set.
 
-   The stroke color has to be in a vector!
-   Example: (with-stroke [255] ...)
-            (with-stroke [10 80 98] ...)"
-  [stroke-args & body]
-  `(let [old-stroke# (quil.core/current-stroke)]
-     (apply quil.core/stroke ~stroke-args)
-     ~@body
-     (quil.core/stroke old-stroke#)))
+   A stroke argument of nil disables the stroke.
+
+   Example: (with-stroke 255 ...)
+            (with-stroke [10 80 98] ...)
+            (with-stroke (quil.core/color 13 27 42) ...)
+            (with-stroke nil ...)"
+  [stroke & body]
+  `(let [stroke# ~stroke
+         stroke-was-enabled# (.stroke (quil.core/current-graphics))
+         previous-stroke# (quil.core/current-stroke)]
+
+     (cond (not stroke#) (quil.core/no-stroke)
+           (sequential? stroke#) (apply quil.core/stroke stroke#)
+           true (quil.core/stroke stroke#))
+
+     ;;return the value from body, not from the if after it.
+     (let [return-val# (do ~@body)]
+
+       ;;reset the previous stroke even if it was disabled; other code could call (quil.core/current-stroke)
+       (quil.core/stroke previous-stroke#)
+       (if-not stroke-was-enabled#
+         (quil.core/no-stroke))
+       return-val#)))
 
 (defmacro
   ^{:requires-bindings true
