@@ -1,4 +1,4 @@
-(defproject quil "2.7.1"
+(defproject quil "2.7.2-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -58,13 +58,26 @@
                                             [org.clojure/clojurescript "1.10.238"]]
 
                              :cljsbuild
-                             {:builds [{:source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
+                             {:builds [
+                                        ; Compiles all tests in advanced mode. Used for release testing.
+                                       {:source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
                                          :pretty-print true}}
+
+                                        ; Compiles sample sketch. Used for development to
+                                        ; see changes immediately when changing quil cljs code.
                                        {:id "development"
                                         :source-paths ["dev" "src/cljs"]
                                         :compiler {:output-to "target/jsdev/main.js"
                                                    :output-dir "target/jsdev"
-                                                   :main "sample"}}]}}]})
+                                                   :main "sample"}}
+
+                                        ; Compiles script that outputs all code snippets to
+                                        ; console. Used to get cljs version of code snippets.
+                                       {:id "snippets-generation"
+                                        :source-paths ["dev-resources" "src/cljs"]
+                                        :compiler {:output-to "target/snippets_generation/main.js"
+                                                   :output-dir "target/snippets_generation"
+                                                   :main "utils.snippets_generator"}}]}}]})
