@@ -95,7 +95,7 @@
 (defn init-test-selection [input]
   (doseq [[ns tests] (sort-by first (group-by :ns test-functions))]
     (let [optgroup (.createElement js/document "optgroup")]
-      (set! (.-label optgroup) (subs ns (inc (count "snippet."))))
+      (set! (.-label optgroup) (subs ns (count "quil.snippets.")))
       (doseq [test tests]
         (let [option (.createElement js/document "option")]
           (set! (.-innerHTML option) (:name test))

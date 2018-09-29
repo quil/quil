@@ -49,8 +49,7 @@
                    :source-paths ["dev"]}
 
              :cljs-testing [:dev
-                            {:hooks [leiningen.cljsbuild]
-                             :plugins [[lein-cljsbuild "1.1.7"]]
+                            {:plugins [[lein-cljsbuild "1.1.7"]]
                              :source-paths ["test/cljs"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
@@ -60,10 +59,11 @@
                              :cljsbuild
                              {:builds [
                                         ; Compiles all tests in advanced mode. Used for release testing.
-                                       {:source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
+                                       {:id "tests"
+                                        :source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
-                                         :optimizations :advanced
+                                         :optimizations :simple
                                          :pretty-print true}}
 
                                         ; Compiles sample sketch. Used for development to
