@@ -63,7 +63,7 @@
                                         :source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
-                                         :optimizations :simple
+                                         :optimizations :advanced
                                          :pretty-print true}}
 
                                         ; Compiles sample sketch. Used for development to
