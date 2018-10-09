@@ -11,7 +11,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text-size 7)
+  (q/text-size 10)
   (doseq [[col fonts] (->> (q/available-fonts)
                            (partition-all 50)
                            (map-indexed vector))
@@ -25,14 +25,17 @@
   (q/background 255)
   (q/fill 0)
 
+  (comment "create font by name and size")
   (q/text-font (q/create-font "Courier New" 30))
   (q/text "(print :hello)" 20 50)
 
+  (comment "create font by name and size and using smooth")
   (q/text-font (q/create-font "Georgia" 30 true))
   (q/text "(print :hello)" 20 100)
 
-  #?(:clj (q/text-font (q/create-font "Georgia" 30 false (char-array "what is it for?"))))
-  (q/text "(print :hello)" 20 150))
+  #?@(:clj ((comment "create font using with all parameters")
+            (q/text-font (q/create-font "Georgia" 30 false (char-array "what is it for?")))
+            (q/text "(print :hello)" 20 150))))
 
 #?(:clj
    (defsnippet font-available?-s
@@ -68,12 +71,16 @@
   (q/background 255)
   (q/fill 0)
   (q/camera 50 50 50 0 0 0 0 0 -1)
+  (comment "draw x/y/z axis")
   (q/line 0 0 0 0 0 20)
   (q/line 0 0 0 0 20 0)
   (q/line 0 0 0 20 0 0)
+  (comment "draw text '2D'")
   (q/text "2D" 0 15)
   (q/rotate-x (- q/HALF-PI))
+  (comment "draw text '3D'")
   (q/text "3D" 0 -5 0)
+  (comment "draw text 'box'")
   (q/rotate-y q/HALF-PI)
   (q/rect-mode :corners)
   (q/text "box" -30 0 30 -15))

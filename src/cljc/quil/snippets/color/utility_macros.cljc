@@ -10,28 +10,33 @@
      "with-fill"
      {}
 
-     (q/fill 255) ; global white fill
+     (comment "set fill to white and draw a square")
+     (q/fill 255)
+     (q/rect 30 30 60 60)
 
-     (q/rect 30 30 60 60) ; white rect
-
+     (comment "set fill to red and draw 2 squares")
      (q/with-fill [255 0 0]
        (q/rect 60 60 90 90)
-       (q/rect 90 90 120 120)) ; two red rects
+       (q/rect 90 90 120 120))
 
-     (q/rect 120 120 150 150))) ; white rect again
+     (comment "draw square, it'll use white color")
+     (q/rect 120 120 150 150)))
 
 #?(:clj
    (defsnippet with-stroke
      "with-stroke"
      {}
 
-     (q/fill 255) ; global white fill
-     (q/stroke-weight 10) ; make borders thicker
+     (comment "set fill to white and draw a square")
+     (comment "default border color is black")
+     (q/fill 255)
+     (q/stroke-weight 10)
+     (q/rect 30 30 60 60)
 
-     (q/rect 30 30 60 60) ; white rect
-
+     (comment "set border to red and draw 2 squares")
      (q/with-stroke [255 0 0]
        (q/rect 60 60 90 90)
-       (q/rect 90 90 120 120)) ; two red rects
+       (q/rect 90 90 120 120))
 
+     (comment "draw another square, should have black borders")
      (q/rect 120 120 150 150)))

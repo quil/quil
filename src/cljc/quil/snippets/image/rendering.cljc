@@ -32,24 +32,26 @@
                (q/rect 20 10 20 80))
              (q/image gr (* col 120) (* row 120))))))))
 
-#?(:clj
-   (defsnippet create-graphics
-     "create-graphics"
-     {}
+(defsnippet create-graphics
+   "create-graphics"
+   {}
 
-     (q/background 255)
-     (let [gr (q/create-graphics 100 100)]
-       (q/with-graphics gr
-         (q/background 127)
-         (q/ellipse 50 50 80 40))
-       (q/image gr 0 0))
-     (let [gr (q/create-graphics 100 100 :java2d)]
-       (q/with-graphics gr
-         (q/background 127)
-         (q/ellipse 50 50 40 80))
-       (q/image gr 100 100))
-     (let [gr (q/create-graphics 100 100 :pdf "generated/create-graphics.pdf")]
-       (q/with-graphics gr
-         (q/background 127)
-         (q/ellipse 50 50 80 40)
-         (.dispose gr)))))
+   (q/background 255)
+   (let [gr (q/create-graphics 100 100)]
+     (q/with-graphics gr
+       (q/background 127)
+       (q/ellipse 50 50 80 40))
+     (q/image gr 0 0))
+
+  #?@(:clj ((comment "use different renderer")
+            (let [gr (q/create-graphics 100 100 :java2d)]
+              (q/with-graphics gr
+                (q/background 127)
+                (q/ellipse 50 50 40 80))
+              (q/image gr 100 100))
+            (comment "write output to pdf file")
+            (let [gr (q/create-graphics 100 100 :pdf "generated/create-graphics.pdf")]
+              (q/with-graphics gr
+                (q/background 127)
+                (q/ellipse 50 50 80 40)
+                (.dispose gr))))))

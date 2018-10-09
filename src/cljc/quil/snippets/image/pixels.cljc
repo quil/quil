@@ -5,62 +5,57 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-#?(:clj
-   (defsnippet blend
-     "blend"
-     {}
+(defsnippet blend
+   "blend"
+   {}
 
-     (q/background 255 100 20 50)
+   (q/background 255 100 20 50)
 
-     (let [gr (q/create-graphics 50 50)
-           modes [:blend :add :subtract :darkest :lightest :difference :exclusion
-                  :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
-           splitted (partition-all 5 modes)]
-       (q/with-graphics gr
-         (q/background 40 200 255 200)
-         (q/fill 255 0 0)
-         (q/ellipse 12 12 20 20)
-         (q/fill 0 255 0)
-         (q/ellipse 38 12 20 20)
-         (q/fill 0 0 255)
-         (q/ellipse 25 38 20 20))
+   (let [gr (q/create-graphics 50 50)
+         modes [:blend :add :subtract :darkest :lightest :difference :exclusion
+                :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
+         splitted (partition-all 5 modes)]
+     (comment "draw 3 circles of different color on the graphics")
+     (q/with-graphics gr
+       (q/background 40 200 255 200)
+       (q/fill 255 0 0)
+       (q/ellipse 12 12 20 20)
+       (q/fill 0 255 0)
+       (q/ellipse 38 12 20 20)
+       (q/fill 0 0 255)
+       (q/ellipse 25 38 20 20))
 
-       ; Draw all possible blended modes.
-       (dotimes [row (count splitted)]
-         (dotimes [col (count (nth splitted row))]
-           (let [mode (nth (nth splitted row) col)]
-             ; blend with sketch itself
-             (q/blend 400 0 50 50 (* col 55) (* row 55) 50 50 mode)
-             ; blend with graphics
-             (q/blend gr 0 0 50 50 (* col 55) (+ 170 (* row 55)) 50 50 mode)
-             ; blend graphics to graphics
-             (q/blend gr (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode)))))))
+     (comment "all possible blended modes")
+     (dotimes [row (count splitted)]
+       (dotimes [col (count (nth splitted row))]
+         (let [mode (nth (nth splitted row) col)]
+           (comment "blend with sketch itself")
+           (q/blend 400 0 50 50 (* col 55) (* row 55) 50 50 mode)
+           (comment "blend with graphics")
+           (q/blend gr 0 0 50 50 (* col 55) (+ 170 (* row 55)) 50 50 mode)
+           (comment "blend graphics to graphics")
+           (q/blend gr (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode))))))
 
-#?(:clj
-   (defsnippet copy
-     "copy"
-     {}
+(defsnippet copy
+   "copy"
+   {}
 
-     (q/background 255)
-     (let [gr (q/create-graphics 100 100)]
-       (q/with-graphics gr
-         (q/background 0 0 255)
-         (q/stroke-weight 5)
-         (q/stroke 0 255 0)
-         (q/no-fill)
-         (q/ellipse 50 50 10 10)
-         (q/ellipse 50 50 50 50)
-         (q/ellipse 50 50 90 90)
-         (q/stroke 255 0 0)
-         (q/line 0 0 100 100)
-         (q/line 100 0 0 100))
-       ; Processing 3 can't treat PGraphics as PImage
-       ; so we have to get create PImage from PGraphics ourselves.
-       (let [im (.copy gr)]
-         (q/image im 0 0)
-         (q/copy im im [0 0 50 50] [50 0 50 50])
-         (q/copy im [0 0 100 100] [120 0 100 100])
-         (q/copy [0 0 50 50] [240 0 100 100])))))
+  (q/background 255)
+  (let [im (q/create-image 100 100 :rgb)]
+    (comment " gradient on the image")
+    (dotimes [x 100]
+      (dotimes [y 100]
+        (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
+
+    (comment "draw original image")
+    (q/image im 0 0)
+    (comment "copy left top quarter to the right top quarter")
+    (q/copy im im [0 0 50 50] [50 0 50 50])
+    (comment "copy the whole image to the sketch, essentially just draw it")
+    (q/copy im [0 0 100 100] [120 0 100 100])
+    (comment "copy top left 50x50 square of sketch ")
+    (comment "to the 100x100 square at [240, 0] position")
+    (q/copy [0 0 50 50] [240 0 100 100])))
 
 (defsnippet image-filter
   "image-filter"
@@ -79,6 +74,7 @@
                [:erode]
                [:dilate]]
         splitted (partition-all 4 modes)]
+    (comment "draw 10x10 square from circles of different color")
     (q/with-graphics orig
       (q/color-mode :rgb 1.0)
       (q/background 1)
@@ -89,6 +85,7 @@
         (q/fill r 0 b)
         (q/ellipse (* r 100) (* b 100) 10 10)))
 
+    (comment "apply different filters, four filters per row")
     (q/image orig 0 0)
     (dotimes [row (count splitted)]
       (dotimes [col (count (nth splitted row))]
@@ -114,6 +111,7 @@
                [:erode]
                [:dilate]]
         splitted (partition-all 4 modes)]
+    (comment "draw 10x10 square from circles of different color")
     (q/with-graphics orig
       (q/color-mode :rgb 1.0)
       (q/background 1)
@@ -124,6 +122,7 @@
         (q/fill r 0 b)
         (q/ellipse (* r 100) (* b 100) 10 10)))
 
+    (comment "apply different filters, four filters per row")
     (q/image orig 0 0)
     (dotimes [row (count splitted)]
       (dotimes [col (count (nth splitted row))]
@@ -156,85 +155,83 @@
        (q/filter-shader shd)
        (q/image orig 100 100))))
 
-#?(:clj
-   (defsnippet get-pixel
-     "get-pixel"
-     {}
+(defsnippet get-pixel
+   "get-pixel"
+   {}
 
-     (q/background 255)
-     (let [gr (q/create-graphics 100 100)]
-       (q/with-graphics gr
-         (q/background 255)
-         (q/fill 127 255 180)
-         (q/ellipse 50 50 70 70))
+   (q/background 255)
+   (let [gr (q/create-graphics 100 100)]
+     (comment "draw circle on the graphics")
+     (q/with-graphics gr
+       (q/background 255)
+       (q/fill 127 255 180)
+       (q/ellipse 50 50 70 70))
 
-       (q/image gr 0 0)
+     (comment "draw original graphics")
+     (q/image gr 0 0)
 
-       (q/image (q/get-pixel gr) 0 120)
-       (q/fill (q/get-pixel gr 50 50))
-       (q/rect 120 120 100 100)
-       (q/image (q/get-pixel gr 0 0 50 50) 240 120)
+     (comment "copy graphics and draw it")
+     (q/image (q/get-pixel gr) 0 120)
 
-       (q/image (q/get-pixel) 400 400)
-       (q/fill (q/get-pixel 50 50))
-       (q/rect 120 240 100 100)
-       (q/image (q/get-pixel 0 0 50 50) 240 240))))
+     (comment "use get-pixel to get color of specific pixel")
+     (comment "and draw square")
+     (q/fill (q/get-pixel gr 50 50))
+     (q/rect 120 120 100 100)
 
-#?(:clj
-   (defsnippet pixels-update-pixels
-     ["pixels" "update-pixels"]
-     {:renderer :p2d}
+     (comment "use get-pixel to copy part of the graphics")
+     (q/image (q/get-pixel gr 0 0 50 50) 240 120)
 
-     (q/background 255)
-     (let [size 50
-           gr (q/create-graphics size size :p2d)]
-       (q/with-graphics gr
-         (q/background 255)
-         (q/fill 255 0 0)
-         (q/ellipse (/ size 2) (/ size 3) (* size 2/3) (* size 2/3)))
+     (comment "use get-pixel to copy part of the sketch itself")
+     (q/image (q/get-pixel) 400 400)
+     (q/fill (q/get-pixel 50 50))
+     (q/rect 120 240 100 100)
+     (q/image (q/get-pixel 0 0 50 50) 240 240)))
 
-       (q/image gr 0 0)
-       (let [px (q/pixels gr)
-             half (/ (* size size) 2)]
-         (dotimes [i half]
-           (aset-int px (+ i half) (aget px i))))
-       (q/update-pixels gr)
-       (q/image gr (+ size 20) 0)
+(defsnippet pixels-update-pixels
+   ["pixels" "update-pixels"]
+   {:renderer :p2d}
 
-       (let [px (q/pixels)
-             half (/ (* (q/width) (q/height)) 10)]
-         (dotimes [i half]
-           (aset-int px (+ i half) (aget px i))))
-       (q/update-pixels))))
+   (q/background 255)
+   (let [size 50
+         gr (q/create-graphics size size :p2d)]
+
+     (comment "draw red circle on the graphics")
+     (q/with-graphics gr
+       (q/background 255)
+       (q/fill 255 0 0)
+       (q/ellipse (/ size 2) (/ size 2) (* size (/ 2 3)) (* size (/ 2 3))))
+
+     (comment "draw original graphics")
+     (q/image gr 0 0)
+     (comment "get pixels of the graphics and copy")
+     (comment "the first half of all pixels to the second half")
+     (let [px (q/pixels gr)
+           half (/ (* size size) 2)]
+       (dotimes [i half]
+         #?(:clj (aset-int px (+ i half) (aget px i))
+            :cljs (aset px (+ i half) (aget px i)))))
+     (q/update-pixels gr)
+     (q/image gr (+ size 20) 0)
+
+     (comment "get pixels of the sketch itself and copy")
+     (comment "the first half of all pixels to the second half")
+     (let [px (q/pixels)
+           half (/ (* (q/width) (q/height)) 10)]
+       (dotimes [i half]
+         #?(:clj (aset-int px (+ i half) (aget px i))
+            :cljs (aset px (+ i half) (aget px i)))))
+     (q/update-pixels)))
 
 (defsnippet set-image
   "set-image"
   {}
 
   (q/background 255)
-  (let [gr (q/create-graphics 100 100)]
-    (q/with-graphics gr
-      (q/background 255)
-      (q/fill 255 0 0)
-      (q/ellipse 50 50 90 90))
+  (let [im (q/create-image 100 100 :rgb)]
+    (comment "draw gradient on the image")
+    (dotimes [x 100]
+      (dotimes [y 100]
+        (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
+    (comment "draw image on sketch")
+    (q/set-image 10 10 im)))
 
-    (q/set-image 10 10 gr)))
-
-#?(:clj
-   (defsnippet set-pixel
-     "set-pixel"
-     {:renderer :p2d}
-
-     (q/background 255)
-     (let [gr (q/create-graphics 100 100)]
-       (q/with-graphics gr
-         (q/background 255))
-
-       (doseq [i (range 30)
-               j (range 30)]
-         (q/set-pixel gr i j (q/color (* 7 i) (* 7 j) 0)))
-       (q/image gr 0 0)
-
-       (doseq [i (range 30)
-               j (range 30)]
-         (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))))

@@ -15,6 +15,7 @@
   (let [h-align [:left :center :right]
         v-align [:top :bottom :center :baseline]]
 
+    (comment "text-align with single argument")
     (doseq [ind (range (count h-align))
             :let [x 50
                   y (+ 20 (* ind 50))]]
@@ -22,6 +23,7 @@
       (q/text (name (h-align ind)) x y)
       (q/point x y))
 
+    (comment "text-align with multiple arguments")
     (doseq [ind-h (range (count h-align))
             ind-v (range (count v-align))
             :let [x (+ 70 (* ind-v 100))
