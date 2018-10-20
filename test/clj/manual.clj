@@ -171,10 +171,7 @@
                (q/rect base-x 100 90 90)
                (q/with-stroke [0 100 0]
                  (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-
-             ;;stroke -> no-stroke -> stroke
+               (q/rect base-x 300 90 90));;stroke -> no-stroke -> stroke
              (let [base-x 300]
                (q/stroke (q/color 0 100 0))
                (q/rect base-x 100 90 90)
@@ -231,10 +228,7 @@
                (q/rect base-x 100 90 90)
                (q/with-fill [0 100 0]
                  (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-
-             ;;fill -> no-fill -> fill
+               (q/rect base-x 300 90 90));;fill -> no-fill -> fill
              (let [base-x 300]
                (q/fill (q/color 0 100 0))
                (q/rect base-x 100 90 90)

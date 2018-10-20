@@ -33,15 +33,15 @@
              (q/image gr (* col 120) (* row 120))))))))
 
 (defsnippet create-graphics
-   "create-graphics"
-   {}
+  "create-graphics"
+  {}
 
-   (q/background 255)
-   (let [gr (q/create-graphics 100 100)]
-     (q/with-graphics gr
-       (q/background 127)
-       (q/ellipse 50 50 80 40))
-     (q/image gr 0 0))
+  (q/background 255)
+  (let [gr (q/create-graphics 100 100)]
+    (q/with-graphics gr
+      (q/background 127)
+      (q/ellipse 50 50 80 40))
+    (q/image gr 0 0))
 
   #?@(:clj ((comment "use different renderer")
             (let [gr (q/create-graphics 100 100 :java2d)]

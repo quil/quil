@@ -127,7 +127,6 @@
     (q/fill 255 255 (q/brightness col))
     (q/rect 70 70 100 100)))
 
-
 (defsnippet color
   "color"
   {}
@@ -261,5 +260,4 @@
   (q/green 0xFF112233)
   (q/blue 0xFF112233)
   (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
-  (q/background 0xFF112233)
-)
+  (q/background 0xFF112233))
