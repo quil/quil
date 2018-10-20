@@ -247,32 +247,6 @@
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "abs()"
-       :category "Math"
-       :subcategory "Calculation"
-       :added "1.0"}
-     abs-int
-     "Calculates the absolute value (magnitude) of a number. The absolute
-  value of a number is always positive. Takes and returns an int."
-     [n]
-     (PApplet/abs (int n))))
-
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "abs()"
-       :category "Math"
-       :subcategory "Calculation"
-       :added "1.0"}
-     abs-float
-     "Calculates the absolute value (magnitude) of a number. The absolute
-  value of a number is always positive. Takes and returns a float."
-     [n]
-     (PApplet/abs (float n))))
-
 (defn
   ^{:requires-bindings false
     :processing-name "abs()"
@@ -282,12 +256,12 @@
   abs
   "Calculates the absolute value (magnitude) of a number. The
   absolute value of a number is always positive. Dynamically casts to
-  an int or float appropriately"
+  an int or float appropriately for Clojure."
   [n]
   #?(:clj
      (if (u/int-like? n)
-       (abs-int n)
-       (abs-float n))
+       (PApplet/abs (int n))
+       (PApplet/abs (float n)))
      :cljs
      (.abs (ap/current-applet) n)))
 
@@ -322,38 +296,6 @@
     :category "Lights, Camera"
     :subcategory "Material Properties"
     :added "1.0"}
-  ambient-float
-  "Sets the ambient reflectance for shapes drawn to the screen. This
-  is combined with the ambient light component of environment. The
-  color components set through the parameters define the
-  reflectance. For example in the default color mode, setting x=255,
-  y=126, z=0, would cause all the red light to reflect and half of the
-  green light to reflect. Used in combination with emissive, specular,
-  and shininess in setting the material properties of shapes."
-  ([gray] (.ambient (current-graphics) (float gray)))
-  ([x y z] (.ambient (current-graphics) (float x) (float y) (float z))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "ambient()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
-  ambient-int
-  "Sets the ambient reflectance for shapes drawn to the screen. This
-  is combined with the ambient light component of environment. The rgb
-  color components set define the reflectance. Used in combination
-  with emissive, specular, and shininess in setting the material
-  properties of shapes."
-  [rgb]
-  (.ambient (current-graphics) (int rgb)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "ambient()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
   ambient
   "Sets the ambient reflectance for shapes drawn to the screen. This
   is combined with the ambient light component of environment. The
@@ -362,10 +304,8 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([rgb]
-   #?(:clj (if (u/int-like? rgb) (ambient-int rgb) (ambient-float rgb))
-      :cljs (ambient-float rgb)))
-  ([x y z] (ambient-float x y z)))
+  ([gray] (.ambient (current-graphics) (float gray)))
+  ([r g b] (.ambient (current-graphics) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -510,7 +450,7 @@
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
-  background-float
+  background
   "Sets the color used for the background of the Processing
   window. The default background is light gray. In the draw function,
   the background color is used to clear the display window at the
@@ -523,46 +463,6 @@
   ([gray alpha] (.background (current-graphics) (float gray) (float alpha)))
   ([r g b] (.background (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.background (current-graphics) (float r) (float g) (float b) (float a))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "background()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
-  background-int
-  "Sets the color used for the background of the Processing
-  window. The default background is light gray. In the draw function,
-  the background color is used to clear the display window at the
-  beginning of each frame.
-
-  It is not possible to use transparency (alpha) in background colors
-  with the main drawing surface, however they will work properly with
-  create-graphics. Converts rgb to an int and alpha to a float."
-  ([rgb] (.background (current-graphics) (unchecked-int rgb)))
-  ([rgb alpha] (.background (current-graphics) (unchecked-int rgb) (float alpha))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "background()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
-  background
-  "Sets the color used for the background of the Processing
-  window. The default background is light gray. In the draw function,
-  the background color is used to clear the display window at the
-  beginning of each frame.
-
-  It is not possible to use transparency (alpha) in background colors
-  with the main drawing surface, however they will work properly with
-  create-graphics. Converts args to floats."
-  #?(:clj ([rgb] (if (u/int-like? rgb) (background-int rgb) (background-float rgb)))
-     :cljs ([rgb] (.background (current-graphics) rgb)))
-  #?(:clj ([rgb alpha] (if (u/int-like? rgb) (background-int rgb alpha) (background-float rgb alpha)))
-     :cljs ([rgb alpha] (.background (current-graphics) rgb alpha)))
-  ([r g b] (background-float r g b))
-  ([r g b a] (background-float r g b a)))
 
 (defn
   ^{:requires-bindings true
@@ -1062,32 +962,6 @@
    (let [mode (u/resolve-constant-key mode color-modes)]
      (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "constrain()"
-       :category "Math"
-       :subcategory "Calculation"
-       :added "1.0"}
-     constrain-float
-     "Constrains a value to not exceed a maximum and minimum value. All
-  args are cast to floats."
-     [amt low high]
-     (PApplet/constrain (float amt) (float low) (float high))))
-
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "constrain()"
-       :category "Math"
-       :subcategory "Calculation"
-       :added "1.0"}
-     constrain-int
-     "Constrains a value to not exceed a maximum and minimum value. All
-  args are cast to ints."
-     [amt low high]
-     (PApplet/constrain (int amt) (int low) (int high))))
-
 (defn
   ^{:requires-bindings false
     :processing-name "constrain()"
@@ -1099,8 +973,8 @@
   [amt low high]
   #?(:clj
      (if (u/int-like? amt)
-       (constrain-int amt low high)
-       (constrain-float amt low high))
+       (PApplet/constrain (int amt) (int low) (int high))
+       (PApplet/constrain (float amt) (float low) (float high)))
      :cljs (.constrain (ap/current-applet) amt low high)))
 
 (defn
@@ -1563,33 +1437,6 @@
     :category "Lights, Camera"
     :subcategory "Material Properties"
     :added "1.0"}
-  emissive-float
-  "Sets the emissive color of the material used for drawing shapes
- drawn to the screen. Used in combination with ambient, specular, and
- shininess in setting the material properties of shapes. Converts all
- args to floats"
-  ([float-val] (.emissive (current-graphics) (float float-val)))
-  ([r g b] (.emissive (current-graphics) (float r) (float g) (float b))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "emissive()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
-  emissive-int
-  "Sets the emissive color of the material used for drawing shapes
-  drawn to the screen. Used in combination with ambient, specular, and
-  shininess in setting the material properties of shapes. Converts all
-  args to ints"
-  [int-val] (.emissive (current-graphics) (int int-val)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "emissive()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
   emissive
   "Sets the emissive color of the material used for drawing shapes
   drawn to the screen. Used in combination with ambient, specular, and
@@ -1597,10 +1444,8 @@
 
   If passed one arg - it is assumed to be an int (i.e. a color),
   multiple args are converted to floats."
-  ([c]
-   #?(:clj (if (u/int-like? c) (emissive-int c) (emissive-float c))
-      :cljs (emissive-float c)))
-  ([r g b] (emissive-float r g b)))
+  ([gray] (.emissive (current-graphics) (float gray)))
+  ([r g b] (.emissive (current-graphics) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -1699,55 +1544,23 @@
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
-  fill-float
-  "Sets the color used to fill shapes. For example, (fill 204 102 0),
-  will specify that all subsequent shapes will be filled with orange."
+  fill
+  "Sets the color used to fill shapes."
   ([gray]
    (.fill (current-graphics) (float gray))
    #?(:cljs (clear-no-fill-cljs (current-graphics))))
+
   ([gray alpha]
    (.fill (current-graphics) (float gray) (float alpha))
    #?(:cljs (clear-no-fill-cljs (current-graphics))))
+
   ([r g b]
    (.fill (current-graphics) (float r) (float g) (float b))
    #?(:cljs (clear-no-fill-cljs (current-graphics))))
+
   ([r g b alpha]
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
    #?(:cljs (clear-no-fill-cljs (current-graphics)))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "fill()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
-  fill-int
-  "Sets the color used to fill shapes."
-  ([rgb]
-   (.fill (current-graphics) (unchecked-int rgb))
-   #?(:cljs (clear-no-fill-cljs (current-graphics))))
-  ([rgb alpha]
-   (.fill (current-graphics) (unchecked-int rgb) (float alpha))
-   #?(:cljs (clear-no-fill-cljs (current-graphics)))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "fill()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
-  fill
-  "Sets the color used to fill shapes."
-  ([rgb]
-   #?(:clj (if (u/int-like? rgb) (fill-int rgb) (fill-float rgb))
-      :cljs (fill-float rgb)))
-
-  ([rgb alpha]
-   #?(:clj (if (u/int-like? rgb) (fill-int rgb alpha) (fill-float rgb alpha))
-      :cljs (fill-float rgb alpha)))
-
-  ([r g b] (fill-float r g b))
-  ([r g b a] (fill-float r g b a)))
 
 #?(:clj
    (defn
@@ -4043,47 +3856,15 @@
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
-  stroke-float
-  "Sets the color used to draw lines and borders around
-  shapes. Converts all args to floats"
-  ([gray] (.stroke (current-graphics) (float gray)))
-  ([gray alpha] (.stroke (current-graphics) (float gray) (float alpha)))
-  ([x y z] (.stroke (current-graphics) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (current-graphics) (float x) (float y) (float z) (float a))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "stroke()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
-  stroke-int
-  "Sets the color used to draw lines and borders around
-  shapes. Converts rgb to int and alpha to a float."
-  ([rgb] (.stroke (current-graphics) (unchecked-int rgb)))
-  ([rgb alpha] (.stroke (current-graphics) (unchecked-int rgb) (float alpha))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "stroke()"
-    :category "Color"
-    :subcategory "Setting"
-    :added "1.0"}
   stroke
   "Sets the color used to draw lines and borders around shapes. This
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
   each value in the range from 0 to 255)."
-  ([rgb]
-   #?(:clj (if (u/int-like? rgb) (stroke-int rgb) (stroke-float rgb))
-      :cljs (stroke-float rgb)))
-
-  ([rgb alpha]
-   #?(:clj (if (u/int-like? rgb) (stroke-int rgb alpha) (stroke-float rgb alpha))
-      :cljs (stroke-float rgb alpha)))
-
-  ([x y z] (stroke-float x y z))
-  ([x y z a] (stroke-float x y z a)))
+  ([gray] (.stroke (current-graphics) (float gray)))
+  ([gray alpha] (.stroke (current-graphics) (float gray) (float alpha)))
+  ([x y z] (.stroke (current-graphics) (float x) (float y) (float z)))
+  ([x y z a] (.stroke (current-graphics) (float x) (float y) (float z) (float a))))
 
 (defn
   ^{:requires-bindings true
@@ -4440,7 +4221,7 @@
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
-  tint-float
+  tint
   "Sets the fill value for displaying images. Images can be tinted to
   specified colors or made transparent by setting the alpha.
 
@@ -4458,56 +4239,6 @@
   ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
   ([r g b] (.tint (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "tint()"
-    :category "Image"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  tint-int
-  "Sets the fill value for displaying images. Images can be tinted to
-  specified colors or made transparent by setting the alpha.
-
-  To make an image transparent, but not change it's color, use white
-  as the tint color and specify an alpha value. For instance,
-  tint(255, 128) will make an image 50% transparent (unless
-  colorMode() has been used).
-
-  The value for the parameter gray must be less than or equal to the
-  current maximum value as specified by colorMode(). The default
-  maximum value is 255.
-
-  Also used to control the coloring of textures in 3D."
-  ([rgb] (.tint (current-graphics) (unchecked-int rgb)))
-  ([rgb alpha] (.tint (current-graphics) (unchecked-int rgb) (float alpha))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "tint()"
-    :category "Image"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  tint
-  "Sets the fill value for displaying images. Images can be tinted to
-  specified colors or made transparent by setting the alpha.
-
-  To make an image transparent, but not change it's color, use white
-  as the tint color and specify an alpha value. For instance,
-  tint(255, 128) will make an image 50% transparent (unless
-  colorMode() has been used).
-
-  The value for the parameter gray must be less than or equal to the
-  current maximum value as specified by colorMode(). The default
-  maximum value is 255.
-
-  Also used to control the coloring of textures in 3D."
-  #?(:clj ([rgb] (if (u/int-like? rgb) (tint-int rgb) (tint-float rgb)))
-     :cljs ([rgb] (.tint (current-graphics) rgb)))
-  #?(:clj ([rgb alpha] (if (u/int-like? rgb) (tint-int rgb alpha) (tint-float rgb alpha)))
-     :cljs ([rgb alpha] (.tint (current-graphics) rgb alpha)))
-  ([r g b] (tint-float r g b))
-  ([r g b a] (tint-float r g b a)))
 
 (defn
   ^{:requires-bindings true

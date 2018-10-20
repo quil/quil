@@ -262,8 +262,4 @@
   (q/blue 0xFF112233)
   (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
   (q/background 0xFF112233)
-  (q/fill 0xFF00FF00)
-  (q/stroke 0xFF00FF00)
-
-
 )

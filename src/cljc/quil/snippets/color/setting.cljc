@@ -50,7 +50,7 @@
   "fill"
   {}
 
-  (comment "blue")
+  (comment "blue background")
   (q/background 0 0 255)
 
   (comment "grey")
