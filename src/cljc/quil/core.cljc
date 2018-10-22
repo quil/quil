@@ -206,8 +206,17 @@
   (state :foo) ;=> 1
   (swap! (state-atom) update-in [:foo] inc)
   (state :foo) ;=> 2"
-  #?(:clj ([] (-> (ap/current-applet) meta :state))
-     :cljs ([] (. (ap/current-applet) -quil))))
+  []
+  #?(:clj (-> (ap/current-applet) meta :state)
+     :cljs (. (ap/current-applet) -quil)))
+
+(defn- internal-state
+  "Returns atom representing internal sketch state. Can be used by
+  functions to save implementation-specific state. This state is
+  supposed to be visible to users."
+  []
+  #?(:clj (-> (ap/current-applet) meta :internal-state)
+     :cljs (. (ap/current-applet) -quil-internal-state)))
 
 (defn
   ^{:requires-bindings true
@@ -1531,12 +1540,10 @@
   #?(:clj (PApplet/exp (float val))
      :cljs (.exp (ap/current-applet) val)))
 
-#?(:cljs
-   (defn- clear-no-fill-cljs
-     "Sets custom property on graphcs object indicating that it has
-  fill color."
-     [graphics]
-     (aset graphics no-fill-prop false)))
+(defn- mark-has-fill
+  "Marks internal state that fill color (doesn't matter which) is set currently."
+  []
+  (swap! (internal-state) assoc :has-fill? true))
 
 (defn
   ^{:requires-bindings true
@@ -1549,19 +1556,19 @@
   all subsequent shapes will be filled with orange.  This function casts all input as a float"
   ([gray]
    (.fill (current-graphics) (float gray))
-   #?(:cljs (clear-no-fill-cljs (current-graphics))))
+   (mark-has-fill))
 
   ([gray alpha]
    (.fill (current-graphics) (float gray) (float alpha))
-   #?(:cljs (clear-no-fill-cljs (current-graphics))))
+   (mark-has-fill))
 
   ([r g b]
    (.fill (current-graphics) (float r) (float g) (float b))
-   #?(:cljs (clear-no-fill-cljs (current-graphics))))
+   (mark-has-fill))
 
   ([r g b alpha]
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
-   #?(:cljs (clear-no-fill-cljs (current-graphics)))))
+   (mark-has-fill)))
 
 #?(:clj
    (defn
@@ -1690,8 +1697,7 @@
   looping?
   "Returns whether the sketch is looping."
   []
-  #?(:clj (.isLooping (ap/current-applet))
-     :cljs (.-quil-looping? (ap/current-applet))))
+  (:looping? @(internal-state)))
 
 (defn
   ^{:requires-bindings true
@@ -1708,7 +1714,7 @@
   is 60 frames per second."
   [new-rate]
   (do
-    #?(:cljs (reset! (.-target-frame-rate (ap/current-applet)) new-rate))
+    (swap! (internal-state) assoc :frame-rate new-rate)
     (.frameRate (ap/current-applet) (float new-rate))))
 
 (defn
@@ -2489,7 +2495,7 @@
   "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
   (.noFill (current-graphics))
-  #?(:cljs (aset (current-graphics) no-fill-prop true)))
+  (swap! (internal-state) assoc :has-fill? false))
 
 (defn
   ^{:requires-bindings true
@@ -2611,7 +2617,7 @@
   loop was called."
   []
   (.noLoop (ap/current-applet))
-  #?(:cljs (set! (.-quil-looping? (ap/current-applet)) false)))
+  (swap! (internal-state) assoc :looping? false))
 
 (defn
   ^{:requires-bindings true
@@ -3849,7 +3855,7 @@
   draw. If no-loop is called, the code in draw stops executing."
   []
   (.loop (ap/current-applet))
-  #?(:cljs (set! (.-quil-looping? (ap/current-applet)) true)))
+  (swap! (internal-state) assoc :looping? true))
 
 (defn
   ^{:requires-bindings true
@@ -3938,14 +3944,12 @@
   target-frame-rate
   "Returns the target framerate specified with the fn frame-rate"
   []
-  #?(:clj @(ap/target-frame-rate)
-     :cljs @(.-target-frame-rate (ap/current-applet))))
+  (:frame-rate @(internal-state)))
 
-(defn- no-fill?
-  "Returns whether fill is disabled for current graphics."
-  [^PGraphics graphics]
-  #?(:clj (not (.-fill graphics))
-     :cljs (true? (aget graphics no-fill-prop))))
+(defn- has-fill?
+  "Returns whether any fill color is set currently."
+  []
+  (:has-fill? @(internal-state)))
 
 (defn
   ^{:requires-bindings true
@@ -3957,10 +3961,10 @@
   "Draws a char to the screen in the specified position. See text fn
   for more details."
   ([c x y]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) (char c) (float x) (float y))))
   ([c x y z]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) (char c) (float x) (float y) (float z)))))
 
 (defn
@@ -3973,10 +3977,10 @@
   "Draws a number to the screen in the specified position. See text fn
   for more details."
   ([num x y]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) (float num) (float x) (float y))))
   ([num x y z]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) (float num) (float x) (float y) (float z)))))
 
 (defn
@@ -3998,13 +4002,13 @@
   data. For text drawn inside a rectangle, the coordinates are
   interpreted based on the current rect-mode setting."
   ([^String s x y]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) s (float x) (float y))))
   ([^String s x y z]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) s (float x) (float y) (float z))))
   ([^String s x1 y1 x2 y2]
-   (when-not (no-fill? (current-graphics))
+   (when (has-fill?)
      (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2)))))
 
 (defn

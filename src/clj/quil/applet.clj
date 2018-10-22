@@ -4,7 +4,7 @@
            [javax.swing JFrame]
            [java.awt Dimension GraphicsEnvironment]
            [java.awt.event WindowListener])
-  (:require [quil.util :refer [resolve-constant-key no-fn absolute-path]]
+  (:require [quil.util :as u]
             [quil.middlewares
              [deprecated-options :refer [deprecated-options]]
              [safe-fns :refer [safe-fns]]
@@ -22,9 +22,6 @@
   [applet & body]
   `(binding [*applet* ~applet]
      ~@body))
-
-(defn target-frame-rate []
-  (:target-frame-rate (meta (current-applet))))
 
 (def ^:private  executor (java.util.concurrent.Executors/newSingleThreadScheduledExecutor))
 
@@ -109,7 +106,7 @@
   This string can be passed to native Processing methods.
   If renderer passed as String - do nothing and simply return it"
   [renderer]
-  (cond (keyword? renderer) (resolve-constant-key renderer renderer-modes)
+  (cond (keyword? renderer) (u/resolve-constant-key renderer renderer-modes)
         (string? renderer) renderer
         :default (throw (RuntimeException. ":renderer should be keyword or string"))))
 
@@ -191,7 +188,7 @@
   [this]
   (let [{:keys [renderer size output-file settings-fn]} (meta this)
         renderer (resolve-renderer renderer)
-        output-file (absolute-path output-file)]
+        output-file (u/absolute-path output-file)]
     (if (= size :fullscreen)
       (.fullScreen this renderer)
       (.size this (int (first size)) (int (second size))
@@ -215,7 +212,6 @@
     ((:draw-fn (meta this)))))
 
 (defn -frameRate [this new-rate-target]
-  (reset! (target-frame-rate) new-rate-target)
   (.frameRateParent this new-rate-target))
 
 (defn -sketchRenderer [this]
@@ -298,10 +294,10 @@
 
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))
         renderer          (or (:renderer options) :java2d)
-        draw-fn           (or (:draw options) no-fn)
-        setup-fn          (or (:setup options) no-fn)
-        settings-fn       (or (:settings options) no-fn)
-        on-close-fn       (let [close-fn (or (:on-close options) no-fn)]
+        draw-fn           (or (:draw options) u/no-fn)
+        setup-fn          (or (:setup options) u/no-fn)
+        settings-fn       (or (:settings options) u/no-fn)
+        on-close-fn       (let [close-fn (or (:on-close options) u/no-fn)]
                             (if (:exit-on-close options)
                               (fn []
                                 (close-fn)
@@ -310,10 +306,11 @@
 
         state             (atom nil)
         listeners         (into {} (for [name listeners]
-                                     [name (or (options name) no-fn)]))
+                                     [name (or (options name) u/no-fn)]))
 
         applet-state      (merge options
                                  {:state state
+                                  :internal-state (atom u/initial-internal-state)
                                   :on-close on-close-fn
                                   :setup-fn setup-fn
                                   :settings-fn settings-fn
@@ -321,7 +318,6 @@
                                   :renderer renderer
                                   :size size
                                   :display (:display options)
-                                  :target-frame-rate (atom 60)
                                   :key-event (atom nil)}
                                  listeners)
         prx-obj           (quil.Applet. applet-state)]

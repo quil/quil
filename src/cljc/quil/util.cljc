@@ -6,6 +6,11 @@
   "Function that does nothing."
   [])
 
+(def initial-internal-state
+  "Internal state map used to initiate all sketches."
+  {:frame-rate 60
+   :looping? true})
+
 #?(:clj
    (defn callable? [value]
      (or (fn? value)

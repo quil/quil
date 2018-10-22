@@ -122,11 +122,11 @@
         opts (assoc opts
                     :setup setup
                     :mouse-wheel mouse-wheel)
+
         attach-function (fn [prc]
                           (bind-handlers prc opts)
                           (set! (.-quil prc) (atom nil))
-                          (set! (.-quil-looping? prc) true)
-                          (set! (.-target-frame-rate prc) (atom 60)))
+                          (set! (.-quil-internal-state prc) (atom u/initial-internal-state)))
         sketch (js/Processing.Sketch. attach-function)]
     (when (contains? features :global-key-events)
       (aset (aget sketch "options") "globalKeyEvents" true))
