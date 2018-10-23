@@ -1147,7 +1147,7 @@
   current-fill
   "Return the current fill color."
   []
-  (.-fillColor (current-graphics)))
+  (:current-fill @(internal-state)))
 
 (defn
   ^{:requires-bindings true
@@ -1158,7 +1158,7 @@
   current-stroke
   "Return the current stroke color."
   []
-  (.-strokeColor (current-graphics)))
+  (:current-stroke @(internal-state)))
 
 (defn
   ^{:requires-bindings true
@@ -1540,10 +1540,10 @@
   #?(:clj (PApplet/exp (float val))
      :cljs (.exp (ap/current-applet) val)))
 
-(defn- mark-has-fill
-  "Marks internal state that fill color (doesn't matter which) is set currently."
-  []
-  (swap! (internal-state) assoc :has-fill? true))
+(defn- save-current-fill
+  "Save current fill color vector in the internal state. It can be accessed using (current-fill) function."
+  [color]
+  (swap! (internal-state) assoc :current-fill color))
 
 (defn
   ^{:requires-bindings true
@@ -1555,20 +1555,25 @@
   "Sets the color used to fill shapes. For example, if you run fill(204, 102, 0),
   all subsequent shapes will be filled with orange.  This function casts all input as a float"
   ([gray]
-   (.fill (current-graphics) (float gray))
-   (mark-has-fill))
+    ; provided color might be passed from (current-fill) in which case it's a vector.
+    ; In that case just call fill again applying vector to the (fill).
+   (if (vector? gray)
+     (apply fill gray)
+     (do
+       (.fill (current-graphics) (float gray))
+       (save-current-fill [gray]))))
 
   ([gray alpha]
    (.fill (current-graphics) (float gray) (float alpha))
-   (mark-has-fill))
+   (save-current-fill [gray alpha]))
 
   ([r g b]
    (.fill (current-graphics) (float r) (float g) (float b))
-   (mark-has-fill))
+   (save-current-fill [r g b]))
 
   ([r g b alpha]
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
-   (mark-has-fill)))
+   (save-current-fill [r g b alpha])))
 
 #?(:clj
    (defn
@@ -2495,7 +2500,7 @@
   "Disables filling geometry. If both no-stroke and no-fill are called,
   nothing will be drawn to the screen."  []
   (.noFill (current-graphics))
-  (swap! (internal-state) assoc :has-fill? false))
+  (swap! (internal-state) assoc :current-fill nil))
 
 (defn
   ^{:requires-bindings true
@@ -2668,7 +2673,8 @@
   "Disables drawing the stroke (outline). If both no-stroke and
   no-fill are called, nothing will be drawn to the screen."
   []
-  (.noStroke (current-graphics)))
+  (.noStroke (current-graphics))
+  (swap! (internal-state) assoc :current-stroke nil))
 
 (defn
   ^{:requires-bindings true
@@ -3857,6 +3863,11 @@
   (.loop (ap/current-applet))
   (swap! (internal-state) assoc :looping? true))
 
+(defn- save-current-stroke
+  "Save current stroke color vector in the internal state. It can be accessed using (current-stroke) function."
+  [color]
+  (swap! (internal-state) assoc :current-stroke color))
+
 (defn
   ^{:requires-bindings true
     :processing-name "stroke()"
@@ -3868,10 +3879,23 @@
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
   each value in the range from 0 to 255)."
-  ([gray] (.stroke (current-graphics) (float gray)))
-  ([gray alpha] (.stroke (current-graphics) (float gray) (float alpha)))
-  ([x y z] (.stroke (current-graphics) (float x) (float y) (float z)))
-  ([x y z a] (.stroke (current-graphics) (float x) (float y) (float z) (float a))))
+  ([gray]
+    ; provided color might be passed from (current-fill) in which case it's a vector.
+    ; In that case just call fill again applying vector to the (fill).
+   (if (vector? gray)
+     (apply stroke gray)
+     (do
+       (.stroke (current-graphics) (float gray))
+       (save-current-stroke [gray]))))
+  ([gray alpha]
+   (.stroke (current-graphics) (float gray) (float alpha))
+   (save-current-stroke [gray alpha]))
+  ([x y z]
+   (.stroke (current-graphics) (float x) (float y) (float z))
+   (save-current-stroke [x y z]))
+  ([x y z alpha]
+   (.stroke (current-graphics) (float x) (float y) (float z) (float alpha))
+   (save-current-stroke [z y z alpha])))
 
 (defn
   ^{:requires-bindings true
@@ -3946,11 +3970,6 @@
   []
   (:frame-rate @(internal-state)))
 
-(defn- has-fill?
-  "Returns whether any fill color is set currently."
-  []
-  (:has-fill? @(internal-state)))
-
 (defn
   ^{:requires-bindings true
     :processing-name "text()"
@@ -3961,10 +3980,10 @@
   "Draws a char to the screen in the specified position. See text fn
   for more details."
   ([c x y]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) (char c) (float x) (float y))))
   ([c x y z]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) (char c) (float x) (float y) (float z)))))
 
 (defn
@@ -3977,10 +3996,10 @@
   "Draws a number to the screen in the specified position. See text fn
   for more details."
   ([num x y]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) (float num) (float x) (float y))))
   ([num x y z]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) (float num) (float x) (float y) (float z)))))
 
 (defn
@@ -4002,13 +4021,13 @@
   data. For text drawn inside a rectangle, the coordinates are
   interpreted based on the current rect-mode setting."
   ([^String s x y]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) s (float x) (float y))))
   ([^String s x y z]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) s (float x) (float y) (float z))))
   ([^String s x1 y1 x2 y2]
-   (when (has-fill?)
+   (when (current-fill)
      (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2)))))
 
 (defn
@@ -4403,11 +4422,9 @@
 
    Example: (with-fill 255 ...)
             (with-fill [10 80 98] ...)
-            (with-fill (quil.core/color 13 27 42) ...)
             (with-fill nil ...)"
   [fill & body]
   `(let [fill# ~fill
-         fill-was-enabled# (.fill (quil.core/current-graphics))
          previous-fill# (quil.core/current-fill)]
 
      (cond (not fill#) (quil.core/no-fill)
@@ -4416,11 +4433,9 @@
 
      ;;return the value from body, not from the if after it.
      (let [return-val# (do ~@body)]
-
-       ;;reset the previous fill even if it was disabled; other code could call (quil.core/current-fill)
-       (quil.core/fill previous-fill#)
-       (if-not fill-was-enabled#
-         (quil.core/no-fill))
+       (if (nil? previous-fill#)
+         (quil.core/no-fill)
+         (quil.core/fill previous-fill#))
        return-val#)))
 
 (defmacro
@@ -4437,11 +4452,9 @@
 
    Example: (with-stroke 255 ...)
             (with-stroke [10 80 98] ...)
-            (with-stroke (quil.core/color 13 27 42) ...)
             (with-stroke nil ...)"
   [stroke & body]
   `(let [stroke# ~stroke
-         stroke-was-enabled# (.stroke (quil.core/current-graphics))
          previous-stroke# (quil.core/current-stroke)]
 
      (cond (not stroke#) (quil.core/no-stroke)
@@ -4450,11 +4463,9 @@
 
      ;;return the value from body, not from the if after it.
      (let [return-val# (do ~@body)]
-
-       ;;reset the previous stroke even if it was disabled; other code could call (quil.core/current-stroke)
-       (quil.core/stroke previous-stroke#)
-       (if-not stroke-was-enabled#
-         (quil.core/no-stroke))
+       (if (nil? previous-stroke#)
+         (quil.core/no-stroke)
+         (quil.core/stroke previous-stroke#))
        return-val#)))
 
 (defmacro

@@ -154,49 +154,36 @@
      :on-close #(deliver lock true)
      :setup q/no-loop
      :draw (fn []
+
              (q/stroke-weight 5)
-             (q/fill (q/color 0 10 10 90))
+             (q/fill 127)
 
-             ;;no-stroke -> stroke -> no-stroke
+             ;; no-stroke -> stroke -> no-stroke
              (let [base-x 100]
-               (q/no-stroke)
-               (q/rect base-x 100 90 90)
-               (q/with-stroke (q/color 0 100 0)
-                 (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-             ;;no-stroke -> vector stroke -> no-stroke
-             (let [base-x 200]
                (q/no-stroke)
                (q/rect base-x 100 90 90)
                (q/with-stroke [0 100 0]
                  (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90));;stroke -> no-stroke -> stroke
-             (let [base-x 300]
-               (q/stroke (q/color 0 100 0))
+               (q/rect base-x 300 90 90))
+
+             ;; stroke -> no stroke -> original stroke
+             (let [base-x 200]
+               (q/stroke [0 100 0])
                (q/rect base-x 100 90 90)
                (q/with-stroke nil
                  (q/rect base-x 200 90 90))
                (q/rect base-x 300 90 90))
 
-             ;;stroke -> different stroke -> original stroke
-             (let [base-x 400]
-               (q/stroke (q/color 0 100 0))
-               (q/rect base-x 100 90 90)
-               (q/with-stroke (q/color 180 100 0)
-                 (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-             ;;stroke -> different vector stroke -> original stroke
-             (let [base-x 500]
-               (q/stroke (q/color 0 100 0))
+             ;; stroke -> different stroke -> original stroke
+             (let [base-x 300]
+               (q/stroke [0 100 0])
                (q/rect base-x 100 90 90)
                (q/with-stroke [180 100 0]
                  (q/rect base-x 200 90 90))
                (q/rect base-x 300 90 90))
 
-             ;;no-stroke -> no-stroke -> no-stroke
-             (let [base-x 600]
+             ;; no-stroke -> no-stroke -> no-stroke
+             (let [base-x 400]
                (q/no-stroke)
                (q/rect base-x 100 90 90)
                (q/with-stroke nil
@@ -212,48 +199,34 @@
      :setup q/no-loop
      :draw (fn []
              (q/stroke-weight 5)
-             (q/fill (q/color 0 10 10 90))
+             (q/fill [0 10 10 90])
 
-             ;;no-fill -> fill -> no-fill
+             ;; no-fill -> fill -> no-fill
              (let [base-x 100]
-               (q/no-fill)
-               (q/rect base-x 100 90 90)
-               (q/with-fill (q/color 0 100 0)
-                 (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-             ;;no-fill -> vector fill -> no-fill
-             (let [base-x 200]
                (q/no-fill)
                (q/rect base-x 100 90 90)
                (q/with-fill [0 100 0]
                  (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90));;fill -> no-fill -> fill
-             (let [base-x 300]
-               (q/fill (q/color 0 100 0))
+               (q/rect base-x 300 90 90))
+
+             ;; fill -> no-fill -> fill
+             (let [base-x 200]
+               (q/fill [0 100 0])
                (q/rect base-x 100 90 90)
                (q/with-fill nil
                  (q/rect base-x 200 90 90))
                (q/rect base-x 300 90 90))
 
-             ;;fill -> different fill -> original fill
-             (let [base-x 400]
-               (q/fill (q/color 0 100 0))
-               (q/rect base-x 100 90 90)
-               (q/with-fill (q/color 180 100 0)
-                 (q/rect base-x 200 90 90))
-               (q/rect base-x 300 90 90))
-
-             ;;fill -> different vector fill -> original fill
-             (let [base-x 500]
-               (q/fill (q/color 0 100 0))
+             ;; fill -> different fill -> original fill
+             (let [base-x 300]
+               (q/fill [0 100 0])
                (q/rect base-x 100 90 90)
                (q/with-fill [180 100 0]
                  (q/rect base-x 200 90 90))
                (q/rect base-x 300 90 90))
 
-             ;;no-fill -> no-fill -> no-fill
-             (let [base-x 600]
+             ;; no-fill -> no-fill -> no-fill
+             (let [base-x 400]
                (q/no-fill)
                (q/rect base-x 100 90 90)
                (q/with-fill nil
