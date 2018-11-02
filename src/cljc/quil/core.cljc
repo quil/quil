@@ -3305,7 +3305,12 @@
 
   Technically, rotate multiplies the current transformation matrix by
   a rotation matrix. This function can be further controlled by the
-  push-matrix and pop-matrix."
+  push-matrix and pop-matrix.
+
+  When 4 arguments provides it produces a rotation of angle degrees
+  around the vector x y z. Check examples for to better understand.
+  This rotation follows the right-hand rule, so if the vector x y z points
+  toward the user, the rotation will be counterclockwise."
   ([angle] (.rotate (current-graphics) (float angle)))
   ([angle vx vy vz] (.rotate (current-graphics) (float angle)
                              (float vx) (float vy) (float vz))))
@@ -4494,7 +4499,12 @@
     :added "1.0"}
   with-rotation
   "Performs body with rotation, restores current transformation on exit.
-  Accepts a vector [angle] or [angle x-axis y-axis z-axis].
+  Accepts a vector [angle] or [angle x y z].
+
+  When 4 arguments provides it produces a rotation of angle degrees
+  around the vector x y z. Check examples for to better understand.
+  This rotation follows the right-hand rule, so if the vector x y z points
+  toward the user, the rotation will be counterclockwise.
 
   Example:
     (with-rotation [angle]
