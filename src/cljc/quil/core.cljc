@@ -1545,6 +1545,8 @@
   [color]
   (swap! (internal-state) assoc :current-fill color))
 
+(declare no-fill)
+
 (defn
   ^{:requires-bindings true
     :processing-name "fill()"
@@ -1553,15 +1555,16 @@
     :added "1.0"}
   fill
   "Sets the color used to fill shapes. For example, if you run fill(204, 102, 0),
-  all subsequent shapes will be filled with orange.  This function casts all input as a float"
+  all subsequent shapes will be filled with orange.  This function casts all input as a float.
+  If nil is passed it removes any fill color; equivalent to (no-fill)."
   ([gray]
     ; provided color might be passed from (current-fill) in which case it's a vector.
     ; In that case just call fill again applying vector to the (fill).
-   (if (vector? gray)
-     (apply fill gray)
-     (do
-       (.fill (current-graphics) (float gray))
-       (save-current-fill [gray]))))
+   (cond (vector? gray) (apply fill gray)
+         (nil? gray) (no-fill)
+         true (do
+                (.fill (current-graphics) (float gray))
+                (save-current-fill [gray]))))
 
   ([gray alpha]
    (.fill (current-graphics) (float gray) (float alpha))
@@ -3883,15 +3886,16 @@
   "Sets the color used to draw lines and borders around shapes. This
   color is either specified in terms of the RGB or HSB color depending
   on the current color-mode (the default color space is RGB, with
-  each value in the range from 0 to 255)."
+  each value in the range from 0 to 255).
+  If nil is passed it removes any fill color; equivalent to (no-stroke)."
   ([gray]
     ; provided color might be passed from (current-fill) in which case it's a vector.
     ; In that case just call fill again applying vector to the (fill).
-   (if (vector? gray)
-     (apply stroke gray)
-     (do
-       (.stroke (current-graphics) (float gray))
-       (save-current-stroke [gray]))))
+   (cond (vector? gray) (apply stroke gray)
+         (nil? gray) (no-stroke)
+         true (do
+                (.stroke (current-graphics) (float gray))
+                (save-current-stroke [gray]))))
   ([gray alpha]
    (.stroke (current-graphics) (float gray) (float alpha))
    (save-current-stroke [gray alpha]))
@@ -4432,8 +4436,7 @@
   `(let [fill# ~fill
          previous-fill# (quil.core/current-fill)]
 
-     (cond (not fill#) (quil.core/no-fill)
-           (sequential? fill#) (apply quil.core/fill fill#)
+     (cond (sequential? fill#) (apply quil.core/fill fill#)
            true (quil.core/fill fill#))
 
      ;;return the value from body, not from the if after it.
@@ -4462,8 +4465,7 @@
   `(let [stroke# ~stroke
          previous-stroke# (quil.core/current-stroke)]
 
-     (cond (not stroke#) (quil.core/no-stroke)
-           (sequential? stroke#) (apply quil.core/stroke stroke#)
+     (cond (sequential? stroke#) (apply quil.core/stroke stroke#)
            true (quil.core/stroke stroke#))
 
      ;;return the value from body, not from the if after it.
