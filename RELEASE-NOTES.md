@@ -1,3 +1,13 @@
+## 2.8.0
+_19th November 2018_
+
+* New `looping?` function. Contributed by [@NightMachinary](https://github.com/NightMachinary) in [#244](https://github.com/quil/quil/pull/244).
+* Improved fullscreen support. [#240](https://github.com/quil/quil/issues/240).
+* Improved `with-sketch` and `with-stroke` macros. Contributed by [@zck](https://github.com/zck). Not it works both in Clojure and ClojureScript versions.
+* Removed the following functions: `abs-int`, `abs-float`, `ambient-float`, `ambient-int`, `background-float`, `baackground-int`, `constrain-float`, `constrain-int`, `emissive-float`, `emissive-int`, `fill-float`, `fill-int`, `stroke-float`, `stroke-int`, `tint-float`, `tint-int`. Only their counterpart without int/float left and work both in Clojure and ClojureScript.
+* Documentation improvements by [@Alex-Keyes](https://github.com/Alex-Keyes).
+* Refactoring of snippets to use them in API docs. See [#246](https://github.com/quil/quil/issues/246).
+
 ## 2.7.1
 _1st April 2018_
 
