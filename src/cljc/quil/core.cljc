@@ -143,6 +143,9 @@
                 122 :f11
                 123 :f12}))
 
+(def ^{:private true}
+  KEY-MAP {" " :space})
+
 ;; ------------------ end PConstants section ---------------------
 
 #?(:cljs
@@ -4732,8 +4735,10 @@
       (get KEY-CODES code :unknown-key)
       ; Workaround for closure compiler incorrect string casts.
       ; See https://github.com/google/closure-compiler/issues/1676
-      (keyword #?(:clj (str key-char)
-                  :cljs (js/String key-char))))))
+      (let [key-str #?(:clj (str key-char)
+                       :cljs (js/String key-char))]
+        (or (KEY-MAP key-str)
+            (keyword key-str))))))
 
 #?(:clj
    (defn
