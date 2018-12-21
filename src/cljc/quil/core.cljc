@@ -13,7 +13,7 @@
 
      :cljs
      (:require clojure.string
-               org.processingjs.Processing
+               cljsjs.p5
                [quil.sketch :as ap :include-macros true]
                [quil.util :as u :include-macros true])))
 

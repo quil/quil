@@ -1,4 +1,4 @@
-(defproject quil "2.8.0"
+(defproject quil "2.9.0-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -16,7 +16,7 @@
                  [quil/processing-svg "3.3.7"]
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
-                 [quil/processing-js "1.6.6.0"]
+                 [cljsjs/p5 "0.7.2-0"]
                  [com.lowagie/itext "2.1.7"]
 
 
