@@ -1,4 +1,4 @@
-(defproject quil "2.9.0-SNAPSHOT"
+(defproject quil "3.0.0-SNAPSHOT"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
