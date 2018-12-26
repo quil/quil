@@ -16,7 +16,9 @@
                            rendering-modes (:java2d :p2d :p3d :opengl))
 
 (defn resolve-renderer [mode]
-  (u/resolve-constant-key mode rendering-modes))
+  (if (= :p3d mode)
+    (aget js/p5.prototype "WEBGL")
+    (u/resolve-constant-key mode rendering-modes)))
 
 (defn set-size [applet width height]
   (let [el (.-quil-canvas applet)]
@@ -32,7 +34,7 @@
    (.createCanvas (current-applet) (int width) (int height)))
 
   ([width height mode]
-   (.createCanvas (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
+   (.createCanvas (current-applet) (int width) (int height) (resolve-renderer mode))))
 
 (defn- bind-handlers [prc opts]
   (doseq [[processing-name quil-name] {:setup :setup

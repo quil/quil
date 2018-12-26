@@ -87,11 +87,6 @@
    (cstr/upper-case (name const-keyword))
    #"-" "_"))
 
-(defn prepare-quil-name-cljs [const-keyword]
-  (if (= :p3d const-keyword)
-    "WEBGL"
-    (prepare-quil-name const-keyword)))
-
 (defn prepare-quil-clj-constants [constants]
   (into {}
         (map
@@ -101,7 +96,7 @@
 (defn prepare-quil-cljs-constants [constants]
   (into {}
         (map
-         #(vector % `(aget js/p5.prototype ~(prepare-quil-name-cljs %)))
+         #(vector % `(aget js/p5.prototype ~(prepare-quil-name %)))
          constants)))
 
 (defn make-quil-constant-map [target const-map-name const-map]
