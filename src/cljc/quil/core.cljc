@@ -1904,7 +1904,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (current-graphics) (unchecked-int col)))
+  (.hue (current-graphics) col))
 
 (defn
   ^{:requires-bindings true
