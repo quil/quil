@@ -819,7 +819,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (current-graphics) (unchecked-int color)))
+  (.blue (current-graphics) color))
 
 (defn
   ^{:requires-bindings true
