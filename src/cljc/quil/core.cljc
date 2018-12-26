@@ -2096,7 +2096,7 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-graphics) (unchecked-int c1) (unchecked-int c2) (float amt)))
+  (.lerpColor (current-graphics) c1 c2 (float amt)))
 
 (defn
   ^{:requires-bindings false
