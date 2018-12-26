@@ -3406,7 +3406,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (current-graphics) (unchecked-int c)))
+  (.saturation (current-graphics) c))
 
 (defn
   ^{:requires-bindings true
