@@ -841,7 +841,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (current-graphics) (unchecked-int color)))
+  (.brightness (current-graphics) color))
 
 (defn
   ^{:requires-bindings true
