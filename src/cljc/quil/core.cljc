@@ -48,7 +48,8 @@
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
                      :screen :overlay :replace :hard-light :soft-light :dodge :burn)
- color-modes (:rgb :hsb)
+ #?@(:clj (color-modes (:rgb :hsb))
+     :cljs (color-modes (:rgb :hsb :hsl)))
  image-formats (:rgb :argb :alpha)
  ellipse-modes (:center :radius :corner :corners)
  hint-options (:enable-async-saveframe :disable-async-saveframe
@@ -930,7 +931,7 @@
     :subcategory "Creating & Reading"
     :added "1.0"}
   color
-  "Creates an integer representation of a color The parameters are
+  "Creates an integer representation of a color. The parameters are
   interpreted as RGB or HSB values depending on the current
   color-mode. The default mode is RGB values from 0 to 255 and
   therefore, the function call (color 255 204 0) will return a bright
@@ -953,7 +954,8 @@
     :added "1.0"}
   color-mode
   "Changes the way Processing interprets color data. Available modes
-  are :rgb and :hsb.By default, the parameters for fill, stroke,
+  are :rgb and :hsb (and :hsl in clojurescript).
+  By default, the parameters for fill, stroke,
   background, and color are defined by values between 0 and 255 using
   the :rgb color model. The color-mode fn is used to change the
   numerical range used for specifying colors and to switch color
@@ -963,16 +965,16 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) (int mode))))
+     (.colorMode (current-graphics) mode)))
   ([mode max]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) (int mode) (float max))))
+     (.colorMode (current-graphics) mode) (float max)))
   ([mode max-x max-y max-z]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z))))
+     (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z))))
   ([mode max-x max-y max-z max-a]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) (int mode) (float max-x) (float max-y) (float max-z) (float max-a)))))
+     (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z) (float max-a)))))
 
 (defn
   ^{:requires-bindings false

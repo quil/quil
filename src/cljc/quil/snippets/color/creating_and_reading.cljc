@@ -165,6 +165,18 @@
   (q/fill 255 255 255)
   (q/rect 0 0 100 100))
 
+#?(:cljs
+   (defsnippet color-mode-hsl
+     "color-mode"
+     {}
+
+     (q/color-mode :rgb 255)
+     (q/background 255)
+
+     (q/color-mode :hsl)
+     (q/fill 255 255 255)
+     (q/rect 0 0 100 100)))
+
 (defsnippet color-mode
   "color-mode"
   {}
