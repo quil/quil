@@ -300,7 +300,7 @@
   alpha
   "Extracts the alpha value from a color."
   [color]
-  (.alpha (current-graphics) (unchecked-int color)))
+  (.alpha (current-graphics) color))
 
 (defn
   ^{:requires-bindings true
