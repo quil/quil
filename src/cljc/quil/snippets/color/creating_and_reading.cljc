@@ -50,6 +50,20 @@
              (q/fill (q/blend-color c1 c2 mode)))
            (q/rect (* col 100) (* (inc row) 100) 70 70))))))
 
+#?(:cljs
+   (defsnippet lightness
+     "lightness"
+     {}
+
+     (q/background 255)
+
+     (q/color-mode :hsl)
+     (let [col (q/color 156 100 50)]
+       (q/fill col)
+       (q/rect 0 0 100 100)
+
+       (q/fill (q/lightness col))
+       (q/rect 70 70 100 100))))
 
 (defsnippet red
   "red"

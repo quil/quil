@@ -2061,6 +2061,18 @@
   #?(:clj (.-keyPressed (ap/current-applet))
      :cljs (.-__keyPressed (ap/current-applet))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "lightness()"
+       :category nil
+       :subcategory nil
+       :added "3.0.0"}
+     lightness
+     "Extracts the HSL lightness value from a color or pixel array."
+     [c]
+     (.lightness (current-graphics) c)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "lightFalloff()"
