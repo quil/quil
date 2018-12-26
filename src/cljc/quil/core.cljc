@@ -1781,7 +1781,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (current-graphics) (unchecked-int col)))
+  (.green (current-graphics) col))
 
 (defn
   ^{:require-binding false
