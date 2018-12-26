@@ -731,48 +731,48 @@
      (.blend dest-img src-img (int x) (int y) (int width) (int height)
              (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
 
-(defn
-  ^{:requires-bindings false
-    :processing-name "blendColor()"
-    :processing-link nil
-    :category "Color"
-    :subcategory "Creating & Reading"
-    :added "1.0"}
-  blend-color
-  "Blends two color values together based on the blending mode given specified
-  with the mode keyword.
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "blendColor()"
+       :processing-link nil
+       :category "Color"
+       :subcategory "Creating & Reading"
+       :added "1.0"}
+     blend-color
+     "Blends two color values together based on the blending mode given specified
+     with the mode keyword.
 
-  Available blend modes are:
+     Available blend modes are:
 
-  :blend      - linear interpolation of colours: C = A*factor + B
-  :add        - additive blending with white clip:
-                                            C = min(A*factor + B, 255)
-  :subtract   - subtractive blending with black clip:
-                                            C = max(B - A*factor, 0)
-  :darkest    - only the darkest colour succeeds:
-                                            C = min(A*factor, B)
-  :lightest   - only the lightest colour succeeds:
-                                            C = max(A*factor, B)
-  :difference - subtract colors from underlying image.
-  :exclusion  - similar to :difference, but less extreme.
-  :multiply   - Multiply the colors, result will always be darker.
-  :screen     - Opposite multiply, uses inverse values of the colors.
-  :overlay    - A mix of :multiply and :screen. Multiplies dark values
-                and screens light values.
-  :hard-light - :screen when greater than 50% gray, :multiply when
-                lower.
-  :soft-light - Mix of :darkest and :lightest. Works like :overlay,
-                but not as harsh.
-  :dodge      - Lightens light tones and increases contrast, ignores
-                darks.
-                Called \"Color Dodge\" in Illustrator and Photoshop.
-  :burn       - Darker areas are applied, increasing contrast, ignores
-                lights. Called \"Color Burn\" in Illustrator and
-                Photoshop."
-  [c1 c2 mode]
-  (let [mode (u/resolve-constant-key mode blend-modes)]
-    #?(:clj (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode))
-       :cljs (.blendColor (current-graphics) c1 c2 mode))))
+     :blend      - linear interpolation of colours: C = A*factor + B
+     :add        - additive blending with white clip:
+                                               C = min(A*factor + B, 255)
+     :subtract   - subtractive blending with black clip:
+                                               C = max(B - A*factor, 0)
+     :darkest    - only the darkest colour succeeds:
+                                               C = min(A*factor, B)
+     :lightest   - only the lightest colour succeeds:
+                                               C = max(A*factor, B)
+     :difference - subtract colors from underlying image.
+     :exclusion  - similar to :difference, but less extreme.
+     :multiply   - Multiply the colors, result will always be darker.
+     :screen     - Opposite multiply, uses inverse values of the colors.
+     :overlay    - A mix of :multiply and :screen. Multiplies dark values
+                   and screens light values.
+     :hard-light - :screen when greater than 50% gray, :multiply when
+                   lower.
+     :soft-light - Mix of :darkest and :lightest. Works like :overlay,
+                   but not as harsh.
+     :dodge      - Lightens light tones and increases contrast, ignores
+                   darks.
+                   Called \"Color Dodge\" in Illustrator and Photoshop.
+     :burn       - Darker areas are applied, increasing contrast, ignores
+                   lights. Called \"Color Burn\" in Illustrator and
+                   Photoshop."
+     [c1 c2 mode]
+     (let [mode (u/resolve-constant-key mode blend-modes)]
+       (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))))
 
 #?(:clj
    (defn

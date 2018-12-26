@@ -23,31 +23,33 @@
     (q/fill semi-blue)
     (q/rect 70 70 100 100)))
 
-(defsnippet blend-color
-  "blend-color"
-  {}
+#?(:clj
+   (defsnippet blend-color
+     "blend-color"
+     {}
 
-  (q/background 255)
+     (q/background 255)
 
-  (let [_ (comment "very transparent red")
-        c1 (q/color 255 100 20 50)
-        _ (comment "not very transparent blue")
-        c2 (q/color 40 200 255 200)
-        modes [:blend :add :subtract :darkest :lightest :difference :exclusion
-               :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
-        splitted (partition-all 3 modes)]
-    (comment "draw 2 rectangles with colors c1 and c2")
-    (q/fill c1)
-    (q/rect 0 0 70 70)
-    (q/fill c2)
-    (q/rect 100 0 70 70)
+     (let [_ (comment "very transparent red")
+           c1 (q/color 255 100 20 50)
+           _ (comment "not very transparent blue")
+           c2 (q/color 40 200 255 200)
+           modes [:blend :add :subtract :darkest :lightest :difference :exclusion
+                  :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
+           splitted (partition-all 3 modes)]
+       (comment "draw 2 rectangles with colors c1 and c2")
+       (q/fill c1)
+       (q/rect 0 0 70 70)
+       (q/fill c2)
+       (q/rect 100 0 70 70)
 
-    (comment "draw all possible blended colors")
-    (dotimes [row (count splitted)]
-      (dotimes [col (count (nth splitted row))]
-        (let [mode (nth (nth splitted row) col)]
-          (q/fill (q/blend-color c1 c2 mode)))
-        (q/rect (* col 100) (* (inc row) 100) 70 70)))))
+       (comment "draw all possible blended colors")
+       (dotimes [row (count splitted)]
+         (dotimes [col (count (nth splitted row))]
+           (let [mode (nth (nth splitted row) col)]
+             (q/fill (q/blend-color c1 c2 mode)))
+           (q/rect (* col 100) (* (inc row) 100) 70 70))))))
+
 
 (defsnippet red
   "red"
