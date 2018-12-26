@@ -3178,7 +3178,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (current-graphics) (unchecked-int c)))
+  (.red (current-graphics) c))
 
 (defn
   ^{:requires-bindings true
