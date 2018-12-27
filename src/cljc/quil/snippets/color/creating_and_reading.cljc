@@ -274,18 +274,34 @@
       (q/fill (q/lerp-color c1 c2 (/ i 5)))
       (q/rect (* i 70) (* i 70) 100 100))))
 
-; snippet to make sure that using hex colors doesn't throw error.
-(defsnippet use-hex-colors
-  ; specify no function so it doesn't get added as snippet in API.
-  []
-  {}
+#?(:clj
+   ; snippet to make sure that using hex colors doesn't throw error.
+   (defsnippet use-hex-colors
+     ; specify no function so it doesn't get added as snippet in API.
+     []
+     {}
 
-  (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
-  (q/hue 0xFF112233)
-  (q/saturation 0xFF112233)
-  (q/brightness 0xFF112233)
-  (q/red 0xFF112233)
-  (q/green 0xFF112233)
-  (q/blue 0xFF112233)
-  (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
-  (q/background 0xFF112233))
+     (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
+     (q/hue 0xFF112233)
+     (q/saturation 0xFF112233)
+     (q/brightness 0xFF112233)
+     (q/red 0xFF112233)
+     (q/green 0xFF112233)
+     (q/blue 0xFF112233)
+     (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
+     (q/background 0xFF112233)))
+
+#?(:cljs
+   ; snippet to make sure that using hex colors doesn't throw error.
+   (defsnippet use-hex-colors
+     ; specify no function so it doesn't get added as snippet in API.
+     []
+     {}
+
+     (q/hue "0xFF112233")
+     (q/saturation "0xFF112233")
+     (q/brightness "0xFF112233")
+     (q/red "0xFF112233")
+     (q/green "0xFF112233")
+     (q/blue "0xFF112233")
+     (q/background "0xFF112233")))
