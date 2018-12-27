@@ -891,23 +891,22 @@
   #?(:clj (PApplet/ceil (float n))
      :cljs (.ceil (ap/current-applet) n)))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "clear()"
-       :category "Color"
-       :subcategory "Setting"
-       :added "2.4.0"}
-     clear
-     "Clears the pixels within a buffer. This function only works on
+(defn
+  ^{:requires-bindings true
+    :processing-name "clear()"
+    :category "Color"
+    :subcategory "Setting"
+    :added "2.4.0"}
+  clear
+  "Clears the pixels within a buffer. This function only works on
   graphics objects created with the (create-graphics) function meaning
   that you should call it only inside (with-graphics) macro. Unlike
   the main graphics context (the display window), pixels in additional
   graphics areas created with (create-graphics) can be entirely or
   partially transparent. This function clears everything in a graphics
   object to make all of the pixels 100% transparent."
-     []
-     (.clear (current-graphics))))
+  []
+  (.clear (current-graphics)))
 
 #?(:clj
    (defn
@@ -4549,9 +4548,9 @@
   [graphics & body]
   `(let [gr# ~graphics]
      (binding [quil.core/*graphics* gr#]
-       (.beginDraw gr#)
+       #?@(:clj (.beginDraw gr#))
        ~@body
-       (.endDraw gr#))))
+       #?@(:clj (.endDraw gr#)))))
 
 (defn ^{:requires-bindings false
         :category "Environment"
