@@ -7,12 +7,6 @@
             [goog.events.EventType :as EventType])
   (:require-macros [quil.sketch]))
 
-; Processing runs Processing.init() on DOMCOntentLoad event.
-; That function removes all sketches created before that point.
-; This is unexpected behavior from Quil point of view and
-; Processing.init() doesn't do anything relevant to Quil anyway.
-(.disableInit js/Processing)
-
 (def ^:dynamic
   *applet* nil)
 
@@ -22,7 +16,9 @@
                            rendering-modes (:java2d :p2d :p3d :opengl))
 
 (defn resolve-renderer [mode]
-  (u/resolve-constant-key mode rendering-modes))
+  (if (= :p3d mode)
+    (aget js/p5.prototype "WEBGL")
+    (u/resolve-constant-key mode rendering-modes)))
 
 (defn set-size [applet width height]
   (let [el (.-quil-canvas applet)]
@@ -35,10 +31,10 @@
 
 (defn size
   ([width height]
-   (.size (current-applet) (int width) (int height)))
+   (.createCanvas (current-applet) (int width) (int height)))
 
   ([width height mode]
-   (.size (current-applet) (int width) (int height) (u/resolve-constant-key mode rendering-modes))))
+   (.createCanvas (current-applet) (int width) (int height) (resolve-renderer mode))))
 
 (defn- bind-handlers [prc opts]
   (doseq [[processing-name quil-name] {:setup :setup
@@ -123,22 +119,21 @@
                     :setup setup
                     :mouse-wheel mouse-wheel)
 
-        attach-function (fn [prc]
-                          (bind-handlers prc opts)
-                          (set! (.-quil prc) (atom nil))
-                          (set! (.-quil-internal-state prc) (atom u/initial-internal-state)))
-        sketch (js/Processing.Sketch. attach-function)]
+        sketch (fn [prc]
+                 (bind-handlers prc opts)
+                 (set! (.-quil prc) (atom nil))
+                 (set! (.-quil-internal-state prc) (atom u/initial-internal-state)))]
     (when (contains? features :global-key-events)
       (aset (aget sketch "options") "globalKeyEvents" true))
     sketch))
 
 (defn destroy-previous-sketch [host-elem]
   (when-let [proc-obj (.-processing-obj host-elem)]
-    (.exit proc-obj)))
+    (.remove proc-obj)))
 
 (defn sketch [& opts]
   (let [opts-map (apply hash-map opts)
-        host-elem (dom/getElement (:host opts-map))
+        host-elem (:host opts-map)
         renderer (or (:renderer opts-map) :p2d)]
     (if host-elem
       (do
@@ -147,7 +142,7 @@
             (.warn js/console "WARNING: Using different context on one canvas!"))
           (set! (.-processing-context host-elem) renderer))
         (destroy-previous-sketch host-elem)
-        (let [proc-obj (js/Processing. host-elem (make-sketch opts-map))]
+        (let [proc-obj (js/p5. (make-sketch opts-map) host-elem)]
           (set! (.-processing-obj host-elem) proc-obj)
           (set! (.-quil-canvas proc-obj) host-elem)
           (add-fullscreen-support proc-obj)

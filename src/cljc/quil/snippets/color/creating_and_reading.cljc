@@ -23,31 +23,47 @@
     (q/fill semi-blue)
     (q/rect 70 70 100 100)))
 
-(defsnippet blend-color
-  "blend-color"
-  {}
+#?(:clj
+   (defsnippet blend-color
+     "blend-color"
+     {}
 
-  (q/background 255)
+     (q/background 255)
 
-  (let [_ (comment "very transparent red")
-        c1 (q/color 255 100 20 50)
-        _ (comment "not very transparent blue")
-        c2 (q/color 40 200 255 200)
-        modes [:blend :add :subtract :darkest :lightest :difference :exclusion
-               :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
-        splitted (partition-all 3 modes)]
-    (comment "draw 2 rectangles with colors c1 and c2")
-    (q/fill c1)
-    (q/rect 0 0 70 70)
-    (q/fill c2)
-    (q/rect 100 0 70 70)
+     (let [_ (comment "very transparent red")
+           c1 (q/color 255 100 20 50)
+           _ (comment "not very transparent blue")
+           c2 (q/color 40 200 255 200)
+           modes [:blend :add :subtract :darkest :lightest :difference :exclusion
+                  :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
+           splitted (partition-all 3 modes)]
+       (comment "draw 2 rectangles with colors c1 and c2")
+       (q/fill c1)
+       (q/rect 0 0 70 70)
+       (q/fill c2)
+       (q/rect 100 0 70 70)
 
-    (comment "draw all possible blended colors")
-    (dotimes [row (count splitted)]
-      (dotimes [col (count (nth splitted row))]
-        (let [mode (nth (nth splitted row) col)]
-          (q/fill (q/blend-color c1 c2 mode)))
-        (q/rect (* col 100) (* (inc row) 100) 70 70)))))
+       (comment "draw all possible blended colors")
+       (dotimes [row (count splitted)]
+         (dotimes [col (count (nth splitted row))]
+           (let [mode (nth (nth splitted row) col)]
+             (q/fill (q/blend-color c1 c2 mode)))
+           (q/rect (* col 100) (* (inc row) 100) 70 70))))))
+
+#?(:cljs
+   (defsnippet lightness
+     "lightness"
+     {}
+
+     (q/background 255)
+
+     (q/color-mode :hsl)
+     (let [col (q/color 156 100 50)]
+       (q/fill col)
+       (q/rect 0 0 100 100)
+
+       (q/fill (q/lightness col))
+       (q/rect 70 70 100 100))))
 
 (defsnippet red
   "red"
@@ -163,6 +179,18 @@
   (q/fill 255 255 255)
   (q/rect 0 0 100 100))
 
+#?(:cljs
+   (defsnippet color-mode-hsl
+     "color-mode"
+     {}
+
+     (q/color-mode :rgb 255)
+     (q/background 255)
+
+     (q/color-mode :hsl)
+     (q/fill 255 255 255)
+     (q/rect 0 0 100 100)))
+
 (defsnippet color-mode
   "color-mode"
   {}
@@ -246,18 +274,34 @@
       (q/fill (q/lerp-color c1 c2 (/ i 5)))
       (q/rect (* i 70) (* i 70) 100 100))))
 
-; snippet to make sure that using hex colors doesn't throw error.
-(defsnippet use-hex-colors
-  ; specify no function so it doesn't get added as snippet in API.
-  []
-  {}
+#?(:clj
+   ; snippet to make sure that using hex colors doesn't throw error.
+   (defsnippet use-hex-colors
+     ; specify no function so it doesn't get added as snippet in API.
+     []
+     {}
 
-  (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
-  (q/hue 0xFF112233)
-  (q/saturation 0xFF112233)
-  (q/brightness 0xFF112233)
-  (q/red 0xFF112233)
-  (q/green 0xFF112233)
-  (q/blue 0xFF112233)
-  (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
-  (q/background 0xFF112233))
+     (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
+     (q/hue 0xFF112233)
+     (q/saturation 0xFF112233)
+     (q/brightness 0xFF112233)
+     (q/red 0xFF112233)
+     (q/green 0xFF112233)
+     (q/blue 0xFF112233)
+     (q/blend-color 0xFF00FF00 0xFFFF0000 :blend)
+     (q/background 0xFF112233)))
+
+#?(:cljs
+   ; snippet to make sure that using hex colors doesn't throw error.
+   (defsnippet use-hex-colors
+     ; specify no function so it doesn't get added as snippet in API.
+     []
+     {}
+
+     (q/hue "0xFF112233")
+     (q/saturation "0xFF112233")
+     (q/brightness "0xFF112233")
+     (q/red "0xFF112233")
+     (q/green "0xFF112233")
+     (q/blue "0xFF112233")
+     (q/background "0xFF112233")))
