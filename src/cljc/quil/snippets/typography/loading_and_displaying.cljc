@@ -120,8 +120,8 @@
   (q/background 255)
   (q/fill 0)
   (let [font #?(:clj (q/create-font "Courier New" 20)
-                :cljs (q/create-font "serif" 20))]
-    (q/text-font font)
+                :cljs "Courier New")]
+    (q/text-font font 20)
     (q/text "(print :hello)" 20 30)
     (q/text-font font 30)
     (q/text "(print-bigger :hello)" 20 100)))
