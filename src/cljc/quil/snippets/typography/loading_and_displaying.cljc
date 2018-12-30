@@ -5,18 +5,19 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-(defsnippet available-fonts
-  "available-fonts"
-  {}
+#?(:clj
+   (defsnippet available-fonts
+     "available-fonts"
+     {}
 
-  (q/background 255)
-  (q/fill 0)
-  (q/text-size 10)
-  (doseq [[col fonts] (->> (q/available-fonts)
-                           (partition-all 50)
-                           (map-indexed vector))
-          [row font] (map-indexed vector fonts)]
-    (q/text font (+ 20 (* col 100)) (+ 20 (* row 10)))))
+     (q/background 255)
+     (q/fill 0)
+     (q/text-size 10)
+     (doseq [[col fonts] (->> (q/available-fonts)
+                              (partition-all 50)
+                              (map-indexed vector))
+             [row font] (map-indexed vector fonts)]
+       (q/text font (+ 20 (* col 100)) (+ 20 (* row 10))))))
 
 (defsnippet create-font
   "create-font"
