@@ -10,30 +10,38 @@
   {}
 
   (q/fill 0)
-  (q/stroke 255 0 0)
-  (q/stroke-weight 5)
   (let [h-align [:left :center :right]
         v-align [:top :bottom :center :baseline]]
 
-    (comment "text-align with single argument")
-    (doseq [ind (range (count h-align))
-            :let [x 50
-                  y (+ 20 (* ind 50))]]
-      (q/text-align (h-align ind))
-      (q/text (name (h-align ind)) x y)
-      (q/point x y))
+   (comment "text-align with single argument")
+   (doseq [ind (range (count h-align))
+           :let [x 50
+                 y (+ 20 (* ind 50))]]
+     (q/text-align (h-align ind))
+     (q/text (name (h-align ind)) x y)
 
-    (comment "text-align with multiple arguments")
-    (doseq [ind-h (range (count h-align))
-            ind-v (range (count v-align))
-            :let [x (+ 70 (* ind-v 100))
-                  y (+ 250 (* ind-h 50))
-                  h-al (h-align ind-h)
-                  v-al (v-align ind-v)
-                  txt (str (name h-al) "+" (name v-al))]]
-      (q/text-align h-al v-al)
-      (q/text txt x y)
-      (q/point x y))))
+     (q/push-style)
+     (q/stroke 255 0 0)
+     (q/stroke-weight 5)
+     (q/point x y)
+     (q/pop-style))
+
+   (comment "text-align with multiple arguments")
+   (doseq [ind-h (range (count h-align))
+           ind-v (range (count v-align))
+           :let [x (+ 70 (* ind-v 100))
+                 y (+ 250 (* ind-h 50))
+                 h-al (h-align ind-h)
+                 v-al (v-align ind-v)
+                 txt (str (name h-al) "+" (name v-al))]]
+     (q/text-align h-al v-al)
+     (q/text txt x y)
+
+     (q/push-style)
+     (q/stroke 255 0 0)
+     (q/stroke-weight 5)
+     (q/point x y)
+     (q/pop-style))))
 
 (defsnippet text-leading
   "text-leading"

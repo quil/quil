@@ -2877,7 +2877,8 @@
   The push-style and pop-style functions can be nested to provide more
   control"
   []
-  (.popStyle (current-graphics)))
+  #?(:clj (.popStyle (current-graphics))
+     :cljs (.pop (current-graphics))))
 
 (defn
   ^{:requires-bindings false
@@ -2968,7 +2969,8 @@
   shape-mode, color-mode, text-align, text-font, text-mode, text-size,
   text-leading, emissive, specular, shininess, and ambient"
   []
-  (.pushStyle (current-graphics)))
+  #?(:clj (.pushStyle (current-graphics))
+     :cljs (.push (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -4086,11 +4088,11 @@
   change the size of the font."
   ([align]
    (let [align (u/resolve-constant-key align horizontal-alignment-modes)]
-     (.textAlign (current-graphics) (int align))))
+     (.textAlign (current-graphics) align)))
   ([align-x align-y]
    (let [align-x (u/resolve-constant-key align-x horizontal-alignment-modes)
          align-y (u/resolve-constant-key align-y vertical-alignment-modes)]
-     (.textAlign (current-graphics) (int align-x) (int align-y)))))
+     (.textAlign (current-graphics) align-x align-y))))
 
 (defn
   ^{:requires-bindings true
