@@ -75,6 +75,21 @@
     (q/text-size size)
     (q/text (str "Text size: " size) 20 (+ 20 (* ind 80)))))
 
+#?(:cljs
+   (defsnippet text-style
+     "text-style"
+     {}
+
+     (q/fill 0)
+     (q/text-style :normal)
+     (q/text "text-style: normal" 20 50)
+
+     (q/text-style :italic)
+     (q/text "text-style: italic" 20 100)
+
+     (q/text-style :bold)
+     (q/text "text-style: bold" 20 150)))
+
 (defsnippet text-width
   "text-width"
   {}

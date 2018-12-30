@@ -69,6 +69,7 @@
  horizontal-alignment-modes (:left :center :right)
  vertical-alignment-modes (:top :bottom :center :baseline)
  #?@(:clj (text-modes (:model :shape)))
+ #?@(:cljs (text-styles (:normal :italic :bold)))
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
  filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
@@ -4202,6 +4203,22 @@
   units of pixels."
   [size]
   (.textSize (current-graphics) (float size)))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textStyle()"
+       :category "Typography"
+       :subcategory "Attributes"
+       :added "2.8.0"}
+     text-style
+     "Sets/gets the style of the text for system fonts to :normal, :italic,
+     or :bold. Note: this may be is overridden by CSS styling. For
+     non-system fonts (opentype, truetype, etc.) please load styled fonts
+     instead."
+     [style]
+     (let [s (u/resolve-constant-key style text-styles)]
+       (.textStyle (current-graphics) s))))
 
 (defn
   ^{:requires-bindings true
