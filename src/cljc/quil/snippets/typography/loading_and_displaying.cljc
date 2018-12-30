@@ -66,26 +66,41 @@
           (q/text-font))
      (q/text "CoMiC SaNs HeRe" 20 100)))
 
-(defsnippet text
-  "text"
-  {:renderer :p3d}
+#?(:clj
+   (defsnippet text
+     "text"
+     {:renderer :p3d}
 
-  (q/background 255)
-  (q/fill 0)
-  (q/camera 50 50 50 0 0 0 0 0 -1)
-  (comment "draw x/y/z axis")
-  (q/line 0 0 0 0 0 20)
-  (q/line 0 0 0 0 20 0)
-  (q/line 0 0 0 20 0 0)
-  (comment "draw text '2D'")
-  (q/text "2D" 0 15)
-  (q/rotate-x (- q/HALF-PI))
-  (comment "draw text '3D'")
-  (q/text "3D" 0 -5 0)
-  (comment "draw text 'box'")
-  (q/rotate-y q/HALF-PI)
-  (q/rect-mode :corners)
-  (q/text "box" -30 0 30 -15))
+     (q/background 255)
+     (q/fill 0)
+     (q/camera 50 50 50 0 0 0 0 0 -1)
+     (comment "draw x/y/z axis")
+     (q/line 0 0 0 0 0 20)
+     (q/line 0 0 0 0 20 0)
+     (q/line 0 0 0 20 0 0)
+     (comment "draw text '2D'")
+     (q/text "2D" 0 15)
+     (q/rotate-x (- q/HALF-PI))
+     (comment "draw text '3D'")
+     (q/text "3D" 0 -5 0)
+     (comment "draw text 'box'")
+     (q/rotate-y q/HALF-PI)
+     (q/rect-mode :corners)
+     (q/text "box" -30 0 30 -15)))
+
+#?(:cljs
+   (defsnippet text
+     "text"
+     {}
+
+     (q/background 255)
+     (q/fill 0)
+
+     (comment "draw text")
+     (q/text "word" 10 30)
+
+     (comment "draw text in a 'box'")
+     (q/text "a long sentence wrapping inside a box" 60 20 120 60)))
 
 #?(:clj
    (defsnippet text-char

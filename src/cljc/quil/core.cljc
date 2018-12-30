@@ -4052,9 +4052,10 @@
   ([^String s x y]
    (when (current-fill)
      (.text (current-graphics) s (float x) (float y))))
-  ([^String s x y z]
-   (when (current-fill)
-     (.text (current-graphics) s (float x) (float y) (float z))))
+  #?(:clj
+     ([^String s x y z]
+      (when (current-fill)
+        (.text (current-graphics) s (float x) (float y) (float z)))))
   ([^String s x1 y1 x2 y2]
    (when (current-fill)
      (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2)))))
