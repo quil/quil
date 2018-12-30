@@ -1046,42 +1046,43 @@
        true
        false)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "createFont()"
-    :category "Typography"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  create-font
-  "Dynamically converts a font to the format used by Processing (a
-  PFont) from either a font name that's installed on the computer, or
-  from a .ttf or .otf file inside the sketches 'data' folder. This
-  function is an advanced feature for precise control.
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "createFont()"
+       :category "Typography"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     create-font
+     "Dynamically converts a font to the format used by Processing (a
+     PFont) from either a font name that's installed on the computer, or
+     from a .ttf or .otf file inside the sketches 'data' folder. This
+     function is an advanced feature for precise control.
 
-  Use available-fonts to obtain the names for the fonts recognized by
-  the computer and are compatible with this function.
+     Use available-fonts to obtain the names for the fonts recognized by
+     the computer and are compatible with this function.
 
-  The size parameter states the font size you want to generate. The
-  smooth parameter specifies if the font should be antialiased or not,
-  and the charset parameter is an array of chars that specifies the
-  characters to generate.
+     The size parameter states the font size you want to generate. The
+     smooth parameter specifies if the font should be antialiased or not,
+     and the charset parameter is an array of chars that specifies the
+     characters to generate.
 
-  This function creates a bitmapped version of a font It loads a font
-  by name, and converts it to a series of images based on the size of
-  the font. When possible, the text function will use a native font
-  rather than the bitmapped version created behind the scenes with
-  create-font. For instance, when using the default renderer
-  setting (JAVA2D), the actual native version of the font will be
-  employed by the sketch, improving drawing quality and
-  performance. With the :p2d, :p3d, and :opengl renderer settings, the
-  bitmapped version will be used. While this can drastically improve
-  speed and appearance, results are poor when exporting if the sketch
-  does not include the .otf or .ttf file, and the requested font is
-  not available on the machine running the sketch."
-  ([name size] (.createFont (ap/current-applet) (str name) (float size)))
-  ([name size smooth] (.createFont (ap/current-applet) (str name) (float size) smooth))
-  ([name size smooth ^chars charset]
-   (.createFont (ap/current-applet) (str name) (float size) smooth charset)))
+     This function creates a bitmapped version of a font It loads a font
+     by name, and converts it to a series of images based on the size of
+     the font. When possible, the text function will use a native font
+     rather than the bitmapped version created behind the scenes with
+     create-font. For instance, when using the default renderer
+     setting (JAVA2D), the actual native version of the font will be
+     employed by the sketch, improving drawing quality and
+     performance. With the :p2d, :p3d, and :opengl renderer settings, the
+     bitmapped version will be used. While this can drastically improve
+     speed and appearance, results are poor when exporting if the sketch
+     does not include the .otf or .ttf file, and the requested font is
+     not available on the machine running the sketch."
+     ([name size] (.createFont (ap/current-applet) (str name) (float size)))
+     ([name size smooth] (.createFont (ap/current-applet) (str name) (float size) smooth))
+     ([name size smooth ^chars charset]
+      (.createFont (ap/current-applet) (str name) (float size) smooth charset))))
 
 (defn
   ^{:requires-bindings true
