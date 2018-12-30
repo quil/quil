@@ -53,16 +53,17 @@
     (q/text-leading leading)
     (q/text (str "text leading\n" leading) 20 (+ 20 (* ind 100)))))
 
-(defsnippet text-mode
-  "text-mode"
-  {:renderer :p2d}
+#?(:clj
+   (defsnippet text-mode
+     "text-mode"
+     {:renderer :p2d}
 
-  (q/fill 0)
-  (q/text-mode :model)
-  (q/text "text-mode: model" 20 50)
+     (q/fill 0)
+     (q/text-mode :model)
+     (q/text "text-mode: model" 20 50)
 
-  (q/text-mode :shape)
-  (q/text "text-mode: shape" 20 100))
+     (q/text-mode :shape)
+     (q/text "text-mode: shape" 20 100)))
 
 (defsnippet text-size
   "text-size"

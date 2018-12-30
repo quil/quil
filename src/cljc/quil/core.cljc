@@ -68,7 +68,7 @@
  stroke-join-modes (:miter :bevel :round)
  horizontal-alignment-modes (:left :center :right)
  vertical-alignment-modes (:top :bottom :center :baseline)
- text-modes (:model :shape)
+ #?@(:clj (text-modes (:model :shape)))
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
  filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
@@ -4160,34 +4160,35 @@
   [leading]
   (.textLeading (current-graphics) (float leading)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "textMode()"
-    :category "Typography"
-    :subcategory "Attributes"
-    :added "1.0"}
-  text-mode
-  "Sets the way text draws to the screen - available modes
-  are :model and :shape
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textMode()"
+       :category "Typography"
+       :subcategory "Attributes"
+       :added "1.0"}
+     text-mode
+     "Sets the way text draws to the screen - available modes
+     are :model and :shape
 
-  In the default configuration (the :model mode), it's possible to
-  rotate, scale, and place letters in two and three dimensional space.
+     In the default configuration (the :model mode), it's possible to
+     rotate, scale, and place letters in two and three dimensional space.
 
-  The :shape mode draws text using the glyph outlines of individual
-  characters rather than as textures. This mode is only supported with
-  the PDF and OPENGL renderer settings. With the PDF renderer, you
-  must specify the :shape text-mode before any other drawing occurs.
-  If the outlines are not available, then :shape will be ignored and
-  :model will be used instead.
+     The :shape mode draws text using the glyph outlines of individual
+     characters rather than as textures. This mode is only supported with
+     the PDF and OPENGL renderer settings. With the PDF renderer, you
+     must specify the :shape text-mode before any other drawing occurs.
+     If the outlines are not available, then :shape will be ignored and
+     :model will be used instead.
 
-  The :shape option in OPENGL mode can be combined with begin-raw to
-  write vector-accurate text to 2D and 3D output files, for instance
-  DXF or PDF. :shape is not currently optimized for OPENGL, so if
-  recording shape data, use :model until you're ready to capture the
-  geometry with begin-raw."
-  [mode]
-  (let [mode (u/resolve-constant-key mode text-modes)]
-    (.textMode (current-graphics) (int mode))))
+     The :shape option in OPENGL mode can be combined with begin-raw to
+     write vector-accurate text to 2D and 3D output files, for instance
+     DXF or PDF. :shape is not currently optimized for OPENGL, so if
+     recording shape data, use :model until you're ready to capture the
+     geometry with begin-raw."
+     [mode]
+     (let [mode (u/resolve-constant-key mode text-modes)]
+       (.textMode (current-graphics) (int mode)))))
 
 (defn
   ^{:requires-bindings true
