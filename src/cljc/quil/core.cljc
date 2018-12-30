@@ -964,10 +964,10 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) mode)))
+     (.colorMode (current-graphics) mode #?(:cljs 255))))
   ([mode max]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) mode) (float max)))
+     (.colorMode (current-graphics) mode (float max))))
   ([mode max-x max-y max-z]
    (let [mode (u/resolve-constant-key mode color-modes)]
      (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z))))
