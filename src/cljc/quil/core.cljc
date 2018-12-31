@@ -1335,23 +1335,24 @@
   #?(:clj (PApplet/degrees (float radians))
      :cljs (.degrees (ap/current-applet) radians)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "delay()"
-    :processing-link nil
-    :category "Structure"
-    :subcategory nil
-    :added "1.0"}
-  delay-frame
-  "Forces the program to stop running for a specified time. Delay
-  times are specified in thousandths of a second, therefore the
-  function call (delay 3000) will stop the program for three
-  seconds. Because the screen is updated only at the end of draw,
-  the program may appear to 'freeze', because the screen will not
-  update when the delay fn is used. This function has no affect
-  inside setup."
-  [freeze-ms]
-  (.delay (ap/current-applet) (int freeze-ms)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "delay()"
+       :processing-link nil
+       :category "Structure"
+       :subcategory nil
+       :added "1.0"}
+     delay-frame
+     "Forces the program to stop running for a specified time. Delay
+     times are specified in thousandths of a second, therefore the
+     function call (delay 3000) will stop the program for three
+     seconds. Because the screen is updated only at the end of draw,
+     the program may appear to 'freeze', because the screen will not
+     update when the delay fn is used. This function has no affect
+     inside setup."
+     [freeze-ms]
+     (.delay (ap/current-applet) (int freeze-ms))))
 
 (defn
   ^{:requires-bindings true
