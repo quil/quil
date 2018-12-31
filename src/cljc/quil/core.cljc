@@ -4039,7 +4039,7 @@
     :added "1.0"}
   text
   "Draws text to the screen in the position specified by the x and y
-  parameters and the optional z parameter. A default font will be used
+  parameters (and the optional z parameter in clj). A default font will be used
   unless a font is set with the text-font fn. Change the color of the
   text with the fill fn. The text displays in relation to the
   text-align fn, which gives the option to draw to the left, right, and
