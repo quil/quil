@@ -870,7 +870,7 @@
   upY:      1
   upZ:      0
 
-  Similar imilar to gluLookAt() in OpenGL, but it first clears the
+  Similar to gluLookAt() in OpenGL, but it first clears the
   current camera settings."
   ([] (.camera (current-graphics)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
@@ -919,7 +919,7 @@
      clip
      "Limits the rendering to the boundaries of a rectangle defined by
   the parameters. The boundaries are drawn based on the state of
-  the (image-mode) fuction, either :corner, :corners, or :center.
+  the (image-mode) function, either :corner, :corners, or :center.
   To disable use (no-clip)."
      [x y w h]
      (.clip (current-graphics) (float x) (float y) (float w) (float h))))
@@ -1249,7 +1249,7 @@
     :subcategory "Curves"
     :added "1.0"}
   curve-point
-  "Evalutes the curve at point t for points a, b, c, d. The parameter
+  "Evaluates the curve at point t for points a, b, c, d. The parameter
   t varies between 0 and 1, a and d are points on the curve, and b c
   and are the control points. This can be done once with the x
   coordinates and a second time with the y coordinates to get the
@@ -1432,7 +1432,7 @@
     :subcategory "Attributes"
     :added "1.0"}
   ellipse-mode
-  "Modifies the origin of the ellispse according to the specified mode:
+  "Modifies the origin of the ellipse according to the specified mode:
 
   :center  - specifies the location of the ellipse as
              the center of the shape. (Default).
@@ -2184,7 +2184,7 @@
   the fill method will not affect the color of a line. 2D lines are
   drawn with a width of one pixel by default, but this can be changed
   with the stroke-weight function. The version with six parameters
-  allows the line to be placed anywhere within XYZ space. "
+  allows the line to be placed anywhere within XYZ space."
   ([p1 p2] (apply line (concat p1 p2)))
   ([x1 y1 x2 y2] (.line (current-graphics) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
@@ -2575,7 +2575,7 @@
   "Adjusts the character and level of detail produced by the Perlin
   noise function. Similar to harmonics in physics, noise is computed
   over several octaves. Lower octaves contribute more to the output
-  signal and as such define the overal intensity of the noise, whereas
+  signal and as such define the overall intensity of the noise, whereas
   higher octaves create finer grained details in the noise
   sequence. By default, noise is computed over 4 octaves with each
   octave contributing exactly half than its predecessor, starting at
@@ -3327,7 +3327,7 @@
   direction. Transformations apply to everything that happens after
   and subsequent calls to the function accumulates the effect. For
   example, calling (rotate HALF-PI) and then (rotate HALF-PI) is the
-  same as (rotate PI). All tranformations are reset when draw begins
+  same as (rotate PI). All transformations are reset when draw begins
   again.
 
   Technically, rotate multiplies the current transformation matrix by
@@ -3793,8 +3793,8 @@
     :added "1.0"}
   specular
   "Sets the specular color of the materials used for shapes drawn to
-  the screen, which sets the color of hightlights. Specular refers to
-  light which bounces off a surface in a perferred direction (rather
+  the screen, which sets the color of highlights. Specular refers to
+  light which bounces off a surface in a preferred direction (rather
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
@@ -4639,7 +4639,7 @@
                                     inside functions provided to sketch (like
                                     draw, mouse-click, key-pressed and
                                     other). By default all exceptions thrown
-                                    inside these functions are catched. This
+                                    inside these functions are caught. This
                                     prevents sketch from breaking when bad
                                     function was provided and allows you to
                                     fix it and reload it on fly. You can
@@ -4684,7 +4684,7 @@
 
    :host           - String id of canvas element or DOM element itself.
                      Specifies host for the sketch. Must be specified in sketch,
-                     may be omitted in defsketch. If ommitted in defsketch,
+                     may be omitted in defsketch. If omitted in defsketch,
                      :host is set to the name of the sketch. If element with
                      specified id is not found on the page and page is empty -
                      new canvas element will be created. Used in ClojureScript.
