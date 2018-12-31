@@ -3206,7 +3206,7 @@
     :subcategory nil
     :added "1.0"}
   redraw
-  "Executes the code within the draw fn one time. This functions
+  "Executes the code within the draw fn one time (or n times in cljs). This function
   allows the program to update the display window only when necessary,
   for example when an event registered by mouse-pressed or
   key-pressed occurs.
@@ -3218,8 +3218,10 @@
 
   Calling redraw within draw has no effect because draw is
   continuously called anyway."
-  []
-  (.redraw (ap/current-applet)))
+  ([]
+   (.redraw (ap/current-applet)))
+  #?(:cljs ([n]
+            (.redraw (ap/current-applet) n))))
 
 (defn
   ^{:requires-bindings true
