@@ -45,6 +45,8 @@
 (u/generate-quil-constants
  #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
+ #?@(:cljs
+     (angle-modes (:radians :degrees)))
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
                      :screen :overlay :replace :hard-light :soft-light :dodge :burn)
@@ -341,6 +343,19 @@
   ([red green blue x y z]
    (.ambientLight (current-graphics) (float red) (float green) (float blue)
                   (float x) (float y) (float z))))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "angleMode()"
+       :category "Math"
+       :subcategory "Trigonometry"
+       :added "2.8.0"}
+     angle-mode
+     "Sets the current mode of p5 to given mode. Default mode is :radians."
+     ([mode]
+      (let [mode (u/resolve-constant-key mode angle-modes)]
+        (.angleMode (current-graphics) mode)))))
 
 (defn
   ^{:requires-bindings true
