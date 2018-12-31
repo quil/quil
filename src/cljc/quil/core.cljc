@@ -1532,7 +1532,8 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (.exit (ap/current-applet)))
+  #?(:clj (.exit (ap/current-applet))
+     :cljs (.remove (ap/current-applet))))
 
 (defn
   ^{:requires-bindings false
