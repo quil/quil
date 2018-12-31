@@ -2304,9 +2304,8 @@
   ([a b]
    #?(:clj (PApplet/mag (float a) (float b))
       :cljs (.mag (ap/current-applet) a b)))
-  ([a b c]
-   #?(:clj (PApplet/mag (float a) (float b) (float c))
-      :cljs (.mag (ap/current-applet) a b c))))
+  #?(:clj ([a b c]
+           (PApplet/mag (float a) (float b) (float c)))))
 
 (defn
   ^{:requires-bindings false

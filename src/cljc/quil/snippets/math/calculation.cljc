@@ -79,7 +79,7 @@
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/mag 3 4) = " (q/mag 3 4)) 10 20)
-  (q/text (str "(q/mag 3 4 5) = " (q/mag 3 4 5)) 10 40))
+  #?(:clj (q/text (str "(q/mag 3 4 5) = " (q/mag 3 4 5)) 10 40)))
 
 (defsnippet map-range
   "map-range"
