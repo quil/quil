@@ -14,6 +14,23 @@
   (q/text (str "(q/acos 0) = " (q/acos 0)) 10 20)
   (q/text (str "(q/acos 1) = " (q/acos 1)) 10 40))
 
+#?(:cljs
+    (defsnippet angle-mode
+      "angle-mode"
+      {}
+
+      (comment "draw a red square for reference")
+      (q/fill "red")
+      (q/rect 0 0 100 100)
+
+      (comment "rotation will be in degrees (instead of the default radians)")
+      (q/angle-mode :degrees)
+      (q/rotate 45)
+
+      (comment "draw a green square after the rotation of 45 degrees")
+      (q/fill "green")
+      (q/rect 0 0 100 100)))
+
 (defsnippet asin
   "asin"
   {}

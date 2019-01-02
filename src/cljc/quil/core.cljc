@@ -45,6 +45,8 @@
 (u/generate-quil-constants
  #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
+ #?@(:cljs
+     (angle-modes (:radians :degrees)))
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
                      :screen :overlay :replace :hard-light :soft-light :dodge :burn)
@@ -68,7 +70,8 @@
  stroke-join-modes (:miter :bevel :round)
  horizontal-alignment-modes (:left :center :right)
  vertical-alignment-modes (:top :bottom :center :baseline)
- text-modes (:model :shape)
+ #?@(:clj (text-modes (:model :shape)))
+ #?@(:cljs (text-styles (:normal :italic :bold)))
  texture-modes (:image :normal)
  texture-wrap-modes (:clamp :repeat)
  filter-modes (:threshold :gray :invert :posterize :blur :opaque :erode :dilate)
@@ -341,6 +344,19 @@
    (.ambientLight (current-graphics) (float red) (float green) (float blue)
                   (float x) (float y) (float z))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "angleMode()"
+       :category "Math"
+       :subcategory "Trigonometry"
+       :added "2.8.0"}
+     angle-mode
+     "Sets the current mode of p5 to given mode. Default mode is :radians."
+     ([mode]
+      (let [mode (u/resolve-constant-key mode angle-modes)]
+        (.angleMode (current-graphics) mode)))))
+
 (defn
   ^{:requires-bindings true
     :processing-name "applyMatrix()"
@@ -436,26 +452,26 @@
   #?(:clj (PApplet/atan2 (float y) (float x))
      :cljs (.atan2 (ap/current-applet) y x)))
 
-(defn
-  ^{:requires-bindings false
-    :processing-name "PFont.list()"
-    :category "Typography"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  available-fonts
-  "A sequence of strings representing the fonts on this system
-  available for use.
+#(:clj
+  (defn
+    ^{:requires-bindings false
+      :processing-name "PFont.list()"
+      :category "Typography"
+      :subcategory "Loading & Displaying"
+      :added "1.0"}
+    available-fonts
+    "A sequence of strings representing the fonts on this system
+    available for use.
 
-  Because of limitations in Java, not all fonts can be used and some
-  might work with one operating system and not others. When sharing a
-  sketch with other people or posting it on the web, you may need to
-  include a .ttf or .otf version of your font in the data directory of
-  the sketch because other people might not have the font installed on
-  their computer. Only fonts that can legally be distributed should be
-  included with a sketch."
-  []
-  #?(:clj (seq (PFont/list))
-     :cljs (seq (.list js/PFont))))
+    Because of limitations in Java, not all fonts can be used and some
+    might work with one operating system and not others. When sharing a
+    sketch with other people or posting it on the web, you may need to
+    include a .ttf or .otf version of your font in the data directory of
+    the sketch because other people might not have the font installed on
+    their computer. Only fonts that can legally be distributed should be
+    included with a sketch."
+    []
+    (seq (PFont/list))))
 
 (defn
   ^{:requires-bindings true
@@ -869,7 +885,7 @@
   upY:      1
   upZ:      0
 
-  Similar imilar to gluLookAt() in OpenGL, but it first clears the
+  Similar to gluLookAt() in OpenGL, but it first clears the
   current camera settings."
   ([] (.camera (current-graphics)))
   ([eyeX eyeY eyeZ centerX centerY centerZ upX upY upZ]
@@ -918,7 +934,7 @@
      clip
      "Limits the rendering to the boundaries of a rectangle defined by
   the parameters. The boundaries are drawn based on the state of
-  the (image-mode) fuction, either :corner, :corners, or :center.
+  the (image-mode) function, either :corner, :corners, or :center.
   To disable use (no-clip)."
      [x y w h]
      (.clip (current-graphics) (float x) (float y) (float w) (float h))))
@@ -964,10 +980,10 @@
   parameters range1, range2, range3, and range 4."
   ([mode]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) mode)))
+     (.colorMode (current-graphics) mode #?(:cljs 255))))
   ([mode max]
    (let [mode (u/resolve-constant-key mode color-modes)]
-     (.colorMode (current-graphics) mode) (float max)))
+     (.colorMode (current-graphics) mode (float max))))
   ([mode max-x max-y max-z]
    (let [mode (u/resolve-constant-key mode color-modes)]
      (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z))))
@@ -1045,42 +1061,43 @@
        true
        false)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "createFont()"
-    :category "Typography"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  create-font
-  "Dynamically converts a font to the format used by Processing (a
-  PFont) from either a font name that's installed on the computer, or
-  from a .ttf or .otf file inside the sketches 'data' folder. This
-  function is an advanced feature for precise control.
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "createFont()"
+       :category "Typography"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     create-font
+     "Dynamically converts a font to the format used by Processing (a
+     PFont) from either a font name that's installed on the computer, or
+     from a .ttf or .otf file inside the sketches 'data' folder. This
+     function is an advanced feature for precise control.
 
-  Use available-fonts to obtain the names for the fonts recognized by
-  the computer and are compatible with this function.
+     Use available-fonts to obtain the names for the fonts recognized by
+     the computer and are compatible with this function.
 
-  The size parameter states the font size you want to generate. The
-  smooth parameter specifies if the font should be antialiased or not,
-  and the charset parameter is an array of chars that specifies the
-  characters to generate.
+     The size parameter states the font size you want to generate. The
+     smooth parameter specifies if the font should be antialiased or not,
+     and the charset parameter is an array of chars that specifies the
+     characters to generate.
 
-  This function creates a bitmapped version of a font It loads a font
-  by name, and converts it to a series of images based on the size of
-  the font. When possible, the text function will use a native font
-  rather than the bitmapped version created behind the scenes with
-  create-font. For instance, when using the default renderer
-  setting (JAVA2D), the actual native version of the font will be
-  employed by the sketch, improving drawing quality and
-  performance. With the :p2d, :p3d, and :opengl renderer settings, the
-  bitmapped version will be used. While this can drastically improve
-  speed and appearance, results are poor when exporting if the sketch
-  does not include the .otf or .ttf file, and the requested font is
-  not available on the machine running the sketch."
-  ([name size] (.createFont (ap/current-applet) (str name) (float size)))
-  ([name size smooth] (.createFont (ap/current-applet) (str name) (float size) smooth))
-  ([name size smooth ^chars charset]
-   (.createFont (ap/current-applet) (str name) (float size) smooth charset)))
+     This function creates a bitmapped version of a font It loads a font
+     by name, and converts it to a series of images based on the size of
+     the font. When possible, the text function will use a native font
+     rather than the bitmapped version created behind the scenes with
+     create-font. For instance, when using the default renderer
+     setting (JAVA2D), the actual native version of the font will be
+     employed by the sketch, improving drawing quality and
+     performance. With the :p2d, :p3d, and :opengl renderer settings, the
+     bitmapped version will be used. While this can drastically improve
+     speed and appearance, results are poor when exporting if the sketch
+     does not include the .otf or .ttf file, and the requested font is
+     not available on the machine running the sketch."
+     ([name size] (.createFont (ap/current-applet) (str name) (float size)))
+     ([name size smooth] (.createFont (ap/current-applet) (str name) (float size) smooth))
+     ([name size smooth ^chars charset]
+      (.createFont (ap/current-applet) (str name) (float size) smooth charset))))
 
 (defn
   ^{:requires-bindings true
@@ -1247,7 +1264,7 @@
     :subcategory "Curves"
     :added "1.0"}
   curve-point
-  "Evalutes the curve at point t for points a, b, c, d. The parameter
+  "Evaluates the curve at point t for points a, b, c, d. The parameter
   t varies between 0 and 1, a and d are points on the curve, and b c
   and are the control points. This can be done once with the x
   coordinates and a second time with the y coordinates to get the
@@ -1333,23 +1350,24 @@
   #?(:clj (PApplet/degrees (float radians))
      :cljs (.degrees (ap/current-applet) radians)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "delay()"
-    :processing-link nil
-    :category "Structure"
-    :subcategory nil
-    :added "1.0"}
-  delay-frame
-  "Forces the program to stop running for a specified time. Delay
-  times are specified in thousandths of a second, therefore the
-  function call (delay 3000) will stop the program for three
-  seconds. Because the screen is updated only at the end of draw,
-  the program may appear to 'freeze', because the screen will not
-  update when the delay fn is used. This function has no affect
-  inside setup."
-  [freeze-ms]
-  (.delay (ap/current-applet) (int freeze-ms)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "delay()"
+       :processing-link nil
+       :category "Structure"
+       :subcategory nil
+       :added "1.0"}
+     delay-frame
+     "Forces the program to stop running for a specified time. Delay
+     times are specified in thousandths of a second, therefore the
+     function call (delay 3000) will stop the program for three
+     seconds. Because the screen is updated only at the end of draw,
+     the program may appear to 'freeze', because the screen will not
+     update when the delay fn is used. This function has no affect
+     inside setup."
+     [freeze-ms]
+     (.delay (ap/current-applet) (int freeze-ms))))
 
 (defn
   ^{:requires-bindings true
@@ -1429,7 +1447,7 @@
     :subcategory "Attributes"
     :added "1.0"}
   ellipse-mode
-  "Modifies the origin of the ellispse according to the specified mode:
+  "Modifies the origin of the ellipse according to the specified mode:
 
   :center  - specifies the location of the ellipse as
              the center of the shape. (Default).
@@ -1529,7 +1547,8 @@
   completed (or after setup completes if called during the setup
   method). "
   []
-  (.exit (ap/current-applet)))
+  #?(:clj (.exit (ap/current-applet))
+     :cljs (.remove (ap/current-applet))))
 
 (defn
   ^{:requires-bindings false
@@ -2180,7 +2199,7 @@
   the fill method will not affect the color of a line. 2D lines are
   drawn with a width of one pixel by default, but this can be changed
   with the stroke-weight function. The version with six parameters
-  allows the line to be placed anywhere within XYZ space. "
+  allows the line to be placed anywhere within XYZ space."
   ([p1 p2] (apply line (concat p1 p2)))
   ([x1 y1 x2 y2] (.line (current-graphics) (float x1) (float y1) (float x2) (float y2)))
   ([x1 y1 z1 x2 y2 z2]
@@ -2300,9 +2319,8 @@
   ([a b]
    #?(:clj (PApplet/mag (float a) (float b))
       :cljs (.mag (ap/current-applet) a b)))
-  ([a b c]
-   #?(:clj (PApplet/mag (float a) (float b) (float c))
-      :cljs (.mag (ap/current-applet) a b c))))
+  #?(:clj ([a b c]
+           (PApplet/mag (float a) (float b) (float c)))))
 
 (defn
   ^{:requires-bindings false
@@ -2571,7 +2589,7 @@
   "Adjusts the character and level of detail produced by the Perlin
   noise function. Similar to harmonics in physics, noise is computed
   over several octaves. Lower octaves contribute more to the output
-  signal and as such define the overal intensity of the noise, whereas
+  signal and as such define the overall intensity of the noise, whereas
   higher octaves create finer grained details in the noise
   sequence. By default, noise is computed over 4 octaves with each
   octave contributing exactly half than its predecessor, starting at
@@ -2877,7 +2895,8 @@
   The push-style and pop-style functions can be nested to provide more
   control"
   []
-  (.popStyle (current-graphics)))
+  #?(:clj (.popStyle (current-graphics))
+     :cljs (.pop (current-graphics))))
 
 (defn
   ^{:requires-bindings false
@@ -2968,7 +2987,8 @@
   shape-mode, color-mode, text-align, text-font, text-mode, text-size,
   text-leading, emissive, specular, shininess, and ambient"
   []
-  (.pushStyle (current-graphics)))
+  #?(:clj (.pushStyle (current-graphics))
+     :cljs (.push (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -3200,7 +3220,7 @@
     :subcategory nil
     :added "1.0"}
   redraw
-  "Executes the code within the draw fn one time. This functions
+  "Executes the code within the draw fn one time (or n times in cljs). This function
   allows the program to update the display window only when necessary,
   for example when an event registered by mouse-pressed or
   key-pressed occurs.
@@ -3212,8 +3232,10 @@
 
   Calling redraw within draw has no effect because draw is
   continuously called anyway."
-  []
-  (.redraw (ap/current-applet)))
+  ([]
+   (.redraw (ap/current-applet)))
+  #?(:cljs ([n]
+            (.redraw (ap/current-applet) n))))
 
 (defn
   ^{:requires-bindings true
@@ -3319,7 +3341,7 @@
   direction. Transformations apply to everything that happens after
   and subsequent calls to the function accumulates the effect. For
   example, calling (rotate HALF-PI) and then (rotate HALF-PI) is the
-  same as (rotate PI). All tranformations are reset when draw begins
+  same as (rotate PI). All transformations are reset when draw begins
   again.
 
   Technically, rotate multiplies the current transformation matrix by
@@ -3785,8 +3807,8 @@
     :added "1.0"}
   specular
   "Sets the specular color of the materials used for shapes drawn to
-  the screen, which sets the color of hightlights. Specular refers to
-  light which bounces off a surface in a perferred direction (rather
+  the screen, which sets the color of highlights. Specular refers to
+  light which bounces off a surface in a preferred direction (rather
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
@@ -4035,7 +4057,7 @@
     :added "1.0"}
   text
   "Draws text to the screen in the position specified by the x and y
-  parameters and the optional z parameter. A default font will be used
+  parameters (and the optional z parameter in clj). A default font will be used
   unless a font is set with the text-font fn. Change the color of the
   text with the fill fn. The text displays in relation to the
   text-align fn, which gives the option to draw to the left, right, and
@@ -4048,9 +4070,10 @@
   ([^String s x y]
    (when (current-fill)
      (.text (current-graphics) s (float x) (float y))))
-  ([^String s x y z]
-   (when (current-fill)
-     (.text (current-graphics) s (float x) (float y) (float z))))
+  #?(:clj
+     ([^String s x y z]
+      (when (current-fill)
+        (.text (current-graphics) s (float x) (float y) (float z)))))
   ([^String s x1 y1 x2 y2]
    (when (current-fill)
      (.text (current-graphics) s (float x1) (float y1) (float x2) (float y2)))))
@@ -4086,11 +4109,11 @@
   change the size of the font."
   ([align]
    (let [align (u/resolve-constant-key align horizontal-alignment-modes)]
-     (.textAlign (current-graphics) (int align))))
+     (.textAlign (current-graphics) align)))
   ([align-x align-y]
    (let [align-x (u/resolve-constant-key align-x horizontal-alignment-modes)
          align-y (u/resolve-constant-key align-y vertical-alignment-modes)]
-     (.textAlign (current-graphics) (int align-x) (int align-y)))))
+     (.textAlign (current-graphics) align-x align-y))))
 
 (defn
   ^{:requires-bindings true
@@ -4158,34 +4181,35 @@
   [leading]
   (.textLeading (current-graphics) (float leading)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "textMode()"
-    :category "Typography"
-    :subcategory "Attributes"
-    :added "1.0"}
-  text-mode
-  "Sets the way text draws to the screen - available modes
-  are :model and :shape
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textMode()"
+       :category "Typography"
+       :subcategory "Attributes"
+       :added "1.0"}
+     text-mode
+     "Sets the way text draws to the screen - available modes
+     are :model and :shape
 
-  In the default configuration (the :model mode), it's possible to
-  rotate, scale, and place letters in two and three dimensional space.
+     In the default configuration (the :model mode), it's possible to
+     rotate, scale, and place letters in two and three dimensional space.
 
-  The :shape mode draws text using the glyph outlines of individual
-  characters rather than as textures. This mode is only supported with
-  the PDF and OPENGL renderer settings. With the PDF renderer, you
-  must specify the :shape text-mode before any other drawing occurs.
-  If the outlines are not available, then :shape will be ignored and
-  :model will be used instead.
+     The :shape mode draws text using the glyph outlines of individual
+     characters rather than as textures. This mode is only supported with
+     the PDF and OPENGL renderer settings. With the PDF renderer, you
+     must specify the :shape text-mode before any other drawing occurs.
+     If the outlines are not available, then :shape will be ignored and
+     :model will be used instead.
 
-  The :shape option in OPENGL mode can be combined with begin-raw to
-  write vector-accurate text to 2D and 3D output files, for instance
-  DXF or PDF. :shape is not currently optimized for OPENGL, so if
-  recording shape data, use :model until you're ready to capture the
-  geometry with begin-raw."
-  [mode]
-  (let [mode (u/resolve-constant-key mode text-modes)]
-    (.textMode (current-graphics) (int mode))))
+     The :shape option in OPENGL mode can be combined with begin-raw to
+     write vector-accurate text to 2D and 3D output files, for instance
+     DXF or PDF. :shape is not currently optimized for OPENGL, so if
+     recording shape data, use :model until you're ready to capture the
+     geometry with begin-raw."
+     [mode]
+     (let [mode (u/resolve-constant-key mode text-modes)]
+       (.textMode (current-graphics) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -4199,6 +4223,22 @@
   units of pixels."
   [size]
   (.textSize (current-graphics) (float size)))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textStyle()"
+       :category "Typography"
+       :subcategory "Attributes"
+       :added "2.8.0"}
+     text-style
+     "Sets/gets the style of the text for system fonts to :normal, :italic,
+     or :bold. Note: this may be is overridden by CSS styling. For
+     non-system fonts (opentype, truetype, etc.) please load styled fonts
+     instead."
+     [style]
+     (let [s (u/resolve-constant-key style text-styles)]
+       (.textStyle (current-graphics) s))))
 
 (defn
   ^{:requires-bindings true
@@ -4613,7 +4653,7 @@
                                     inside functions provided to sketch (like
                                     draw, mouse-click, key-pressed and
                                     other). By default all exceptions thrown
-                                    inside these functions are catched. This
+                                    inside these functions are caught. This
                                     prevents sketch from breaking when bad
                                     function was provided and allows you to
                                     fix it and reload it on fly. You can
@@ -4658,7 +4698,7 @@
 
    :host           - String id of canvas element or DOM element itself.
                      Specifies host for the sketch. Must be specified in sketch,
-                     may be omitted in defsketch. If ommitted in defsketch,
+                     may be omitted in defsketch. If omitted in defsketch,
                      :host is set to the name of the sketch. If element with
                      specified id is not found on the page and page is empty -
                      new canvas element will be created. Used in ClojureScript.
