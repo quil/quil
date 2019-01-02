@@ -4588,9 +4588,9 @@
   [graphics & body]
   `(let [gr# ~graphics]
      (binding [quil.core/*graphics* gr#]
-       #?@(:clj (.beginDraw gr#))
+       #?(:clj (.beginDraw gr#))
        ~@body
-       #?@(:clj (.endDraw gr#)))))
+       #?(:clj (.endDraw gr#)))))
 
 (defn ^{:requires-bindings false
         :category "Environment"
