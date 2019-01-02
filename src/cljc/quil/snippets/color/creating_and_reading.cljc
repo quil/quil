@@ -58,11 +58,16 @@
      (q/background 255)
 
      (q/color-mode :hsl)
-     (let [col (q/color 156 100 50)]
-       (q/fill col)
+     (let [_ (comment "blue with low lightness (70 of 255)")
+           blue (q/color 156 255 70)
+           _ (comment "extract lightness")
+           l (q/lightness blue)
+           _ (comment "create red with same lightness")
+           red (q/color 0 255 l)]
+       (q/fill blue)
        (q/rect 0 0 100 100)
 
-       (q/fill (q/lightness col))
+       (q/fill red)
        (q/rect 70 70 100 100))))
 
 (defsnippet red
@@ -70,11 +75,12 @@
   {}
 
   (q/background 255)
-  (let [col (q/color 123 50 220)]
-    (q/fill col)
+  (let [purple (q/color 123 50 220)]
+    (q/fill purple)
     (q/rect 0 0 100 100)
 
-    (q/fill (q/red col) 0 0)
+    (comment "use only red component of purple")
+    (q/fill (q/red purple) 0 0)
     (q/rect 70 70 100 100)))
 
 (defsnippet green
@@ -82,11 +88,12 @@
   {}
 
   (q/background 255)
-  (let [col (q/color 123 50 220)]
-    (q/fill col)
+  (let [purple (q/color 123 50 220)]
+    (q/fill purple)
     (q/rect 0 0 100 100)
 
-    (q/fill 0 (q/green col) 0)
+    (comment "use only green component of purple")
+    (q/fill 0 (q/green purple) 0)
     (q/rect 70 70 100 100)))
 
 (defsnippet blue
@@ -94,11 +101,12 @@
   {}
 
   (q/background 255)
-  (let [col (q/color 123 50 220)]
-    (q/fill col)
+  (let [purple (q/color 123 50 220)]
+    (q/fill purple)
     (q/rect 0 0 100 100)
 
-    (q/fill 0 0 (q/blue col))
+    (comment "use only blue component of purple")
+    (q/fill 0 0 (q/blue purple))
     (q/rect 70 70 100 100)))
 
 (defsnippet hue
@@ -108,11 +116,12 @@
   (q/background 255)
 
   (q/color-mode :hsb)
-  (let [col (q/color 100 230 100)]
-    (q/fill col)
+  (let [dark-green (q/color 100 230 100)]
+    (q/fill dark-green)
     (q/rect 0 0 100 100)
 
-    (q/fill (q/hue col) 255 255)
+    (comment "use the hue (green) but make it bright")
+    (q/fill (q/hue dark-green) 255 255)
     (q/rect 70 70 100 100)))
 
 (defsnippet saturation
@@ -122,11 +131,12 @@
   (q/background 255)
 
   (q/color-mode :hsb)
-  (let [col (q/color 100 230 100)]
-    (q/fill col)
+  (let [dark-green (q/color 100 230 100)]
+    (q/fill dark-green)
     (q/rect 0 0 100 100)
 
-    (q/fill 255 (q/saturation col) 255)
+    (comment "use the same saturation but different color")
+    (q/fill 255 (q/saturation dark-green) 255)
     (q/rect 70 70 100 100)))
 
 (defsnippet brightness
@@ -136,11 +146,12 @@
   (q/background 255)
 
   (q/color-mode :hsb)
-  (let [col (q/color 100 230 100)]
-    (q/fill col)
+  (let [dark-green (q/color 100 230 100)]
+    (q/fill dark-green)
     (q/rect 0 0 100 100)
 
-    (q/fill 255 255 (q/brightness col))
+    (comment "use the same brightness but different color")
+    (q/fill 255 255 (q/brightness dark-green))
     (q/rect 70 70 100 100)))
 
 (defsnippet color
@@ -165,20 +176,6 @@
   (q/fill (q/color 0 255 255 120))
   (q/rect 210 210 100 100))
 
-(defsnippet color-mode-hsb
-  "color-mode"
-  {}
-
-  (q/color-mode :rgb 255)
-  (q/background 255)
-
-  ; Result image is total mess, as apparently color-mode is global
-  ; and only last (q/color-mode) call will be used for all drawings.
-  ; Still we can ensure that no error is thrown.
-  (q/color-mode :hsb)
-  (q/fill 255 255 255)
-  (q/rect 0 0 100 100))
-
 #?(:cljs
    (defsnippet color-mode-hsl
      "color-mode"
@@ -188,7 +185,8 @@
      (q/background 255)
 
      (q/color-mode :hsl)
-     (q/fill 255 255 255)
+     (comment "use red color")
+     (q/fill 255 255 127)
      (q/rect 0 0 100 100)))
 
 (defsnippet color-mode
@@ -218,48 +216,46 @@
   (q/fill 0 10 20 15)
   (q/rect 210 210 100 100))
 
-#?(:clj
-   (defsnippet current-fill
-     "current-fill"
-     {}
+(defsnippet current-fill
+  "current-fill"
+  {}
 
-     (q/background 255)
+  (q/background 255)
 
-     (comment "set to red")
-     (q/fill 255 0 0)
-     (q/rect 0 0 100 100)
+  (comment "set to red")
+  (q/fill 255 0 0)
+  (q/rect 0 0 100 100)
 
-     (let [_ (comment "remember current color")
-           cur-fill (q/current-fill)]
+  (let [_ (comment "remember current color")
+        cur-fill (q/current-fill)]
 
-       (comment "change to blue")
-       (q/fill 0 0 255)
-       (q/rect 70 70 100 100)
+    (comment "change to blue")
+    (q/fill 0 0 255)
+    (q/rect 70 70 100 100)
 
-       (comment "change back to the original color")
-       (q/fill cur-fill)
-       (q/rect 140 140 100 100))))
+    (comment "change back to the original color")
+    (q/fill cur-fill)
+    (q/rect 140 140 100 100)))
 
-#?(:clj
-   (defsnippet current-stroke
-     "current-stroke"
-     {}
+(defsnippet current-stroke
+  "current-stroke"
+  {}
 
-     (q/background 255)
+  (q/background 255)
 
-     (comment "set to red")
-     (q/stroke 255 0 0)
-     (q/rect 0 0 100 100)
+  (comment "set to red")
+  (q/stroke 255 0 0)
+  (q/rect 0 0 100 100)
 
-     (let [_ (comment "remember current color")
-           cur-stroke (q/current-stroke)]
-       (comment "change to blue")
-       (q/stroke 0 0 255)
-       (q/rect 70 70 100 100)
+  (let [_ (comment "remember current color")
+        cur-stroke (q/current-stroke)]
+    (comment "change to blue")
+    (q/stroke 0 0 255)
+    (q/rect 70 70 100 100)
 
-       (comment "change back to the original color")
-       (q/stroke cur-stroke)
-       (q/rect 140 140 100 100))))
+    (comment "change back to the original color")
+    (q/stroke cur-stroke)
+    (q/rect 140 140 100 100)))
 
 (defsnippet lerp-color
   "lerp-color"
@@ -267,11 +263,11 @@
 
   (q/background 255)
 
-  (let [c1 (q/color 255 0 0)
-        c2 (q/color 0 0 255)]
-    (comment "draw colors that transition from c1 to c2")
+  (let [red (q/color 255 0 0)
+        blue (q/color 0 0 255)]
+    (comment "draw colors that transition from red to blue")
     (dotimes [i 6]
-      (q/fill (q/lerp-color c1 c2 (/ i 5)))
+      (q/fill (q/lerp-color red blue (/ i 5)))
       (q/rect (* i 70) (* i 70) 100 100))))
 
 #?(:clj
