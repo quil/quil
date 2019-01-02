@@ -1586,7 +1586,7 @@
    (cond (vector? gray) (apply fill gray)
          (nil? gray) (no-fill)
          true (do
-                (.fill (current-graphics) (float gray))
+                (.fill (current-graphics) gray)
                 (save-current-fill [gray]))))
 
   ([gray alpha]
@@ -3932,7 +3932,7 @@
    (cond (vector? gray) (apply stroke gray)
          (nil? gray) (no-stroke)
          true (do
-                (.stroke (current-graphics) (float gray))
+                (.stroke (current-graphics)  gray)
                 (save-current-stroke [gray]))))
   ([gray alpha]
    (.stroke (current-graphics) (float gray) (float alpha))
