@@ -4576,6 +4576,12 @@
        (finally
          (quil.core/pop-matrix)))))
 
+(defn begin-draw [graphics]
+  #?(:clj (.beginDraw graphics)))
+
+(defn end-draw [graphics]
+  #?(:clj (.endDraw graphics)))
+
 (defmacro
   ^{:requires-bindings true
     :processing-name nil
@@ -4588,9 +4594,9 @@
   [graphics & body]
   `(let [gr# ~graphics]
      (binding [quil.core/*graphics* gr#]
-       #?(:clj (.beginDraw gr#))
+       (begin-draw gr#)
        ~@body
-       #?(:clj (.endDraw gr#)))))
+       (end-draw gr#))))
 
 (defn ^{:requires-bindings false
         :category "Environment"
