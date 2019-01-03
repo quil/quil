@@ -452,15 +452,15 @@
   #?(:clj (PApplet/atan2 (float y) (float x))
      :cljs (.atan2 (ap/current-applet) y x)))
 
-#(:clj
-  (defn
-    ^{:requires-bindings false
-      :processing-name "PFont.list()"
-      :category "Typography"
-      :subcategory "Loading & Displaying"
-      :added "1.0"}
-    available-fonts
-    "A sequence of strings representing the fonts on this system
+#?(:clj
+   (defn
+     ^{:requires-bindings false
+       :processing-name "PFont.list()"
+       :category "Typography"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     available-fonts
+     "A sequence of strings representing the fonts on this system
     available for use.
 
     Because of limitations in Java, not all fonts can be used and some
@@ -470,8 +470,8 @@
     the sketch because other people might not have the font installed on
     their computer. Only fonts that can legally be distributed should be
     included with a sketch."
-    []
-    (seq (PFont/list))))
+     []
+     (seq (PFont/list))))
 
 (defn
   ^{:requires-bindings true

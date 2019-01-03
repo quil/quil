@@ -79,8 +79,8 @@
    (defsnippet text-style
      "text-style"
      {}
-
      (q/fill 0)
+
      (q/text-style :normal)
      (q/text "text-style: normal" 20 50)
 

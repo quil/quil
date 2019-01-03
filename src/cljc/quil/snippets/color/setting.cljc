@@ -36,9 +36,9 @@
 
 (defsnippet background-image
   "background-image"
-  {:setup (let [size (str (q/width) "x" (q/height))
-                _ (comment "create url to image to used as background")
-                url (str "https://dummyimage.com/" size "/2c3e50/ffffff.png")]
+  {:setup (let [_ (comment "create url to image to used as background")
+                url #?(:clj (str "https://dummyimage.com/" (q/width) "x"  (q/height) "/2c3e50/ffffff.png")
+                       :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
@@ -89,15 +89,16 @@
   {}
 
   (q/background 255)
+  (q/stroke-weight 10)
 
   (comment "set stroke to black")
   (q/fill 120)
   (q/stroke 0)
-  (q/rect 0 0 100 100)
+  (q/rect 30 30 100 100)
 
   (comment "remove stroke, no border around square")
   (q/no-stroke)
-  (q/rect 70 70 100 100))
+  (q/rect 100 100 100 100))
 
 (defsnippet stroke
   "stroke"

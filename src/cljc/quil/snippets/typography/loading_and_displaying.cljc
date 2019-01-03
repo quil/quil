@@ -53,21 +53,35 @@
      (q/text (str "'My Custom Font' available: " (q/font-available? "My Custom Font"))
              20 60)))
 
-#?(:clj
-   (defsnippet load-font
-     "load-font"
-     {}
+(defsnippet load-font
+  "background-image"
+  {:setup (let [_ (comment "create url to load font")
+                url #?(:clj (.getPath (clojure.java.io/resource "ComicSansMS-48.vlw"))
+                       :cljs "https://www.fontsquirrel.com/fonts/download/roboto")]
+            (q/set-state! :font (q/load-font url)))}
 
-     (q/background 255)
-     (q/fill 0)
-     (->> (clojure.java.io/resource "ComicSansMS-48.vlw")
-          (.getPath)
-          (q/load-font)
-          (q/text-font))
-     (q/text "CoMiC SaNs HeRe" 20 100)))
+  (q/background 255)
+  (q/fill 0)
+  (let [font (q/state :font)]
+    (q/text-font font)
+
+    (q/text "CoMiC SaNs HeRe" 20 100)))
+
+(defsnippet text-2d
+  "text"
+  {}
+
+  (q/background 255)
+  (q/fill 0)
+
+  (comment "draw text")
+  (q/text "word" 10 30)
+
+  (comment "draw text in a 'box'")
+  (q/text "a long sentence wrapping inside a box" 60 20 120 60))
 
 #?(:clj
-   (defsnippet text
+   (defsnippet text-3d
      "text"
      {:renderer :p3d}
 
@@ -87,20 +101,6 @@
      (q/rotate-y q/HALF-PI)
      (q/rect-mode :corners)
      (q/text "box" -30 0 30 -15)))
-
-#?(:cljs
-   (defsnippet text
-     "text"
-     {}
-
-     (q/background 255)
-     (q/fill 0)
-
-     (comment "draw text")
-     (q/text "word" 10 30)
-
-     (comment "draw text in a 'box'")
-     (q/text "a long sentence wrapping inside a box" 60 20 120 60)))
 
 #?(:clj
    (defsnippet text-char
