@@ -697,7 +697,8 @@
       :cljs (.toString val 2)))
   ([val num-digits]
    #?(:clj (PApplet/binary (int val) (int num-digits))
-      :cljs (subs (.toString val 2) 0 num-digits))))
+      :cljs (let [full (binary val)]
+              (subs full (- (count full) num-digits) (count full))))))
 
 (defn
   ^{:requires-bindings true

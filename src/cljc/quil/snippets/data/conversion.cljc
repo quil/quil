@@ -14,9 +14,9 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (q/binary 42) 10 10)
+  (q/text (str "(q/binary 42) = " (q/binary 42)) 10 10)
 
-  (q/text (q/binary 42 5) 10 30))
+  (q/text (str "(q/binary 42 5) = " (q/binary 42 5)) 10 30))
 
 (defsnippet hex
   "hex"
@@ -24,9 +24,9 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (q/hex 42) 10 10)
+  (q/text (str "(q/hex 42) = " (q/hex 42)) 10 10)
 
-  (q/text (q/hex 42 5) 10 30))
+  (q/text (str "(q/hex 42 5) = " (q/hex 42 5)) 10 30))
 
 (defsnippet unbinary
   "unbinary"
@@ -34,7 +34,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/unbinary "0101010")) 10 10))
+  (q/text (str "(q/unbinary \"0101010\") = " (q/unbinary "0101010")) 10 10))
 
 (defsnippet unhex
   "unhex"
@@ -42,4 +42,4 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/unhex "2A")) 10 10))
+  (q/text (str "(q/unhex \"2A\") = " (q/unhex "2A")) 10 10))
