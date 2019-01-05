@@ -508,23 +508,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "beginCamera()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  begin-camera
-  "Sets the matrix mode to the camera matrix so calls such as
-  translate, rotate, apply-matrix and reset-matrix affect the
-  camera. begin-camera should always be used with a following
-  end-camera and pairs of begin-camera and end-camera cannot be
-  nested.
-
-  For most situations the camera function will be sufficient."
-  []
-  (.beginCamera (current-graphics)))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "beginContour()"
     :category "Shape"
     :subcategory "Vertex"
@@ -1481,17 +1464,6 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "endCamera()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  end-camera
-  "Unsets the matrix mode from the camera matrix. See begin-camera."
-  []
-  (.endCamera (current-graphics)))
-
-(defn
-  ^{:requires-bindings true
     :processing-name "endContour()"
     :category "Shape"
     :subcategory "Vertex"
@@ -1749,19 +1721,21 @@
     (swap! (internal-state) assoc :frame-rate new-rate)
     (.frameRate (ap/current-applet) (float new-rate))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "frustum()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  frustum
-  "Sets a perspective matrix defined through the parameters. Works
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "frustum()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "1.0"}
+     frustum
+     "Sets a perspective matrix defined through the parameters. Works
   like glFrustum, except it wipes out the current perspective matrix
-  rather than muliplying itself with it."
-  [left right bottom top near far]
-  (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
-            (float near) (float far)))
+  rather than muliplying itself with it.
+  https://en.wikipedia.org/wiki/Frustum"
+     [left right bottom top near far]
+     (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
+               (float near) (float far))))
 
 (defn
   ^{:requires-bindings true
@@ -2726,6 +2700,18 @@
   []
   (.noTint (current-graphics)))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "orbitControl()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "3.0.0"}
+     orbit-control
+     "Allows the camera to orbit around a target using mouse."
+     []
+     (.orbitControl (current-graphics))))
+
 (defn
   ^{:requires-bindings true
     :processing-name "ortho()"
@@ -2880,7 +2866,8 @@
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
-  (.popMatrix (current-graphics)))
+  #?(:clj (.popMatrix (current-graphics))
+     :cljs (.pop (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2965,7 +2952,8 @@
   methods and may be embedded to control the scope of the
   transformations."
   []
-  (.pushMatrix (current-graphics)))
+  #?(:clj (.pushMatrix (current-graphics))
+     :cljs (.push (current-graphics))))
 
 (defn
   ^{:requires-bindings true
