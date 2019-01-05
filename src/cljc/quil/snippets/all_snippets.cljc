@@ -20,7 +20,6 @@
    quil.snippets.color.utility-macros
    quil.snippets.data.conversion
    quil.snippets.lights-camera.camera
-   quil.snippets.lights-camera.coordinates
    quil.snippets.lights-camera.lights
    quil.snippets.lights-camera.material-properties
    quil.snippets.math.calculation

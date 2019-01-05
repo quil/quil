@@ -2361,51 +2361,6 @@
      :cljs (.minute (ap/current-applet))))
 
 (defn
-  ^{:requires-bindings true
-    :processing-name "modelX()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  model-x
-  "Returns the three-dimensional x, y, z position in model space. This
-  returns the x value for a given coordinate based on the current set
-  of transformations (scale, rotate, translate, etc.) The x value can
-  be used to place an object in space relative to the location of the
-  original point once the transformations are no longer in use."
-  [x y z]
-  (.modelX (current-graphics) (float x) (float y) (float z)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "modelY()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  model-y
-  "Returns the three-dimensional x, y, z position in model space. This
-  returns the y value for a given coordinate based on the current set
-  of transformations (scale, rotate, translate, etc.) The y value can
-  be used to place an object in space relative to the location of the
-  original point once the transformations are no longer in use."
-  [x y z]
-  (.modelY (current-graphics) (float x) (float y) (float z)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "modelZ()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  model-z
-  "Returns the three-dimensional x, y, z position in model space. This
-  returns the z value for a given coordinate based on the current set
-  of transformations (scale, rotate, translate, etc.) The z value can
-  be used to place an object in space relative to the location of the
-  original point once the transformations are no longer in use."
-  [x y z]
-  (.modelZ (current-graphics) (float x) (float y) (float z)))
-
-(defn
   ^{:requires-bindings false
     :processing-name "month()"
     :category "Input"
@@ -3522,48 +3477,6 @@
      "Returns the height of the main screen in pixels."
      []
      (.height (current-screen))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "screenX()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  screen-x
-  "Takes a three-dimensional x, y, z position and returns the x value
-  for where it will appear on a (two-dimensional) screen, once
-  affected by translate, scale or any other transformations"
-  ([x y]  (.screenX (current-graphics) (float x) (float y)))
-  ([x y z]  (.screenX (current-graphics) (float x) (float y) (float z))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "screenY()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  screen-y
-  "Takes a three-dimensional x, y, z position and returns the y value
-  for where it will appear on a (two-dimensional) screen, once
-  affected by translate, scale or any other transformations"
-  ([x y]  (.screenY (current-graphics) (float x) (float y)))
-  ([x y z]  (.screenY (current-graphics) (float x) (float y) (float z))))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "screenZ()"
-    :category "Lights, Camera"
-    :subcategory "Coordinates"
-    :added "1.0"}
-  screen-z
-  "Given an x, y, z coordinate, returns its z value.
-   This value can be used to determine if an x, y, z coordinate is in
-   front or in back of another (x, y, z) coordinate. The units are
-   based on how the zbuffer is set up, and don't relate to anything
-   'real'. They're only useful for in comparison to another value
-   obtained from screen-z, or directly out of the zbuffer"
-  [x y z]
-  (.screenZ (current-graphics) (float x) (float y) (float z)))
 
 (defn
   ^{:requires-bindings false
