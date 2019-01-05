@@ -20,7 +20,7 @@
      {}
 
      (comment "draw a red square for reference")
-     (q/fill "red")
+     (q/fill 255 0 0)
      (q/rect 0 0 100 100)
 
      (comment "rotation will be in degrees (instead of the default radians)")
@@ -28,7 +28,7 @@
      (q/rotate 45)
 
      (comment "draw a green square after the rotation of 45 degrees")
-     (q/fill "green")
+     (q/fill 0 255 0)
      (q/rect 0 0 100 100)))
 
 (defsnippet asin
