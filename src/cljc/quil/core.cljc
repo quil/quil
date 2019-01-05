@@ -694,10 +694,10 @@
   the number of digits used."
   ([val]
    #?(:clj (PApplet/binary (int val))
-      :cljs (.binary (ap/current-applet) val)))
+      :cljs (.toString val 2)))
   ([val num-digits]
    #?(:clj (PApplet/binary (int val) (int num-digits))
-      :cljs (.binary (ap/current-applet) val num-digits))))
+      :cljs (subs (.toString val 2) 0 num-digits))))
 
 (defn
   ^{:requires-bindings true
@@ -4378,7 +4378,7 @@
   integers to strings."
   [str-val]
   #?(:clj (PApplet/unbinary (str str-val))
-     :cljs (.unbinary (ap/current-applet) (str str-val))))
+     :cljs (js/parseInt str-val 2)))
 
 (defn
   ^{:require-binding false
