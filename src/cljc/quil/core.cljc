@@ -4571,12 +4571,12 @@
                      all sketches are support fullscreen when you press F11.
 
    :renderer       - Specifies the renderer type. One of :p2d, :p3d, :java2d,
-                     :opengl, :pdf). Defaults to :java2d. :dxf renderer
+                     :opengl, :pdf, :svg). Defaults to :java2d. :dxf renderer
                      can't be used as sketch renderer. Use begin-raw method
                      instead. In clojurescript only :p2d and :p3d renderers
                      are supported.
 
-   :output-file    - Specifies an output file path. Only used in :pdf mode.
+   :output-file    - Specifies an output file path. Only used in :pdf and :svg modes.
                      Not supported in clojurescript.
 
    :title          - A string which will be displayed at the top of
