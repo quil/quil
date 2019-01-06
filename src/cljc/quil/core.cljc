@@ -320,8 +320,12 @@
   y=126, z=0, would cause all the red light to reflect and half of the
   green light to reflect. Used in combination with emissive, specular,
   and shininess in setting the material properties of shapes."
-  ([gray] (.ambient (current-graphics) (float gray)))
-  ([r g b] (.ambient (current-graphics) (float r) (float g) (float b))))
+  ([gray]
+   #?(:clj (.ambient (current-graphics) (float gray))
+      :cljs (.ambientMaterial (current-graphics) (float gray))))
+  ([r g b]
+   #?(:clj (.ambient (current-graphics) (float r) (float g) (float b)))
+   :cljs (.ambientMaterial (current-graphics) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -2066,14 +2070,15 @@
      [c]
      (.lightness (current-graphics) c)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "lightFalloff()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  light-falloff
-  "Sets the falloff rates for point lights, spot lights, and ambient
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "lightFalloff()"
+       :category "Lights, Camera"
+       :subcategory "Lights"
+       :added "1.0"}
+     light-falloff
+     "Sets the falloff rates for point lights, spot lights, and ambient
   lights. The parameters are used to determine the falloff with the
   following equation:
 
@@ -2088,8 +2093,8 @@
   another color, you would use an ambient light with location and
   falloff. You can think of it as a point light that doesn't care
   which direction a surface is facing."
-  [constant linear quadratic]
-  (.lightFalloff (current-graphics) (float constant) (float linear) (float quadratic)))
+     [constant linear quadratic]
+     (.lightFalloff (current-graphics) (float constant) (float linear) (float quadratic))))
 
 (defn
   ^{:requires-bindings true
@@ -2122,14 +2127,15 @@
   #?(:clj (PApplet/lerp (float start) (float stop) (float amt))
      :cljs (.lerp (ap/current-applet) start stop amt)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "lights()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  lights
-  "Sets the default ambient light, directional light, falloff, and
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "lights()"
+       :category "Lights, Camera"
+       :subcategory "Lights"
+       :added "1.0"}
+     lights
+     "Sets the default ambient light, directional light, falloff, and
   specular values. The defaults are:
 
   (ambient-light 128 128 128)
@@ -2141,25 +2147,26 @@
   looping program. Placing them in the setup of a looping program
   will cause them to only have an effect the first time through the
   loop."
-  []
-  (.lights (current-graphics)))
+     []
+     (.lights (current-graphics))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "lightSpecular()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  light-specular
-  "Sets the specular color for lights. Like fill, it affects only the
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "lightSpecular()"
+       :category "Lights, Camera"
+       :subcategory "Lights"
+       :added "1.0"}
+     light-specular
+     "Sets the specular color for lights. Like fill, it affects only the
   elements which are created after it in the code. Specular refers to
   light which bounces off a surface in a perferred direction (rather
   than bouncing in all directions like a diffuse light) and is used
   for creating highlights. The specular quality of a light interacts
   with the specular material qualities set through the specular and
   shininess functions."
-  [r g b]
-  (.lightSpecular (current-graphics) (float r) (float g) (float b)))
+     [r g b]
+     (.lightSpecular (current-graphics) (float r) (float g) (float b))))
 
 (defn
   ^{:requires-bindings true
@@ -2550,19 +2557,20 @@
   [val]
   (.noiseSeed (ap/current-applet) (int val)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "noLights()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  no-lights
-  "Disable all lighting. Lighting is turned off by default and enabled
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "noLights()"
+       :category "Lights, Camera"
+       :subcategory "Lights"
+       :added "1.0"}
+     no-lights
+     "Disable all lighting. Lighting is turned off by default and enabled
   with the lights fn. This function can be used to disable lighting so
   that 2D geometry (which does not require lighting) can be drawn
   after a set of lighted 3D geometry."
-  []
-  (.noLights (current-graphics)))
+     []
+     (.noLights (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2602,22 +2610,6 @@
   [val start stop]
   #?(:clj (PApplet/norm (float val) (float start) (float stop))
      :cljs (.norm (ap/current-applet) val start stop)))
-
-(defn
-  ^{:requires-bindings true
-    :processing-name "normal()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  normal
-  "Sets the current normal vector. This is for drawing three
-  dimensional shapes and surfaces and specifies a vector perpendicular
-  to the surface of the shape which determines how lighting affects
-  it. Processing attempts to automatically assign normals to shapes,
-  but since that's imperfect, this is a better option when you want
-  more control. This function is identical to glNormal3f() in OpenGL."
-  [nx ny nz]
-  (.normal (current-graphics) (float nx) (float ny) (float nz)))
 
 (defn
   ^{:requires-bindings true
@@ -3749,14 +3741,15 @@
   ([res] (.sphereDetail (current-graphics) (int res)))
   ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "spotLight()"
-    :category "Lights, Camera"
-    :subcategory "Lights"
-    :added "1.0"}
-  spot-light
-  "Adds a spot light. Lights need to be included in the draw to
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "spotLight()"
+       :category "Lights, Camera"
+       :subcategory "Lights"
+       :added "1.0"}
+     spot-light
+     "Adds a spot light. Lights need to be included in the draw to
   remain persistent in a looping program. Placing them in the setup
   of a looping program will cause them to only have an effect the
   first time through the loop. The affect of the r, g, and b
@@ -3764,10 +3757,10 @@
   parameters specify the position of the light and nx, ny, nz specify
   the direction or light. The angle parameter affects angle of the
   spotlight cone."
-  ([r g b x y z nx ny nz angle concentration]
-   (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))
-  ([[r g b] [x y z] [nx ny nz] angle concentration]
-   (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration)))
+     ([r g b x y z nx ny nz angle concentration]
+      (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))
+     ([[r g b] [x y z] [nx ny nz] angle concentration]
+      (.spotLight (current-graphics) r g b x y z nx ny nz angle concentration))))
 
 (defn
   ^{:requires-bindings false
