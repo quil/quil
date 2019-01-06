@@ -324,8 +324,8 @@
    #?(:clj (.ambient (current-graphics) (float gray))
       :cljs (.ambientMaterial (current-graphics) (float gray))))
   ([r g b]
-   #?(:clj (.ambient (current-graphics) (float r) (float g) (float b)))
-   :cljs (.ambientMaterial (current-graphics) (float r) (float g) (float b))))
+   #?(:clj (.ambient (current-graphics) (float r) (float g) (float b))
+      :cljs (.ambientMaterial (current-graphics) (float r) (float g) (float b)))))
 
 (defn
   ^{:requires-bindings true
@@ -1450,21 +1450,22 @@
   (let [mode (u/resolve-constant-key mode ellipse-modes)]
     (.ellipseMode (current-graphics) (int mode))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "emissive()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
-  emissive
-  "Sets the emissive color of the material used for drawing shapes
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "emissive()"
+       :category "Lights, Camera"
+       :subcategory "Material Properties"
+       :added "1.0"}
+     emissive
+     "Sets the emissive color of the material used for drawing shapes
   drawn to the screen. Used in combination with ambient, specular, and
   shininess in setting the material properties of shapes.
 
   If passed one arg - it is assumed to be an int (i.e. a color),
   multiple args are converted to floats."
-  ([gray] (.emissive (current-graphics) (float gray)))
-  ([r g b] (.emissive (current-graphics) (float r) (float g) (float b))))
+     ([gray] (.emissive (current-graphics) gray))
+     ([r g b] (.emissive (current-graphics) (float r) (float g) (float b)))))
 
 (defn
   ^{:requires-bindings true
@@ -3636,18 +3637,19 @@
   (let [mode (u/resolve-constant-key mode p-shape-modes)]
     (.shapeMode (current-graphics) (int mode))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "shininess()"
-    :category "Lights, Camera"
-    :subcategory "Material Properties"
-    :added "1.0"}
-  shininess
-  "Sets the amount of gloss in the surface of shapes. Used in
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "shininess()"
+       :category "Lights, Camera"
+       :subcategory "Material Properties"
+       :added "1.0"}
+     shininess
+     "Sets the amount of gloss in the surface of shapes. Used in
   combination with ambient, specular, and emissive in setting
   the material properties of shapes."
-  [shine]
-  (.shininess (current-graphics) (float shine)))
+     [shine]
+     (.shininess (current-graphics) (float shine))))
 
 (defn
   ^{:requires-bindings false
@@ -3706,8 +3708,12 @@
   than bouncing in all directions like a diffuse light). Used in
   combination with emissive, ambient, and shininess in setting
   the material properties of shapes."
-  ([gray] (.specular (current-graphics) (float gray)))
-  ([x y z] (.specular (current-graphics) (float x) (float y) (float z))))
+  ([gray]
+   #?(:clj (.specular (current-graphics) (float gray))
+      :cljs (.specularMaterial (current-graphics) (float gray))))
+  ([x y z]
+   #?(:clj (.specular (current-graphics) (float x) (float y) (float z))
+      :cljs (.specularMaterial (current-graphics) (float x) (float y) (float z)))))
 
 (defn
   ^{:requires-bindings true
