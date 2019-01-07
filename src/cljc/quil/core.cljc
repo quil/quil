@@ -4577,7 +4577,9 @@
                      are supported.
 
    :output-file    - Specifies an output file path. Only used in :pdf and :svg modes.
-                     Not supported in clojurescript.
+                     Not supported in clojurescript. When writing to a file, call
+                     `(q/exit)` at the end of the draw call to end the sketch and not
+                     write repeatedly to the file.
 
    :title          - A string which will be displayed at the top of
                      the sketch window. Not supported in clojurescript.
