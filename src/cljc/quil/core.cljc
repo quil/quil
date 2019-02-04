@@ -1454,7 +1454,7 @@
              corners of the ellipse's bounding box."
   [mode]
   (let [mode (u/resolve-constant-key mode ellipse-modes)]
-    (.ellipseMode (current-graphics) (int mode))))
+    (.ellipseMode (current-graphics) mode)))
 
 #?(:clj
    (defn
@@ -1626,9 +1626,9 @@
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
                noticeable in the lower ranges.
-  :blur      - executes a Guassian blur with the level parameter
+  :blur      - executes a Gaussian blur with the level parameter
                specifying the extent of the blurring. If no level
-               parameter is used, the blur is equivalent to Guassian
+               parameter is used, the blur is equivalent to Gaussian
                blur of radius 1.
   :opaque    - sets the alpha channel to entirely opaque. Doesn't work
                with level.
@@ -1636,11 +1636,11 @@
   :dilate    - increases the light areas.  Doesn't work with level."
   ([mode]
    (.filter (current-graphics)
-            (int (u/resolve-constant-key mode filter-modes))))
+            (u/resolve-constant-key mode filter-modes)))
 
   ([mode level]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter (current-graphics) (int mode) (float level)))))
+     (.filter (current-graphics) mode (float level)))))
 
 #?(:clj
    (defn
@@ -1966,9 +1966,9 @@
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
                noticeable in the lower ranges.
-  :blur      - executes a Guassian blur with the level parameter
+  :blur      - executes a Gaussian blur with the level parameter
                specifying the extent of the blurring. If no level
-               parameter is used, the blur is equivalent to Guassian
+               parameter is used, the blur is equivalent to Gaussian
                blur of radius 1.
   :opaque    - sets the alpha channel to entirely opaque. Doesn't work
                with level.
@@ -1976,10 +1976,10 @@
   :dilate    - increases the light areas.  Doesn't work with level."
   ([^PImage img mode]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter img (int mode))))
+     (.filter img mode)))
   ([^PImage img mode level]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter img (int mode) (float level)))))
+     (.filter img mode (float level)))))
 
 (defn
   ^{:requires-bindings true
