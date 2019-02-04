@@ -1119,13 +1119,14 @@
   using save to write a PNG or TGA file, the transparency of the
   graphics object will be honored."
   ([w h]
-   (.createGraphics (ap/current-applet) (int w) (int h) #?(:cljs :p2d)))
+   (.createGraphics (ap/current-applet) (int w) (int h)))
   ([w h renderer]
    (.createGraphics (ap/current-applet) (int w) (int h) (ap/resolve-renderer renderer)))
-  ([w h renderer path]
-   (.createGraphics (ap/current-applet) (int w) (int h) (ap/resolve-renderer renderer)
-                    #?(:clj (u/absolute-path path)
-                       :cljs path))))
+  #?(:clj
+     ([w h renderer path]
+      (.createGraphics (ap/current-applet) (int w) (int h)
+                       (ap/resolve-renderer renderer)
+                       (u/absolute-path path)))))
 
 (defn
   ^{:requires-bindings true
