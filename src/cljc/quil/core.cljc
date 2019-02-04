@@ -2857,16 +2857,17 @@
   #?(:clj (PApplet/pow (float num) (float exponent))
      :cljs (.pow (ap/current-applet) num exponent)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printCamera()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  print-camera
-  "Prints the current camera matrix to std out. Useful for debugging."
-  []
-  (.printCamera (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printCamera()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "1.0"}
+     print-camera
+     "Prints the current camera matrix to std out. Useful for debugging."
+     []
+     (.printCamera (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2879,17 +2880,18 @@
   []
   (.printMatrix (current-graphics)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printProjection()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  print-projection
-  "Prints the current projection matrix to std out. Useful for
-  debugging"
-  []
-  (.printProjection (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printProjection()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "1.0"}
+     print-projection
+     "Prints the current projection matrix to std out. Useful for
+     debugging"
+     []
+     (.printProjection (current-graphics))))
 
 (defn
   ^{:requires-bindings true
