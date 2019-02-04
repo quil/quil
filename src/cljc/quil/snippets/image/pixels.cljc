@@ -46,6 +46,7 @@
     (dotimes [x 100]
       (dotimes [y 100]
         (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
+    #?(:cljs (q/update-pixels im))
 
     (comment "draw original image")
     (q/image im 0 0)

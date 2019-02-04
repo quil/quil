@@ -1001,7 +1001,7 @@
     :subcategory "Pixels"
     :added "1.0"}
   copy
-  "Copies a region of pixels from the one image to another. If src-img
+  "Copies a region of pixels from one image to another. If src-img
   is not specified it defaults to current-graphics. If dest-img is not
   specified - it defaults to current-graphics. If the source
   and destination regions aren't the same size, it will automatically
@@ -1017,7 +1017,8 @@
    (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
 
   ([^PImage src-img ^PImage dest-img [sx sy swidth sheight] [dx dy dwidth dheight]]
-   (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
+   (.copy dest-img src-img
+          (int sx) (int sy) (int swidth) (int sheight)
           (int dx) (int dy) (int dwidth) (int dheight))))
 
 (defn
