@@ -135,15 +135,16 @@
     (q/no-tint)
     (q/image gr 200 0)))
 
-(defsnippet request-image
-  "request-image"
-  {:setup
-   (q/set-state! :image
-                 (q/request-image "https://dummyimage.com/100x100/2c3e50/ffffff.png"))}
+#?(:clj
+   (defsnippet request-image
+     "request-image"
+     {:setup
+      (q/set-state! :image
+                    (q/request-image "https://dummyimage.com/100x100/2c3e50/ffffff.png"))}
 
-  (if (zero? (.-width (q/state :image)))
-    (q/text "Loading" 10 10)
-    (q/image (q/state :image) 0 0)))
+     (if (zero? (.-width (q/state :image)))
+       (q/text "Loading" 10 10)
+       (q/image (q/state :image) 0 0))))
 
 (defsnippet tint
   "tint"

@@ -3174,14 +3174,15 @@
   #?(:cljs ([n]
             (.redraw (ap/current-applet) n))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "requestImage()"
-    :category "Image"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  request-image
-  "This function load images on a separate thread so that your sketch
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "requestImage()"
+       :category "Image"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     request-image
+     "This function loads an image on a separate thread so that your sketch
   does not freeze while images load during setup. While the image is
   loading, its width and height will be 0. If an error occurs while
   loading the image, its width and height will be set to -1. You'll
@@ -3189,7 +3190,7 @@
   will be greater than 0. Asynchronous image loading (particularly
   when downloading from a server) can dramatically improve
   performance."
-  [filename] (.requestImage (ap/current-applet) (str filename)))
+     [filename] (.requestImage (ap/current-applet) (str filename))))
 
 (defn
   ^{:requires-bindings true
