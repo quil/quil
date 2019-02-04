@@ -1133,19 +1133,24 @@
     :subcategory nil
     :added "1.0"}
   create-image
-  "Creates a new PImage (the datatype for storing images). This
-  provides a fresh buffer of pixels to play with. Set the size of the
-  buffer with the width and height parameters. The format parameter
-  defines how the pixels are stored. See the PImage reference for more
-  information.
+ "Creates a new datatype for storing images (PImage for clj and
+  Image for cljs). This provides a fresh buffer of pixels to play
+  with. Set the size of the buffer with the width and height
+  parameters.
 
+  In clj the format parameter defines how the pixels are stored.
+  See the PImage reference for more information.
   Possible formats: :rgb, :argb, :alpha (grayscale alpha channel)
 
-  Prefer using create-image over initialising new PImage instances
-  directly."
-  [w h format]
-  (let [format (u/resolve-constant-key format image-formats)]
-    (.createImage (ap/current-applet) (int w) (int h) (int format))))
+  Prefer using create-image over initialising new PImage (or Image)
+  instances directly."
+  #?@(:clj
+      ([w h format]
+       (let [format (u/resolve-constant-key format image-formats)]
+         (.createImage (ap/current-applet) (int w) (int h) (int format))))
+      :cljs
+      ([w h]
+       (.createImage (ap/current-applet) (int w) (int h)))))
 
 (defn
   ^{:requires-bindings true

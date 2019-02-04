@@ -41,7 +41,7 @@
   {}
 
   (q/background 255)
-  (let [im (q/create-image 100 100 :rgb)]
+  (let [im (q/create-image 100 100 #?(:clj :rgb))]
     (comment " gradient on the image")
     (dotimes [x 100]
       (dotimes [y 100]
@@ -227,7 +227,7 @@
   {}
 
   (q/background 255)
-  (let [im (q/create-image 100 100 :rgb)]
+  (let [im (q/create-image 100 100 #?(:clj :rgb))]
     (comment "draw gradient on the image")
     (dotimes [x 100]
       (dotimes [y 100]
