@@ -3515,7 +3515,7 @@
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
   ([^PImage img x y c]
-   (.set img (int x) (int y) (int c))))
+   (.set img (int x) (int y) c)))
 
 (defn
   ^{:requires-bindings true
