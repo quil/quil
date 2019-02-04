@@ -2003,7 +2003,7 @@
   :center  - draw images centered at the given x and y position."
   [mode]
   (let [mode (u/resolve-constant-key mode image-modes)]
-    (.imageMode (current-graphics) (int mode))))
+    (.imageMode (current-graphics) mode)))
 
 (defn
   ^{:requires-bindings true
