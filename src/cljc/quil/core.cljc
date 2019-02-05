@@ -1197,18 +1197,19 @@
               #?(:clj (int cursor-mode)
                  :cljs (str cursor-mode))))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "cursor()"
-    :category "Environment"
-    :subcategory nil
-    :added "1.0"}
-  cursor-image
-  "Set the cursor to a predefined image. The horizontal and vertical
-  active spots of the cursor may be specified with hx and hy.
-  It is recommended to make the size 16x16 or 32x32 pixels."
-  ([^PImage img] (.cursor (ap/current-applet) img))
-  ([^PImage img hx hy] (.cursor (ap/current-applet) img (int hx) (int hy))))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cursor()"
+       :category "Environment"
+       :subcategory nil
+       :added "1.0"}
+     cursor-image
+     "Set the cursor to a predefined image. The horizontal and vertical
+     active spots of the cursor may be specified with hx and hy.
+     It is recommended to make the size 16x16 or 32x32 pixels."
+     ([^PImage img] (.cursor (ap/current-applet) img))
+     ([^PImage img hx hy] (.cursor (ap/current-applet) img (int hx) (int hy)))))
 
 (defn
   ^{:requires-bindings true
@@ -2751,6 +2752,17 @@
       (let [pix-array (.toArray (.-pixels img))]
         (set! (.-stored-pix-array img) pix-array)
         pix-array))))
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "plane()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     plane
+     "Draw a plane with given a width and height."
+     [width height]
+     (.plane (current-graphics) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -4169,14 +4181,15 @@
      :cljs [img])
   (.texture (current-graphics) img))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "textureMode()"
-    :category "Shape"
-    :subcategory "Vertex"
-    :added "1.0"}
-  texture-mode
-  "Sets the coordinate space for texture mapping. There are two
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textureMode()"
+       :category "Shape"
+       :subcategory "Vertex"
+       :added "1.0"}
+     texture-mode
+     "Sets the coordinate space for texture mapping. There are two
   options, :image and :normal.
 
   :image refers to the actual coordinates of the image and :normal
@@ -4185,9 +4198,9 @@
   mapping the image onto the entire size of a quad would require the
   points (0,0) (0,100) (100,200) (0,200). The same mapping in
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
-  [mode]
-  (let [mode (u/resolve-constant-key mode texture-modes)]
-    (.textureMode (current-graphics) (int mode))))
+     [mode]
+     (let [mode (u/resolve-constant-key mode texture-modes)]
+       (.textureMode (current-graphics) (int mode)))))
 
 #?(:clj
    (defn

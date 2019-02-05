@@ -38,18 +38,17 @@
   (doseq [type [:arrow :cross :hand :move :text :wait]]
     (q/cursor type)))
 
-(defsnippet cursor-image
-  "cursor-image"
-  {:setup (q/set-state! :image (q/request-image
-                                #?(:cljs "cursor.jpg"
-                                   :clj "test/html/cursor.jpg")))}
+#?(:clj
+   (defsnippet cursor-image
+     "cursor-image"
+     {:setup (q/set-state! :image (q/request-image "test/html/cursor.jpg"))}
 
-  (if (zero? (.-width (q/state :image)))
-    (q/text "Loading" 10 10)
-    (do
-      (q/cursor-image (q/state :image))
-      (q/cursor-image (q/state :image) 16 16)
-      (q/image (q/state :image) 0 0))))
+     (if (zero? (.-width (q/state :image)))
+       (q/text "Loading" 10 10)
+       (do
+         (q/cursor-image (q/state :image))
+         (q/cursor-image (q/state :image) 16 16)
+         (q/image (q/state :image) 0 0)))))
 
 (defsnippet focused
   "focused"
