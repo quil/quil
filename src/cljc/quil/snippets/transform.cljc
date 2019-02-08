@@ -50,14 +50,15 @@
   (q/translate 150 0)
   (q/rect 0 0 50 50))
 
-(defsnippet print-matrix
-  "print-matrix"
-  {}
+#?(:clj
+   (defsnippet print-matrix
+     "print-matrix"
+     {}
 
-  (q/translate 250 250)
-  (q/rotate 1)
-  (q/rect 0 0 100 100)
-  (q/print-matrix))
+     (q/translate 250 250)
+     (q/rotate 1)
+     (q/rect 0 0 100 100)
+     (q/print-matrix)))
 
 (defsnippet reset-matrix
   "reset-matrix"

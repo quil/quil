@@ -2892,16 +2892,17 @@
      []
      (.printCamera (current-graphics))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printMatrix()"
-    :category "Transform"
-    :subcategory nil
-    :added "1.0"}
-  print-matrix
-  "Prints the current matrix to std out. Useful for debugging."
-  []
-  (.printMatrix (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printMatrix()"
+       :category "Transform"
+       :subcategory nil
+       :added "1.0"}
+     print-matrix
+     "Prints the current matrix to std out. Useful for debugging."
+     []
+     (.printMatrix (current-graphics))))
 
 #?(:clj
    (defn
