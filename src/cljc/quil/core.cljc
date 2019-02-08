@@ -1721,8 +1721,7 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  #?(:clj (.frameRate (ap/current-applet))
-     :cljs (.-__frameRate (ap/current-applet))))
+  (.frameRate (ap/current-applet)))
 
 (defn
   ^{:requires-bindings true

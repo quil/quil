@@ -11,8 +11,8 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/current-frame-rate)) 10 20)
-  (q/text (str (q/target-frame-rate)) 10 40))
+  (q/text (str "(q/current-frame-rate) = " (q/current-frame-rate)) 10 20)
+  (q/text (str "(q/target-frame-rate) = " (q/target-frame-rate)) 10 40))
 
 (defsnippet current-graphics
   "current-graphics"
