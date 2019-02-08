@@ -2730,21 +2730,20 @@
    (.perspective (current-graphics) (float fovy) (float aspect)
                  (float z-near) (float z-far))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "pixelDensity()"
-       :category "Environment"
-       :subcategory nil
-       :added "2.4.0"}
-     pixel-density
-     "It makes it possible for Processing to render using all of the pixels
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixelDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.4.0"}
+  pixel-density
+  "It makes it possible for Processing to render using all of the pixels
   on high resolutions screens like Apple Retina displays and Windows
   High-DPI displays. Possible values 1 or 2. Must be called only from
   :settings handler. To get density of the current screen you can use
   (display-density) function."
-     [density]
-     (.pixelDensity (ap/current-applet) density)))
+  [density]
+  (.pixelDensity (ap/current-applet) density))
 
 (defn
   ^{:requires-bindings true
