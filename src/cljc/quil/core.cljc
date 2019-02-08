@@ -45,11 +45,10 @@
 (u/generate-quil-constants
  #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
- #?@(:cljs
-     (angle-modes (:radians :degrees)))
+ #?@(:cljs (angle-modes (:radians :degrees)))
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
-                     :screen :overlay :replace :hard-light :soft-light :dodge :burn)
+              :screen :overlay :replace :hard-light :soft-light :dodge :burn)
  #?@(:clj (color-modes (:rgb :hsb))
      :cljs (color-modes (:rgb :hsb :hsl)))
  image-formats (:rgb :argb :alpha)
@@ -779,15 +778,14 @@
      (let [mode (u/resolve-constant-key mode blend-modes)]
        (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "blendMode()"
-       :category "Image"
-       :subcategory "Rendering"
-       :added "2.0"}
-     blend-mode
-     "Blends the pixels in the display window according to the defined mode.
+(defn
+  ^{:requires-bindings true
+    :processing-name "blendMode()"
+    :category "Image"
+    :subcategory "Rendering"
+    :added "2.0"}
+  blend-mode
+  "Blends the pixels in the display window according to the defined mode.
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
@@ -800,19 +798,28 @@
                                             C = min(A*factor, B)
   :lightest   - only the lightest colour succeeds:
                                             C = max(A*factor, B)
+  :difference - subtract colors from underlying image.
   :exclusion  - similar to :difference, but less extreme.
   :multiply   - Multiply the colors, result will always be darker.
   :screen     - Opposite multiply, uses inverse values of the colors.
   :replace    - the pixels entirely replace the others and don't utilize
-                alpha (transparency) values
+                alpha (transparency) values.
+  :overlay    - mix of :multiply and :screen. Multiplies dark values,
+                and screens light values.
+  :hard-light - :screen when greater than 50% gray, :multiply when lower.
+  :soft-light - mix of :darkest and :lightest. Works like :overlay, but
+                not as harsh.
+  :dodge      - lightens light tones and increases contrast, ignores darks.
+  :burn       - darker areas are applied, increasing contrast, ignores
+                lights.
 
-  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn, :difference
-  modes are not supported by this function.
+  Note: in clj :hard-light, :soft-light, :overlay, :dodge, :burn
+  modes are not supported. In cljs :subtract mode is not supported.
 
-  factor is alpha value of pixel being drawed"
-     ([mode]
-      (let [mode (u/resolve-constant-key mode blend-modes)]
-        (.blendMode (current-graphics) mode)))))
+  factor is the alpha value of the pixel being drawn"
+  ([mode]
+   (let [mode (u/resolve-constant-key mode blend-modes)]
+     (.blendMode (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
