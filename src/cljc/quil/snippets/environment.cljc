@@ -101,14 +101,13 @@
            h (q/screen-height)]
        (q/text (str w "x" h) 10 20))))
 
-#?(:clj
-   (defsnippet display-density
-     "display-density"
-     {}
+(defsnippet display-density
+  "display-density"
+  {}
 
-     (q/background 255)
-     (q/fill 0)
-     (q/text-num (q/display-density) 10 20)))
+  (q/background 255)
+  (q/fill 0)
+  (q/text-num (q/display-density) 10 20))
 
 #?(:clj
    (defsnippet pixel-density

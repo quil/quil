@@ -1587,21 +1587,20 @@
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
    (save-current-fill [r g b alpha])))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "displayDensity()"
-       :category "Environment"
-       :subcategory nil
-       :added "2.4.0"}
-     display-density
-     "This function returns the number 2 if the screen is a high-density
+(defn
+  ^{:requires-bindings true
+    :processing-name "displayDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.4.0"}
+  display-density
+  "This function returns the number 2 if the screen is a high-density
   screen (called a Retina display on OS X or high-dpi on Windows and
   Linux) and a 1 if not. This information is useful for a program to
   adapt to run at double the pixel density on a screen that supports
   it. Can be used in conjunction with (pixel-density)"
-     ([] (.displayDensity (ap/current-applet)))
-     ([display] (.displayDensity (ap/current-applet) display))))
+  ([] (.displayDensity (ap/current-applet)))
+  ([display] (.displayDensity (ap/current-applet) display)))
 
 (defn
   ^{:requires-bindings true
