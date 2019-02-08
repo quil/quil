@@ -3324,8 +3324,10 @@
   This rotation follows the right-hand rule, so if the vector x y z points
   toward the user, the rotation will be counterclockwise."
   ([angle] (.rotate (current-graphics) (float angle)))
-  ([angle vx vy vz] (.rotate (current-graphics) (float angle)
-                             (float vx) (float vy) (float vz))))
+  ([angle vx vy vz] (.rotate (current-graphics)
+                             (float angle)
+                             #?@(:clj ((float vx) (float vy) (float vz))
+                                 :cljs ((array (float vx) (float vy) (float vz)))))))
 
 (defn
   ^{:requires-bindings true

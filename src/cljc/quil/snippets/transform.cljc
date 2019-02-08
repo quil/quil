@@ -70,31 +70,46 @@
   (q/reset-matrix)
   (q/rect 0 0 50 100))
 
-(defsnippet rotate
-  "rotate"
-  {:renderer :p3d}
+#?(:clj
+   (defsnippet rotate
+     "rotate"
+     {:renderer :p3d}
 
-  (q/camera 200 200 200 0 0 0 0 0 -1)
-  (q/no-fill)
-  (q/box 50)
-  (q/push-matrix)
+     (q/camera 200 200 200 0 0 0 0 0 -1)
+     (q/no-fill)
+     (q/box 50)
+     (q/push-matrix)
 
-  (q/translate 100 0 0)
-  (q/rotate 0.5)
-  (q/box 50)
-  (q/pop-matrix)
-  (q/push-matrix)
+     (q/translate 100 0 0)
+     (q/rotate 0.5)
+     (q/box 50)
+     (q/pop-matrix)
+     (q/push-matrix)
 
-  (q/translate 0 100 0)
-  (q/rotate 0.5 1 0 0)
-  (q/box 50)
-  (q/pop-matrix)
-  (q/push-matrix)
+     (q/translate 0 100 0)
+     (q/rotate 0.5 1 0 0)
+     (q/box 50)
+     (q/pop-matrix)
+     (q/push-matrix)
 
-  (q/translate 0 0 100)
-  (q/rotate 0.5 0 1 0)
-  (q/box 50)
-  (q/pop-matrix))
+     (q/translate 0 0 100)
+     (q/rotate 0.5 0 1 0)
+     (q/box 50)
+     (q/pop-matrix)))
+
+#?(:cljs
+   (defsnippet rotate
+     "rotate"
+     {}
+
+     (q/stroke 100)
+     (q/no-fill)
+     (q/rect 0 0 52 52)
+
+     (q/translate (/ (q/width) 4) (/ (q/height) 4))
+     (q/rotate (/ q/PI 3))
+     (q/fill 100)
+     (q/rect 0 0 52 52)))
 
 (defsnippet rotate-x-y-z
   ["rotate-x" "rotate-y" "rotate-z"]
