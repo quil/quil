@@ -704,8 +704,6 @@
   :blend      - linear interpolation of colours: C = A*factor + B
   :add        - additive blending with white clip:
                                             C = min(A*factor + B, 255)
-  :subtract   - subtractive blending with black clip:
-                                            C = max(B - A*factor, 0)
   :darkest    - only the darkest colour succeeds:
                                             C = min(A*factor, B)
   :lightest   - only the lightest colour succeeds:
@@ -725,15 +723,24 @@
                 Called \"Color Dodge\" in Illustrator and Photoshop.
   :burn       - Darker areas are applied, increasing contrast, ignores
                 lights. Called \"Color Burn\" in Illustrator and
-                Photoshop."
+                Photoshop.
+
+  In clj the following blend modes are also supported:
+  :subtract   - subtractive blending with black clip:
+                                            C = max(B - A*factor, 0)
+
+  In cljs the following blend modes are also supported:
+  :replace    - the pixels entirely replace the others and don't utilize
+                alpha (transparency) values."
   ([x y width height dx dy dwidth dheight mode]
    (blend (current-graphics) (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img x y width height dx dy dwidth dheight mode]
    (blend src-img (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img ^PImage dest-img x y width height dx dy dwidth dheight mode]
    (let [mode (u/resolve-constant-key mode blend-modes)]
-     (.blend dest-img src-img (int x) (int y) (int width) (int height)
-             (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
+     (.blend dest-img src-img
+             (int x) (int y) (int width) (int height)
+             (int dx) (int dy) (int dwidth) (int dheight) mode))))
 
 #?(:clj
    (defn
