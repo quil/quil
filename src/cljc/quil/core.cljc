@@ -1763,7 +1763,7 @@
      frustum
      "Sets a perspective matrix defined through the parameters. Works
   like glFrustum, except it wipes out the current perspective matrix
-  rather than muliplying itself with it.
+  rather than multiplying itself with it.
   https://en.wikipedia.org/wiki/Frustum"
      [left right bottom top near far]
      (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
@@ -2188,7 +2188,7 @@
      light-specular
      "Sets the specular color for lights. Like fill, it affects only the
   elements which are created after it in the code. Specular refers to
-  light which bounces off a surface in a perferred direction (rather
+  light which bounces off a surface in a preferred direction (rather
   than bouncing in all directions like a diffuse light) and is used
   for creating highlights. The specular quality of a light interacts
   with the specular material qualities set through the specular and
@@ -2840,7 +2840,7 @@
   stack. Understanding pushing and popping requires understanding the
   concept of a matrix stack. The push-matrix fn saves the current
   coordinate system to the stack and pop-matrix restores the prior
-  coordinate system. push-matrix and pop-matrix are used in conjuction
+  coordinate system. push-matrix and pop-matrix are used in conjunction
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
@@ -2929,7 +2929,7 @@
   understanding the concept of a matrix stack. The push-matrix
   function saves the current coordinate system to the stack and
   pop-matrix restores the prior coordinate system. push-matrix and
-  pop-matrix are used in conjuction with the other transformation
+  pop-matrix are used in conjunction with the other transformation
   methods and may be embedded to control the scope of the
   transformations."
   []
@@ -3442,8 +3442,8 @@
     :added "1.0"}
   save-frame
   "Saves an image identical to the current display window as a
-  file. May be called multple times - each file saved will have a
-  unique name. Name and image formate may be modified by passing a
+  file. May be called multiple times - each file saved will have a
+  unique name. Name and image format may be modified by passing a
   string parameter of the form \"foo-####.ext\" where foo- can be any
   arbitrary string, #### will be replaced with the current frame id
   and .ext is one of .tiff, .targa, .png, .jpeg or .jpg
@@ -3470,7 +3470,7 @@
   multiply the effect. For example, calling (scale 2) and then
   (scale 1.5) is the same as (scale 3). If scale is called within
   draw, the transformation is reset when the loop begins again. Using
-  this fuction with the z parameter requires specfying :p3d or :opengl
+  this function with the z parameter requires specifying :p3d or :opengl
   as the renderer. This function can be further controlled by
   push-matrix and pop-matrix."
   ([s] (.scale (current-graphics) (float s)))
@@ -3567,7 +3567,7 @@
        :added "2.0"}
      shader
      "Applies the shader specified by the parameters. It's compatible with the :p2d
-  and :p3drenderers, but not with the default :java2d renderer. Optional 'kind'
+  and :p3d renderers, but not with the default :java2d renderer. Optional 'kind'
   parameter - type of shader, either :points, :lines, or :triangles"
      ([shader] (.shader (current-graphics) shader))
      ([shader kind]
@@ -3777,7 +3777,7 @@
   called again with a new parameter and so should not be called prior
   to every sphere statement, unless you wish to render spheres with
   different settings, e.g. using less detail for smaller spheres or
-  ones further away from the camera. To controla the detail of the
+  ones further away from the camera. To control the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
   ([res] (.sphereDetail (current-graphics) (int res)))
