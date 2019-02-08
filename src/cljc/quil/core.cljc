@@ -2740,17 +2740,10 @@
   the changes. Calls .loadPixels before obtaining the pixel array."
   ([] (pixels (current-graphics)))
 
-  #?(:clj
-     ([^PImage img]
-      (.loadPixels img)
-      (.-pixels img))
+  ([^PImage img]
+   (.loadPixels img)
+   (.-pixels img)))
 
-     :cljs
-     ([img]
-      (.loadPixels img)
-      (let [pix-array (.toArray (.-pixels img))]
-        (set! (.-stored-pix-array img) pix-array)
-        pix-array))))
 #?(:cljs
    (defn
      ^{:requires-bindings true
@@ -4334,15 +4327,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   ([] (update-pixels (current-graphics)))
-  #?(:clj
-     ([^PImage img] (.updatePixels img))
-
-     :cljs
-     ([img]
-      (when-let [pix-array (.-stored-pix-array img)]
-        (.set (.-pixels img) pix-array)
-        (set! (.-stored-pix-array img) nil))
-      (.updatePixels img))))
+  ([^PImage img] (.updatePixels img)))
 
 (defn
   ^{:requires-bindings true

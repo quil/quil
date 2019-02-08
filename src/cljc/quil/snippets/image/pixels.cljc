@@ -207,7 +207,8 @@
     (comment "get pixels of the graphics and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels gr)
-          half (/ (* size size) 2)]
+          half #?(:clj (/ (* size size) 2)
+                  :cljs (* 4 (* (q/display-density) size) (/ (* (q/display-density) size) 2)))]
       (dotimes [i half]
         #?(:clj (aset-int px (+ i half) (aget px i))
            :cljs (aset px (+ i half) (aget px i)))))
@@ -217,7 +218,8 @@
     (comment "get pixels of the sketch itself and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels)
-          half (/ (* (q/width) (q/height)) 10)]
+          half #?(:clj (/ (* (q/width) (q/height)) 10)
+                  :cljs (/ (* 4 (* (q/display-density) (q/width)) (* (q/display-density) (q/height))) 10))]
       (dotimes [i half]
         #?(:clj (aset-int px (+ i half) (aget px i))
            :cljs (aset px (+ i half) (aget px i)))))
@@ -233,6 +235,8 @@
     (dotimes [x 100]
       (dotimes [y 100]
         (q/set-pixel im x y (q/color (* 2 x) (* 2 y) (+ x y)))))
+    #?(:cljs (q/update-pixels im))
+
     (comment "draw image on sketch")
     (q/set-image 10 10 im)))
 
