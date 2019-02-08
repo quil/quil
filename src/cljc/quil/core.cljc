@@ -2341,15 +2341,14 @@
   #?(:clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
      :cljs (.map (ap/current-applet) val low1 high1 low2 high2)))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "PImage.mask()"
-       :category "Image"
-       :subcategory "Loading & Displaying"
-       :added "1.0"}
-     mask-image
-     "Masks part of an image from displaying by loading another image and
+(defn
+  ^{:requires-bindings false
+    :processing-name "PImage.mask()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  mask-image
+  "Masks part of an image from displaying by loading another image and
   using it as an alpha channel.  This mask image should only contain
   grayscale data, but only the blue color channel is used. The mask
   image needs to be the same size as the image to which it is
@@ -2361,8 +2360,8 @@
 
   This method is useful for creating dynamically generated alpha
   masks."
-     ([^PImage mask] (mask-image (current-graphics) mask))
-     ([^PImage img ^PImage mask] (.mask img mask))))
+  ([^PImage mask] (mask-image (current-graphics) mask))
+  ([^PImage img ^PImage mask] (.mask img mask)))
 
 (defn
   ^{:requires-bindings true
