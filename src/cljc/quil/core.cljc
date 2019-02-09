@@ -1001,7 +1001,7 @@
     :subcategory "Pixels"
     :added "1.0"}
   copy
-  "Copies a region of pixels from the one image to another. If src-img
+  "Copies a region of pixels from one image to another. If src-img
   is not specified it defaults to current-graphics. If dest-img is not
   specified - it defaults to current-graphics. If the source
   and destination regions aren't the same size, it will automatically
@@ -1017,7 +1017,8 @@
    (copy src-img (current-graphics) [sx sy swidth sheight] [dx dy dwidth dheight]))
 
   ([^PImage src-img ^PImage dest-img [sx sy swidth sheight] [dx dy dwidth dheight]]
-   (.copy dest-img src-img (int sx) (int sy) (int swidth) (int sheight)
+   (.copy dest-img src-img
+          (int sx) (int sy) (int swidth) (int sheight)
           (int dx) (int dy) (int dwidth) (int dheight))))
 
 (defn
@@ -1118,13 +1119,14 @@
   using save to write a PNG or TGA file, the transparency of the
   graphics object will be honored."
   ([w h]
-   (.createGraphics (ap/current-applet) (int w) (int h) #?(:cljs :p2d)))
+   (.createGraphics (ap/current-applet) (int w) (int h)))
   ([w h renderer]
    (.createGraphics (ap/current-applet) (int w) (int h) (ap/resolve-renderer renderer)))
-  ([w h renderer path]
-   (.createGraphics (ap/current-applet) (int w) (int h) (ap/resolve-renderer renderer)
-                    #?(:clj (u/absolute-path path)
-                       :cljs path))))
+  #?(:clj
+     ([w h renderer path]
+      (.createGraphics (ap/current-applet) (int w) (int h)
+                       (ap/resolve-renderer renderer)
+                       (u/absolute-path path)))))
 
 (defn
   ^{:requires-bindings true
@@ -1133,19 +1135,24 @@
     :subcategory nil
     :added "1.0"}
   create-image
-  "Creates a new PImage (the datatype for storing images). This
-  provides a fresh buffer of pixels to play with. Set the size of the
-  buffer with the width and height parameters. The format parameter
-  defines how the pixels are stored. See the PImage reference for more
-  information.
+ "Creates a new datatype for storing images (PImage for clj and
+  Image for cljs). This provides a fresh buffer of pixels to play
+  with. Set the size of the buffer with the width and height
+  parameters.
 
+  In clj the format parameter defines how the pixels are stored.
+  See the PImage reference for more information.
   Possible formats: :rgb, :argb, :alpha (grayscale alpha channel)
 
-  Prefer using create-image over initialising new PImage instances
-  directly."
-  [w h format]
-  (let [format (u/resolve-constant-key format image-formats)]
-    (.createImage (ap/current-applet) (int w) (int h) (int format))))
+  Prefer using create-image over initialising new PImage (or Image)
+  instances directly."
+  #?@(:clj
+      ([w h format]
+       (let [format (u/resolve-constant-key format image-formats)]
+         (.createImage (ap/current-applet) (int w) (int h) (int format))))
+      :cljs
+      ([w h]
+       (.createImage (ap/current-applet) (int w) (int h)))))
 
 (defn
   ^{:requires-bindings true
@@ -1190,18 +1197,19 @@
               #?(:clj (int cursor-mode)
                  :cljs (str cursor-mode))))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "cursor()"
-    :category "Environment"
-    :subcategory nil
-    :added "1.0"}
-  cursor-image
-  "Set the cursor to a predefined image. The horizontal and vertical
-  active spots of the cursor may be specified with hx and hy.
-  It is recommended to make the size 16x16 or 32x32 pixels."
-  ([^PImage img] (.cursor (ap/current-applet) img))
-  ([^PImage img hx hy] (.cursor (ap/current-applet) img (int hx) (int hy))))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cursor()"
+       :category "Environment"
+       :subcategory nil
+       :added "1.0"}
+     cursor-image
+     "Set the cursor to a predefined image. The horizontal and vertical
+     active spots of the cursor may be specified with hx and hy.
+     It is recommended to make the size 16x16 or 32x32 pixels."
+     ([^PImage img] (.cursor (ap/current-applet) img))
+     ([^PImage img hx hy] (.cursor (ap/current-applet) img (int hx) (int hy)))))
 
 (defn
   ^{:requires-bindings true
@@ -1448,7 +1456,7 @@
              corners of the ellipse's bounding box."
   [mode]
   (let [mode (u/resolve-constant-key mode ellipse-modes)]
-    (.ellipseMode (current-graphics) (int mode))))
+    (.ellipseMode (current-graphics) mode)))
 
 #?(:clj
    (defn
@@ -1620,9 +1628,9 @@
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
                noticeable in the lower ranges.
-  :blur      - executes a Guassian blur with the level parameter
+  :blur      - executes a Gaussian blur with the level parameter
                specifying the extent of the blurring. If no level
-               parameter is used, the blur is equivalent to Guassian
+               parameter is used, the blur is equivalent to Gaussian
                blur of radius 1.
   :opaque    - sets the alpha channel to entirely opaque. Doesn't work
                with level.
@@ -1630,11 +1638,11 @@
   :dilate    - increases the light areas.  Doesn't work with level."
   ([mode]
    (.filter (current-graphics)
-            (int (u/resolve-constant-key mode filter-modes))))
+            (u/resolve-constant-key mode filter-modes)))
 
   ([mode level]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter (current-graphics) (int mode) (float level)))))
+     (.filter (current-graphics) mode (float level)))))
 
 #?(:clj
    (defn
@@ -1960,9 +1968,9 @@
                colors specified as the level parameter. The parameter can
                be set to values between 2 and 255, but results are most
                noticeable in the lower ranges.
-  :blur      - executes a Guassian blur with the level parameter
+  :blur      - executes a Gaussian blur with the level parameter
                specifying the extent of the blurring. If no level
-               parameter is used, the blur is equivalent to Guassian
+               parameter is used, the blur is equivalent to Gaussian
                blur of radius 1.
   :opaque    - sets the alpha channel to entirely opaque. Doesn't work
                with level.
@@ -1970,10 +1978,10 @@
   :dilate    - increases the light areas.  Doesn't work with level."
   ([^PImage img mode]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter img (int mode))))
+     (.filter img mode)))
   ([^PImage img mode level]
    (let [mode (u/resolve-constant-key mode filter-modes)]
-     (.filter img (int mode) (float level)))))
+     (.filter img mode (float level)))))
 
 (defn
   ^{:requires-bindings true
@@ -1996,7 +2004,7 @@
   :center  - draw images centered at the given x and y position."
   [mode]
   (let [mode (u/resolve-constant-key mode image-modes)]
-    (.imageMode (current-graphics) (int mode))))
+    (.imageMode (current-graphics) mode)))
 
 (defn
   ^{:requires-bindings true
@@ -2744,6 +2752,17 @@
       (let [pix-array (.toArray (.-pixels img))]
         (set! (.-stored-pix-array img) pix-array)
         pix-array))))
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "plane()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     plane
+     "Draw a plane with given a width and height."
+     [width height]
+     (.plane (current-graphics) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -2850,16 +2869,17 @@
   #?(:clj (PApplet/pow (float num) (float exponent))
      :cljs (.pow (ap/current-applet) num exponent)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printCamera()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  print-camera
-  "Prints the current camera matrix to std out. Useful for debugging."
-  []
-  (.printCamera (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printCamera()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "1.0"}
+     print-camera
+     "Prints the current camera matrix to std out. Useful for debugging."
+     []
+     (.printCamera (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2872,17 +2892,18 @@
   []
   (.printMatrix (current-graphics)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printProjection()"
-    :category "Lights, Camera"
-    :subcategory "Camera"
-    :added "1.0"}
-  print-projection
-  "Prints the current projection matrix to std out. Useful for
-  debugging"
-  []
-  (.printProjection (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printProjection()"
+       :category "Lights, Camera"
+       :subcategory "Camera"
+       :added "1.0"}
+     print-projection
+     "Prints the current projection matrix to std out. Useful for
+     debugging"
+     []
+     (.printProjection (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -3174,14 +3195,15 @@
   #?(:cljs ([n]
             (.redraw (ap/current-applet) n))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "requestImage()"
-    :category "Image"
-    :subcategory "Loading & Displaying"
-    :added "1.0"}
-  request-image
-  "This function load images on a separate thread so that your sketch
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "requestImage()"
+       :category "Image"
+       :subcategory "Loading & Displaying"
+       :added "1.0"}
+     request-image
+     "This function loads an image on a separate thread so that your sketch
   does not freeze while images load during setup. While the image is
   loading, its width and height will be 0. If an error occurs while
   loading the image, its width and height will be set to -1. You'll
@@ -3189,7 +3211,7 @@
   will be greater than 0. Asynchronous image loading (particularly
   when downloading from a server) can dramatically improve
   performance."
-  [filename] (.requestImage (ap/current-applet) (str filename)))
+     [filename] (.requestImage (ap/current-applet) (str filename))))
 
 (defn
   ^{:requires-bindings true
@@ -3507,7 +3529,7 @@
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
   ([^PImage img x y c]
-   (.set img (int x) (int y) (int c))))
+   (.set img (int x) (int y) c)))
 
 (defn
   ^{:requires-bindings true
@@ -4159,14 +4181,15 @@
      :cljs [img])
   (.texture (current-graphics) img))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "textureMode()"
-    :category "Shape"
-    :subcategory "Vertex"
-    :added "1.0"}
-  texture-mode
-  "Sets the coordinate space for texture mapping. There are two
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "textureMode()"
+       :category "Shape"
+       :subcategory "Vertex"
+       :added "1.0"}
+     texture-mode
+     "Sets the coordinate space for texture mapping. There are two
   options, :image and :normal.
 
   :image refers to the actual coordinates of the image and :normal
@@ -4175,9 +4198,9 @@
   mapping the image onto the entire size of a quad would require the
   points (0,0) (0,100) (100,200) (0,200). The same mapping in
   NORMAL_SPACE is (0,0) (0,1) (1,1) (0,1)."
-  [mode]
-  (let [mode (u/resolve-constant-key mode texture-modes)]
-    (.textureMode (current-graphics) (int mode))))
+     [mode]
+     (let [mode (u/resolve-constant-key mode texture-modes)]
+       (.textureMode (current-graphics) (int mode)))))
 
 #?(:clj
    (defn
