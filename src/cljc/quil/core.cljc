@@ -2426,9 +2426,9 @@
 
        :cljs
        (condp = button-code
-         37 :left
-         39 :right
-         3  :center
+         (aget js/p5.prototype "LEFT") :left
+         (aget js/p5.prototype "RIGHT") :right
+         (aget js/p5.prototype "CENTER") :center
          nil))))
 
 (defn
