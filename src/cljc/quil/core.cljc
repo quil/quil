@@ -1509,17 +1509,18 @@
   []
   (.endContour (current-graphics)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "endRaw()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  end-raw
-  "Complement to begin-raw; they must always be used together. See
-  the begin-raw docstring for details."
-  []
-  (.endRaw (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "endRaw()"
+       :category "Output"
+       :subcategory "Files"
+       :added "1.0"}
+     end-raw
+     "Complement to begin-raw; they must always be used together. See
+     the begin-raw docstring for details."
+     []
+     (.endRaw (current-graphics))))
 
 (defn
   ^{:requires-bindings true
