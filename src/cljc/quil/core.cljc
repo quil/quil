@@ -3433,14 +3433,15 @@
   [filename]
   (.save (current-graphics) (str filename)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "saveFrame()"
-    :category "Output"
-    :subcategory "Image"
-    :added "1.0"}
-  save-frame
-  "Saves an image identical to the current display window as a
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "saveFrame()"
+       :category "Output"
+       :subcategory "Image"
+       :added "1.0"}
+     save-frame
+     "Saves an image identical to the current display window as a
   file. May be called multiple times - each file saved will have a
   unique name. Name and image format may be modified by passing a
   string parameter of the form \"foo-####.ext\" where foo- can be any
@@ -3449,9 +3450,9 @@
 
   Examples:
   (save-frame)
-  (save-frame \"pretty-pic-####.jpg\")"
-  ([] (.saveFrame (ap/current-applet)))
-  ([name] (.saveFrame (ap/current-applet) (str name))))
+     (save-frame \"pretty-pic-####.jpg\")"
+     ([] (.saveFrame (ap/current-applet)))
+     ([name] (.saveFrame (ap/current-applet) (str name)))))
 
 (defn
   ^{:requires-bindings true
