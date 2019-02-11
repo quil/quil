@@ -2084,7 +2084,7 @@
   "true if any key is currently pressed, false otherwise."
   []
   #?(:clj (.-keyPressed (ap/current-applet))
-     :cljs (.-__keyPressed (ap/current-applet))))
+     :cljs (.-keyIsPressed (ap/current-applet))))
 
 #?(:cljs
    (defn
@@ -2443,7 +2443,7 @@
   and false if a button is not pressed."
   []
   #?(:clj (.-mousePressed (ap/current-applet))
-     :cljs (.-__mousePressed (ap/current-applet))))
+     :cljs (.-mouseIsPressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
