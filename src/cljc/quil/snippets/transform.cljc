@@ -5,23 +5,35 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-(defsnippet apply-matrix
-  "apply-matrix"
-  {:renderer :p3d}
+#?(:clj
+   (defsnippet apply-matrix
+     "apply-matrix"
+     {:renderer :p3d}
 
-  (q/camera 200 200 200 0 0 0 0 0 -1)
-  (q/no-fill)
-  (q/box 50)
-  #?(:clj (q/apply-matrix 1 0 50
-                          0 1 -50))
-  #?(:clj (q/box 50))
-  (let [s (q/sin 1)
-        c (q/cos 1)]
-    (q/apply-matrix 1 0 0 0
-                    0 c s 50
-                    0 (- s) c -50
-                    0 0 0 1))
-  (q/box 50))
+     (q/camera 200 200 200 0 0 0 0 0 -1)
+     (q/no-fill)
+     (q/box 50)
+     (q/apply-matrix 1 0 50
+                     0 1 -50)
+     (q/box 50)
+     (let [s (q/sin 1)
+           c (q/cos 1)]
+       (q/apply-matrix 1 0 0 0
+                       0 c s 50
+                       0 (- s) c -50
+                       0 0 0 1))
+     (q/box 50)))
+
+#?(:cljs
+   (defsnippet apply-matrix
+     "apply-matrix"
+     {}
+
+     (q/no-fill)
+     (q/rect 10 10 50 50)
+     (q/apply-matrix 1  0  0
+                     1 80 50)
+     (q/rect 10 10 50 50)))
 
 (defsnippet push-matrix-pop-matrix
   ["push-matrix" "pop-matrix"]
@@ -38,14 +50,15 @@
   (q/translate 150 0)
   (q/rect 0 0 50 50))
 
-(defsnippet print-matrix
-  "print-matrix"
-  {}
+#?(:clj
+   (defsnippet print-matrix
+     "print-matrix"
+     {}
 
-  (q/translate 250 250)
-  (q/rotate 1)
-  (q/rect 0 0 100 100)
-  (q/print-matrix))
+     (q/translate 250 250)
+     (q/rotate 1)
+     (q/rect 0 0 100 100)
+     (q/print-matrix)))
 
 (defsnippet reset-matrix
   "reset-matrix"
@@ -57,31 +70,46 @@
   (q/reset-matrix)
   (q/rect 0 0 50 100))
 
-(defsnippet rotate
-  "rotate"
-  {:renderer :p3d}
+#?(:clj
+   (defsnippet rotate
+     "rotate"
+     {:renderer :p3d}
 
-  (q/camera 200 200 200 0 0 0 0 0 -1)
-  (q/no-fill)
-  (q/box 50)
-  (q/push-matrix)
+     (q/camera 200 200 200 0 0 0 0 0 -1)
+     (q/no-fill)
+     (q/box 50)
+     (q/push-matrix)
 
-  (q/translate 100 0 0)
-  (q/rotate 0.5)
-  (q/box 50)
-  (q/pop-matrix)
-  (q/push-matrix)
+     (q/translate 100 0 0)
+     (q/rotate 0.5)
+     (q/box 50)
+     (q/pop-matrix)
+     (q/push-matrix)
 
-  (q/translate 0 100 0)
-  (q/rotate 0.5 1 0 0)
-  (q/box 50)
-  (q/pop-matrix)
-  (q/push-matrix)
+     (q/translate 0 100 0)
+     (q/rotate 0.5 1 0 0)
+     (q/box 50)
+     (q/pop-matrix)
+     (q/push-matrix)
 
-  (q/translate 0 0 100)
-  (q/rotate 0.5 0 1 0)
-  (q/box 50)
-  (q/pop-matrix))
+     (q/translate 0 0 100)
+     (q/rotate 0.5 0 1 0)
+     (q/box 50)
+     (q/pop-matrix)))
+
+#?(:cljs
+   (defsnippet rotate
+     "rotate"
+     {}
+
+     (q/stroke 100)
+     (q/no-fill)
+     (q/rect 0 0 52 52)
+
+     (q/translate (/ (q/width) 4) (/ (q/height) 4))
+     (q/rotate (/ q/PI 3))
+     (q/fill 100)
+     (q/rect 0 0 52 52)))
 
 (defsnippet rotate-x-y-z
   ["rotate-x" "rotate-y" "rotate-z"]

@@ -45,11 +45,10 @@
 (u/generate-quil-constants
  #?(:clj :clj :cljs :cljs)
  arc-modes (:open :chord :pie)
- #?@(:cljs
-     (angle-modes (:radians :degrees)))
+ #?@(:cljs (angle-modes (:radians :degrees)))
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
-                     :screen :overlay :replace :hard-light :soft-light :dodge :burn)
+              :screen :overlay :replace :hard-light :soft-light :dodge :burn)
  #?@(:clj (color-modes (:rgb :hsb))
      :cljs (color-modes (:rgb :hsb :hsl)))
  image-formats (:rgb :argb :alpha)
@@ -377,15 +376,21 @@
       (.applyMatrix (current-graphics)
                     (float n00) (float n01) (float n02)
                     (float n10) (float n11) (float n12))))
-  ([n00 n01 n02 n03
-    n10 n11 n12 n13
-    n20 n21 n22 n23
-    n30 n31 n32 n33]
-   (.applyMatrix (current-graphics)
-                 (float n00) (float n01) (float n02) (float n03)
-                 (float n10) (float n11) (float n12) (float n13)
-                 (float n20) (float n21) (float n22) (float n23)
-                 (float n30) (float n31) (float n32) (float n33))))
+  #?(:clj
+     ([n00 n01 n02 n03
+       n10 n11 n12 n13
+       n20 n21 n22 n23
+       n30 n31 n32 n33]
+      (.applyMatrix (current-graphics)
+                    (float n00) (float n01) (float n02) (float n03)
+                    (float n10) (float n11) (float n12) (float n13)
+                    (float n20) (float n21) (float n22) (float n23)
+                    (float n30) (float n31) (float n32) (float n33))))
+  #?(:cljs
+     ([a b c d e f]
+      (.applyMatrix (current-graphics)
+                    (float a) (float b) (float c)
+                    (float d) (float e) (float f)))))
 
 (defn
   ^{:requires-bindings true
@@ -705,8 +710,6 @@
   :blend      - linear interpolation of colours: C = A*factor + B
   :add        - additive blending with white clip:
                                             C = min(A*factor + B, 255)
-  :subtract   - subtractive blending with black clip:
-                                            C = max(B - A*factor, 0)
   :darkest    - only the darkest colour succeeds:
                                             C = min(A*factor, B)
   :lightest   - only the lightest colour succeeds:
@@ -726,15 +729,24 @@
                 Called \"Color Dodge\" in Illustrator and Photoshop.
   :burn       - Darker areas are applied, increasing contrast, ignores
                 lights. Called \"Color Burn\" in Illustrator and
-                Photoshop."
+                Photoshop.
+
+  In clj the following blend modes are also supported:
+  :subtract   - subtractive blending with black clip:
+                                            C = max(B - A*factor, 0)
+
+  In cljs the following blend modes are also supported:
+  :replace    - the pixels entirely replace the others and don't utilize
+                alpha (transparency) values."
   ([x y width height dx dy dwidth dheight mode]
    (blend (current-graphics) (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img x y width height dx dy dwidth dheight mode]
    (blend src-img (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img ^PImage dest-img x y width height dx dy dwidth dheight mode]
    (let [mode (u/resolve-constant-key mode blend-modes)]
-     (.blend dest-img src-img (int x) (int y) (int width) (int height)
-             (int dx) (int dy) (int dwidth) (int dheight) (int mode)))))
+     (.blend dest-img src-img
+             (int x) (int y) (int width) (int height)
+             (int dx) (int dy) (int dwidth) (int dheight) mode))))
 
 #?(:clj
    (defn
@@ -779,15 +791,14 @@
      (let [mode (u/resolve-constant-key mode blend-modes)]
        (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "blendMode()"
-       :category "Image"
-       :subcategory "Rendering"
-       :added "2.0"}
-     blend-mode
-     "Blends the pixels in the display window according to the defined mode.
+(defn
+  ^{:requires-bindings true
+    :processing-name "blendMode()"
+    :category "Image"
+    :subcategory "Rendering"
+    :added "2.0"}
+  blend-mode
+  "Blends the pixels in the display window according to the defined mode.
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
@@ -800,19 +811,28 @@
                                             C = min(A*factor, B)
   :lightest   - only the lightest colour succeeds:
                                             C = max(A*factor, B)
+  :difference - subtract colors from underlying image.
   :exclusion  - similar to :difference, but less extreme.
   :multiply   - Multiply the colors, result will always be darker.
   :screen     - Opposite multiply, uses inverse values of the colors.
   :replace    - the pixels entirely replace the others and don't utilize
-                alpha (transparency) values
+                alpha (transparency) values.
+  :overlay    - mix of :multiply and :screen. Multiplies dark values,
+                and screens light values.
+  :hard-light - :screen when greater than 50% gray, :multiply when lower.
+  :soft-light - mix of :darkest and :lightest. Works like :overlay, but
+                not as harsh.
+  :dodge      - lightens light tones and increases contrast, ignores darks.
+  :burn       - darker areas are applied, increasing contrast, ignores
+                lights.
 
-  Note: :hard-light, :soft-light, :dodge, :overlay, :dodge, :burn, :difference
-  modes are not supported by this function.
+  Note: in clj :hard-light, :soft-light, :overlay, :dodge, :burn
+  modes are not supported. In cljs :subtract mode is not supported.
 
-  factor is alpha value of pixel being drawed"
-     ([mode]
-      (let [mode (u/resolve-constant-key mode blend-modes)]
-        (.blendMode (current-graphics) mode)))))
+  factor is the alpha value of the pixel being drawn"
+  ([mode]
+   (let [mode (u/resolve-constant-key mode blend-modes)]
+     (.blendMode (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
@@ -1587,21 +1607,20 @@
    (.fill (current-graphics) (float r) (float g) (float b) (float alpha))
    (save-current-fill [r g b alpha])))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "displayDensity()"
-       :category "Environment"
-       :subcategory nil
-       :added "2.4.0"}
-     display-density
-     "This function returns the number 2 if the screen is a high-density
+(defn
+  ^{:requires-bindings true
+    :processing-name "displayDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.4.0"}
+  display-density
+  "This function returns the number 2 if the screen is a high-density
   screen (called a Retina display on OS X or high-dpi on Windows and
   Linux) and a 1 if not. This information is useful for a program to
   adapt to run at double the pixel density on a screen that supports
   it. Can be used in conjunction with (pixel-density)"
-     ([] (.displayDensity (ap/current-applet)))
-     ([display] (.displayDensity (ap/current-applet) display))))
+  ([] (.displayDensity (ap/current-applet)))
+  ([display] (.displayDensity (ap/current-applet) display)))
 
 (defn
   ^{:requires-bindings true
@@ -1702,8 +1721,7 @@
   current-frame-rate
   "Returns the current framerate"
   []
-  #?(:clj (.frameRate (ap/current-applet))
-     :cljs (.-__frameRate (ap/current-applet))))
+  (.frameRate (ap/current-applet)))
 
 (defn
   ^{:requires-bindings true
@@ -1744,7 +1762,7 @@
      frustum
      "Sets a perspective matrix defined through the parameters. Works
   like glFrustum, except it wipes out the current perspective matrix
-  rather than muliplying itself with it.
+  rather than multiplying itself with it.
   https://en.wikipedia.org/wiki/Frustum"
      [left right bottom top near far]
      (.frustum (current-graphics) (float left) (float right) (float bottom) (float top)
@@ -2169,7 +2187,7 @@
      light-specular
      "Sets the specular color for lights. Like fill, it affects only the
   elements which are created after it in the code. Specular refers to
-  light which bounces off a surface in a perferred direction (rather
+  light which bounces off a surface in a preferred direction (rather
   than bouncing in all directions like a diffuse light) and is used
   for creating highlights. The specular quality of a light interacts
   with the specular material qualities set through the specular and
@@ -2328,15 +2346,14 @@
   #?(:clj (PApplet/map (float val) (float low1) (float high1) (float low2) (float high2))
      :cljs (.map (ap/current-applet) val low1 high1 low2 high2)))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings false
-       :processing-name "PImage.mask()"
-       :category "Image"
-       :subcategory "Loading & Displaying"
-       :added "1.0"}
-     mask-image
-     "Masks part of an image from displaying by loading another image and
+(defn
+  ^{:requires-bindings false
+    :processing-name "PImage.mask()"
+    :category "Image"
+    :subcategory "Loading & Displaying"
+    :added "1.0"}
+  mask-image
+  "Masks part of an image from displaying by loading another image and
   using it as an alpha channel.  This mask image should only contain
   grayscale data, but only the blue color channel is used. The mask
   image needs to be the same size as the image to which it is
@@ -2348,8 +2365,8 @@
 
   This method is useful for creating dynamically generated alpha
   masks."
-     ([^PImage mask] (mask-image (current-graphics) mask))
-     ([^PImage img ^PImage mask] (.mask img mask))))
+  ([^PImage mask] (mask-image (current-graphics) mask))
+  ([^PImage img ^PImage mask] (.mask img mask)))
 
 (defn
   ^{:requires-bindings true
@@ -2712,21 +2729,20 @@
    (.perspective (current-graphics) (float fovy) (float aspect)
                  (float z-near) (float z-far))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "pixelDensity()"
-       :category "Environment"
-       :subcategory nil
-       :added "2.4.0"}
-     pixel-density
-     "It makes it possible for Processing to render using all of the pixels
+(defn
+  ^{:requires-bindings true
+    :processing-name "pixelDensity()"
+    :category "Environment"
+    :subcategory nil
+    :added "2.4.0"}
+  pixel-density
+  "It makes it possible for Processing to render using all of the pixels
   on high resolutions screens like Apple Retina displays and Windows
   High-DPI displays. Possible values 1 or 2. Must be called only from
   :settings handler. To get density of the current screen you can use
   (display-density) function."
-     [density]
-     (.pixelDensity (ap/current-applet) density)))
+  [density]
+  (.pixelDensity (ap/current-applet) density))
 
 (defn
   ^{:requires-bindings true
@@ -2741,17 +2757,10 @@
   the changes. Calls .loadPixels before obtaining the pixel array."
   ([] (pixels (current-graphics)))
 
-  #?(:clj
-     ([^PImage img]
-      (.loadPixels img)
-      (.-pixels img))
+  ([^PImage img]
+   (.loadPixels img)
+   (.-pixels img)))
 
-     :cljs
-     ([img]
-      (.loadPixels img)
-      (let [pix-array (.toArray (.-pixels img))]
-        (set! (.-stored-pix-array img) pix-array)
-        pix-array))))
 #?(:cljs
    (defn
      ^{:requires-bindings true
@@ -2829,7 +2838,7 @@
   stack. Understanding pushing and popping requires understanding the
   concept of a matrix stack. The push-matrix fn saves the current
   coordinate system to the stack and pop-matrix restores the prior
-  coordinate system. push-matrix and pop-matrix are used in conjuction
+  coordinate system. push-matrix and pop-matrix are used in conjunction
   with the other transformation methods and may be embedded to control
   the scope of the transformations."
   []
@@ -2881,16 +2890,17 @@
      []
      (.printCamera (current-graphics))))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "printMatrix()"
-    :category "Transform"
-    :subcategory nil
-    :added "1.0"}
-  print-matrix
-  "Prints the current matrix to std out. Useful for debugging."
-  []
-  (.printMatrix (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "printMatrix()"
+       :category "Transform"
+       :subcategory nil
+       :added "1.0"}
+     print-matrix
+     "Prints the current matrix to std out. Useful for debugging."
+     []
+     (.printMatrix (current-graphics))))
 
 #?(:clj
    (defn
@@ -2917,7 +2927,7 @@
   understanding the concept of a matrix stack. The push-matrix
   function saves the current coordinate system to the stack and
   pop-matrix restores the prior coordinate system. push-matrix and
-  pop-matrix are used in conjuction with the other transformation
+  pop-matrix are used in conjunction with the other transformation
   methods and may be embedded to control the scope of the
   transformations."
   []
@@ -3312,8 +3322,10 @@
   This rotation follows the right-hand rule, so if the vector x y z points
   toward the user, the rotation will be counterclockwise."
   ([angle] (.rotate (current-graphics) (float angle)))
-  ([angle vx vy vz] (.rotate (current-graphics) (float angle)
-                             (float vx) (float vy) (float vz))))
+  ([angle vx vy vz] (.rotate (current-graphics)
+                             (float angle)
+                             #?@(:clj ((float vx) (float vy) (float vz))
+                                 :cljs ((array (float vx) (float vy) (float vz)))))))
 
 (defn
   ^{:requires-bindings true
@@ -3428,8 +3440,8 @@
     :added "1.0"}
   save-frame
   "Saves an image identical to the current display window as a
-  file. May be called multple times - each file saved will have a
-  unique name. Name and image formate may be modified by passing a
+  file. May be called multiple times - each file saved will have a
+  unique name. Name and image format may be modified by passing a
   string parameter of the form \"foo-####.ext\" where foo- can be any
   arbitrary string, #### will be replaced with the current frame id
   and .ext is one of .tiff, .targa, .png, .jpeg or .jpg
@@ -3456,7 +3468,7 @@
   multiply the effect. For example, calling (scale 2) and then
   (scale 1.5) is the same as (scale 3). If scale is called within
   draw, the transformation is reset when the loop begins again. Using
-  this fuction with the z parameter requires specfying :p3d or :opengl
+  this function with the z parameter requires specifying :p3d or :opengl
   as the renderer. This function can be further controlled by
   push-matrix and pop-matrix."
   ([s] (.scale (current-graphics) (float s)))
@@ -3553,7 +3565,7 @@
        :added "2.0"}
      shader
      "Applies the shader specified by the parameters. It's compatible with the :p2d
-  and :p3drenderers, but not with the default :java2d renderer. Optional 'kind'
+  and :p3d renderers, but not with the default :java2d renderer. Optional 'kind'
   parameter - type of shader, either :points, :lines, or :triangles"
      ([shader] (.shader (current-graphics) shader))
      ([shader kind]
@@ -3763,7 +3775,7 @@
   called again with a new parameter and so should not be called prior
   to every sphere statement, unless you wish to render spheres with
   different settings, e.g. using less detail for smaller spheres or
-  ones further away from the camera. To controla the detail of the
+  ones further away from the camera. To control the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
   ([res] (.sphereDetail (current-graphics) (int res)))
@@ -4335,15 +4347,7 @@
   renderer may not seem to use this function in the current Processing
   release, this will always be subject to change."
   ([] (update-pixels (current-graphics)))
-  #?(:clj
-     ([^PImage img] (.updatePixels img))
-
-     :cljs
-     ([img]
-      (when-let [pix-array (.-stored-pix-array img)]
-        (.set (.-pixels img) pix-array)
-        (set! (.-stored-pix-array img) nil))
-      (.updatePixels img))))
+  ([^PImage img] (.updatePixels img)))
 
 (defn
   ^{:requires-bindings true

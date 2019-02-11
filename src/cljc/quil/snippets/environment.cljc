@@ -11,8 +11,8 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/current-frame-rate)) 10 20)
-  (q/text (str (q/target-frame-rate)) 10 40))
+  (q/text (str "(q/current-frame-rate) = " (q/current-frame-rate)) 10 20)
+  (q/text (str "(q/target-frame-rate) = " (q/target-frame-rate)) 10 40))
 
 (defsnippet current-graphics
   "current-graphics"
@@ -101,14 +101,13 @@
            h (q/screen-height)]
        (q/text (str w "x" h) 10 20))))
 
-#?(:clj
-   (defsnippet display-density
-     "display-density"
-     {}
+(defsnippet display-density
+  "display-density"
+  {}
 
-     (q/background 255)
-     (q/fill 0)
-     (q/text-num (q/display-density) 10 20)))
+  (q/background 255)
+  (q/fill 0)
+  (q/text-num (q/display-density) 10 20))
 
 #?(:clj
    (defsnippet pixel-density
