@@ -58,61 +58,48 @@
     (when-not (zero? (.-width im))
       (q/image im 0 0))))
 
-#?(:clj
-   (defsnippet mask-image
-     "mask-image"
-     {:renderer :p3d}
+(defsnippet mask-image
+  "mask-image"
+  {}
 
-     (q/background 255)
-     (comment "define 2 graphics and mask to apply to them")
-     (let [gr (q/create-graphics 100 100 :p3d)
-           gr2 (q/create-graphics 100 100 :p3d)
-           mask (q/create-graphics 100 100 :p3d)]
+  (q/background 255)
+  (comment "define 2 images and a mask to apply to them")
+  (let [im (q/create-image 100 100 #?(:clj :argb))
+        im2 (q/create-image 100 100 #?(:clj :argb))
+        mask (q/create-image 100 100 #?(:clj :argb))]
 
-       (comment "first graphic is blue square with red crossing")
-       (q/with-graphics gr
-         (q/background 0 0 255)
-         (q/stroke-weight 3)
-         (q/stroke 255 0 0)
-         (q/line 0 0 100 100)
-         (q/line 0 100 100 0))
+    (comment "first image is a blue square with a red cross")
+    (dotimes [x 100]
+      (dotimes [y 100]
+        (if (or (< 0 (- x y) 5) (< 95 (+ x y) 100))
+          (q/set-pixel im x y (q/color 255 0 0 255))
+          (q/set-pixel im x y (q/color 0 0 255)))))
+    #?(:cljs (q/update-pixels im))
 
-       (comment "second graphic is green cross")
-       (q/with-graphics gr2
-         (q/background 255)
-         (q/stroke 0 255 0)
-         (q/stroke-weight 5)
-         (q/line 0 50 100 50)
-         (q/line 50 0 50 100))
+    (comment "second image is a green cross")
+    (dotimes [x 100]
+      (dotimes [y 5]
+        (q/set-pixel im2 (+ y 47) x (q/color 0 255 0))
+        (q/set-pixel im2 x (+ y 47) (q/color 0 255 0))))
+    #?(:cljs (q/update-pixels im2))
 
-       (comment "mask is grey circles")
-       (q/with-graphics mask
-         (q/background 0)
-         (q/stroke-weight 5)
-         (q/no-fill)
-         (q/stroke 255)
-         (q/ellipse 50 50 10 10)
-         (q/stroke 200)
-         (q/ellipse 50 50 30 30)
-         (q/stroke 150)
-         (q/ellipse 50 50 50 50)
-         (q/stroke 100)
-         (q/ellipse 50 50 70 70)
-         (q/stroke 50)
-         (q/ellipse 50 50 90 90))
+    (comment "mask is rectangles with different shades of gray")
+    (dotimes [x 100]
+      (dotimes [y 100]
+        (q/set-pixel mask x y (q/color 0 (* 40 (+ (quot x 20) (quot y 20)))))))
+    #?(:cljs (q/update-pixels mask))
 
-       (comment "draw first graphic, mask and graphic with mask applied")
-       (q/image gr 20 20)
-       (q/image mask 140 20)
-       (q/mask-image gr mask)
-       (q/image gr 260 20)
+    (comment "draw first image, mask and image with mask applied")
+    (q/image im 20 20)
+    (q/image mask 140 20)
+    (q/mask-image im mask)
+    (q/image im 260 20)
 
-       (comment "draw second graphic, mask and graphic with mask applied")
-       (q/image gr2 20 140)
-       (q/image mask 140 140)
-       (q/with-graphics gr2
-         (q/mask-image mask))
-       (q/image gr2 260 140))))
+    (comment "draw second image, mask and image with mask applied")
+    (q/image im2 20 140)
+    (q/image mask 140 140)
+    (q/mask-image im2 mask)
+    (q/image im2 260 140)))
 
 (defsnippet no-tint
   "no-tint"
