@@ -1509,17 +1509,18 @@
   []
   (.endContour (current-graphics)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "endRaw()"
-    :category "Output"
-    :subcategory "Files"
-    :added "1.0"}
-  end-raw
-  "Complement to begin-raw; they must always be used together. See
-  the begin-raw docstring for details."
-  []
-  (.endRaw (current-graphics)))
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "endRaw()"
+       :category "Output"
+       :subcategory "Files"
+       :added "1.0"}
+     end-raw
+     "Complement to begin-raw; they must always be used together. See
+     the begin-raw docstring for details."
+     []
+     (.endRaw (current-graphics))))
 
 (defn
   ^{:requires-bindings true
@@ -2083,7 +2084,7 @@
   "true if any key is currently pressed, false otherwise."
   []
   #?(:clj (.-keyPressed (ap/current-applet))
-     :cljs (.-__keyPressed (ap/current-applet))))
+     :cljs (.-keyIsPressed (ap/current-applet))))
 
 #?(:cljs
    (defn
@@ -2425,9 +2426,9 @@
 
        :cljs
        (condp = button-code
-         37 :left
-         39 :right
-         3  :center
+         (aget js/p5.prototype "LEFT") :left
+         (aget js/p5.prototype "RIGHT") :right
+         (aget js/p5.prototype "CENTER") :center
          nil))))
 
 (defn
@@ -2442,7 +2443,7 @@
   and false if a button is not pressed."
   []
   #?(:clj (.-mousePressed (ap/current-applet))
-     :cljs (.-__mousePressed (ap/current-applet))))
+     :cljs (.-mouseIsPressed (ap/current-applet))))
 
 (defn
   ^{:requires-bindings true
@@ -3432,14 +3433,15 @@
   [filename]
   (.save (current-graphics) (str filename)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "saveFrame()"
-    :category "Output"
-    :subcategory "Image"
-    :added "1.0"}
-  save-frame
-  "Saves an image identical to the current display window as a
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "saveFrame()"
+       :category "Output"
+       :subcategory "Image"
+       :added "1.0"}
+     save-frame
+     "Saves an image identical to the current display window as a
   file. May be called multiple times - each file saved will have a
   unique name. Name and image format may be modified by passing a
   string parameter of the form \"foo-####.ext\" where foo- can be any
@@ -3448,9 +3450,9 @@
 
   Examples:
   (save-frame)
-  (save-frame \"pretty-pic-####.jpg\")"
-  ([] (.saveFrame (ap/current-applet)))
-  ([name] (.saveFrame (ap/current-applet) (str name))))
+     (save-frame \"pretty-pic-####.jpg\")"
+     ([] (.saveFrame (ap/current-applet)))
+     ([name] (.saveFrame (ap/current-applet) (str name)))))
 
 (defn
   ^{:requires-bindings true

@@ -16,14 +16,13 @@
      (q/box 100)
      (q/end-raw)))
 
-#?(:clj
-   (defsnippet save
-     "save"
-     {:renderer :p3d}
+(defsnippet save
+  "save"
+  {:renderer :p3d}
 
-     (q/camera 150 150 150 0 0 0 0 0 1)
-     (q/box 100)
-     (q/save "generated/box.png")))
+  (q/camera 150 150 150 0 0 0 0 0 1)
+  (q/box 100)
+  (q/save "generated/box.png"))
 
 #?(:clj
    (defsnippet save-frame

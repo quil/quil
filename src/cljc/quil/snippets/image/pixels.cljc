@@ -7,34 +7,33 @@
 
 (defsnippet blend
   "blend"
-  {}
+  {:setup (q/no-loop)}
 
   (q/background 255 100 20 50)
 
-  (let [gr (q/create-graphics 50 50)
-        modes [:blend :add :subtract :darkest :lightest :difference :exclusion
-               :multiply :screen :overlay :hard-light :soft-light :dodge :burn]
+  (let [im (q/create-image 50 50 #?(:clj :rgb))
+        modes [#?(:cljs :replace) :blend :add #?(:clj :subtract) :darkest
+               :lightest :difference :exclusion :multiply :screen
+               :overlay :hard-light :soft-light :dodge :burn]
         splitted (partition-all 5 modes)]
-    (comment "draw 3 circles of different color on the graphics")
-    (q/with-graphics gr
-      (q/background 40 200 255 200)
-      (q/fill 255 0 0)
-      (q/ellipse 12 12 20 20)
-      (q/fill 0 255 0)
-      (q/ellipse 38 12 20 20)
-      (q/fill 0 0 255)
-      (q/ellipse 25 38 20 20))
+    (comment "draw 3 squares of different color on the graphics")
+    (dotimes [x 10]
+      (dotimes [y 10]
+        (q/set-pixel im (+ x 10) (+ y 10) (q/color 255 0 0))
+        (q/set-pixel im (+ x 30) (+ y 10) (q/color 0 255 0))
+        (q/set-pixel im (+ x 20) (+ y 30) (q/color 0 0 255))))
+    #?(:cljs (q/update-pixels im))
 
-    (comment "all possible blended modes")
+    (comment "draw all possible blended modes")
     (dotimes [row (count splitted)]
       (dotimes [col (count (nth splitted row))]
         (let [mode (nth (nth splitted row) col)]
           (comment "blend with sketch itself")
           (q/blend 400 0 50 50 (* col 55) (* row 55) 50 50 mode)
-          (comment "blend with graphics")
-          (q/blend gr 0 0 50 50 (* col 55) (+ 170 (* row 55)) 50 50 mode)
-          (comment "blend graphics to graphics")
-          (q/blend gr (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode))))))
+          (comment "blend with image")
+          (q/blend im 0 0 50 50 (* col 55) (+ 170 (* row 55)) 50 50 mode)
+          (comment "blend image to image")
+          (q/blend im (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode))))))
 
 (defsnippet copy
   "copy"
