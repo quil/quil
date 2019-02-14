@@ -3225,7 +3225,7 @@
 
   [mode]
   (let [mode (u/resolve-constant-key mode rect-modes)]
-    (.rectMode (current-graphics) (int mode))))
+    (.rectMode (current-graphics) mode)))
 
 (defn
   ^{:requires-bindings true
