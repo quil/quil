@@ -15,6 +15,29 @@
   (q/with-translation [0 100 0]
     (q/box 70 100 50)))
 
+#?(:cljs
+   (defsnippet cone
+     "cone"
+     {:renderer :p3d}
+
+     (q/rotate-x (* q/PI 1.25))
+     (q/cone 80 140)))
+
+#?(:cljs
+   (defsnippet cylinder
+     "cylinder"
+     {:renderer :p3d}
+
+     (q/rotate-x (* q/PI 1.25))
+     (q/cylinder 40 140)))
+
+#?(:cljs
+   (defsnippet ellipsoid
+     "ellipsoid"
+     {:renderer :p3d}
+
+     (q/ellipsoid 40 60 80)))
+
 (defsnippet sphere
   "sphere"
   {:renderer :p3d}
@@ -38,3 +61,10 @@
      (q/with-translation [0 100 0]
        (q/sphere 70))))
 
+#?(:cljs
+   (defsnippet torus
+     "torus"
+     {:renderer :p3d}
+
+     (q/rotate-x (/ q/PI 4))
+     (q/torus 70 20)))
