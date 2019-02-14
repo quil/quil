@@ -110,27 +110,26 @@
   (q/curve-vertex 0 0 0)
   (q/end-shape :close))
 
-#?(:clj
-   (defsnippet quadratic-vertex
-     "quadratic-vertex"
-     {:renderer :p3d}
+(defsnippet quadratic-vertex
+  "quadratic-vertex"
+  {:renderer :p3d}
 
-     (q/camera 50 200 50 50 0 0 0 0 -1)
-     (q/line 0 0 0 0 0 100)
-     (q/line 0 0 0 0 100 0)
-     (q/line 0 0 0 100 0 0)
-     (q/begin-shape)
-     (q/vertex 0 0)
-     (q/quadratic-vertex 30 50 10 100)
-     (q/quadratic-vertex 50 -50 90 100)
-     (q/quadratic-vertex 80 50 100 0)
-     (q/end-shape :close)
-     (q/begin-shape)
-     (q/vertex 0 0 0)
-     (q/quadratic-vertex 30 0 50 10 0 100)
-     (q/quadratic-vertex 50 0 -50 90 0 100)
-     (q/quadratic-vertex 80 0 50 100 0 0)
-     (q/end-shape :close)))
+  (q/camera 50 200 50 50 0 0 0 0 -1)
+  (q/line 0 0 0 0 0 100)
+  (q/line 0 0 0 0 100 0)
+  (q/line 0 0 0 100 0 0)
+  (q/begin-shape)
+  (q/vertex 0 0)
+  (q/quadratic-vertex 30 50 10 100)
+  (q/quadratic-vertex 50 -50 90 100)
+  (q/quadratic-vertex 80 50 100 0)
+  (q/end-shape :close)
+  (q/begin-shape)
+  (q/vertex 0 0 0)
+  (q/quadratic-vertex 30 0 50 10 0 100)
+  (q/quadratic-vertex 50 0 -50 90 0 100)
+  (q/quadratic-vertex 80 0 50 100 0 0)
+  (q/end-shape :close))
 
 #?(:clj
    (defsnippet texture
