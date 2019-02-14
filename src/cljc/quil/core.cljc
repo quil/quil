@@ -3761,14 +3761,15 @@
   "Generates a hollow ball made from tessellated triangles."
   [radius] (.sphere (current-graphics) (float radius)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "sphereDetail()"
-    :category "Shape"
-    :subcategory "3D Primitives"
-    :added "1.0"}
-  sphere-detail
-  "Controls the detail used to render a sphere by adjusting the number
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "sphereDetail()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "1.0"}
+     sphere-detail
+     "Controls the detail used to render a sphere by adjusting the number
   of vertices of the sphere mesh. The default resolution is 30, which
   creates a fairly detailed sphere definition with vertices every
   360/30 = 12 degrees. If you're going to render a great number of
@@ -3780,8 +3781,8 @@
   ones further away from the camera. To control the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
-  ([res] (.sphereDetail (current-graphics) (int res)))
-  ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres))))
+     ([res] (.sphereDetail (current-graphics) (int res)))
+     ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres)))))
 
 #?(:clj
    (defn
