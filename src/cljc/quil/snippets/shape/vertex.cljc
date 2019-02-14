@@ -5,22 +5,21 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-#?(:clj
-   (defsnippet begin-contour-end-contour
-     ["begin-contour" "end-contour"]
-     {:renderer :p2d}
+(defsnippet begin-contour-end-contour
+  ["begin-contour" "end-contour"]
+  {:renderer :p2d}
 
-     (q/stroke 255 0 0)
-     (q/begin-shape)
-     (q/vertex 250 20)
-     (q/vertex 400 400)
-     (q/vertex 50 400)
-     (q/begin-contour)
-     (q/vertex 200 200)
-     (q/vertex 300 200)
-     (q/vertex 250 380)
-     (q/end-contour)
-     (q/end-shape :close)))
+  (q/stroke 255 0 0)
+  (q/begin-shape)
+  (q/vertex 250 20)
+  (q/vertex 400 400)
+  (q/vertex 50 400)
+  (q/begin-contour)
+  (q/vertex 200 200)
+  (q/vertex 300 200)
+  (q/vertex 250 380)
+  (q/end-contour)
+  (q/end-shape :close))
 
 (defsnippet begin-shape-end-shape
   ["begin-shape" "end-shape"]
