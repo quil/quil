@@ -1596,7 +1596,7 @@
         :cljs nil))
    (.endShape (current-graphics)
               #?(:clj PApplet/CLOSE
-                 :cljs 2))))
+                 :cljs (aget js/p5.prototype "CLOSE")))))
 
 (defn
   ^{:requires-bindings true
