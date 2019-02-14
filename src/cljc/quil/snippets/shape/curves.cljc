@@ -82,7 +82,7 @@
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/bezier-tangent 0 5 7 0 v)
-          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
+          txt (str "(q/bezier-tangent 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
 (defsnippet curve
@@ -119,7 +119,7 @@
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/curve-point 0 5 7 0 v)
-          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
+          txt (str "(q/curve-point 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
 (defsnippet curve-tangent
@@ -130,7 +130,7 @@
   (dotimes [i 5]
     (let [v (/ i 4)
           res (q/curve-tangent 0 5 7 0 v)
-          txt (str "(q/bezier-point 0 5 7 0 " v ") = " res)]
+          txt (str "(q/curve-tangent 0 5 7 0 " v ") = " res)]
       (q/text txt 10 (+ 20 (* i 20))))))
 
 (defsnippet curve-tightness
