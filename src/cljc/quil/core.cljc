@@ -999,6 +999,28 @@
    (let [mode (u/resolve-constant-key mode color-modes)]
      (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z) (float max-a)))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cone()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     cone
+     "Draw a cone with given radius and height.
+      Optional parameters:
+        detail-x: number of segments, the more segments the smoother geometry default is 24
+        detail-y: number of segments, the more segments the smoother geometry default is 24
+        cap:      whether to draw the base of the cone"
+     ([radius height]
+      (.cone (current-graphics) (float radius) (float height)))
+     ([radius height detail-x]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x)))
+     ([radius height detail-x detail-y]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x) (int detail-y)))
+     ([radius height detail-x detail-y cap]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x) (int detail-y) (boolean cap)))))
+
 (defn
   ^{:requires-bindings false
     :processing-name "constrain()"
@@ -1337,6 +1359,21 @@
   ([x y] (.curveVertex (current-graphics) (float x) (float y)))
   ([x y z] (.curveVertex (current-graphics) (float x) (float y) (float z))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cylinder()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     cylinder
+     "Draw a cylinder with given radius and height."
+     ([radius height]
+      (.cylinder (current-graphics) (float radius) (float height)))
+
+     ([radius height detail-x detail-y bottom-cap top-cap]
+      (.cylinder (current-graphics) (float radius) (float height) (int detail-x) (int detail-y) (boolean bottom-cap) (boolean top-cap)))))
+
 (defn
   ^{:requires-bindings false
     :processing-name "day()"
@@ -1477,6 +1514,25 @@
   [mode]
   (let [mode (u/resolve-constant-key mode ellipse-modes)]
     (.ellipseMode (current-graphics) mode)))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "ellipsoid()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     ellipsoid
+     "Draw an ellipsoid with given radius
+       Optional parameters:
+         detail-x: number of segments, the more segments the smoother geometry default is 24
+         detail-y: number of segments, the more segments the smoother geometry default is 16"
+     ([radius-x radius-y radius-z]
+      (.ellipsoid (current-graphics) radius-x radius-y radius-z))
+     ([radius-x radius-y radius-z detail-x]
+      (.ellipsoid (current-graphics) (float radius-x) (float radius-y) (float radius-z) (int detail-x)))
+     ([radius-x radius-y radius-z detail-x detail-y]
+      (.ellipsoid (current-graphics) (float radius-x) (float radius-y) (float radius-z) (int detail-x) (detail-y)))))
 
 #?(:clj
    (defn
@@ -4267,6 +4323,25 @@
   ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
   ([r g b] (.tint (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "torus()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     torus
+     "Draw a torus with given radius and tube radius.
+      Optional parameters:
+        detail-x: number of segments, the more segments the smoother geometry default is 24
+        detail-y: number of segments, the more segments the smoother geometry default is 16"
+     ([radius tube-radius]
+      (.torus (current-graphics) (float radius) (float tube-radius)))
+     ([radius tube-radius detail-x]
+      (.torus (current-graphics) (float radius) (float tube-radius) (int detail-x)))
+     ([radius tube-radius detail-x detail-y]
+      (.torus (current-graphics) (float radius) (float tube-radius) (int detail-x) (int detail-y)))))
 
 (defn
   ^{:requires-bindings true
