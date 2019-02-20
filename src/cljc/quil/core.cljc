@@ -1557,7 +1557,7 @@
     :subcategory "Setting"
     :added "1.0"}
   fill
-  "Sets the color used to fill shapes. For example, if you run fill(204, 102, 0),
+  "Sets the color used to fill shapes. For example, if you run (fill 204 102 0),
   all subsequent shapes will be filled with orange.  This function casts all input as a float.
   If nil is passed it removes any fill color; equivalent to (no-fill)."
   ([gray]
