@@ -1895,15 +1895,16 @@
   []
   (.-height (ap/current-applet)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "hint()"
-    :processing-link nil
-    :category "Rendering"
-    :subcategory nil
-    :added "1.0"}
-  hint
-  "Set various hints and hacks for the renderer. This is used to
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "hint()"
+       :processing-link nil
+       :category "Rendering"
+       :subcategory nil
+       :added "1.0"}
+     hint
+     "Set various hints and hacks for the renderer. This is used to
   handle obscure rendering features that cannot be implemented in a
   consistent manner across renderers. Many options will often graduate
   to standard features instead of hints over time.
@@ -1959,11 +1960,11 @@
   :enable-texture-mipmaps
   :disable-texture-mipmaps
 "
-  [hint-type]
-  (let [hint-type (if (keyword? hint-type)
-                    (get hint-options hint-type)
-                    hint-type)]
-    (.hint (current-graphics) (int hint-type))))
+     [hint-type]
+     (let [hint-type (if (keyword? hint-type)
+                       (get hint-options hint-type)
+                       hint-type)]
+       (.hint (current-graphics) (int hint-type)))))
 
 (defn
   ^{:requires-bindings false

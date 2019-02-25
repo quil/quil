@@ -5,31 +5,32 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-(defsnippet hint
-  "hint"
-  {:renderer :p3d}
+#?(:clj
+   (defsnippet hint
+     "hint"
+     {:renderer :p3d}
 
-  (let [hints [:enable-async-saveframe
-               :disable-async-saveframe
-               :enable-depth-test
-               :disable-depth-test
-               :enable-depth-sort
-               :disable-depth-sort
-               :enable-opengl-errors
-               :disable-opengl-errors
-               :enable-depth-mask
-               :disable-depth-mask
-               :enable-optimized-stroke
-               :disable-optimized-stroke
-               :enable-stroke-perspective
-               :disable-stroke-perspective
-               :enable-stroke-pure
-               :disable-stroke-pure
-               :enable-texture-mipmaps
-               :disable-texture-mipmaps]]
-    (doseq [h hints]
-      (q/hint h)))
-  (q/ellipse 250 250 400 200))
+     (let [hints [:enable-async-saveframe
+                  :disable-async-saveframe
+                  :enable-depth-test
+                  :disable-depth-test
+                  :enable-depth-sort
+                  :disable-depth-sort
+                  :enable-opengl-errors
+                  :disable-opengl-errors
+                  :enable-depth-mask
+                  :disable-depth-mask
+                  :enable-optimized-stroke
+                  :disable-optimized-stroke
+                  :enable-stroke-perspective
+                  :disable-stroke-perspective
+                  :enable-stroke-pure
+                  :disable-stroke-pure
+                  :enable-texture-mipmaps
+                  :disable-texture-mipmaps]]
+       (doseq [h hints]
+         (q/hint h)))
+     (q/ellipse 250 250 400 200)))
 
 (defsnippet with-graphics
   "with-graphics"
