@@ -408,11 +408,10 @@
    (.arc (current-graphics) (float x) (float y) (float width) (float height)
          (float start) (float stop)))
 
-  #?(:clj
-     ([x y width height start stop mode]
-      (let [arc-mode (u/resolve-constant-key mode arc-modes)]
-        (.arc (current-graphics) (float x) (float y) (float width) (float height)
-              (float start) (float stop) (int arc-mode))))))
+  ([x y width height start stop mode]
+   (let [arc-mode (u/resolve-constant-key mode arc-modes)]
+     (.arc (current-graphics) (float x) (float y) (float width) (float height)
+           (float start) (float stop) arc-mode))))
 
 (defn
   ^{:requires-bindings false
