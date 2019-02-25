@@ -109,13 +109,11 @@
   (q/fill 0)
   (q/text-num (q/display-density) 10 20))
 
-#?(:clj
-   (defsnippet pixel-density
-     "pixel-density"
-     {:settings #(q/pixel-density 1)}
+(defsnippet pixel-density
+  "pixel-density"
+  {:settings #(q/pixel-density 1)}
 
-     (q/background 255)
-     (q/fill 0)
-     (q/ellipse 102 102 200 200)
-     (q/triangle 200 200 400 300 300 400)))
-
+  (q/background 255)
+  (q/fill 0)
+  (q/ellipse 102 102 200 200)
+  (q/triangle 200 200 400 300 300 400))
