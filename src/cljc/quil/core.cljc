@@ -408,11 +408,10 @@
    (.arc (current-graphics) (float x) (float y) (float width) (float height)
          (float start) (float stop)))
 
-  #?(:clj
-     ([x y width height start stop mode]
-      (let [arc-mode (u/resolve-constant-key mode arc-modes)]
-        (.arc (current-graphics) (float x) (float y) (float width) (float height)
-              (float start) (float stop) (int arc-mode))))))
+  ([x y width height start stop mode]
+   (let [arc-mode (u/resolve-constant-key mode arc-modes)]
+     (.arc (current-graphics) (float x) (float y) (float width) (float height)
+           (float start) (float stop) arc-mode))))
 
 (defn
   ^{:requires-bindings false
@@ -999,6 +998,28 @@
    (let [mode (u/resolve-constant-key mode color-modes)]
      (.colorMode (current-graphics) mode (float max-x) (float max-y) (float max-z) (float max-a)))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cone()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     cone
+     "Draw a cone with given radius and height.
+      Optional parameters:
+        detail-x: number of segments, the more segments the smoother geometry default is 24
+        detail-y: number of segments, the more segments the smoother geometry default is 24
+        cap:      whether to draw the base of the cone"
+     ([radius height]
+      (.cone (current-graphics) (float radius) (float height)))
+     ([radius height detail-x]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x)))
+     ([radius height detail-x detail-y]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x) (int detail-y)))
+     ([radius height detail-x detail-y cap]
+      (.cone (current-graphics) (float radius) (float height) (int detail-x) (int detail-y) (boolean cap)))))
+
 (defn
   ^{:requires-bindings false
     :processing-name "constrain()"
@@ -1337,6 +1358,21 @@
   ([x y] (.curveVertex (current-graphics) (float x) (float y)))
   ([x y z] (.curveVertex (current-graphics) (float x) (float y) (float z))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "cylinder()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     cylinder
+     "Draw a cylinder with given radius and height."
+     ([radius height]
+      (.cylinder (current-graphics) (float radius) (float height)))
+
+     ([radius height detail-x detail-y bottom-cap top-cap]
+      (.cylinder (current-graphics) (float radius) (float height) (int detail-x) (int detail-y) (boolean bottom-cap) (boolean top-cap)))))
+
 (defn
   ^{:requires-bindings false
     :processing-name "day()"
@@ -1478,6 +1514,25 @@
   (let [mode (u/resolve-constant-key mode ellipse-modes)]
     (.ellipseMode (current-graphics) mode)))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "ellipsoid()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     ellipsoid
+     "Draw an ellipsoid with given radius
+       Optional parameters:
+         detail-x: number of segments, the more segments the smoother geometry default is 24
+         detail-y: number of segments, the more segments the smoother geometry default is 16"
+     ([radius-x radius-y radius-z]
+      (.ellipsoid (current-graphics) radius-x radius-y radius-z))
+     ([radius-x radius-y radius-z detail-x]
+      (.ellipsoid (current-graphics) (float radius-x) (float radius-y) (float radius-z) (int detail-x)))
+     ([radius-x radius-y radius-z detail-x detail-y]
+      (.ellipsoid (current-graphics) (float radius-x) (float radius-y) (float radius-z) (int detail-x) (detail-y)))))
+
 #?(:clj
    (defn
      ^{:requires-bindings true
@@ -1540,7 +1595,7 @@
         :cljs nil))
    (.endShape (current-graphics)
               #?(:clj PApplet/CLOSE
-                 :cljs 2))))
+                 :cljs (aget js/p5.prototype "CLOSE")))))
 
 (defn
   ^{:requires-bindings true
@@ -1840,15 +1895,16 @@
   []
   (.-height (ap/current-applet)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "hint()"
-    :processing-link nil
-    :category "Rendering"
-    :subcategory nil
-    :added "1.0"}
-  hint
-  "Set various hints and hacks for the renderer. This is used to
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "hint()"
+       :processing-link nil
+       :category "Rendering"
+       :subcategory nil
+       :added "1.0"}
+     hint
+     "Set various hints and hacks for the renderer. This is used to
   handle obscure rendering features that cannot be implemented in a
   consistent manner across renderers. Many options will often graduate
   to standard features instead of hints over time.
@@ -1904,11 +1960,11 @@
   :enable-texture-mipmaps
   :disable-texture-mipmaps
 "
-  [hint-type]
-  (let [hint-type (if (keyword? hint-type)
-                    (get hint-options hint-type)
-                    hint-type)]
-    (.hint (current-graphics) (int hint-type))))
+     [hint-type]
+     (let [hint-type (if (keyword? hint-type)
+                       (get hint-options hint-type)
+                       hint-type)]
+       (.hint (current-graphics) (int hint-type)))))
 
 (defn
   ^{:requires-bindings false
@@ -3169,7 +3225,7 @@
 
   [mode]
   (let [mode (u/resolve-constant-key mode rect-modes)]
-    (.rectMode (current-graphics) (int mode))))
+    (.rectMode (current-graphics) mode)))
 
 (defn
   ^{:requires-bindings true
@@ -3761,14 +3817,15 @@
   "Generates a hollow ball made from tessellated triangles."
   [radius] (.sphere (current-graphics) (float radius)))
 
-(defn
-  ^{:requires-bindings true
-    :processing-name "sphereDetail()"
-    :category "Shape"
-    :subcategory "3D Primitives"
-    :added "1.0"}
-  sphere-detail
-  "Controls the detail used to render a sphere by adjusting the number
+#?(:clj
+   (defn
+     ^{:requires-bindings true
+       :processing-name "sphereDetail()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "1.0"}
+     sphere-detail
+     "Controls the detail used to render a sphere by adjusting the number
   of vertices of the sphere mesh. The default resolution is 30, which
   creates a fairly detailed sphere definition with vertices every
   360/30 = 12 degrees. If you're going to render a great number of
@@ -3780,8 +3837,8 @@
   ones further away from the camera. To control the detail of the
   horizontal and vertical resolution independently, use the version of
   the functions with two parameters."
-  ([res] (.sphereDetail (current-graphics) (int res)))
-  ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres))))
+     ([res] (.sphereDetail (current-graphics) (int res)))
+     ([ures vres] (.sphereDetail (current-graphics) (int ures) (int vres)))))
 
 #?(:clj
    (defn
@@ -4266,6 +4323,25 @@
   ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
   ([r g b] (.tint (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
+
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :processing-name "torus()"
+       :category "Shape"
+       :subcategory "3D Primitives"
+       :added "3.0.0"}
+     torus
+     "Draw a torus with given radius and tube radius.
+      Optional parameters:
+        detail-x: number of segments, the more segments the smoother geometry default is 24
+        detail-y: number of segments, the more segments the smoother geometry default is 16"
+     ([radius tube-radius]
+      (.torus (current-graphics) (float radius) (float tube-radius)))
+     ([radius tube-radius detail-x]
+      (.torus (current-graphics) (float radius) (float tube-radius) (int detail-x)))
+     ([radius tube-radius detail-x detail-y]
+      (.torus (current-graphics) (float radius) (float tube-radius) (int detail-x) (int detail-y)))))
 
 (defn
   ^{:requires-bindings true

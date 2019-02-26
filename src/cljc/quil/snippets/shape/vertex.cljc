@@ -5,22 +5,21 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-#?(:clj
-   (defsnippet begin-contour-end-contour
-     ["begin-contour" "end-contour"]
-     {:renderer :p2d}
+(defsnippet begin-contour-end-contour
+  ["begin-contour" "end-contour"]
+  {:renderer :p2d}
 
-     (q/stroke 255 0 0)
-     (q/begin-shape)
-     (q/vertex 250 20)
-     (q/vertex 400 400)
-     (q/vertex 50 400)
-     (q/begin-contour)
-     (q/vertex 200 200)
-     (q/vertex 300 200)
-     (q/vertex 250 380)
-     (q/end-contour)
-     (q/end-shape :close)))
+  (q/stroke 255 0 0)
+  (q/begin-shape)
+  (q/vertex 250 20)
+  (q/vertex 400 400)
+  (q/vertex 50 400)
+  (q/begin-contour)
+  (q/vertex 200 200)
+  (q/vertex 300 200)
+  (q/vertex 250 380)
+  (q/end-contour)
+  (q/end-shape :close))
 
 (defsnippet begin-shape-end-shape
   ["begin-shape" "end-shape"]
@@ -111,27 +110,26 @@
   (q/curve-vertex 0 0 0)
   (q/end-shape :close))
 
-#?(:clj
-   (defsnippet quadratic-vertex
-     "quadratic-vertex"
-     {:renderer :p3d}
+(defsnippet quadratic-vertex
+  "quadratic-vertex"
+  {:renderer :p3d}
 
-     (q/camera 50 200 50 50 0 0 0 0 -1)
-     (q/line 0 0 0 0 0 100)
-     (q/line 0 0 0 0 100 0)
-     (q/line 0 0 0 100 0 0)
-     (q/begin-shape)
-     (q/vertex 0 0)
-     (q/quadratic-vertex 30 50 10 100)
-     (q/quadratic-vertex 50 -50 90 100)
-     (q/quadratic-vertex 80 50 100 0)
-     (q/end-shape :close)
-     (q/begin-shape)
-     (q/vertex 0 0 0)
-     (q/quadratic-vertex 30 0 50 10 0 100)
-     (q/quadratic-vertex 50 0 -50 90 0 100)
-     (q/quadratic-vertex 80 0 50 100 0 0)
-     (q/end-shape :close)))
+  (q/camera 50 200 50 50 0 0 0 0 -1)
+  (q/line 0 0 0 0 0 100)
+  (q/line 0 0 0 0 100 0)
+  (q/line 0 0 0 100 0 0)
+  (q/begin-shape)
+  (q/vertex 0 0)
+  (q/quadratic-vertex 30 50 10 100)
+  (q/quadratic-vertex 50 -50 90 100)
+  (q/quadratic-vertex 80 50 100 0)
+  (q/end-shape :close)
+  (q/begin-shape)
+  (q/vertex 0 0 0)
+  (q/quadratic-vertex 30 0 50 10 0 100)
+  (q/quadratic-vertex 50 0 -50 90 0 100)
+  (q/quadratic-vertex 80 0 50 100 0 0)
+  (q/end-shape :close))
 
 #?(:clj
    (defsnippet texture
