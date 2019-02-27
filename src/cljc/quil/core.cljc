@@ -4450,7 +4450,8 @@
   changed with texture-mode."
   ([x y] (.vertex (current-graphics) (float x) (float y)))
   ([x y z] (.vertex (current-graphics) (float x) (float y) (float z)))
-  ([x y u v] (.vertex (current-graphics) (float x) (float y) (float u) (float v)))
+  ([x y u v] #?(:clj (.vertex (current-graphics) (float x) (float y) (float u) (float v))
+                :cljs (.vertex (current-graphics) (float x) (float y) 0 (float u) (float v))))
   ([x y z u v]
    (.vertex (current-graphics) (float x) (float y) (float z) (float u) (float v))))
 

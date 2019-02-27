@@ -227,50 +227,49 @@
          (q/vertex 0 200 0 200)
          (q/end-shape :close)))))
 
-#?(:clj
-   (defsnippet vertex
-     "vertex"
-     {:renderer :p3d}
+(defsnippet vertex
+  "vertex"
+  {:renderer :p3d}
 
-     (q/camera 100 400 200 100 0 0 0 0 -1)
-     (q/line 0 0 0 0 0 100)
-     (q/line 0 0 0 0 100 0)
-     (q/line 0 0 0 100 0 0)
+  (q/camera 100 400 200 100 0 0 0 0 -1)
+  (q/line 0 0 0 0 0 100)
+  (q/line 0 0 0 0 100 0)
+  (q/line 0 0 0 100 0 0)
 
-     (let [txtr (q/create-graphics 100 100)]
-       (q/with-graphics txtr
-         (q/background 255)
-         (q/fill 255 0 0)
-         (q/rect 0 60 100 40)
-         (q/fill 0 150 0)
-         (q/rect 0 0 100 60))
+  (let [txtr (q/create-graphics 100 100)]
+    (q/with-graphics txtr
+      (q/background 255)
+      (q/fill 255 0 0)
+      (q/rect 0 60 100 40)
+      (q/fill 0 150 0)
+      (q/rect 0 0 100 60))
 
-       (q/begin-shape)
-       (q/vertex 0 0)
-       (q/vertex 100 0)
-       (q/vertex 100 100)
-       (q/vertex 0 100)
-       (q/end-shape :close)
+    (q/begin-shape)
+    (q/vertex 0 0)
+    (q/vertex 100 0)
+    (q/vertex 100 100)
+    (q/vertex 0 100)
+    (q/end-shape :close)
 
-       (q/begin-shape)
-       (q/vertex 0 0 0)
-       (q/vertex 100 0 0)
-       (q/vertex 100 0 100)
-       (q/vertex 0 0 100)
-       (q/end-shape :close)
+    (q/begin-shape)
+    (q/vertex 0 0 0)
+    (q/vertex 100 0 0)
+    (q/vertex 100 0 100)
+    (q/vertex 0 0 100)
+    (q/end-shape :close)
 
-       (q/begin-shape)
-       (q/texture txtr)
-       (q/vertex 100 0 0 0)
-       (q/vertex 200 0 100 0)
-       (q/vertex 200 100 100 100)
-       (q/vertex 100 100 0 100)
-       (q/end-shape :close)
+    (q/begin-shape)
+    (q/texture txtr)
+    (q/vertex 100 0 0 0)
+    (q/vertex 200 0 100 0)
+    (q/vertex 200 100 100 100)
+    (q/vertex 100 100 0 100)
+    (q/end-shape :close)
 
-       (q/begin-shape)
-       (q/texture txtr)
-       (q/vertex 100 0 0 0 0)
-       (q/vertex 200 0 0 100 0)
-       (q/vertex 200 0 100 100 100)
-       (q/vertex 100 0 100 0 100)
-       (q/end-shape :close))))
+    (q/begin-shape)
+    (q/texture txtr)
+    (q/vertex 100 0 0 0 0)
+    (q/vertex 200 0 0 100 0)
+    (q/vertex 200 0 100 100 100)
+    (q/vertex 100 0 100 0 100)
+    (q/end-shape :close)))
