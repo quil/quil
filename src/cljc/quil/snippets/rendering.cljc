@@ -65,6 +65,20 @@
        (q/reset-shader)
        (q/image gr 250 250))))
 
+#?(:cljs
+   (defsnippet load-shader
+     "load-shader"
+     {:renderer :p3d
+      :setup (let [shd (q/load-shader "shader.frag" "shader.vert")]
+               (q/set-state! :shader shd))}
+
+     (let [shd (q/state :shader)]
+       (when (q/loaded? shd)
+         (q/shader shd)
+         (q/set-uniform shd "p" (array -0.74364388703 0.13182590421))
+         (q/set-uniform shd "r" (* 1.5 (q/exp (* -6.5 (+ 1 (q/sin (/ (q/millis) 2000)))))))
+         (q/quad -1 -1 1 -1 1 1 -1 1)))))
+
 #?(:clj
    (defsnippet clip-no-clip
      ["clip" "no-clip"]
