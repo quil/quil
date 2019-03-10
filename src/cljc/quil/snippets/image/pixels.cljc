@@ -64,7 +64,7 @@
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
         modes [[:threshold]
-               [:threshold 0.7]
+               [:threshold 0.2]
                [:gray]
                [:invert]
                [:posterize 20]
@@ -101,7 +101,7 @@
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
         modes [[:threshold]
-               [:threshold 0.7]
+               [:threshold 0.2]
                [:gray]
                [:invert]
                [:posterize 20]
@@ -225,7 +225,7 @@
     (q/update-pixels)))
 
 (defsnippet set-image
-  "set-image"
+  ["set-image" "set-pixel"]
   {}
 
   (q/background 255)
