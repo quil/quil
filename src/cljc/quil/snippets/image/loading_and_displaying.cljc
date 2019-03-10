@@ -50,7 +50,8 @@
 (defsnippet load-image
   "load-image"
   {:setup (let [_ (comment "create url to load image 100x100")
-                url (str "https://dummyimage.com/100x100/2c3e50/ffffff.png")]
+                url #?(:clj "https://dummyimage.com/100x100/2c3e50/ffffff.png"
+                       :cljs "https://placekitten.com/100/100")]
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
@@ -121,17 +122,6 @@
     (comment "remove tint")
     (q/no-tint)
     (q/image gr 200 0)))
-
-#?(:clj
-   (defsnippet request-image
-     "request-image"
-     {:setup
-      (q/set-state! :image
-                    (q/request-image "https://dummyimage.com/100x100/2c3e50/ffffff.png"))}
-
-     (if (zero? (.-width (q/state :image)))
-       (q/text "Loading" 10 10)
-       (q/image (q/state :image) 0 0))))
 
 (defsnippet tint
   "tint"

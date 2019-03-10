@@ -41,7 +41,7 @@
 #?(:clj
    (defsnippet cursor-image
      "cursor-image"
-     {:setup (q/set-state! :image (q/request-image "test/html/cursor.jpg"))}
+     {:setup (q/set-state! :image (q/load-image "test/html/cursor.jpg"))}
 
      (if (zero? (.-width (q/state :image)))
        (q/text "Loading" 10 10)

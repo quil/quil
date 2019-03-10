@@ -45,7 +45,7 @@
                                   [clj-http "3.8.0"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [org.clojure/tools.reader "1.2.2"]]
-                   :plugins [[lein-ring "0.12.4"]
+                   :plugins [[lein-ring "0.12.5"]
                              [lein-cljfmt "0.5.7"]]
                    :source-paths ["dev"]}
 

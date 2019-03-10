@@ -23,6 +23,8 @@
 
 (def ^{:private true} no-fill-prop "no-fill-quil")
 
+(declare pixels)
+
 (defn
   ^{:requires-bindings true
     :category "Environment"
@@ -2005,11 +2007,7 @@
   unless the width and height parameters specify a different size. The
   image-mode fn changes the way the parameters work. A call to
   (image-mode :corners) will change the width and height parameters to
-  define the x and y values of the opposite corner of the image.
-
-  Starting with release 0124, when using the default (JAVA2D)
-  renderer, smooth will also improve image quality of resized
-  images."
+   define the x and y values of the opposite corner of the image."
   (#?(:clj [^PImage img x y]
       :cljs [img x y])
    (.image (current-graphics) img (float x) (float y)))
@@ -2412,9 +2410,8 @@
   mask-image
   "Masks part of an image from displaying by loading another image and
   using it as an alpha channel.  This mask image should only contain
-  grayscale data, but only the blue color channel is used. The mask
-  image needs to be the same size as the image to which it is
-  applied.
+  grayscale data. The mask image needs to be the same size as the image
+  to which it is applied.
 
   If single argument function is used - masked image is sketch itself
   or graphics if used inside with-graphics macro. If you're passing
@@ -2423,7 +2420,15 @@
   This method is useful for creating dynamically generated alpha
   masks."
   ([^PImage mask] (mask-image (current-graphics) mask))
-  ([^PImage img ^PImage mask] (.mask img mask)))
+  ([^PImage img ^PImage mask]
+    #?(:clj
+        ; in clj we can't use image as mask as it uses blue component, not alpha.
+        ; instead we convert extract alphas into array and use array version of mask()
+        ; see https://processing.org/reference/PImage_mask_.html
+        (let [pxls (pixels mask)
+              alphas (amap ^ints pxls idx ret (int (alpha (aget ^ints pxls idx))))]
+          (.mask img alphas))
+       :cljs (.mask img mask))))
 
 (defn
   ^{:requires-bindings true
@@ -3261,24 +3266,6 @@
    (.redraw (ap/current-applet)))
   #?(:cljs ([n]
             (.redraw (ap/current-applet) n))))
-
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "requestImage()"
-       :category "Image"
-       :subcategory "Loading & Displaying"
-       :added "1.0"}
-     request-image
-     "This function loads an image on a separate thread so that your sketch
-  does not freeze while images load during setup. While the image is
-  loading, its width and height will be 0. If an error occurs while
-  loading the image, its width and height will be set to -1. You'll
-  know when the image has loaded properly because its width and height
-  will be greater than 0. Asynchronous image loading (particularly
-  when downloading from a server) can dramatically improve
-  performance."
-     [filename] (.requestImage (ap/current-applet) (str filename))))
 
 (defn
   ^{:requires-bindings true
