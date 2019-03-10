@@ -10,14 +10,18 @@
   {:renderer :p2d}
 
   (q/stroke 255 0 0)
+  (q/fill 0 127 0)
   (q/begin-shape)
+  (comment "outer shape")
   (q/vertex 250 20)
   (q/vertex 400 400)
   (q/vertex 50 400)
+
+  (comment "inner shape")
   (q/begin-contour)
   (q/vertex 200 200)
-  (q/vertex 300 200)
   (q/vertex 250 380)
+  (q/vertex 300 200)
   (q/end-contour)
   (q/end-shape :close))
 
@@ -26,6 +30,7 @@
   {:renderer :p2d}
 
   (q/stroke 255 0 0)
+  (comment "try all kinds of begin modes")
   (doseq [[ind begin-mode close-mode]
           [[0 nil nil]
            [1 nil :close]
@@ -73,12 +78,15 @@
   {:renderer :p3d}
 
   (q/camera -400 250 -100 500 250 0 0 0 1)
+
+  (comment "draw first shape")
   (q/begin-shape)
   (q/vertex 30 20)
   (q/bezier-vertex 480 0 480 475 30 475)
   (q/bezier-vertex 250 380 360 125 30 20)
   (q/end-shape :close)
 
+  (comment "draw second shape")
   (q/begin-shape)
   (q/vertex 30 20 0)
   (q/bezier-vertex 480 0 20 480 475 30 30 475 40)
@@ -90,6 +98,8 @@
   {:renderer :p3d}
 
   (q/camera 50 200 50 50 0 0 0 0 1)
+
+  (comment "draw first shape")
   (q/begin-shape)
   (q/curve-vertex 0 0)
   (q/curve-vertex 0 0)
@@ -100,6 +110,7 @@
   (q/curve-vertex 0 0)
   (q/end-shape :close)
 
+  (comment "draw second shape")
   (q/begin-shape)
   (q/curve-vertex 0 0 0)
   (q/curve-vertex 0 0 0)
@@ -114,16 +125,20 @@
   "quadratic-vertex"
   {:renderer :p3d}
 
+  (comment "setup camera and draw axes")
   (q/camera 50 200 50 50 0 0 0 0 -1)
   (q/line 0 0 0 0 0 100)
   (q/line 0 0 0 0 100 0)
   (q/line 0 0 0 100 0 0)
+
+  (comment "draw first shape")
   (q/begin-shape)
   (q/vertex 0 0)
   (q/quadratic-vertex 30 50 10 100)
   (q/quadratic-vertex 50 -50 90 100)
   (q/quadratic-vertex 80 50 100 0)
   (q/end-shape :close)
+  (comment "draw second shape")
   (q/begin-shape)
   (q/vertex 0 0 0)
   (q/quadratic-vertex 30 0 50 10 0 100)
@@ -137,14 +152,17 @@
      {:renderer :p2d}
 
      (let [gr (q/create-graphics 100 100)]
+       (comment "draw something on graphics that will be texture")
        (q/with-graphics gr
          (q/background 255)
          (q/fill 255 0 0)
          (q/rect 0 60 100 40)
          (q/fill 0 150 0)
          (q/rect 0 0 100 60))
+       (comment "draw graphics to see what we got")
        (q/image gr 0 0)
 
+       (comment "draw custom shape using texture we created above")
        (q/with-translation [250 250]
          (q/begin-shape)
          (q/texture gr)
@@ -232,18 +250,21 @@
   {:renderer :p3d}
 
   (q/camera 100 400 200 100 0 0 0 0 -1)
-  (q/line 0 0 0 0 0 100)
-  (q/line 0 0 0 0 100 0)
-  (q/line 0 0 0 100 0 0)
+  (q/line 0 0 0 0 0 150)
+  (q/line 0 0 0 0 150 0)
+  (q/line 0 0 0 150 0 0)
 
   (let [txtr (q/create-graphics 100 100)]
     (q/with-graphics txtr
       (q/background 255)
+      (comment "draw belarusian flag, kinda")
       (q/fill 255 0 0)
       (q/rect 0 60 100 40)
       (q/fill 0 150 0)
       (q/rect 0 0 100 60))
 
+    (comment "draw blue rect")
+    (q/fill 0 0 127)
     (q/begin-shape)
     (q/vertex 0 0)
     (q/vertex 100 0)
@@ -251,6 +272,7 @@
     (q/vertex 0 100)
     (q/end-shape :close)
 
+    (comment "draw another blue rect")
     (q/begin-shape)
     (q/vertex 0 0 0)
     (q/vertex 100 0 0)
@@ -258,6 +280,7 @@
     (q/vertex 0 0 100)
     (q/end-shape :close)
 
+    (comment "draw rect using our custom texture")
     (q/begin-shape)
     (q/texture txtr)
     (q/vertex 100 0 0 0)
@@ -266,6 +289,7 @@
     (q/vertex 100 100 0 100)
     (q/end-shape :close)
 
+    (comment "draw another rect using our custom texture")
     (q/begin-shape)
     (q/texture txtr)
     (q/vertex 100 0 0 0 0)

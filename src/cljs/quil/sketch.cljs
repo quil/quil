@@ -21,13 +21,18 @@
     (u/resolve-constant-key mode rendering-modes)))
 
 (defn set-size [applet width height]
-  (let [el (.-quil-canvas applet)]
-    (.setAttribute el "width" width)
-    (.setAttribute el "height" height)
-    (set! (.-width applet)
-          (.parseInt js/window (style/getComputedStyle el "width")))
-    (set! (.-height applet)
-          (.parseInt js/window (style/getComputedStyle el "height")))))
+  (when-let [el (.-quil-canvas applet)]
+    ; p5js creates a <canvas> element inside provided <div> element
+    ; we need to resize only the canvas as outer div will adapt automatically
+    (let [inner-canvas (.querySelector el "canvas")]
+      (.setAttribute inner-canvas "width" width)
+      (.setAttribute inner-canvas "height" height)
+      (aset (.-style inner-canvas) "width" (str width "px"))
+      (aset (.-style inner-canvas) "height" (str height "px"))
+      (set! (.-width applet)
+            (.parseInt js/window (style/getComputedStyle inner-canvas "width")))
+      (set! (.-height applet)
+            (.parseInt js/window (style/getComputedStyle inner-canvas "height"))))))
 
 (defn size
   ([width height]
@@ -134,7 +139,10 @@
 (defn sketch [& opts]
   (let [opts-map (apply hash-map opts)
         host-elem (:host opts-map)
-        renderer (or (:renderer opts-map) :p2d)]
+        renderer (or (:renderer opts-map) :p2d)
+        host-elem (if (string? host-elem)
+                    (.getElementById js/document host-elem)
+                    host-elem)]
     (if host-elem
       (do
         (if (.-processing-context host-elem)

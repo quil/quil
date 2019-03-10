@@ -70,11 +70,13 @@
      ["clip" "no-clip"]
      {}
 
-     (q/no-clip)
      (q/background 255)
      (q/fill 0)
+     (comment "clip rendering so that triangle will be incomplete")
      (q/clip 50 100 100 100)
      (q/triangle 100 70 170 180 30 180)
+
+     (comment "draw normal unclipped triangle")
      (q/no-clip)
      (q/with-translation [(/ (q/width) 2) (/ (q/height) 2)]
        (q/triangle 100 70 170 180 30 180))))

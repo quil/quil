@@ -28,15 +28,40 @@
       (.ellipse (q/current-graphics) 50 50 100 100))
     (q/image gr 70 70)))
 
-(defsnippet cursor
-  "cursor"
+(defsnippet cursor-no-cursor
+  ["cursor" "no-cursor"]
   {}
 
-  (q/no-cursor)
-  (q/cursor)
-
-  (doseq [type [:arrow :cross :hand :move :text :wait]]
-    (q/cursor type)))
+  (q/background 255)
+  (q/rect-mode :corners)
+  (q/text-align :center :center)
+  (comment "iterate through all types of cursors")
+  (let [types [:arrow :cross :hand :move :text :wait :no-cursor :default]
+        box-width (/ (q/width) 4.1)
+        box-height (/ (q/height) 2.1)]
+    (dotimes [ind (count types)]
+      (let [type (nth types ind)
+            _ (comment "calculate corners of current box")
+            x (* box-width (rem ind 4))
+            y (* box-height (quot ind 4))
+            n-x (+ x box-width)
+            n-y (+ y box-height)]
+        (comment "draw a box for current type with its name in center")
+        (q/stroke 127)
+        (q/no-fill)
+        (q/rect x y n-x n-y)
+        (q/no-stroke)
+        (q/fill 0)
+        (q/text (str type)
+                (/ (+ x n-x) 2)
+                (/ (+ y n-y) 2))
+        (comment "if mouse is inside the box - enable this type")
+        (when (and (<= x (q/mouse-x) n-x)
+                   (<= y (q/mouse-y) n-y))
+          (condp = type
+            :default (q/cursor)
+            :no-cursor (q/no-cursor)
+            (q/cursor type)))))))
 
 #?(:clj
    (defsnippet cursor-image
@@ -56,7 +81,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/focused)) 10 20))
+  (q/text (str "Focused: " (q/focused)) 10 20))
 
 (defsnippet frame-count
   "frame-count"
@@ -64,7 +89,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/frame-count)) 10 20))
+  (q/text (str "Frame count: " (q/frame-count)) 10 20))
 
 (defsnippet frame-rate
   "frame-rate"
@@ -72,9 +97,15 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/target-frame-rate)) 10 20)
+  (q/text (str "Frame rate: " (q/target-frame-rate)) 10 20)
 
-  (q/frame-rate (inc (rand-int 5))))
+  (let [frame (q/frame-count)]
+    (comment "draw moving box")
+    (q/rect (rem frame (q/width)) 50 50 50)
+    (comment "every 10 frames change frame rate")
+    (comment "frame rate cycles through [1, 6, 11, 16, 21]")
+    (when (zero? (rem frame 10))
+      (q/frame-rate (inc (* 5 (rem (quot frame 10) 5)))))))
 
 (defsnippet height-width
   ["height" "width"]
@@ -82,13 +113,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text (str (q/width) "x" (q/height)) 10 20))
-
-(defsnippet no-cursor
-  "no-cursor"
-  {}
-
-  (q/no-cursor))
+  (q/text (str "width: " (q/width) ", height: " (q/height)) 10 20))
 
 #?(:clj
    (defsnippet screen-height-screen-width
@@ -107,7 +132,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (q/text-num (q/display-density) 10 20))
+  (q/text (str "display density: " (q/display-density)) 10 20))
 
 (defsnippet pixel-density
   "pixel-density"
@@ -117,3 +142,15 @@
   (q/fill 0)
   (q/ellipse 102 102 200 200)
   (q/triangle 200 200 400 300 300 400))
+
+(defsnippet resize-sketch
+  "resize-sketch"
+  {}
+
+  (q/frame-rate 1)
+  (comment "each frame increase size of sketch")
+  (q/resize-sketch (inc (q/width)) (inc (q/height)))
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "width: " (q/width) ", height: " (q/height)) 10 20))
+

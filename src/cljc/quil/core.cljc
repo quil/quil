@@ -372,7 +372,10 @@
   "Multiplies the current matrix by the one specified through the
   parameters. This is very slow because it will try to calculate the
   inverse of the transform, so avoid it whenever possible. The
-  equivalent function in OpenGL is glMultMatrix()."
+  equivalent function in OpenGL is glMultMatrix().
+
+  Note that cljs has only 2d version and arguments differ see
+  https://p5js.org/reference/#/p5/applyMatrix"
   #?(:clj
      ([n00 n01 n02 n10 n11 n12]
       (.applyMatrix (current-graphics)
@@ -1232,7 +1235,7 @@
   Available modes: :arrow, :cross, :hand, :move, :text, :wait
 
   See cursor-image for specifying a generic image as the cursor
-  symbol."
+  symbol (clj only)."
   ([] (.cursor (ap/current-applet)))
   ([cursor-mode]
    (let [cursor-mode (u/resolve-constant-key cursor-mode cursor-modes)]
@@ -3328,10 +3331,10 @@
     :added "2.7.0"}
   resize-sketch
   "Resizes sketch.
-  Note about ClojureScript version: if canvas element is resized by external
+  Note about ClojureScript version: if div element is resized by external
   reasons (for example from js on a page then you still need to call this
   method in order to tell Quil that size has changed. Currently there is no
-  good way to automatically detect that size of <canvas> element changed."
+  good way to automatically detect that size of <div> element changed."
   [width height]
   #?(:cljs
      (ap/set-size (ap/current-applet) width height)

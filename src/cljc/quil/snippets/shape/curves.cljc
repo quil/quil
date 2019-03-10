@@ -5,68 +5,37 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-#?(:clj
-   (defsnippet bezier
-     "bezier"
-     {:renderer :p3d}
+(defsnippet bezier-2d
+  "bezier-2d"
+  {}
 
-     (q/camera 200 200 200 0 0 0 0 0 -1)
-     (q/no-fill)
-     (q/bezier 0 0 50 100 100 -100 150 0)
-     (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0)))
+  (q/no-fill)
+  (q/with-translation [100 100]
+    (q/bezier 0 0 50 100 100 -100 150 0)))
 
-#?(:cljs
-   (defsnippet bezier-2d
-     "bezier-2d"
-     {}
 
-     (q/no-fill)
-     (q/bezier 0 0 50 100 100 -100 150 0)))
+(defsnippet bezier-3d
+  "bezier-3d"
+  {:renderer :p3d}
 
-#?(:cljs
-   (defsnippet bezier-3d
-     "bezier-3d"
-     {:renderer :p3d}
+  (q/camera 200 200 200 0 0 0 0 0 -1)
+  (q/no-fill)
+  (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
-     (q/camera 200 200 200 0 0 0 0 0 -1)
-     (q/no-fill)
-     (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0)))
+(defsnippet bezier-detail
+  "bezier-detail"
+  {:renderer :p3d}
 
-#?(:clj
-   (defsnippet bezier-detail
-     "bezier-detail"
-     {:renderer :p3d}
-
-     (q/camera 0 0 300 0 0 0 0 1 0)
-     (q/no-fill)
-     (q/bezier-detail 5)
-     (q/bezier 0 0 50 100 100 -100 150 0)
-     (q/bezier-detail 20)
-     (q/bezier 0 0 -50 100 -100 -100 -150 0)))
-
-#?(:cljs
-   (defsnippet bezier-detail-2d
-     "bezier-detail"
-     {}
-
-     (q/no-fill)
-     (q/bezier-detail 5)
-     (q/bezier 0 0 50 100 100 -100 150 0)))
-
-#?(:cljs
-   (defsnippet bezier-detail-3d
-     "bezier-detail"
-     {:renderer :p3d}
-
-     (q/camera 0 0 300 0 0 0 0 1 0)
-     (q/no-fill)
-     (q/bezier-detail 20)
-     (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0)))
+  (q/camera 0 0 300 0 0 0 0 1 0)
+  (q/no-fill)
+  (q/bezier-detail 5)
+  (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
 (defsnippet bezier-point
   "bezier-point"
   {}
 
+  (comment "see https://p5js.org/reference/#/p5/bezierPoint for better example")
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
@@ -78,6 +47,7 @@
   "bezier-tangent"
   {}
 
+  (comment "see https://p5js.org/reference/#/p5/bezierTangent for better example")
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
@@ -115,6 +85,7 @@
   "curve-point"
   {}
 
+  (comment "see https://p5js.org/reference/#/p5/curvePoint for better example")
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
@@ -126,6 +97,7 @@
   "curve-tangent"
   {}
 
+  (comment "see https://p5js.org/reference/#/p5/curveTangent for better example")
   (q/fill 0)
   (dotimes [i 5]
     (let [v (/ i 4)
@@ -138,6 +110,7 @@
   {}
 
   (q/no-fill)
+  (comment "try different tightnesses")
   (doseq [[ind t] [[0 -5] [1 -1] [2 0] [3 1] [4 5]]]
     (q/curve-tightness t)
     (q/with-translation [100 (+ 50 (* ind 70))]
