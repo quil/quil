@@ -2373,18 +2373,19 @@
   [filename]
   (.loadShape (ap/current-applet) filename))
 
-#?(:cljs
-   (defn
-     ^{:requires-bindings true
-       :processing-name nil
-       :category "Environment"
-       :subcategory nil
-       :added "1.0"}
-     loaded?
-     "Returns true if object is loaded."
-     [object]
-     (condp = (type object)
-       js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc")))))
+(defn
+  ^{:requires-bindings false
+    :processing-name nil
+    :category "Environment"
+    :subcategory nil
+    :added "3.0.0"}
+  loaded?
+  "Returns true if object is loaded."
+  [object]
+  (condp = (type object)
+    #?@(:clj  (PImage (pos? (.-width object)))
+        :cljs (js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc"))
+               js/p5.Image (pos? (.-width object))))))
 
 (defn
   ^{:requires-bindings false

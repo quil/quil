@@ -55,8 +55,8 @@
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
-    (comment "image is loaded once its width is non-zero")
-    (when-not (zero? (.-width im))
+    (comment "check if image is loaded using function loaded?")
+    (when (q/loaded? im)
       (q/image im 0 0))))
 
 (defsnippet mask-image
