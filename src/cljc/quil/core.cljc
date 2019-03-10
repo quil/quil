@@ -2159,8 +2159,8 @@
    (defn
      ^{:requires-bindings true
        :processing-name "lightness()"
-       :category nil
-       :subcategory nil
+       :category "Color"
+       :subcategory "Creating & Reading"
        :added "3.0.0"}
      lightness
      "Extracts the HSL lightness value from a color or pixel array."
