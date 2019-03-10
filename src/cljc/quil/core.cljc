@@ -264,6 +264,18 @@
       (let [state-map (apply hash-map state-vals)]
         (reset! state* state-map)))))
 
+#?(:cljs
+   (defn
+     ^{:requires-bindings true
+       :category "Shader"
+       :subcategory nil
+       :added "3.0.0"}
+     set-uniform
+     "Set a uniform variables inside a shader to modify the effect
+     while the program is running."
+     [shader uniform-name data]
+     (.setUniform shader uniform-name data)))
+
 (defn
   ^{:requires-bindings false
     :processing-name "abs()"
@@ -2147,8 +2159,8 @@
    (defn
      ^{:requires-bindings true
        :processing-name "lightness()"
-       :category nil
-       :subcategory nil
+       :category "Color"
+       :subcategory "Creating & Reading"
        :added "3.0.0"}
      lightness
      "Extracts the HSL lightness value from a color or pixel array."
@@ -2340,12 +2352,15 @@
     :subcategory "Shaders"
     :added "2.0"}
   load-shader
-  "Loads a shader into the PShader object. Shaders are compatible with the
-  P2D and P3D renderers, but not with the default renderer."
+  "Loads a shader into the PShader object for clj and Shader object for
+  cljs. In clj mode shaders are
+  compatible with the P2D and P3D renderers, but not with the default
+  renderer. In cljs mode shaders are compatible with the P3D renderer."
   ([fragment-filename]
    (.loadShader (current-graphics) fragment-filename))
   ([fragment-filename vertex-filename]
-   (.loadShader (current-graphics) fragment-filename vertex-filename)))
+   #?(:clj (.loadShader (current-graphics) fragment-filename vertex-filename)
+      :cljs (.loadShader (current-graphics) vertex-filename fragment-filename))))
 
 (defn
   ^{:requires-bindings true
@@ -2357,6 +2372,20 @@
   "Load a geometry from a file as a PShape."
   [filename]
   (.loadShape (ap/current-applet) filename))
+
+(defn
+  ^{:requires-bindings false
+    :processing-name nil
+    :category "Environment"
+    :subcategory nil
+    :added "3.0.0"}
+  loaded?
+  "Returns true if object is loaded."
+  [object]
+  (condp = (type object)
+    #?@(:clj  (PImage (pos? (.-width object)))
+        :cljs (js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc"))
+               js/p5.Image (pos? (.-width object))))))
 
 (defn
   ^{:requires-bindings false
@@ -3604,18 +3633,19 @@
   [x y ^PImage src]
   (.set (current-graphics) (int x) (int y) src))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "shader()"
-       :category "Rendering"
-       :subcategory "Shaders"
-       :added "2.0"}
-     shader
-     "Applies the shader specified by the parameters. It's compatible with the :p2d
-  and :p3d renderers, but not with the default :java2d renderer. Optional 'kind'
-  parameter - type of shader, either :points, :lines, or :triangles"
-     ([shader] (.shader (current-graphics) shader))
+(defn
+  ^{:requires-bindings true
+    :processing-name "shader()"
+    :category "Rendering"
+    :subcategory "Shaders"
+    :added "2.0"}
+  shader
+  "Applies the shader specified by the parameters. It's compatible with the :p2d
+  and :p3d renderers, but not with the default :java2d renderer.
+  In clj mode you can pass an optional 'kind' parameter that specifies
+  the type of shader, either :points, :lines, or :triangles"
+  ([shader] (.shader (current-graphics) shader))
+  #?(:clj
      ([shader kind]
       (let [mode (u/resolve-constant-key kind shader-modes)]
         (.shader (current-graphics) shader mode)))))
