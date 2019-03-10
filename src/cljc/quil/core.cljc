@@ -1639,7 +1639,7 @@
     :subcategory "Setting"
     :added "1.0"}
   fill
-  "Sets the color used to fill shapes. For example, if you run fill(204, 102, 0),
+  "Sets the color used to fill shapes. For example, if you run (fill 204 102 0),
   all subsequent shapes will be filled with orange.  This function casts all input as a float.
   If nil is passed it removes any fill color; equivalent to (no-fill)."
   ([gray]
@@ -4637,13 +4637,15 @@
                      all sketches are support fullscreen when you press F11.
 
    :renderer       - Specifies the renderer type. One of :p2d, :p3d, :java2d,
-                     :opengl, :pdf). Defaults to :java2d. :dxf renderer
+                     :opengl, :pdf, :svg). Defaults to :java2d. :dxf renderer
                      can't be used as sketch renderer. Use begin-raw method
                      instead. In clojurescript only :p2d and :p3d renderers
                      are supported.
 
-   :output-file    - Specifies an output file path. Only used in :pdf mode.
-                     Not supported in clojurescript.
+   :output-file    - Specifies an output file path. Only used in :pdf and :svg modes.
+                     Not supported in clojurescript. When writing to a file, call
+                     `(q/exit)` at the end of the draw call to end the sketch and not
+                     write repeatedly to the file.
 
    :title          - A string which will be displayed at the top of
                      the sketch window. Not supported in clojurescript.

@@ -17,8 +17,9 @@
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
                  [cljsjs/p5 "0.7.3-0"]
-                 [com.lowagie/itext "2.1.7"]
-
+                 [com.lowagie/itext "2.1.7"
+                  :exclusions [bouncycastle/bctsp-jdk14]]
+                 [org.bouncycastle/bctsp-jdk14 "1.38"]
 
                  ; svg
                  [org.apache.xmlgraphics/batik-svggen "1.8"]
