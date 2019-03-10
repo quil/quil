@@ -93,8 +93,10 @@
 
 (defn run-selected-test [event]
   (let [select (.-target event)
-        option (aget select (.-selectedIndex select))]
+        index (.-selectedIndex select)
+        option (aget select index)]
     (remove-canvases)
+    (aset js/location "hash" index)
     ((:fn (.-testData option)))))
 
 (defn init-test-selection [input]
@@ -108,7 +110,10 @@
           (.appendChild optgroup option)))
       (.appendChild input optgroup)))
   (events/listen input EventType/CHANGE
-                 run-selected-test))
+                 run-selected-test)
+  (when-let [hash (aget js/location "hash")]
+    (aset input "selectedIndex" (js/parseInt (subs hash 1)))
+    (.dispatchEvent input (js/Event. EventType/CHANGE))))
 
 (defn init []
   (when-let [input (.querySelector js/document "#test-select")]
