@@ -5,18 +5,8 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
-(defsnippet load-shape
-  "load-shape"
-  {:renderer :p3d
-   :setup (let [sh #?(:clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
-                      :cljs (q/load-shape "octahedron.obj"))]
-            (q/set-state! :shp sh))}
-
-  (let [sh (q/state :shp)]
-    (q/shape sh)))
-
 (defsnippet shape
-  "shape"
+  ["shape" "load-shape"]
   {:renderer :p3d
    :setup (let [sh #?(:clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
                       :cljs (q/load-shape "octahedron.obj"))]
