@@ -2369,9 +2369,11 @@
     :subcategory "Loading & Displaying"
     :added "1.0"}
   load-shape
-  "Load a geometry from a file as a PShape."
+  "Load a geometry from a file as a PShape in clj, and a Geometry
+  in cljs."
   [filename]
-  (.loadShape (ap/current-applet) filename))
+  #?(:clj (.loadShape (ap/current-applet) filename)
+     :cljs (.loadModel (ap/current-applet) filename)))
 
 (defn
   ^{:requires-bindings false
@@ -3671,9 +3673,12 @@
   Note complex shapes may draw awkwardly with the renderers :p2d, :p3d, and
   :opengl. Those renderers do not yet support shapes that have holes
   or complicated breaks."
-  ([^PShape sh] (.shape (current-graphics) sh))
-  ([^PShape sh x y] (.shape (current-graphics) sh (float x) (float y)))
-  ([^PShape sh x y width height] (.shape (current-graphics) sh (float x) (float y) (float width) (float height))))
+  ([^PShape sh] #?(:clj (.shape (current-graphics) sh)
+                   :cljs (.model (current-graphics) sh)))
+  #?(:clj
+     ([^PShape sh x y] (.shape (current-graphics) sh (float x) (float y))))
+  #?(:clj
+     ([^PShape sh x y width height] (.shape (current-graphics) sh (float x) (float y) (float width) (float height)))))
 
 (defn
   ^{:requires-bindings true
@@ -3725,29 +3730,30 @@
   [angle]
   (.shearY (current-graphics) (float angle)))
 
-(defn ^{:requires-bindings true
-        :processing-name "shapeMode()"
-        :category "Shape"
-        :subcategory "Loading & Displaying"
-        :added "1.0"}
-  shape-mode
-  "Modifies the location from which shapes draw. Available modes are
-  :corner, :corners and :center. Default is :corner.
+#?(:clj
+   (defn ^{:requires-bindings true
+           :processing-name "shapeMode()"
+           :category "Shape"
+           :subcategory "Loading & Displaying"
+           :added "1.0"}
+     shape-mode
+     "Modifies the location from which shapes draw. Available modes are
+     :corner, :corners and :center. Default is :corner.
 
-  :corner  - specifies the location to be the upper left corner of the
-             shape and uses the third and fourth parameters of shape
-             to specify the width and height.
+     :corner  - specifies the location to be the upper left corner of the
+                shape and uses the third and fourth parameters of shape
+                to specify the width and height.
 
-  :corners - uses the first and second parameters of shape to set
-             the location of one corner and uses the third and fourth
-             parameters to set the opposite corner.
+     :corners - uses the first and second parameters of shape to set
+                the location of one corner and uses the third and fourth
+                parameters to set the opposite corner.
 
-  :center  - draws the shape from its center point and uses the third
-             and forth parameters of shape to specify the width and
-             height. "
-  [mode]
-  (let [mode (u/resolve-constant-key mode p-shape-modes)]
-    (.shapeMode (current-graphics) (int mode))))
+     :center  - draws the shape from its center point and uses the third
+                and forth parameters of shape to specify the width and
+                height. "
+     [mode]
+     (let [mode (u/resolve-constant-key mode p-shape-modes)]
+       (.shapeMode (current-graphics) (int mode)))))
 
 #?(:clj
    (defn
