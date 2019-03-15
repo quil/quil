@@ -109,19 +109,19 @@
 
   (comment "grey")
   (q/stroke 120)
-  (q/rect 0 0 100 100)
+  (q/rect 10 10 100 100)
 
   (comment "semitransparent light grey")
   (q/stroke 80 120)
-  (q/rect 70 70 100 100)
+  (q/rect 80 80 100 100)
 
   (comment "green")
   (q/stroke 0 255 0)
-  (q/rect 140 140 100 100)
+  (q/rect 150 150 100 100)
 
   (comment "semitransparent red")
   (q/stroke 255 0 0 120)
-  (q/rect 210 210 100 100))
+  (q/rect 220 220 100 100))
 
 (defsnippet clear
   "clear"
