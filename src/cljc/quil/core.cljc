@@ -2587,7 +2587,7 @@
   constant to return the same pseudo-random numbers each time the
   software is run."
   [val]
-  (.noiseSeed (ap/current-applet) (int val)))
+  (.noiseSeed (ap/current-applet) (long val)))
 
 (defn
   ^{:requires-bindings true
