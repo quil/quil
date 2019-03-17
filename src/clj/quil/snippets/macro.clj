@@ -40,14 +40,17 @@
       :setup Setup function to use. Default is empty.
     body Body of draw function of the snippet."
   [snip-name fns opts & body]
-  (let [setup (:setup opts '())]
+  (let [setup (:setup opts '())
+        mouse-clicked (:mouse-clicked opts '())]
     `(swap! quil.snippets.all-snippets-internal/all-snippets
             conj
             {:name (name '~snip-name)
              :fns ~(if (string? fns) [fns] fns)
-             :opts ~(dissoc opts :setup)
+             :opts ~(dissoc opts :setup :mouse-clicked)
              :setup (fn [] ~setup)
              :setup-str ~(pr-str setup)
              :body (fn [] ~@body)
              :body-str ~(pr-str body)
+             :mouse-clicked (fn [] ~mouse-clicked)
+             :mouse-clicked-str ~(pr-str mouse-clicked)
              :ns ~(str (ns-name *ns*))})))

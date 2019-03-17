@@ -17,8 +17,7 @@
                [quil.sketch :as ap :include-macros true]
                [quil.util :as u :include-macros true])))
 
-(def ^{:dynamic true
-       :private true}
+(def ^{:dynamic true}
   *graphics* nil)
 
 (def ^{:private true} no-fill-prop "no-fill-quil")
@@ -152,38 +151,6 @@
   KEY-MAP {" " :space})
 
 ;; ------------------ end PConstants section ---------------------
-
-#?(:cljs
-   (defn
-     ^{:require-bindings true
-       :category "Output"
-       :subcategory "Text area"
-       :added "1.0"}
-     prc-println
-     "Writes to the text area of the Processing environment's console.
-  This is often helpful for looking at the data a program is producing.
-  Each call to this function creates a new line of output.
-  Individual elements can be separated with quotes (\"\") and joined with the string concatenation operator (+).
-  Also writes the content of an array to the text area of the Processing environment.
-  This is often helpful for looking at the data a program is producing.
-  A new line is put between each element of the array. This function can only print 1D arrays,
-  but can test to see if the content are null or not null for 2+ dimensional arrays."
-     [msg]
-     (.println (ap/current-applet) msg)))
-
-#?(:cljs
-   (defn
-     ^{:require-bindings true
-       :category "Output"
-       :subcategory "Text area"
-       :added "1.0"}
-     prc-print
-     "Writes to the console area of the Processing environment.
-  This is often helpful for looking at the data a program is producing.
-  The companion function println() works like print(), but creates a new line of text for each call to the function.
-   Individual elements can be separated with quotes (\"\") and joined with the addition operator (+). "
-     [msg]
-     (.print (ap/current-applet) msg)))
 
 #?(:cljs
    (defn
@@ -3526,9 +3493,7 @@
   and .ext is one of .tiff, .targa, .png, .jpeg or .jpg
 
   Examples:
-  (save-frame)
      (save-frame \"pretty-pic-####.jpg\")"
-     ([] (.saveFrame (ap/current-applet)))
      ([name] (.saveFrame (ap/current-applet) (str name)))))
 
 (defn

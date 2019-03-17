@@ -6,7 +6,6 @@
             [goog.events.EventType :as EventType]
             [quil.snippets.all-snippets :as as]))
 
-
 (def default-size [500 500])
 (def default-host {:p2d "quil-test-2d"
                    :p3d "quil-test-3d"})
@@ -27,6 +26,7 @@
             :host (or (:host opts)
                       (get default-host (:renderer opts :p2d)))
             :setup (:setup snippet)
+            :mouse-clicked (:mouse-clicked snippet)
 
             :draw (fn []
                     (try

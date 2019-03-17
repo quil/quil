@@ -14,10 +14,11 @@
 (def tests-in-set 50)
 (def current-test (atom -1))
 
-(defn run-snippet-as-test [{:keys [ns name opts setup body body-str]}]
+(defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
   (let [result (promise)
         time (System/currentTimeMillis)
         snip-name (str ns "/" name)]
+    (println mouse-clicked)
     (println "Test:" snip-name)
     (when manual?
       (clojure.pprint/pprint body-str))
@@ -28,6 +29,7 @@
      :setup (fn []
               (setup)
               (q/frame-rate 5))
+     :mouse-clicked mouse-clicked
      :settings (fn []
                  (:settings opts))
      :draw (fn []

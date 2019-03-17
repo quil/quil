@@ -11,6 +11,8 @@
 
   (q/background 255)
   (q/fill 0)
+  (comment "iterate through all key-related functions")
+  (comment "and print their values")
   (doseq [[ind capt fn] [[0 "key-as-keyword" q/key-as-keyword]
                          [1 "key-code" q/key-code]
                          [2 "key-coded?" #(q/key-coded? (q/raw-key))]
@@ -25,6 +27,8 @@
 
   (q/background 255)
   (q/fill 0)
+  (comment "iterate through all mouse-related functions")
+  (comment "and print their values")
   (doseq [[ind capt fn] [[0 "mouse-button" q/mouse-button]
                          [1 "mouse-pressed?" q/mouse-pressed?]
                          [2 "mouse-x" q/mouse-x]
@@ -39,6 +43,8 @@
 
   (q/background 255)
   (q/fill 0)
+  (comment "iterate through all time-related functions")
+  (comment "and print their values")
   (doseq [[ind capt fn] [[0 "millis" q/millis]
                          [1 "seconds" q/seconds]
                          [2 "minute" q/minute]

@@ -22,7 +22,11 @@
 
   (q/camera 150 150 150 0 0 0 0 0 1)
   (q/box 100)
-  (q/save "generated/box.png"))
+  (q/save "generated/box.png")
+  (comment "stop sketch after saving image")
+  (comment "otherwise it will show save dialog")
+  (comment "on every iteration")
+  (q/exit))
 
 #?(:clj
    (defsnippet save-frame
@@ -33,7 +37,6 @@
      (q/background 127)
      (q/with-rotation [(/ (q/frame-count) 10)]
        (q/box 100))
-     (q/save-frame)
      (q/save-frame "generated/rotating-box-####.png")))
 
 #?(:clj
@@ -52,4 +55,3 @@
                                  (+ 50 (* 50 i))
                                  (+ 50 (* 50 i))))
          (is (pos? (.length (clojure.java.io/file file))))))))
-
