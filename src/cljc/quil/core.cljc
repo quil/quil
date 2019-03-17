@@ -2297,20 +2297,11 @@
 
   The filename parameter can also be a URL to a file found online.
 
-  If an image is not loaded successfully, the null value is returned
-  and an error message will be printed to the console. The error
-  message does not halt the program, however the null value may cause
-  a NullPointerException if your code does not check whether the value
-  returned from load-image is nil.
-
-  Depending on the type of error, a PImage object may still be
-  returned, but the width and height of the image will be set to
-  -1. This happens if bad image data is returned or cannot be decoded
-  properly. Sometimes this happens with image URLs that produce a 403
-  error or that redirect to a password prompt, because load-image
-  will attempt to interpret the HTML as image data."
+  Image is loaded asynchronously. In order to check whether image
+  finished loading use (q/loaded? img) function."
   [filename]
-  (.loadImage (ap/current-applet) (str filename)))
+  #?(:clj (.requestImage (ap/current-applet) (str filename))
+     :cljs (.loadImage (ap/current-applet) (str filename))))
 
 (defn
   ^{:requires-bindings true
@@ -2352,7 +2343,9 @@
   "Returns true if object is loaded."
   [object]
   (condp = (type object)
-    #?@(:clj  (PImage (pos? (.-width object)))
+    #?@(:clj  (PImage (pos? (.-width object))
+               ; shader is loaded synchronously
+               PShader true)
         :cljs (js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc"))
                js/p5.Image (pos? (.-width object))))))
 

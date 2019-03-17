@@ -49,21 +49,24 @@
 #?(:clj
    (defsnippet load-shader
      "load-shader"
-     {:renderer :p2d}
+     {:renderer :p2d
+      :setup (let [path (clojure.java.io/resource "SimpleShader.glsl")
+                   shd (q/load-shader (.getPath path))]
+               (q/set-state! :shader shd))}
 
      (let [gr (q/create-graphics 250 250)
-           path (clojure.java.io/resource "SimpleShader.glsl")
-           shd (q/load-shader (.getPath path))]
-       (q/with-graphics gr
-         (q/background 255)
-         (q/fill 255 0 0)
-         (q/triangle 50 30 220 120 20 180))
-       (q/image gr 0 0)
-       (q/image gr 250 0)
-       (q/shader shd)
-       (q/image gr 0 250)
-       (q/reset-shader)
-       (q/image gr 250 250))))
+           shd (q/state :shader)]
+       (when (q/loaded? shd)
+         (q/with-graphics gr
+           (q/background 255)
+           (q/fill 255 0 0)
+           (q/triangle 50 30 220 120 20 180))
+         (q/image gr 0 0)
+         (q/image gr 250 0)
+         (q/shader shd)
+         (q/image gr 0 250)
+         (q/reset-shader)
+         (q/image gr 250 250)))))
 
 #?(:cljs
    (defsnippet load-shader
