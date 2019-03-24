@@ -4533,7 +4533,7 @@
   graphics. 'with-graphics' cannot be nested (you can draw simultaneously
   only on 1 graphics)"
   [graphics & body]
-  `(let [gr# ~graphics]
+  `(let [^PGraphics gr# ~graphics]
      (binding [quil.core/*graphics* gr#]
        (.beginDraw gr#)
        ~@body
