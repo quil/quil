@@ -2637,7 +2637,7 @@
   constant to return the same pseudo-random numbers each time the
   software is run."
   [val]
-  (.noiseSeed (ap/current-applet) (int val)))
+  (.noiseSeed (ap/current-applet) (long val)))
 
 #?(:clj
    (defn
@@ -4583,7 +4583,7 @@
   graphics. 'with-graphics' cannot be nested (you can draw simultaneously
   only on 1 graphics)"
   [graphics & body]
-  `(let [gr# ~graphics]
+  `(let [^PGraphics gr# ~graphics]
      (binding [quil.core/*graphics* gr#]
        (begin-draw gr#)
        ~@body
