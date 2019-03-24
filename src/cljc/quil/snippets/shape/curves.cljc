@@ -13,7 +13,6 @@
   (q/with-translation [100 100]
     (q/bezier 0 0 50 100 100 -100 150 0)))
 
-
 (defsnippet bezier-3d
   "bezier-3d"
   {:renderer :p3d}

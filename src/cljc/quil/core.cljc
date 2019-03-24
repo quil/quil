@@ -49,7 +49,7 @@
  #?@(:cljs (angle-modes (:radians :degrees)))
  shape-modes (:points :lines :triangles :triangle-fan :triangle-strip :quads :quad-strip)
  blend-modes (:blend :add :subtract :darkest :lightest :difference :exclusion :multiply
-              :screen :overlay :replace :hard-light :soft-light :dodge :burn)
+                     :screen :overlay :replace :hard-light :soft-light :dodge :burn)
  #?@(:clj (color-modes (:rgb :hsb))
      :cljs (color-modes (:rgb :hsb :hsl)))
  image-formats (:rgb :argb :alpha)
@@ -1160,7 +1160,7 @@
     :subcategory nil
     :added "1.0"}
   create-image
- "Creates a new datatype for storing images (PImage for clj and
+  "Creates a new datatype for storing images (PImage for clj and
   Image for cljs). This provides a fresh buffer of pixels to play
   with. Set the size of the buffer with the width and height
   parameters.
@@ -2345,9 +2345,9 @@
   (condp = (type object)
     #?@(:clj  (PImage (pos? (.-width object))
                ; shader is loaded synchronously
-               PShader true)
+                      PShader true)
         :cljs (js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc"))
-               js/p5.Image (pos? (.-width object))))))
+                            js/p5.Image (pos? (.-width object))))))
 
 (defn
   ^{:requires-bindings false
@@ -2415,14 +2415,14 @@
   masks."
   ([^PImage mask] (mask-image (current-graphics) mask))
   ([^PImage img ^PImage mask]
-    #?(:clj
+   #?(:clj
         ; in clj we can't use image as mask as it uses blue component, not alpha.
         ; instead we convert extract alphas into array and use array version of mask()
         ; see https://processing.org/reference/PImage_mask_.html
-        (let [pxls (pixels mask)
-              alphas (amap ^ints pxls idx ret (int (alpha (aget ^ints pxls idx))))]
-          (.mask img alphas))
-       :cljs (.mask img mask))))
+      (let [pxls (pixels mask)
+            alphas (amap ^ints pxls idx ret (int (alpha (aget ^ints pxls idx))))]
+        (.mask img alphas))
+      :cljs (.mask img mask))))
 
 (defn
   ^{:requires-bindings true

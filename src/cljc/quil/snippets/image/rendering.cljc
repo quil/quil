@@ -13,7 +13,7 @@
   (let [modes [:replace :blend :add #?(:clj :subtract) :darkest
                :lightest :difference :exclusion :multiply :screen
                #?@(:cljs (:overlay :hard-light :soft-light
-                          :dodge :burn))]
+                                   :dodge :burn))]
         splitted (partition-all 4 modes)]
     (dotimes [row (count splitted)]
       (dotimes [col (count (nth splitted row))]
