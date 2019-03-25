@@ -18,3 +18,4 @@ generated/
 examples/
 pom.xml.asc
 screen-*.tif
+.ds_store

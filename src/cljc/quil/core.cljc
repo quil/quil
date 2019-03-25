@@ -772,7 +772,7 @@
                    Photoshop."
      [c1 c2 mode]
      (let [mode (u/resolve-constant-key mode blend-modes)]
-       (PApplet/blendColor (unchecked-int c1) (unchecked-int c2) (int mode)))))
+       (PApplet/blendColor (u/clj-unchecked-int c1) (u/clj-unchecked-int c2) (int mode)))))
 
 (defn
   ^{:requires-bindings true
@@ -827,7 +827,7 @@
   "Extracts the blue value from a color, scaled to match current color-mode.
   Returns a float."
   [color]
-  (.blue (current-graphics) color))
+  (.blue (current-graphics) (u/clj-unchecked-int color)))
 
 (defn
   ^{:requires-bindings true
@@ -849,7 +849,7 @@
   brightness
   "Extracts the brightness value from a color. Returns a float."
   [color]
-  (.brightness (current-graphics) color))
+  (.brightness (current-graphics) (u/clj-unchecked-int color)))
 
 (defn
   ^{:requires-bindings true
@@ -1847,7 +1847,7 @@
   color-mode. This value is always returned as a float so be careful
   not to assign it to an int value."
   [col]
-  (.green (current-graphics) col))
+  (.green (current-graphics) (u/clj-unchecked-int col)))
 
 (defn
   ^{:require-binding false
@@ -1971,7 +1971,7 @@
   hue
   "Extracts the hue value from a color."
   [col]
-  (.hue (current-graphics) col))
+  (.hue (current-graphics) (u/clj-unchecked-int col)))
 
 (defn
   ^{:requires-bindings true
@@ -2172,7 +2172,10 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-graphics) c1 c2 (float amt)))
+  (.lerpColor (current-graphics) 
+    (u/clj-unchecked-int c1)
+    (u/clj-unchecked-int c2) 
+    (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -3235,7 +3238,7 @@
   red
   "Extracts the red value from a color, scaled to match current color-mode."
   [c]
-  (.red (current-graphics) c))
+  (.red (current-graphics) (u/clj-unchecked-int c)))
 
 (defn
   ^{:requires-bindings true
@@ -3450,7 +3453,7 @@
   saturation
   "Extracts the saturation value from a color."
   [c]
-  (.saturation (current-graphics) c))
+  (.saturation (current-graphics) (u/clj-unchecked-int c)))
 
 (defn
   ^{:requires-bindings true
