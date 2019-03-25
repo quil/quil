@@ -4676,12 +4676,6 @@
                                  call function created defsketch.
                                  Supported only in ClojureScript.
 
-                     :global-key-events - Allows a sketch to receive any
-                                          keyboard event sent to the page,
-                                          regardless of whether the canvas it is
-                                          loaded in has focus or not.
-                                          Supported only in ClojureScript.
-
                      Usage example: :features [:keep-on-top :present]
 
    :bgcolor        - Sets background color for unused space in present mode.

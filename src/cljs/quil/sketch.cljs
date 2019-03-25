@@ -128,8 +128,6 @@
                  (bind-handlers prc opts)
                  (set! (.-quil prc) (atom nil))
                  (set! (.-quil-internal-state prc) (atom u/initial-internal-state)))]
-    (when (contains? features :global-key-events)
-      (aset (aget sketch "options") "globalKeyEvents" true))
     sketch))
 
 (defn destroy-previous-sketch [host-elem]

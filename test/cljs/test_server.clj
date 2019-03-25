@@ -55,12 +55,6 @@
       "Sketch should show a bunch of white dots in weird pattern.")
 
      (gen-test-container
-      "global-key-events"
-      (str
-       "Sketch should number of key events. It should increase each time any key is pressed "
-       "on keyboard regardless whether sketch is focused or not."))
-
-     (gen-test-container
       "mouse-and-key-pressed-variable"
       "Sketch should show whether mouse or key are pressed.")
 

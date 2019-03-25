@@ -164,19 +164,6 @@
 
              (q/image gr 10 10))
            (q/no-loop)))
-  (let [counter (atom 0)]
-    (q/sketch
-     :host "global-key-events"
-     :size [500 500]
-     :key-pressed (fn []
-                    (swap! counter inc))
-     :features [:global-key-events]
-     :draw (fn []
-             (q/background 255)
-             (q/text-size 30)
-             (q/fill 0)
-             (q/text-align :center :center)
-             (q/text (str "Key events: " @counter) 250 250))))
 
   (q/sketch
    :host "mouse-and-key-pressed-variable"
