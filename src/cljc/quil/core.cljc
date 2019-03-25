@@ -1624,8 +1624,9 @@
     :added "1.0"}
   fill
   "Sets the color used to fill shapes. For example, if you run (fill 204 102 0),
-  all subsequent shapes will be filled with orange.  This function casts all input as a float.
-  If nil is passed it removes any fill color; equivalent to (no-fill)."
+  all subsequent shapes will be filled with orange.  This function casts all
+  input as a float. If nil is passed it removes any fill color; equivalent to
+  (no-fill)."
   ([gray]
     ; provided color might be passed from (current-fill) in which case it's a vector.
     ; In that case just call fill again applying vector to the (fill).
@@ -1765,7 +1766,7 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "isLooping()"
+    :processing-name nil
     :category "Environment"
     :subcategory nil
     :added "2.7.2"}
@@ -2172,10 +2173,10 @@
   the two values where 0.0 equal to the first point, 0.1 is very near
   the first point, 0.5 is half-way in between, etc."
   [c1 c2 amt]
-  (.lerpColor (current-graphics) 
-    (u/clj-unchecked-int c1)
-    (u/clj-unchecked-int c2) 
-    (float amt)))
+  (.lerpColor (current-graphics)
+              (u/clj-unchecked-int c1)
+              (u/clj-unchecked-int c2)
+              (float amt)))
 
 (defn
   ^{:requires-bindings false
@@ -3247,9 +3248,9 @@
     :subcategory nil
     :added "1.0"}
   redraw
-  "Executes the code within the draw fn one time (or n times in cljs). This function
-  allows the program to update the display window only when necessary,
-  for example when an event registered by mouse-pressed or
+  "Executes the code within the draw fn one time (or n times in cljs). 
+  This function allows the program to update the display window only 
+  when necessary, for example when an event registered by mouse-pressed or
   key-pressed occurs.
 
   In structuring a program, it only makes sense to call redraw
@@ -3302,7 +3303,7 @@
   ^{:requires-bindings true
     :processing-name "resize()"
     :category "Image"
-    :processing-link "http://processing.org/reference/PImage_resize_.html"
+    :processing-link "https://processing.org/reference/PImage_resize_.html"
     :added "2.1.0"}
   resize
   "Resize the image to a new width and height.
@@ -4629,10 +4630,10 @@
                      instead. In clojurescript only :p2d and :p3d renderers
                      are supported.
 
-   :output-file    - Specifies an output file path. Only used in :pdf and :svg modes.
-                     Not supported in clojurescript. When writing to a file, call
-                     `(q/exit)` at the end of the draw call to end the sketch and not
-                     write repeatedly to the file.
+   :output-file    - Specifies an output file path. Only used in :pdf and :svg
+                     modes. Not supported in clojurescript. When writing to a
+                     file, call `(q/exit)` at the end of the draw call to end
+                     the sketch and not write repeatedly to the file.
 
    :title          - A string which will be displayed at the top of
                      the sketch window. Not supported in clojurescript.

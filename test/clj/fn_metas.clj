@@ -11,7 +11,11 @@
           ['quil.core 'quil.middleware]))
 
 (defn valid-link? [link]
-  (-> link (http/get {:throw-exceptions false}) :status (= 200)))
+  (try
+    (-> link (http/get {:throw-exceptions false}) :status (= 200))
+    (catch Exception e
+      (println e)
+      false)))
 
 (deftest processing-links-valid
   (doseq [{:keys [link valid?]} (->> (get-public-fns-metas)

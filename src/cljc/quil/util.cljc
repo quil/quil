@@ -112,7 +112,7 @@
         #(make-quil-constant-map target (first %) (second %))
         (partition 2 opts))))
 
-(defn clj-unchecked-int 
+(defn clj-unchecked-int
   "In clojure it does unchecked-int and does nothing in cljs.
   Needed to handle colors in hex form in clojure."
   [v]

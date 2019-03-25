@@ -17,7 +17,7 @@
                        (cstr/replace "()" "_")
                        (cstr/replace "." "_")
                        (cstr/replace "[]" ""))]
-          (str "http://www.processing.org/reference/" name ".html"))
+          (str "https://processing.org/reference/" name ".html"))
 
         :else
         nil))
