@@ -148,6 +148,7 @@
                      j (range 30)]
                (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))
            (q/no-loop)))
+
   (q/sketch
    :host "pixels-update-pixels"
    :size [500 500]
@@ -157,9 +158,19 @@
              (q/with-graphics gr
                (q/background 55))
 
-             (let [px (q/pixels gr)]
+             (let [px (q/pixels gr)
+                   c  (q/color 255)
+                   r  (q/red c)
+                   g  (q/green c)
+                   b  (q/blue c)
+                   a  (q/alpha c)]
                (dotimes [i 100]
-                 (aset px (* i i) (q/color 255))))
+                 (let [d (q/display-density)
+                       p (* 4 i i d d)]
+                   (aset px p r)
+                   (aset px (+ 1 p) g)
+                   (aset px (+ 2 p) b)
+                   (aset px (+ 3 p) a))))
              (q/update-pixels gr)
 
              (q/image gr 10 10))
