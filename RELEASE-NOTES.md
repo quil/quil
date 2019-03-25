@@ -1,3 +1,13 @@
+## 3.0.0
+__TODO__
+
+* Switched from ProcessingJS to p5js as backend for ClojureScript version by [@anthonygalea](http://github.com/anthonygalea). A lot of changes in cljs API, see [spreadsheet](https://docs.google.com/spreadsheets/d/1LlXS5DuMgSZpV5LSwvmYzSr5Tpm8UUxwfsuSAsDSamE/edit?usp=sharing).
+* ClojureScript sketches have to be created using `<div>` instead of `<canvas>` due to p5js migration.
+* Removed `:global-key-events` feature as it's global by default now.
+* Fix space-as-keyword functionality. Issue [#232](https://github.com/quil/quil/issues/262) by [@tkocmathla](https://github.com/tkocmathla).
+* Documentation improvements from [@shrynx](https://github.com/shrynx) and [@dominicfreeston](https://github.com/dominicfreeston).
+* Improved type hints to avoid reflection. Pull request [#288](https://github.com/quil/quil/pull/288) by [@heyarne](https://github.com/heyarne).
+
 ## 2.8.0
 _19th November 2018_
 
