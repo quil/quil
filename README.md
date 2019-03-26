@@ -2,7 +2,7 @@
 
 http://quil.info
 
-<img src="https://github.com/quil/quil/blob/master/dev-resources/quil.png" alt="Quil Painting" title="Quil" align="right" width="250"/>
+<img src="dev-resources/quil.png" alt="Quil Painting" title="Quil" align="right" width="250"/>
 
 Quil looked up in shock to see Bigelow floating high in the clouds, his balloons rustling merrily in the wind. He gruffed to her from above, "This truly is a party!". Image after image, vista after vista, passed furry Bige's wide-open eyes. A deep underlying beauty unfolded before him. A flock of bezier gulls whistled past. Beneath his dangling paws a distant shepherd called his scribbly sheep in for re-sketching. Goading him from the distance, wooden letters of so many different fonts mocked **PERLIN-WOULD** from the hilltops.
 
@@ -80,7 +80,7 @@ A simple example is called for:
   :size [323 200])                    ;; You struggle to beat the golden ratio
 ```
 
-<img src="https://github.com/quil/quil/blob/master/dev-resources/grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
+<img src="dev-resources/grey-circles.png" alt="Oh so many grey cicles" title="Oh so many grey cicles" align="left" />
 
 Feast your eyes on this beauty.
 
@@ -102,7 +102,7 @@ Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
 ## Examples
 
-<img src="https://github.com/quil/quil/blob/master/dev-resources/waves.png" alt="Wave Clock" title="Wave Clock" align="right" />
+<img src="dev-resources/waves.png" alt="Wave Clock" title="Wave Clock" align="right" />
 
 Quil comes chock-packed full of examples covering most of the available API. Many of them have been translated from the excellent book "Generative Art" by Matt Pearson, with kind permission from the author.
 
