@@ -252,7 +252,7 @@
   abs
   "Calculates the absolute value (magnitude) of a number. The
   absolute value of a number is always positive. Dynamically casts to
-  an int or float appropriately for Clojure."
+  an `int` or `float` appropriately for Clojure."
   [n]
   #?(:clj
      (if (u/int-like? n)
@@ -268,9 +268,9 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   acos
-  "The inverse of cos, returns the arc cosine of a value. This
+  "The inverse of [[cos]], returns the arc cosine of a value. This
   function expects the values in the range of -1 to 1 and values are
-  returned in the range 0 to Math/PI (3.1415927)."
+  returned in the range 0 to `Math/PI` (3.1415927)."
   [n]
   #?(:clj (PApplet/acos (float n))
      :cljs (.acos (ap/current-applet) n)))
@@ -298,8 +298,8 @@
   color components set through the parameters define the
   reflectance. For example in the default color mode, setting x=255,
   y=126, z=0, would cause all the red light to reflect and half of the
-  green light to reflect. Used in combination with emissive, specular,
-  and shininess in setting the material properties of shapes."
+  green light to reflect. Used in combination with [[emissive]], [[specular]],
+  and [[shininess]] in setting the material properties of shapes."
   ([gray]
    #?(:clj (.ambient (current-graphics) (float gray))
       :cljs (.ambientMaterial (current-graphics) (float gray))))
@@ -315,7 +315,7 @@
     :added "1.0"}
   ambient-light
   "Adds an ambient light. Ambient light doesn't come from a specific direction,
-  the rays have light have bounced around so much that objects are
+  the rays of light have bounced around so much that objects are
   evenly lit from all sides. Ambient lights are almost always used in
   combination with other types of lights. Lights need to be included
   in the draw to remain persistent in a looping program. Placing them
@@ -336,7 +336,7 @@
        :subcategory "Trigonometry"
        :added "2.8.0"}
      angle-mode
-     "Sets the current mode of p5 to given mode. Default mode is :radians."
+     "Sets the current mode of p5 to given mode. Default mode is `:radians`."
      ([mode]
       (let [mode (u/resolve-constant-key mode angle-modes)]
         (.angleMode (current-graphics) mode)))))
@@ -351,7 +351,7 @@
   "Multiplies the current matrix by the one specified through the
   parameters. This is very slow because it will try to calculate the
   inverse of the transform, so avoid it whenever possible. The
-  equivalent function in OpenGL is glMultMatrix().
+  equivalent function in OpenGL is `glMultMatrix()`.
 
   Note that cljs has only 2d version and arguments differ see
   https://p5js.org/reference/#/p5/applyMatrix"
@@ -384,10 +384,10 @@
     :added "1.0"}
   arc
   "Draws an arc in the display window. Arcs are drawn along the outer
-  edge of an ellipse defined by the x, y, width and height
+  edge of an ellipse defined by the `x`, `y`, `width` and `height`
   parameters. The origin or the arc's ellipse may be changed with the
-  ellipse-mode function. The start and stop parameters specify the
-  angles at which to draw the arc. The mode is either :open, :chord or :pie."
+  [[ellipse-mode]] function. The `start` and `stop` parameters specify the
+  angles at which to draw the arc. The `mode` is either `:open`, `:chord` or `:pie`."
   ([x y width height start stop]
    (.arc (current-graphics) (float x) (float y) (float width) (float height)
          (float start) (float stop)))
@@ -404,9 +404,9 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   asin
-  "The inverse of sin, returns the arc sine of a value. This function
+  "The inverse of [[sin]], returns the arc sine of a value. This function
   expects the values in the range of -1 to 1 and values are returned
-  in the range -PI/2 to PI/2."
+  in the range `-PI/2` to `PI/2`."
   [n]
   #?(:clj (PApplet/asin (float n))
      :cljs (.asin (ap/current-applet) n)))
@@ -418,10 +418,10 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   atan
-  "The inverse of tan, returns the arc tangent of a value. This
+  "The inverse of [[tan]], returns the arc tangent of a value. This
   function expects the values in the range of -Infinity to
-  Infinity (exclusive) and values are returned in the range -PI/2 to
-  PI/2 ."
+  Infinity (exclusive) and values are returned in the range `-PI/2` to
+  `PI/2`."
   [n]
   #?(:clj (PApplet/atan (float n))
      :cljs (.atan (ap/current-applet) n)))
@@ -435,7 +435,7 @@
   atan2
   "Calculates the angle (in radians) from a specified point to the
   coordinate origin as measured from the positive x-axis. Values are
-  returned as a float in the range from PI to -PI. The atan2 function
+  returned as a `float` in the range from `PI` to `-PI`. The [[atan2]] function
   is most often used for orienting geometry to the position of the
   cursor. Note: The y-coordinate of the point is the first parameter
   and the x-coordinate is the second due to the structure of
@@ -458,7 +458,7 @@
     Because of limitations in Java, not all fonts can be used and some
     might work with one operating system and not others. When sharing a
     sketch with other people or posting it on the web, you may need to
-    include a .ttf or .otf version of your font in the data directory of
+    include a `.ttf` or `.otf` version of your font in the data directory of
     the sketch because other people might not have the font installed on
     their computer. Only fonts that can legally be distributed should be
     included with a sketch."
@@ -505,9 +505,9 @@
     :subcategory "Vertex"
     :added "2.0"}
   begin-contour
-  "Use the begin-contour and end-contour function to create negative
+  "Use the [[begin-contour]] and [[end-contour]] function to create negative
   shapes within shapes. These functions can only be within a
-  begin-shape/end-shape pair and they only work with the :p2d and :p3d
+  [[begin-shape]]/[[end-shape]] pair and they only work with the `:p2d` and `:p3d`
   renderers."
   []
   (.beginContour (current-graphics)))
@@ -521,7 +521,7 @@
        :added "1.0"}
      begin-raw
      "Enables the creation of vectors from 3D data. Requires
-  corresponding end-raw command. These commands will grab the shape
+  corresponding [[end-raw]] command. These commands will grab the shape
   data just before it is rendered to the screen. At this stage, your
   entire scene is nothing but a long list of individual lines and
   triangles. This means that a shape created with sphere method will
@@ -538,26 +538,26 @@
     :subcategory "Vertex"
     :added "1.0"}
   begin-shape
-  "Enables the creation of complex forms. begin-shape begins recording
-  vertices for a shape and end-shape stops recording. Use the mode
-  keyword to specify which shape create from the provided
+  "Enables the creation of complex forms. [[begin-shape]] begins recording
+  vertices for a shape and [[end-shape]] stops recording. Use the `mode`
+  keyword to specify which shape to create from the provided
   vertices. With no mode specified, the shape can be any irregular
   polygon.
 
-  The available mode keywords are :points, :lines, :triangles,
-                                  :triangle-fan, :triangle-strip,
-                                  :quads, :quad-strip.
+  The available mode keywords are `:points`, `:lines`, `:triangles`,
+                                  `:triangle-fan`, `:triangle-strip`,
+                                  `:quads`, `:quad-strip`.
 
-  After calling the begin-shape function, a series of vertex commands
-  must follow. To stop drawing the shape, call end-shape. The vertex
+  After calling the [[begin-shape]] function, a series of vertex commands
+  must follow. To stop drawing the shape, call [[end-shape]]. The [[vertex]]
   function with two parameters specifies a position in 2D and the
-  vertex function with three parameters specifies a position in
+  [[vertex]] function with three parameters specifies a position in
   3D. Each shape will be outlined with the current stroke color and
   filled with the fill color.
 
-  Transformations such as translate, rotate, and scale do not work
-  within begin-shape. It is also not possible to use other shapes,
-  such as ellipse or rect within begin-shape."
+  Transformations such as [[translate]], [[rotate]], and [[scale]] do not work
+  within [[begin-shape]]. It is also not possible to use other shapes,
+  such as [[ellipse]] or [[rect]] within [[begin-shape]]."
   ([] (.beginShape (current-graphics)))
   ([mode]
    (let [mode (u/resolve-constant-key mode shape-modes)]
@@ -596,8 +596,8 @@
     :added "1.0"}
   bezier-detail
   "Sets the resolution at which Beziers display. The default value is
-  20. This function is only useful when using the :p3d or :opengl
-  renderer as the default (:java2d) renderer does not use this
+  20. This function is only useful when using the `:p3d` or `:opengl`
+  renderer as the default (`:java2d`) renderer does not use this
   information."
   [detail]
   (.bezierDetail (current-graphics) (int detail)))
@@ -609,11 +609,11 @@
     :subcategory "Curves"
     :added "1.0"}
   bezier-point
-  "Evaluates the Bezier at point t for points a, b, c, d. The
-  parameter t varies between 0 and 1, a and d are points on the curve,
-  and b and c are the control points. This can be done once with the x
+  "Evaluates the Bezier at point `t` for points `a`, `b`, `c`, `d`. The
+  parameter `t` varies between 0 and 1, `a` and `d` are points on the curve,
+  and `b` and `c` are the control points. This can be done once with the x
   coordinates and a second time with the y coordinates to get the
-  location of a bezier curve at t."
+  location of a bezier curve at `t`."
   [a b c d t]
   (.bezierPoint (current-graphics) (float a) (float b) (float c)
                 (float d) (float t)))
@@ -639,13 +639,13 @@
     :added "1.0"}
   bezier-vertex
   "Specifies vertex coordinates for Bezier curves. Each call to
-  bezier-vertex defines the position of two control points and one
+  [[bezier-vertex]] defines the position of two control points and one
   anchor point of a Bezier curve, adding a new segment to a line or
-  shape. The first time bezier-vertex is used within a begin-shape
-  call, it must be prefaced with a call to vertex to set the first
-  anchor point. This function must be used between begin-shape and
-  end-shape and only when there is no parameter specified to
-  begin-shape."
+  shape. The first time [[bezier-vertex]] is used within a [[begin-shape]]
+  call, it must be prefaced with a call to [[vertex]] to set the first
+  anchor point. This function must be used between [[begin-shape]] and
+  [[end-shape]] and only when there is no parameter specified to
+  [[begin-shape]]."
   ([cx1 cy1 cx2 cy2 x y]
    (.bezierVertex (current-graphics)
                   (float cx1) (float cy1)
@@ -664,8 +664,8 @@
     :subcategory "Conversion"
     :added "1.0"}
   binary
-  "Returns a string representing the binary value of an int, char or
-  byte. When converting an int to a string, it is possible to specify
+  "Returns a `string` representing the binary value of an `int`, `char` or
+  `byte`. When converting an `int` to a `string`, it is possible to specify
   the number of digits used."
   ([val]
    #?(:clj (PApplet/binary (int val))
@@ -683,44 +683,46 @@
     :added "1.0"}
   blend
   "Blends a region of pixels from one image into another with full alpha
-  channel support. If src is not specified it defaults to current-graphics.
-  If dest is not specified it defaults to current-graphics.
+  channel support. If `src` is not specified it defaults to current-graphics.
+  If dest is not specified it defaults to [[current-graphics]].
 
-  Note: blend-mode function is recommended to use instead of this one.
+  Note: it is recommended to use the [[blend-mode]] function instead of this one.
 
   Available blend modes are:
 
-  :blend      - linear interpolation of colours: C = A*factor + B
-  :add        - additive blending with white clip:
-                                            C = min(A*factor + B, 255)
-  :darkest    - only the darkest colour succeeds:
-                                            C = min(A*factor, B)
-  :lightest   - only the lightest colour succeeds:
-                                            C = max(A*factor, B)
-  :difference - subtract colors from underlying image.
-  :exclusion  - similar to :difference, but less extreme.
-  :multiply   - Multiply the colors, result will always be darker.
-  :screen     - Opposite multiply, uses inverse values of the colors.
-  :overlay    - A mix of :multiply and :screen. Multiplies dark values
-                and screens light values.
-  :hard-light - :screen when greater than 50% gray, :multiply when
-                lower.
-  :soft-light - Mix of :darkest and :lightest. Works like :overlay,
-                but not as harsh.
-  :dodge      - Lightens light tones and increases contrast, ignores
-                darks.
-                Called \"Color Dodge\" in Illustrator and Photoshop.
-  :burn       - Darker areas are applied, increasing contrast, ignores
-                lights. Called \"Color Burn\" in Illustrator and
-                Photoshop.
+  | mode         | description |
+  |--------------|-------------|
+  |`:blend`      | linear interpolation of colours: C = A*factor + B
+  |`:add`        | additive blending with white clip:
+  |              |                             C = min(A*factor + B, 255)
+  |`:darkest`    | only the darkest colour succeeds:
+  |              |                             C = min(A*factor, B)
+  |`:lightest`   | only the lightest colour succeeds:
+  |              |                             C = max(A*factor, B)
+  |`:difference` | subtract colors from underlying image.
+  |`:exclusion`  | similar to :difference, but less extreme.
+  |`:multiply`   | Multiply the colors, result will always be darker.
+  |`:screen`     | Opposite multiply, uses inverse values of the colors.
+  |`:overlay`    | A mix of :multiply and :screen. Multiplies dark values
+  |              | and screens light values.
+  |`:hard-light` | :screen when greater than 50% gray, :multiply when
+  |              | lower.
+  |`:soft-light` | Mix of :darkest and :lightest. Works like :overlay,
+  |              | but not as harsh.
+  |`:dodge`      | Lightens light tones and increases contrast, ignores
+  |              | darks.
+  |              | Called \"Color Dodge\" in Illustrator and Photoshop.
+  |`:burn`       | Darker areas are applied, increasing contrast, ignores
+  |              | lights. Called \"Color Burn\" in Illustrator and
+  |              | Photoshop.
 
   In clj the following blend modes are also supported:
-  :subtract   - subtractive blending with black clip:
+  `:subtract`   - subtractive blending with black clip:
                                             C = max(B - A*factor, 0)
 
   In cljs the following blend modes are also supported:
-  :replace    - the pixels entirely replace the others and don't utilize
-                alpha (transparency) values."
+  `:replace`    - the pixels entirely replace the others and don't utilize
+                  alpha (transparency) values."
   ([x y width height dx dy dwidth dheight mode]
    (blend (current-graphics) (current-graphics) x y width height dx dy dwidth dheight mode))
   ([^PImage src-img x y width height dx dy dwidth dheight mode]
@@ -745,31 +747,33 @@
 
      Available blend modes are:
 
-     :blend      - linear interpolation of colours: C = A*factor + B
-     :add        - additive blending with white clip:
-                                               C = min(A*factor + B, 255)
-     :subtract   - subtractive blending with black clip:
-                                               C = max(B - A*factor, 0)
-     :darkest    - only the darkest colour succeeds:
-                                               C = min(A*factor, B)
-     :lightest   - only the lightest colour succeeds:
-                                               C = max(A*factor, B)
-     :difference - subtract colors from underlying image.
-     :exclusion  - similar to :difference, but less extreme.
-     :multiply   - Multiply the colors, result will always be darker.
-     :screen     - Opposite multiply, uses inverse values of the colors.
-     :overlay    - A mix of :multiply and :screen. Multiplies dark values
-                   and screens light values.
-     :hard-light - :screen when greater than 50% gray, :multiply when
-                   lower.
-     :soft-light - Mix of :darkest and :lightest. Works like :overlay,
-                   but not as harsh.
-     :dodge      - Lightens light tones and increases contrast, ignores
-                   darks.
-                   Called \"Color Dodge\" in Illustrator and Photoshop.
-     :burn       - Darker areas are applied, increasing contrast, ignores
-                   lights. Called \"Color Burn\" in Illustrator and
-                   Photoshop."
+     | mode         | description |
+     |--------------|-------------|
+     |`:blend`      | linear interpolation of colours: C = A*factor + B
+     |`:add`        | additive blending with white clip:
+     |              |                             C = min(A*factor + B, 255)
+     |`:subtract`   | subtractive blending with black clip:
+     |              |                             C = max(B - A*factor, 0)
+     |`:darkest`    | only the darkest colour succeeds:
+     |              |                             C = min(A*factor, B)
+     |`:lightest`   | only the lightest colour succeeds:
+     |              |                             C = max(A*factor, B)
+     |`:difference` | subtract colors from underlying image.
+     |`:exclusion`  | similar to :difference, but less extreme.
+     |`:multiply`   | Multiply the colors, result will always be darker.
+     |`:screen`     | Opposite multiply, uses inverse values of the colors.
+     |`:overlay`    | A mix of :multiply and :screen. Multiplies dark values
+     |              | and screens light values.
+     |`:hard-light` | :screen when greater than 50% gray, :multiply when
+     |              | lower.
+     |`:soft-light` | Mix of :darkest and :lightest. Works like :overlay,
+     |              | but not as harsh.
+     |`:dodge`      | Lightens light tones and increases contrast, ignores
+     |              | darks.
+     |              | Called \"Color Dodge\" in Illustrator and Photoshop.
+     |`:burn`       | Darker areas are applied, increasing contrast, ignores
+     |              | lights. Called \"Color Burn\" in Illustrator and
+     |              | Photoshop."
      [c1 c2 mode]
      (let [mode (u/resolve-constant-key mode blend-modes)]
        (PApplet/blendColor (u/clj-unchecked-int c1) (u/clj-unchecked-int c2) (int mode)))))
@@ -785,32 +789,34 @@
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
-  :blend      - linear interpolation of colours: C = A*factor + B
-  :add        - additive blending with white clip:
-                                            C = min(A*factor + B, 255)
-  :subtract   - subtractive blending with black clip:
-                                            C = max(B - A*factor, 0)
-  :darkest    - only the darkest colour succeeds:
-                                            C = min(A*factor, B)
-  :lightest   - only the lightest colour succeeds:
-                                            C = max(A*factor, B)
-  :difference - subtract colors from underlying image.
-  :exclusion  - similar to :difference, but less extreme.
-  :multiply   - Multiply the colors, result will always be darker.
-  :screen     - Opposite multiply, uses inverse values of the colors.
-  :replace    - the pixels entirely replace the others and don't utilize
-                alpha (transparency) values.
-  :overlay    - mix of :multiply and :screen. Multiplies dark values,
-                and screens light values.
-  :hard-light - :screen when greater than 50% gray, :multiply when lower.
-  :soft-light - mix of :darkest and :lightest. Works like :overlay, but
-                not as harsh.
-  :dodge      - lightens light tones and increases contrast, ignores darks.
-  :burn       - darker areas are applied, increasing contrast, ignores
-                lights.
+  | mode         | description |
+  |--------------|-------------|
+  |`:blend`      | linear interpolation of colours: C = A*factor + B
+  |`:add`        | additive blending with white clip:
+  |              |                             C = min(A*factor + B, 255)
+  |`:subtract`   | subtractive blending with black clip:
+  |              |                             C = max(B - A*factor, 0)
+  |`:darkest`    | only the darkest colour succeeds:
+  |              |                             C = min(A*factor, B)
+  |`:lightest`   | only the lightest colour succeeds:
+  |              |                             C = max(A*factor, B)
+  |`:difference` | subtract colors from underlying image.
+  |`:exclusion`  | similar to :difference, but less extreme.
+  |`:multiply`   | Multiply the colors, result will always be darker.
+  |`:screen`     | Opposite multiply, uses inverse values of the colors.
+  |`:replace`    | the pixels entirely replace the others and don't utilize
+  |              | alpha (transparency) values.
+  |`:overlay`    | mix of :multiply and :screen. Multiplies dark values,
+  |              | and screens light values.
+  |`:hard-light` | :screen when greater than 50% gray, :multiply when lower.
+  |`:soft-light` | mix of :darkest and :lightest. Works like :overlay, but
+  |              | not as harsh.
+  |`:dodge`      | lightens light tones and increases contrast, ignores darks.
+  |`:burn`       | darker areas are applied, increasing contrast, ignores
+  |              | lights.
 
-  Note: in clj :hard-light, :soft-light, :overlay, :dodge, :burn
-  modes are not supported. In cljs :subtract mode is not supported.
+  Note: in clj `:hard-light`, `:soft-light`, `:overlay`, `:dodge`, `:burn`
+  modes are not supported. In cljs `:subtract` mode is not supported.
 
   factor is the alpha value of the pixel being drawn"
   ([mode]
@@ -825,7 +831,7 @@
     :added "1.0"}
   blue
   "Extracts the blue value from a color, scaled to match current color-mode.
-  Returns a float."
+  Returns a `float`."
   [color]
   (.blue (current-graphics) (u/clj-unchecked-int color)))
 
@@ -847,7 +853,7 @@
     :subcategory "Creating & Reading"
     :added "1.0"}
   brightness
-  "Extracts the brightness value from a color. Returns a float."
+  "Extracts the brightness value from a color. Returns a `float`."
   [color]
   (.brightness (current-graphics) (u/clj-unchecked-int color)))
 
