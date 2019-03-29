@@ -2,43 +2,44 @@
   (:require [quil.util :as u]))
 
 (defmacro defsnippet
-  "Defines a snippet. Snippet is a smalll example of how to use specific
-  Quil function. Snippets used in Quil docs as well as they used for release
-  testing.
+  "Defines a snippet. A snippet is a small example showing how to use a specific
+  Quil function. Snippets are used in Quil docs and for release testing.
 
-  If snippet is intended for clj-only or cljs-only function - use reader conditionals
-  (https://clojure.org/reference/reader#_reader_conditionals) to define snippet only in
-  clj or cljs. Also you can use reader conditionals inside snippet itself if needed.
+  If a snippet is intended for a clj-only or cljs-only function, use reader conditionals
+  (https://clojure.org/reference/reader#_reader_conditionals) to define the snippet only in
+  clj or cljs. You can also use reader conditionals inside the snippet itself if needed.
 
-  If the snippet is not trivial and has multiple parts - it should have comments. These
-  comments will help Quil users to understand better what snippet does when they read
-  Quil API. Because standard clojure comments (the one that start with ;) are stripped in
-  macros instead comments should be added using (comment) macro. Like the following:
+  If the snippet is not trivial and has multiple parts it should have comments. These
+  comments will help Quil users to understand better what the snippet does when they read
+  the Quil API. Since standard clojure comments (the one that start with ;) are stripped in
+  macros, comments should be added using (comment) macro like this:
 
+  ```
   (comment \"Do foo bar\")
   (foo-bar 123)
+  ```
 
-  All (comment) forms will be converted into ';' comments when generating documentation.
+  All `(comment)` forms will be converted into `;` comments when generating the
+  documentation.
 
   Snippets are stored in https://github.com/quil/quil/tree/master/src/cljc/quil/snippets
 
   More info about snippets: https://github.com/quil/quil/wiki/Snippets
 
-  This macro works by storing its parts in a list quil.snippets.all-snippets/all-snippets
-  that later used to generate tests for release testing or generate documentation.
+  This macro works by storing its parts in a list [[quil.snippets.all-snippets/all-snippets]]
+  that is later used to generate tests for release testing or generate documentation.
 
-  Params:
-    name Name of snippet. Doesn't really matter, needs to be unique
-        in the current file. Good default name is the same as function
-        this snippets tests.
-    fns Name of the Quil function name that the snippet tests. Used to
-        to find all snippets for each function when generating documentation.
-        Supports a collection of names if snippet tests few related Quil
-        functions at the same time.
-    opts Map of extra options. Supported options:
-      :renderer Renderer to use for snippet, if not default.
-      :setup Setup function to use. Default is empty.
-    body Body of draw function of the snippet."
+  Parameters:
+    * `name` - Name of snippet. Usually the same as the function
+               the snippet tests. Needs to be unique in the current file.
+    * `fns`  - Name of the Quil function that the snippet tests. Used to
+               to find all snippets for each function when generating documentation.
+               Supports a collection of names if snippet tests few related Quil
+               functions at the same time.
+    * `opts` - Map of extra options. Supported options:
+      - `:renderer` - Renderer to use for the snippet, if not default.
+      - `:setup`    - Setup function to use. Default is empty.
+    * `body` - The body of the `draw` function of the snippet."
   [snip-name fns opts & body]
   (let [setup (:setup opts '())
         mouse-clicked (:mouse-clicked opts '())]
