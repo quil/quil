@@ -3,7 +3,57 @@
             [clojure.tools.reader.reader-types :refer [input-stream-push-back-reader]]
             [clojure.java.io :as io]
             [clojure.set :refer [union]]
-            [quil.helpers.docs :refer [link-to-processing-reference]]))
+            [clojure.string :as string]
+            [quil.helpers.docs :refer [link-to-processing-reference]])
+  (:import (com.vladsch.flexmark.parser Parser)
+           (com.vladsch.flexmark.html HtmlRenderer LinkResolverFactory LinkResolver)
+           (com.vladsch.flexmark.html.renderer ResolvedLink LinkType LinkStatus LinkResolverContext)
+           (com.vladsch.flexmark.ext.gfm.tables TablesExtension)
+           (com.vladsch.flexmark.ext.autolink AutolinkExtension)
+           (com.vladsch.flexmark.ext.anchorlink AnchorLinkExtension)
+           (com.vladsch.flexmark.ext.wikilink WikiLinkExtension)
+           (com.vladsch.flexmark.util.options MutableDataSet)))
+
+(def md-extensions
+  [(TablesExtension/create)
+   (AutolinkExtension/create)
+   (AnchorLinkExtension/create)
+   (WikiLinkExtension/create)])
+
+(def md-container
+  (.. (Parser/builder)
+      (extensions md-extensions)
+      (build)))
+
+(defn- md-renderer
+  "Create a Markdown renderer."
+  []
+  (.. (HtmlRenderer/builder
+       (doto (MutableDataSet.)
+         (.set AnchorLinkExtension/ANCHORLINKS_ANCHOR_CLASS "md-anchor")
+         (.set HtmlRenderer/FENCED_CODE_NO_LANGUAGE_CLASS "language-clojure")))
+      (linkResolverFactory
+        (reify LinkResolverFactory
+          (getAfterDependents [_this] nil)
+          (getBeforeDependents [_this] nil)
+          (affectsGlobalScope [_this] false)
+          (^LinkResolver create [_this ^LinkResolverContext _ctx]
+            (reify LinkResolver
+              (resolveLink [_this _node _ctx link]
+                (if (= (.getLinkType link) WikiLinkExtension/WIKI_LINK)
+                  (ResolvedLink. LinkType/LINK
+                                 (.getUrl link)
+                                 nil
+                                 LinkStatus/UNCHECKED)
+                  link))))))
+      (extensions md-extensions)
+      (build)))
+
+(defn markdown-to-html
+  "Parse the given string as Markdown and return HTML."
+  [markdown]
+  (->> (.parse md-container markdown)
+       (.render (md-renderer))))
 
 (defn read-all [file feature]
   (let [reader (->> file
@@ -28,7 +78,7 @@
     (assoc mt
            :args args
            :name name
-           :docstring docstring
+           :docstring (markdown-to-html docstring)
            :what (if (= 'defmacro type) :macro :fn)
            :link (link-to-processing-reference mt))))
 
