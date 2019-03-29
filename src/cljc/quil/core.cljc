@@ -162,7 +162,9 @@
      get-sketch-by-id
      "Returns sketch object by id of canvas element of sketch."
      [id]
-     (.getInstanceById js/Processing id)))
+     (if-let [elem (.getElementById js/document id)]
+        (.-processing-obj elem)
+        nil)))
 
 (defmacro with-sketch [applet & body]
   (when-not (u/clj-compilation?)
