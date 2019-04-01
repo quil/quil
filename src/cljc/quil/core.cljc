@@ -167,8 +167,8 @@
      "Returns sketch object by id of canvas element of sketch."
      [id]
      (if-let [elem (.getElementById js/document id)]
-        (.-processing-obj elem)
-        nil)))
+       (.-processing-obj elem)
+       nil)))
 
 (defmacro with-sketch [applet & body]
   (when-not (u/clj-compilation?)
