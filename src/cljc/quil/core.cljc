@@ -550,8 +550,6 @@
     :added "1.0"}
   begin-shape
   "Enables the creation of complex forms. [[begin-shape]] begins recording
-  vertices for a shape and [[end-shape]] stops recording. Use the `mode`
-  keyword to specify which shape to create from the provided
   vertices. With no mode specified, the shape can be any irregular
   polygon.
 
@@ -563,8 +561,8 @@
   must follow. To stop drawing the shape, call [[end-shape]]. The [[vertex]]
   function with two parameters specifies a position in 2D and the
   [[vertex]] function with three parameters specifies a position in
-  3D. Each shape will be outlined with the current stroke color and
-  filled with the fill color.
+  3D. Each shape will be outlined with the [[current-stroke]] color and
+  filled with the [[fill]] color.
 
   Transformations such as [[translate]], [[rotate]], and [[scale]] do not work
   within [[begin-shape]]. It is also not possible to use other shapes,
@@ -2683,8 +2681,8 @@
   line inside the block.
 
   When [[no-loop]] is used, it's not possible to manipulate or access the
-  screen inside event handling functions such as [[mouse-pressed]] or
-  [[key-pressed]]. Instead, use those functions to call [[redraw]] or
+  screen inside event handling functions such as [[mouse-pressed?]] or
+  [[key-pressed?]]. Instead, use those functions to call [[redraw]] or
   loop which will run `draw`, which can update the screen
   properly. This means that when [[no-loop]] has been called, no drawing
   can happen, and functions like [[save-frame]] may not be used.
@@ -3262,11 +3260,11 @@
   redraw
   "Executes the code within the `draw` function one time (or n times in cljs).
   This function allows the program to update the display window only
-  when necessary, for example when an event registered by [[mouse-pressed]] or
-  [[key-pressed]] occurs.
+  when necessary, for example when an event registered by [[mouse-pressed?]] or
+  [[key-pressed?]] occurs.
 
   In structuring a program, it only makes sense to call [[redraw]]
-  within events such as [[mouse-pressed]]. This is because [[redraw]] does
+  within events such as [[mouse-pressed?]]. This is because [[redraw]] does
   not run draw immediately (it only sets a flag that indicates an
   update is needed).
 
@@ -4664,8 +4662,8 @@
                          Not supported in clojurescript.
     - `:resizable`     - Makes sketch resizable. Not supported in clojurescript.
     - `:no-safe-fns`   - Do not catch and print exceptions thrown inside functions
-                         provided to sketch (like draw, [[mouse-click]],
-                         [[key-pressed]] and others). By default all exceptions
+                         provided to sketch (like draw, [[mouse-clicked?]],
+                         [[key-pressed?]] and others). By default all exceptions
                          thrown inside these functions are caught. This prevents
                          sketch from breaking when bad function was provided and
                          allows you to fix it and reload it on fly. You can
