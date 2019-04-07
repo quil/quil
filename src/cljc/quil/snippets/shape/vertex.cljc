@@ -180,7 +180,7 @@
    (defsnippet texture
      "texture"
      {:renderer :p3d
-      :setup (q/set-state! :image (q/load-image "texture.jpg"))}
+      :setup (q/set-state! :image (q/load-image "https://placekitten.com/100/100"))}
 
      (if (zero? (.-width (q/state :image)))
        (q/text "Loading" 10 10)
