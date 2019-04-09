@@ -4,7 +4,7 @@
             [clojure.java.io :as io]
             [clojure.set :refer [union]]
             [clojure.string :as string]
-            [quil.helpers.docs :refer [link-to-processing-reference]])
+            [quil.helpers.docs :refer [link-to-processing-reference link-to-p5js-reference]])
   (:import (com.vladsch.flexmark.parser Parser)
            (com.vladsch.flexmark.html HtmlRenderer LinkResolverFactory LinkResolver)
            (com.vladsch.flexmark.html.renderer ResolvedLink LinkType LinkStatus LinkResolverContext)
@@ -98,7 +98,8 @@
            :name name
            :docstring (markdown-to-html docstring function->category-info)
            :what (if (= 'defmacro type) :macro :fn)
-           :link (link-to-processing-reference mt))))
+           :processing-link (link-to-processing-reference mt)
+           :p5js-link (link-to-p5js-reference mt))))
 
 (defn get-category-info [[type symbol docstring args :as form]]
   [(name symbol)

@@ -4,10 +4,10 @@
             [clojure.java.io :as io]))
 
 (defn link-to-processing-reference
-  "Builds a link to processing page about the function.
-  If meta has :processing-link key, value will be returned,
-  otherwise method will try to build the link based on processing-name
-  if it is not nil. It processing-name is nil, returns nil."
+  "Returns a link to the Processing page of the function.
+  If `fn-meta` has `:processing-link` key, value will be returned,
+  otherwise method will try to build the link based on `:processing-name`.
+  If `:processing-name` is nil, returns nil."
   [fn-meta]
   (cond (contains? fn-meta :processing-link)
         (:processing-link fn-meta)
@@ -22,11 +22,24 @@
         :else
         nil))
 
+(defn link-to-p5js-reference
+  "Returns a link to the p5js page of the function based on `:p5js-name`
+  in the `fn-meta` metadata. If `:p5-name` is nil, returns nil."
+  [fn-meta]
+  (when-let [name (:p5js-name fn-meta)]
+    (cond (cstr/includes? name ".")
+          (str "https://p5js.org/reference/#/p5." (-> name
+                                                      (cstr/replace "." "/")
+                                                      (cstr/replace "()" "")))
+
+          (cstr/includes? name "()")
+          (str "https://p5js.org/reference/#/p5/" (cstr/replace name "()" "")))))
+
 (defn- fn-metas-with-orig-method-name
   "Returns a seq of metadata maps for all fns with a corresponding
-  Processing API method."
+  Processing or p5js API method."
   [fn-metas]
-  (filter :processing-name fn-metas))
+  (filter #{:processing-name :p5js-name} fn-metas))
 
 (defn matching-processing-methods
   "Takes a string representing the start of a method name in the
