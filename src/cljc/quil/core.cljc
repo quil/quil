@@ -159,7 +159,6 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "getSketchById()"
        :category nil
        :subcategory nil
        :added "1.0"}
@@ -242,6 +241,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
+       :p5js-name "Shader.setUniform()"
        :category "Shader"
        :subcategory nil
        :added "3.0.0"}
@@ -254,6 +254,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "abs()"
+    :p5js-name "abs()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -272,6 +273,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "acos()"
+    :p5js-name "acos()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -286,6 +288,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "alpha()"
+    :p5js-name "alpha()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -297,6 +300,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "ambient()"
+    :p5js-name "ambientMaterial()"
     :category "Lights, Camera"
     :subcategory "Material Properties"
     :added "1.0"}
@@ -318,6 +322,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "ambientLight()"
+    :p5js-name "ambientLight()"
     :category "Lights, Camera"
     :subcategory "Lights"
     :added "1.0"}
@@ -339,7 +344,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "angleMode()"
+       :p5js-name "angleMode()"
        :category "Math"
        :subcategory "Trigonometry"
        :added "2.8.0"}
@@ -355,6 +360,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "applyMatrix()"
+    :p5js-name "applyMatrix()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -390,6 +396,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "arc()"
+    :p5js-name "arc()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -411,6 +418,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "asin()"
+    :p5js-name "asin()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -425,6 +433,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "atan()"
+    :p5js-name "atan()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -440,6 +449,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "atan2()"
+    :p5js-name "atan2()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -448,8 +458,8 @@
   coordinate origin as measured from the positive x-axis. Values are
   returned as a `float` in the range from `PI` to `-PI`. The [[atan2]] function
   is most often used for orienting geometry to the position of the
-  cursor. Note: The y-coordinate of the point is the first parameter
-  and the x-coordinate is the second due to the structure of
+  cursor. Note: The `y` coordinate of the point is the first parameter
+  and the `x` coordinate is the second due to the structure of
   calculating the tangent."
   [y x]
   #?(:clj (PApplet/atan2 (float y) (float x))
@@ -479,6 +489,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
+    :p5js-name "background()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -499,6 +510,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
+    :p5js-name "background()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -512,6 +524,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "beginContour()"
+    :p5js-name "beginContour()"
     :category "Shape"
     :subcategory "Vertex"
     :added "2.0"}
@@ -545,6 +558,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "beginShape()"
+    :p5js-name "beginShape()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -575,6 +589,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "bezier()"
+    :p5js-name "bezier()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -600,6 +615,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "bezierDetail()"
+    :p5js-name "bezierDetail()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -614,6 +630,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "bezierPoint()"
+    :p5js-name "bezierPoint()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -630,6 +647,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "bezierTangent()"
+    :p5js-name "bezierTangent()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -643,6 +661,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "bezierVertex()"
+    :p5js-name "bezierVertex()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -687,6 +706,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "blend()"
+    :p5js-name "blend()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -786,6 +806,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "blendMode()"
+    :p5js-name "blendMode()"
     :category "Image"
     :subcategory "Rendering"
     :added "2.0"}
@@ -829,6 +850,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "blue()"
+    :p5js-name "blue()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -841,6 +863,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "box()"
+    :p5js-name "box()"
     :category "Shape"
     :subcategory "3D Primitives"
     :added "1.0"}
@@ -852,6 +875,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "brightness()"
+    :p5js-name "brightness()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -863,6 +887,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "camera()"
+    :p5js-name "camera()"
     :category "Lights, Camera"
     :subcategory "Camera"
     :added "1.0"}
@@ -896,6 +921,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "ceil()"
+    :p5js-name "ceil()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -910,6 +936,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "clear()"
+    :p5js-name "clear()"
     :category "Color"
     :subcategory "Setting"
     :added "2.4.0"}
@@ -942,6 +969,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "color()"
+    :p5js-name "color()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -964,6 +992,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "colorMode()"
+    :p5js-name "colorMode()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -994,7 +1023,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "cone()"
+       :p5js-name "cone()"
        :category "Shape"
        :subcategory "3D Primitives"
        :added "3.0.0"}
@@ -1017,6 +1046,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "constrain()"
+    :p5js-name "constrain()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -1032,6 +1062,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "copy()"
+    :p5js-name "copy()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -1059,6 +1090,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "cos()"
+    :p5js-name "cos()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -1126,6 +1158,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "createGraphics()"
+    :p5js-name "createGraphics()"
     :category "Image"
     :subcategory "Rendering"
     :added "1.0"}
@@ -1166,6 +1199,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "createImage()"
+    :p5js-name "createImage()"
     :category "Image"
     :subcategory nil
     :added "1.0"}
@@ -1214,6 +1248,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "cursor()"
+    :p5js-name "cursor()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1249,6 +1284,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curve()"
+    :p5js-name "curve()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1277,6 +1313,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curveDetail()"
+    :p5js-name "curveDetail()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1291,6 +1328,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curvePoint()"
+    :p5js-name "curvePoint()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1306,6 +1344,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curveTangent()"
+    :p5js-name "curveTangent()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1318,6 +1357,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curveTightness()"
+    :p5js-name "curveTightness()"
     :category "Shape"
     :subcategory "Curves"
     :added "1.0"}
@@ -1336,6 +1376,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "curveVertex()"
+    :p5js-name "curveVertex()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -1355,7 +1396,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "cylinder()"
+       :p5js-name "cylinder()"
        :category "Shape"
        :subcategory "3D Primitives"
        :added "3.0.0"}
@@ -1370,6 +1411,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "day()"
+    :p5js-name "day()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -1382,6 +1424,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "degrees()"
+    :p5j-name "degrees()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -1418,6 +1461,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "directionalLight()"
+    :p5js-name "directionalLight()"
     :category "Lights, Camera"
     :subcategory "Lights"
     :added "1.0"}
@@ -1440,6 +1484,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "dist()"
+    :p5js-name "dist()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -1478,6 +1523,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "ellipse()"
+    :p5js-name "ellipse()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -1491,6 +1537,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "ellipseMode()"
+    :p5js-name "ellipseMode()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -1513,7 +1560,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "ellipsoid()"
+       :p5js-name "ellipsoid()"
        :category "Shape"
        :subcategory "3D Primitives"
        :added "3.0.0"}
@@ -1550,6 +1597,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "endContour()"
+    :p5js-name "endContour()"
     :category "Shape"
     :subcategory "Vertex"
     :added "2.0"}
@@ -1577,6 +1625,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "endShape()"
+    :p5js-name "endShape()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -1597,6 +1646,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "exit()"
+    :p5js-name "remove()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -1612,6 +1662,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "exp()"
+    :p5js-name "exp()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -1632,6 +1683,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "fill()"
+    :p5js-name "fill()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -1664,6 +1716,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "displayDensity()"
+    :p5js-name "displayDensity()"
     :category "Environment"
     :subcategory nil
     :added "2.4.0"}
@@ -1679,6 +1732,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "filter()"
+    :p5js-name "filter()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -1732,6 +1786,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "floor()"
+    :p5js-name "floor()"
     :category "Math"
     :subcategory "Calculation"
     :added "2.0"}
@@ -1745,6 +1800,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "focused"
+    :p5js-name "focused"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1755,6 +1811,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "frameCount"
+    :p5js-name "frameCount"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1769,6 +1826,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "frameRate"
+    :p5js-name "frameRate()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1791,6 +1849,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "frameRate()"
+    :p5js-name "frameRate()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -1825,6 +1884,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "get()"
+    :p5js-name "Image.get()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -1853,6 +1913,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "green()"
+    :p5js-name "green()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -1866,6 +1927,7 @@
 (defn
   ^{:require-binding false
     :processing-name "hex()"
+    :p5js-name "hex()"
     :category "Data"
     :subcategory "Conversion"}
   hex
@@ -1882,7 +1944,8 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "getHeight()"
+    :processing-name "height"
+    :p5js-name "height"
     :processing-link nil
     :category "Environment"
     :subcategory nil
@@ -1967,6 +2030,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "hour()"
+    :p5js-name "hour()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -1979,6 +2043,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "hue()"
+    :p5js-name "hue()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -1990,6 +2055,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "image()"
+    :p5js-name "image()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2015,6 +2081,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "PImage.filter()"
+    :p5js-name "filter()"
     :category "Image"
     :subcategory "Pixels"
     :added "2.0"}
@@ -2055,6 +2122,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "imageMode()"
+    :p5js-name "imageMode()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2076,6 +2144,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "keyCode"
+    :p5js-name "keyCode"
     :category "Input"
     :subcategory "Keyboard"
     :added "1.0"}
@@ -2125,6 +2194,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "keyPressed"
+    :p5js-name "keyIsPressed"
     :category "Input"
     :subcategory "Keyboard"
     :added "1.0"}
@@ -2137,7 +2207,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "lightness()"
+       :p5js-name "lightness()"
        :category "Color"
        :subcategory "Creating & Reading"
        :added "3.0.0"}
@@ -2175,6 +2245,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "lerpColor()"
+    :p5js-name "lerpColor()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -2192,6 +2263,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "lerp()"
+    :p5js-name "lerp()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2250,6 +2322,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "line()"
+    :p5js-name "line()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -2270,6 +2343,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "loadFont()"
+    :p5js-name "loadFont()"
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2299,6 +2373,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "loadImage()"
+    :p5js-name "loadImage()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2321,6 +2396,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "loadShader()"
+    :p5js-name "loadShader()"
     :category "Rendering"
     :subcategory "Shaders"
     :added "2.0"}
@@ -2338,6 +2414,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "loadShape()"
+    :p5js-name "loadModel()"
     :category "Shape"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2367,6 +2444,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "log()"
+    :p5js-name "log()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2380,6 +2458,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "mag()"
+    :p5js-name "mag()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2398,6 +2477,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "map()"
+    :p5js-name "map()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2413,6 +2493,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "PImage.mask()"
+    :p5js-name "Image.mask()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2442,6 +2523,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "millis()"
+    :p5js-name "millis()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -2455,6 +2537,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "minute()"
+    :p5js-name "minute()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -2467,6 +2550,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "month()"
+    :p5js-name "month()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -2479,6 +2563,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "mouseButton"
+    :p5js-name "mouseButton"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2504,6 +2589,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "mousePressed"
+    :p5js-name "mouseIsPressed"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2516,6 +2602,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "mouseX"
+    :p5js-name "mouseX"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2527,6 +2614,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "mouseY"
+    :p5js-name "mouseY"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2550,6 +2638,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noCursor()"
+    :p5js-name "noCursor()"
     :category "Environment"
     :subcategory nil
     :added "1.0"}
@@ -2562,6 +2651,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noFill()"
+    :p5js-name "noFill()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -2575,6 +2665,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noise()"
+    :p5js-name "noise()"
     :category "Math"
     :subcategory "Random"
     :added "1.0"}
@@ -2615,6 +2706,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noiseDetail()"
+    :p5js-name "noiseDetail()"
     :category "Math"
     :subcategory "Random"
     :added "1.0"}
@@ -2642,6 +2734,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noiseSeed()"
+    :p5js-name "noiseSeed()"
     :category "Math"
     :subcategory "Random"
     :added "1.0"}
@@ -2671,6 +2764,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noLoop()"
+    :p5js-name "noLoop()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -2698,6 +2792,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "norm()"
+    :p5js-name "norm()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2710,6 +2805,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noSmooth()"
+    :p5js-name "noSmooth()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -2721,6 +2817,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noStroke()"
+    :p5js-name "noStroke()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -2734,6 +2831,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "noTint()"
+    :p5js-name "noTint()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -2746,7 +2844,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "orbitControl()"
+       :p5js-name "orbitControl()"
        :category "Lights, Camera"
        :subcategory "Camera"
        :added "3.0.0"}
@@ -2758,6 +2856,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "ortho()"
+    :p5js-name "ortho()"
     :category "Lights, Camera"
     :subcategory "Camera"
     :added "1.0"}
@@ -2779,6 +2878,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "perspective()"
+    :p5js-name "perspective()"
     :category "Lights, Camera"
     :subcategory "Camera"
     :added "1.0"}
@@ -2802,6 +2902,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pixelDensity()"
+    :p5js-name "pixelDensity()"
     :category "Environment"
     :subcategory nil
     :added "2.4.0"}
@@ -2817,6 +2918,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pixels[]"
+    :p5js-name "pixels"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -2834,7 +2936,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "plane()"
+       :p5js-name "plane()"
        :category "Shape"
        :subcategory "3D Primitives"
        :added "3.0.0"}
@@ -2846,6 +2948,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pmouseX"
+    :p5js-name "pmouseX"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2857,6 +2960,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pmouseY"
+    :p5js-name "pmouseY"
     :category "Input"
     :subcategory "Mouse"
     :added "1.0"}
@@ -2868,6 +2972,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "point()"
+    :p5js-name "point()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -2888,6 +2993,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pointLight()"
+    :p5js-name "pointLight()"
     :category "Lights, Camera"
     :subcategory "Lights"
     :added "1.0"}
@@ -2904,6 +3010,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "popMatrix()"
+    :p5js-name "pop()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -2922,6 +3029,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "popStyle()"
+    :p5js-name "pop()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -2939,6 +3047,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "pow()"
+    :p5js-name "pow()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -2992,6 +3101,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pushMatrix()"
+    :p5js-name "push()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3011,6 +3121,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "pushStyle()"
+    :p5js-name "push()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -3035,6 +3146,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "quad()"
+    :p5js-name "quad()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -3054,6 +3166,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "quadraticVertex()"
+    :p5js-name "quadraticVertex()"
     :category "Shape"
     :subcategory "Vertex"
     :added "2.0"}
@@ -3074,6 +3187,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "radians()"
+    :p5js-name "radians()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -3090,6 +3204,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "random()"
+    :p5js-name "random()"
     :category "Math"
     :subcategory "Random"
     :added "1.0"}
@@ -3139,6 +3254,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "randomGaussian()"
+    :p5js-name "randomGaussian()"
     :category "Math"
     :subcategory "Random"
     :added "2.0"}
@@ -3156,6 +3272,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "randomSeed()"
+    :p5js-name "randomSeed()"
     :category "Math"
     :subcategory "Random"
     :added "1.0"}
@@ -3170,6 +3287,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "key"
+    :p5js-name "key"
     :category "Input"
     :subcategory "Keyboard"
     :added "1.0"}
@@ -3191,6 +3309,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rect()"
+    :p5js-name "rect()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -3215,6 +3334,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rectMode()"
+    :p5js-name "rectMode()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -3242,6 +3362,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "red()"
+    :p5js-name "red()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -3278,6 +3399,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "resetMatrix()"
+    :p5js-name "resetMatrix()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3312,6 +3434,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "resize()"
+    :p5js-name "resize()"
     :category "Image"
     :processing-link "https://processing.org/reference/PImage_resize_.html"
     :added "2.1.0"}
@@ -3349,6 +3472,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rotate()"
+    :p5js-name "rotate()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3382,6 +3506,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rotateX()"
+    :p5js-name "rotateX()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3403,6 +3528,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rotateY()"
+    :p5js-name "rotateY()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3424,6 +3550,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "rotateZ()"
+    :p5js-name "rotateZ()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3445,6 +3572,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "round()"
+    :p5js-name "round()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -3458,6 +3586,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "saturation()"
+    :p5js-name "saturation()"
     :category "Color"
     :subcategory "Creating & Reading"
     :added "1.0"}
@@ -3469,6 +3598,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "save()"
+    :p5js-name "save()"
     :category "Output"
     :subcategory "Image"
     :added "1.0"}
@@ -3508,6 +3638,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "scale()"
+    :p5js-name "scale()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3561,6 +3692,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "second()"
+    :p5js-name "second()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -3572,7 +3704,8 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "set()"
+    :processing-name "PImage.set()"
+    :p5js-name "Image.set()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -3599,6 +3732,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "set()"
+    :p5js-name "set()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -3629,6 +3763,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "shape()"
+    :p5js-name "model()"
     :category "Shape"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -3657,6 +3792,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "shearX()"
+    :p5js-name "shearX()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3682,6 +3818,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "shearY()"
+    :p5js-name "shearY()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -3743,6 +3880,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "sin()"
+    :p5js-name "sin()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -3757,6 +3895,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "smooth()"
+    :p5js-name "smooth()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -3787,6 +3926,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "specular()"
+    :p5js-name "specularMaterial()"
     :category "Lights, Camera"
     :subcategory "Material Properties"
     :added "1.0"}
@@ -3807,6 +3947,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "sphere()"
+    :p5js-name "sphere()"
     :category "Shape"
     :subcategory "3D Primitives"
     :added "1.0"}
@@ -3861,6 +4002,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "sq()"
+    :p5js-name "sq()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -3875,6 +4017,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "sqrt()"
+    :p5js-name "sqrt()"
     :category "Math"
     :subcategory "Calculation"
     :added "1.0"}
@@ -3890,6 +4033,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "loop()"
+    :p5js-name "loop()"
     :category "Structure"
     :subcategory nil
     :added "1.0"}
@@ -3909,6 +4053,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "stroke()"
+    :p5js-name "stroke()"
     :category "Color"
     :subcategory "Setting"
     :added "1.0"}
@@ -3939,6 +4084,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "strokeCap()"
+    :p5js-name "strokeCap()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -3955,6 +4101,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "strokeJoin()"
+    :p5js-name "strokeJoin()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -3975,6 +4122,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "strokeWeight()"
+    :p5js-name "strokeWeight()"
     :category "Shape"
     :subcategory "Attributes"
     :added "1.0"}
@@ -3987,6 +4135,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "tan()"
+    :p5js-name "tan()"
     :category "Math"
     :subcategory "Trigonometry"
     :added "1.0"}
@@ -4012,6 +4161,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "text()"
+    :p5js-name "text()"
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -4028,6 +4178,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "text()"
+    :p5js-name "text()"
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -4044,6 +4195,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "text()"
+    :p5js-name "text()"
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -4073,6 +4225,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textAlign()"
+    :p5js-name "textAlign()"
     :category "Typography"
     :subcategory "Attributes"
     :added "1.0"}
@@ -4110,6 +4263,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textAscent()"
+    :p5js-name "textAscent()"
     :category "Typography"
     :subcategory "Metrics"
     :added "1.0"}
@@ -4124,6 +4278,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textDescent()"
+    :p5js-name "textDescent()"
     :category "Typography"
     :subcategory "Metrics"
     :added "1.0"}
@@ -4138,6 +4293,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textFont()"
+    :p5js-name "textFont()"
     :category "Typography"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -4164,6 +4320,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textLeading()"
+    :p5js-name "textLeading()"
     :category "Typography"
     :subcategory "Attributes"
     :added "1.0"}
@@ -4206,6 +4363,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textSize()"
+    :p5js-name "textSize()"
     :category "Typography"
     :subcategory "Attributes"
     :added "1.0"}
@@ -4219,7 +4377,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "textStyle()"
+       :p5js-name "textStyle()"
        :category "Typography"
        :subcategory "Attributes"
        :added "2.8.0"}
@@ -4235,6 +4393,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "texture()"
+    :p5js-name "texture()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -4289,6 +4448,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "textWidth()"
+    :p5js-name "textWidth()"
     :category "Typography"
     :subcategory "Attributes"
     :added "1.0"}
@@ -4300,6 +4460,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "tint()"
+    :p5js-name "tint()"
     :category "Image"
     :subcategory "Loading & Displaying"
     :added "1.0"}
@@ -4325,7 +4486,7 @@
 #?(:cljs
    (defn
      ^{:requires-bindings true
-       :processing-name "torus()"
+       :p5js-name "torus()"
        :category "Shape"
        :subcategory "3D Primitives"
        :added "3.0.0"}
@@ -4345,6 +4506,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "translate()"
+    :p5js-name "translate()"
     :category "Transform"
     :subcategory nil
     :added "1.0"}
@@ -4366,6 +4528,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "triangle()"
+    :p5js-name "triangle()"
     :category "Shape"
     :subcategory "2D Primitives"
     :added "1.0"}
@@ -4395,7 +4558,8 @@
 
 (defn
   ^{:require-binding false
-    :processing-name "hex()"
+    :processing-name "unhex()"
+    :p5js-name "unhex()"
     :category "Data"
     :subcategory "Conversion"}
   unhex
@@ -4408,6 +4572,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "updatePixels()"
+    :p5js-name "updatePixels()"
     :category "Image"
     :subcategory "Pixels"
     :added "1.0"}
@@ -4429,6 +4594,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "vertex()"
+    :p5js-name "vertex()"
     :category "Shape"
     :subcategory "Vertex"
     :added "1.0"}
@@ -4457,6 +4623,7 @@
 (defn
   ^{:requires-bindings false
     :processing-name "year()"
+    :p5js-name "year()"
     :category "Input"
     :subcategory "Time & Date"
     :added "1.0"}
@@ -4468,7 +4635,8 @@
 
 (defn
   ^{:requires-bindings true
-    :processing-name "getWidth()"
+    :processing-name "width"
+    :p5js-name "width"
     :processing-link nil
     :category "Environment"
     :subcategory nil
