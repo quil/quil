@@ -404,8 +404,9 @@
   "Draws an arc in the display window. Arcs are drawn along the outer
   edge of an ellipse defined by the `x`, `y`, `width` and `height`
   parameters. The origin or the arc's ellipse may be changed with the
-  [[ellipse-mode]] function. The `start` and `stop` parameters specify the
-  angles at which to draw the arc. The `mode` is either `:open`, `:chord` or `:pie`."
+  [[ellipse-mode]] function. The `start` and `stop` parameters specify
+  the angles at which to draw the arc. The `mode` is either `:open`,
+  `:chord` or `:pie`."
   ([x y width height start stop]
    (.arc (current-graphics) (float x) (float y) (float width) (float height)
          (float start) (float stop)))
@@ -529,10 +530,10 @@
     :subcategory "Vertex"
     :added "2.0"}
   begin-contour
-  "Use the [[begin-contour]] and [[end-contour]] function to create negative
-  shapes within shapes. These functions can only be used within a
-  [[begin-shape]]/[[end-shape]] pair and they only work with the `:p2d` and `:p3d`
-  renderers."
+  "Use the [[begin-contour]] and [[end-contour]] function to create
+  negative shapes within shapes. These functions can only be used
+  within a [[begin-shape]]/[[end-shape]] pair and they only work with
+  the `:p2d` and `:p3d` renderers."
   []
   (.beginContour (current-graphics)))
 
@@ -712,10 +713,11 @@
     :added "1.0"}
   blend
   "Blends a region of pixels from one image into another with full alpha
-  channel support. If `src` is not specified it defaults to [[current-graphics]].
-  If dest is not specified it defaults to [[current-graphics]].
+  channel support. If `src` is not specified it defaults to
+  [[current-graphics]]. If `dest-img` is not specified it defaults to
+  [[current-graphics]].
 
-  Note: it is recommended to use the [[blend-mode]] function instead of this one.
+  Note: it is recommended to use [[blend-mode]] instead of [[blend]].
 
   Available blend modes are:
 
@@ -998,7 +1000,7 @@
     :added "1.0"}
   color-mode
   "Changes the way Processing interprets color data. Available modes
-  are `:rgb` and `:hsb` (and `:hsl` in clojurescript).
+  are `:rgb` and `:hsb` (and `:hsl` in Clojurescript).
   By default, the parameters for [[fill]], [[stroke]],
   [[background]], and [[color]] are defined by values between 0 and 255 using
   the `:rgb` color model. The [[color-mode]] function is used to change the
@@ -1169,13 +1171,14 @@
   to use [[create-graphics]] with the `:opengl` renderer, because it doesn't
   allow offscreen use. The `:pdf` renderer requires the filename parameter.
 
-  Note: don't use [[create-graphics]] in draw in clojurescript, it leaks memory.
+  Note: don't use [[create-graphics]] in draw in Clojurescript, it leaks memory.
   You should create graphic in setup and reuse it in draw instead of creating
   a new one.
 
-  It's important to call any drawing commands between `(.beginDraw graphics)` and
-  `(.endDraw graphics)` statements or use [[with-graphics]] macro. This is also true
-  for any commands that affect drawing, such as [[smooth]] or [[color-mode]].
+  It's important to call any drawing commands between `(.beginDraw graphics)`
+  and `(.endDraw graphics)` statements or use [[with-graphics]] macro. This is
+  also true for any commands that affect drawing, such as [[smooth]] or
+  [[color-mode]].
 
   If you're using `:pdf` renderer - don't forget to call `(.dispose graphics)`
   as last command inside [[with-graphics]] macro, otherwise graphics won't be
@@ -1333,11 +1336,11 @@
     :subcategory "Curves"
     :added "1.0"}
   curve-point
-  "Evaluates the curve at point `t` for points `a`, `b`, `c`, `d`. The parameter
-  `t` varies between 0 and 1, `a` and `d` are points on the curve, and `b` and `c`
-  are the control points. This can be done once with the x
-  coordinates and a second time with the y coordinates to get the
-  location of a curve at `t`."
+  "Evaluates the curve at point `t` for points `a`, `b`, `c`, `d`. The
+  parameter `t` varies between 0 and 1, `a` and `d` are points on the
+  curve, and `b` and `c` are the control points. This can be done once
+  with the x coordinates and a second time with the y coordinates to
+  get the location of a curve at `t`."
   [a b c d t]
   (.curvePoint (current-graphics) (float a) (float b) (float c) (float d) (float t)))
 
@@ -1505,8 +1508,8 @@
     :added "2.5"}
   do-record
   "Macro for drawing on graphics which saves result in the file at the end.
-  Similar to [[with-graphics]] macro. [[do-record]] assumed to be used with `:pdf`
-  graphics.
+  Similar to [[with-graphics]] macro. [[do-record]] assumed to be used
+  with `:pdf` graphics.
 
   Example:
   ```
@@ -1602,10 +1605,10 @@
     :subcategory "Vertex"
     :added "2.0"}
   end-contour
-  "Use the [[begin-contour]] and [[end-contour]] function to create negative
-  shapes within shapes. These functions can only be within a
-  [[begin-shape]]/[[end-shape]] pair and they only work with the `:p2d` and `:p3d`
-  renderers."
+  "Use the [[begin-contour]] and [[end-contour]] function to create
+  negative shapes within shapes. These functions can only be within a
+  [[begin-shape]]/[[end-shape]] pair and they only work with the
+  `:p2d` and `:p3d` renderers."
   []
   (.endContour (current-graphics)))
 
@@ -1779,8 +1782,8 @@
        :subcategory "Pixels"
        :added "2.0"}
      filter-shader
-     "Originally named filter in Processing Language.
-  Filters the display window with given shader (only in `:p2d` and `:p3d` modes)."
+     "Originally named filter in Processing Language. Filters the display
+     window with given shader (only in `:p2d` and `:p3d` modes)."
      [^PShader shader-obj] (.filter (current-graphics) shader-obj)))
 
 (defn
@@ -3135,10 +3138,12 @@
   embedded to provide more control.
 
   The style information controlled by the following functions are
-  included in the style: [[fill]], [[stroke]], [[tint]], [[stroke-weight]],
-  [[stroke-cap]], [[stroke-join]], [[image-mode]], [[rect-mode]], [[ellipse-mode]],
-  [[shape-mode]], [[color-mode]], [[text-align]], [[text-font]], [[text-mode]], [[text-size]],
-  [[text-leading]], [[emissive]], [[specular]], [[shininess]], and [[ambient]]."
+  included in the
+  style: [[fill]], [[stroke]], [[tint]], [[stroke-weight]],
+  [[stroke-cap]], [[stroke-join]], [[image-mode]], [[rect-mode]],
+  [[ellipse-mode]], [[shape-mode]], [[color-mode]], [[text-align]],
+  [[text-font]], [[text-mode]], [[text-size]], [[text-leading]],
+  [[emissive]], [[specular]], [[shininess]], and [[ambient]]."
   []
   #?(:clj (.pushStyle (current-graphics))
      :cljs (.push (current-graphics))))
@@ -3434,7 +3439,7 @@
 (defn
   ^{:requires-bindings true
     :processing-name "resize()"
-    :p5js-name "resize()"
+    :p5js-name "Image.resize()"
     :category "Image"
     :processing-link "https://processing.org/reference/PImage_resize_.html"
     :added "2.1.0"}
@@ -4201,16 +4206,17 @@
     :added "1.0"}
   text
   "Draws text to the screen in the position specified by the `x` and `y`
-  parameters (and the optional `z` parameter in clj). A default font will be used
-  unless a font is set with the [[text-font]] function. Change the color of the
-  text with the [[fill]] function. The text displays in relation to the
-  [[text-align]] function, which gives the option to draw to the left, right, and
-  center of the coordinates.
+  parameters (and the optional `z` parameter in clj). A default font
+  will be used unless a font is set with the [[text-font]]
+  function. Change the color of the text with the [[fill]]
+  function. The text displays in relation to the
+  [[text-align]] function, which gives the option to draw to the left,
+  right, and center of the coordinates.
 
-  The `x1`, `y1`, `x2` and `y2` parameters define a
-  rectangular area to display within and may only be used with string
-  data. For text drawn inside a rectangle, the coordinates are
-  interpreted based on the current [[rect-mode]] setting."
+  The `x1`, `y1`, `x2` and `y2` parameters define a rectangular area
+  to display within and may only be used with string data. For text
+  drawn inside a rectangle, the coordinates are interpreted based on
+  the current [[rect-mode]] setting."
   ([^String s x y]
    (when (current-fill)
      (.text (current-graphics) s (float x) (float y))))
@@ -4805,68 +4811,75 @@
   inlined and that redefinitions to the original functions are reflected in
   the visualisation.
 
-  * `:size`           - A vector of width and height for the sketch or :fullscreen.
-                        Defaults to `[500 300]`. If you're using :fullscreen you may
-                        want to enable present mode - :features [:present].
-                        :fullscreen size works only in Clojure. In ClojureScript
-                        all sketches are support fullscreen when you press F11.
-  * `:renderer`       - Specifies the renderer type. One of `:p2d`, `:p3d`, `:java2d`,
-                        `:opengl`, `:pdf`, `:svg`). Defaults to `:java2d`. `:dxf` renderer
-                        can't be used as sketch renderer. Use [[begin-raw]] method
-                        instead. In clojurescript only `:p2d` and `:p3d` renderers
+  * `:size`           - A vector of width and height for the sketch or
+                        `:fullscreen`. Defaults to `[500 300]`. If you're using
+                        `:fullscreen` you may  want to enable present mode using
+                        `:features [:present]`. `:fullscreen` size works only in
+                        Clojure. In ClojureScript all sketches support
+                        fullscreen when you press `F11`.
+  * `:renderer`       - Specifies the renderer type. One of `:p2d`, `:p3d`,
+                        `:java2d`, `:opengl`, `:pdf`, `:svg`). Defaults to
+                        `:java2d`. `:dxf` renderer can't be used as sketch
+                        renderer. Use [[begin-raw]] method instead. In
+                        Clojurescript only `:p2d` and `:p3d` renderers
                         are supported.
-  * `:output-file`    - Specifies an output file path. Only used in `:pdf` and `:svg`
-                        modes. Not supported in clojurescript. When writing to a
-                        file, call [[exit]] at the end of the draw call to end
-                        the sketch and not write repeatedly to the file.
+  * `:output-file`    - Specifies an output file path. Only used in `:pdf` and
+                        `:svg` modes. Not supported in Clojurescript. When
+                        writing to a file, call [[exit]] at the end of the
+                        `draw` call to end the sketch and not write repeatedly
+                        to the file.
   * `:title`          - A string which will be displayed at the top of
-                        the sketch window. Not supported in clojurescript.
+                        the sketch window. Not supported in Clojurescript.
   * `:features`       - A vector of keywords customizing sketch behaviour.
                         Supported features:
     - `:keep-on-top`   - Sketch window will always be above other windows.
-                         Note: some platforms might not support always-on-top windows.
-                         Not supported in clojurescript.
+                         Note: some platforms might not support always-on-top
+                         windows. Not supported in clojurescript.
     - `:exit-on-close` - Shutdown JVM  when sketch is closed.
-                         Not supported in clojurescript.
-    - `:resizable`     - Makes sketch resizable. Not supported in clojurescript.
-    - `:no-safe-fns`   - Do not catch and print exceptions thrown inside functions
-                         provided to sketch (like draw, [[mouse-clicked?]],
-                         [[key-pressed?]] and others). By default all exceptions
-                         thrown inside these functions are caught. This prevents
-                         sketch from breaking when bad function was provided and
-                         allows you to fix it and reload it on fly. You can
-                         disable this behaviour by enabling `:no-safe-fns`
-                         feature. Not supported in clojurescript.
+                         Not supported in Clojurescript.
+    - `:resizable`     - Makes sketch resizable. Not supported in Clojurescript.
+    - `:no-safe-fns`   - Do not catch and print exceptions thrown inside
+                         functions provided to sketch (like draw,
+                         [[mouse-pressed?]], [[key-pressed?]] and others). By
+                         default all exceptions thrown inside these functions
+                         are caught. This prevents the sketch from breaking when
+                         a bad function is provided and allows you to fix it and
+                         reload it on the fly. You can disable this behaviour by
+                         enabling the `:no-safe-fns` feature. Not supported in
+                         Clojurescript.
     - `:present`       - Switch to present mode (fullscreen without borders, OS
                          panels). You may want to use this feature together with
                          `:size :fullscreen`. Not supported in ClojureScript. In
                          ClojureScript fullscreen is enabled by pressing F11 and
                          it's enabled on all sketches automatically.
-    - `:no-start`      - Disables autostart if sketch was created using defsketch
-                         macro. To start sketch you have to call function created
-                         defsketch. Supported only in ClojureScript.
+    - `:no-start`      - Disables autostart if sketch was created using the
+                         [[defsketch]] macro. To start sketch you have to call
+                         function created [[defsketch]]. Supported only in
+                         ClojureScript.
                         Usage example: `:features [:keep-on-top :present]`
   * `:bgcolor`        - Sets background color for unused space in present mode.
                         Color is specified in hex format for example
                         `:bgcolor \"#00FFFF\"` (cyan background)
                         Not supported in ClojureScript.
   * `:display`        - Sets what display should be used by this sketch.
-                        Displays are numbered starting from 0. Example: `:display 1`.
+                        Displays are numbered starting from 0.
+                        Example: `:display 1`.
                         Not supported in ClojureScript.
   * `:setup`          - A function to be called once when setting the sketch up.
   * `:draw`           - A function to be repeatedly called at most n times per
                         second where n is the target [[frame-rate]] set for
                         the visualisation.
   * `:host`           - String id of canvas element or DOM element itself.
-                        Specifies host for the sketch. Must be specified in sketch,
-                        may be omitted in defsketch. If omitted in defsketch,
-                        :host is set to the name of the sketch. If element with
-                        specified id is not found on the page and page is empty -
-                        new canvas element will be created. Used in ClojureScript.
+                        Specifies host for the sketch. Must be specified in
+                        sketch, may be omitted in defsketch. If omitted in
+                        [[defsketch]], `:host` is set to the name of the sketch.
+                        If element with specified id is not found on the page
+                        and page is empty, a new canvas element will be created.
+                        Used in ClojureScript.
   * `:focus-gained`   - Called when the sketch gains focus.
                         Not supported in ClojureScript.
-  * `:focus-lost`     - Called when the sketch loses focus.
-                        Not supported in ClojureScript.
+  * `:focus-lost`     - Called when the sketch loses focus. Not supported in
+                        ClojureScript.
   * `:mouse-entered`  - Called when the mouse enters the sketch window.
   * `:mouse-exited`   - Called when the mouse leaves the sketch window
   * `:mouse-pressed`  - Called every time a mouse button is pressed.
@@ -4878,10 +4891,10 @@
   * `:mouse-dragged`  - Called every time the mouse moves and a button is
                         pressed.
   * `:mouse-wheel`    - Called every time mouse wheel is rotated.
-                        Takes 1 argument - wheel rotation, an int.
+                        Takes 1 argument - wheel rotation, an `int`.
                         Negative values if the mouse wheel was rotated
                         up/away from the user, and positive values
-                        if the mouse wheel was rotated down/ towards the user
+                        if the mouse wheel was rotated down/towards the user.
   * `:key-pressed`    - Called every time any key is pressed.
   * `:key-released`   - Called every time any key is released.
   * `:key-typed`      - Called once every time non-modifier keys are
@@ -4889,12 +4902,14 @@
   * `:on-close`       - Called once, when sketch is closed.
                         Not supported in ClojureScript.
   * `:middleware`     - Vector of middleware to be applied to the sketch.
-                        Middleware will be applied in the same order as in comp
-                        function: [f g] will be applied as `(f (g options))`.
+                        Middleware will be applied in the same order as in
+                        `comp` function: `[f g]` will be applied as
+                        `(f (g options))`.
   * `:settings`       - Cousin of `:setup`. A function to be called once when
-                        setting sketch up. Should be used only for [[smooth]] and
-                        [[no-smooth]]. Due to Processing limitations these functions
-                        cannot be used neither in `:setup` nor in `:draw`."
+                        setting sketch up. Should be used only for [[smooth]]
+                        and [[no-smooth]]. Due to Processing limitations these
+                        functions cannot be used neither in `:setup` nor in
+                        `:draw`."
   [app-name & options]
   #?(:clj
      (if (u/clj-compilation?)
@@ -4924,8 +4939,8 @@
         :added "1.6"}
   key-as-keyword
   "Returns a keyword representing the currently pressed key. Modifier
-  keys are represented as: `:up`, `:down`, `:left`, `:right`, `:alt`, `:control`,
-  `:shift`, `:command`, `:f1-24`"
+  keys are represented as: `:up`, `:down`, `:left`, `:right`, `:alt`,
+  `:control`, `:shift`, `:command`, `:f1-24`"
   []
   (let [key-char (raw-key)
         code     (key-code)]
