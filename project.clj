@@ -45,6 +45,7 @@
                                   [clj-http "3.8.0"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [org.clojure/tools.reader "1.2.2"]
+                                  [cheshire "5.8.1"]
                                   [com.vladsch.flexmark/flexmark "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-autolink "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-gfm-tables "0.34.18"]
