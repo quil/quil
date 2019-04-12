@@ -4956,7 +4956,6 @@
 #?(:clj
    (defn
      ^{:requires-bindings false
-       :processing-name nil
        :category "Debugging"
        :added "1.6"}
      debug

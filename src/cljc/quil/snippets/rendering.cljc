@@ -48,7 +48,7 @@
 
 #?(:clj
    (defsnippet load-shader
-     "load-shader"
+     ["load-shader" "loaded?" "reset-shader" "shader"]
      {:renderer :p2d
       :setup (let [path (clojure.java.io/resource "SimpleShader.glsl")
                    shd (q/load-shader (.getPath path))]
@@ -70,7 +70,7 @@
 
 #?(:cljs
    (defsnippet load-shader
-     "load-shader"
+     ["load-shader" "loaded?" "shader"]
      {:renderer :p3d
       :setup (let [shd (q/load-shader "shader.frag" "shader.vert")]
                (q/set-state! :shader shd))}

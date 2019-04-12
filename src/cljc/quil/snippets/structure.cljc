@@ -20,7 +20,7 @@
 
 #?(:clj
    (defsnippet delay
-     "delay"
+     "delay-frame"
      {}
 
      (q/background 127)

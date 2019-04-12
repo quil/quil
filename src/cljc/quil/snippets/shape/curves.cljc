@@ -6,7 +6,7 @@
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 (defsnippet bezier-2d
-  "bezier-2d"
+  "bezier"
   {}
 
   (q/no-fill)
@@ -14,7 +14,7 @@
     (q/bezier 0 0 50 100 100 -100 150 0)))
 
 (defsnippet bezier-3d
-  "bezier-3d"
+  "bezier"
   {:renderer :p3d}
 
   (q/camera 200 200 200 0 0 0 0 0 -1)
@@ -22,7 +22,7 @@
   (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
 
 (defsnippet bezier-detail
-  "bezier-detail"
+  ["bezier-detail" "bezier"]
   {:renderer :p3d}
 
   (q/camera 0 0 300 0 0 0 0 1 0)

@@ -3,14 +3,27 @@
             quil.middleware
             [quil.helpers.docs :refer [link-to-processing-reference
                                        link-to-p5js-reference]]
+            [quil.snippets.all-snippets :as as]
+            [clojure.set :as set]
             [clojure.string :as string]
             [clojure.test :refer [deftest is]]
             [clj-http.client :as http]
             [cheshire.core :as json]))
 
-(defn get-public-fns-metas []
-  (mapcat #(->> % the-ns ns-publics vals (map meta))
+(defn get-public-fns []
+  (mapcat #(->> % the-ns ns-publics)
           ['quil.core 'quil.middleware]))
+
+(defn get-public-fns-metas []
+  (map #(-> % val meta) (get-public-fns)))
+
+(defn get-api-fn-names []
+  (->> (get-public-fns-metas)
+       (filter #(some #{:processing-name :p5js-name} (keys %)))
+       (map #(-> % :name name))))
+
+(defn get-fn-names-covered-by-snippets []
+  (into #{} (mapcat :fns as/all-snippets)))
 
 (defn valid-link? [link]
   (try
@@ -60,3 +73,8 @@
           :when doc]
     (is (<= (max-docstring-length doc) 80)
         (str "Function " name " has docstring longer than 80 chars."))))
+
+(deftest all-public-functions-should-have-a-snippet
+  (let [covered (get-fn-names-covered-by-snippets)]
+    (doseq [fn-name (get-api-fn-names)]
+      (is (contains? covered fn-name)))))
