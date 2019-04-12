@@ -54,7 +54,7 @@
              20 60)))
 
 (defsnippet load-font
-  "background-image"
+  "load-font"
   {:setup (let [_ (comment "create url to load font")
                 url #?(:clj (.getPath (clojure.java.io/resource "ComicSansMS-48.vlw"))
                        :cljs "https://www.fontsquirrel.com/fonts/download/roboto")]

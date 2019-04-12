@@ -6,7 +6,7 @@
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 (defsnippet keyboard
-  ["key-as-keyword" "key-code" "key-coded?" "key-pressed?" "raw-key"]
+  ["key-as-keyword" "key-code" "key-coded?" "key-pressed?" "raw-key" "key-modifiers"]
   {}
 
   (q/background 255)
