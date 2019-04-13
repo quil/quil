@@ -99,7 +99,8 @@
                   :opengl PApplet/OPENGL
                   :pdf    PApplet/PDF
                   :svg    PApplet/SVG
-                  :dxf    PApplet/DXF})
+                  :dxf    PApplet/DXF
+                  :fx2d   PApplet/FX2D})
 
 (defn resolve-renderer
   "Converts keyword to Processing renderer string constant.

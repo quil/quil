@@ -4818,11 +4818,13 @@
                         Clojure. In ClojureScript all sketches support
                         fullscreen when you press `F11`.
   * `:renderer`       - Specifies the renderer type. One of `:p2d`, `:p3d`,
-                        `:java2d`, `:opengl`, `:pdf`, `:svg`). Defaults to
-                        `:java2d`. `:dxf` renderer can't be used as sketch
-                        renderer. Use [[begin-raw]] method instead. In
-                        Clojurescript only `:p2d` and `:p3d` renderers
-                        are supported.
+                        `:java2d`, `:opengl`, `:pdf`, `:svg`, `:fx2d`). Defaults
+                        to `:java2d` in Clojure and `:p2d` in ClojureScript.
+                        `:dxf` renderer can't be used as sketch renderer.
+                        Use [[begin-raw]] method instead. In Clojurescript only
+                        `:p2d` and `:p3d` renderers are supported.
+                        More info on Clojure renderers:
+                        https://processing.org/reference/environment/#Renderers
   * `:output-file`    - Specifies an output file path. Only used in `:pdf` and
                         `:svg` modes. Not supported in Clojurescript. When
                         writing to a file, call [[exit]] at the end of the
