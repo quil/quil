@@ -33,7 +33,10 @@
                                                       (cstr/replace "()" "")))
 
           (cstr/includes? name "()")
-          (str "https://p5js.org/reference/#/p5/" (cstr/replace name "()" "")))))
+          (str "https://p5js.org/reference/#/p5/" (cstr/replace name "()" ""))
+
+          :else
+          (str "https://p5js.org/reference/#/p5/" name))))
 
 (defn- fn-metas-with-orig-method-name
   "Returns a seq of metadata maps for all fns with a corresponding
