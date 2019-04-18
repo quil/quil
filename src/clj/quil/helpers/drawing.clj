@@ -4,14 +4,17 @@
   "Takes either a seq of x y (and z) point coords tuples or two
   separate lists of x and y (and z) coords independently and creates a
   lazy list of line args (vectors of 4 (or 6) elements) suitable for
-  use with the line fn.
+  use with the [[quil.core/line]] function.
 
+  Examples:
+  ```
   (line-join-points [1 2 3] [4 5 6])     ;=> ([1 4 2 5] [2 5 3 6])
   (line-join-points [[1 4] [2 5] [3 6]]) ;=> ([1 4 2 5] [2 5 3 6])
   (line-join-points [[1 4 0] [2 5 1] [3 6 2]]) ;=> ([1 4 0 2 5 1]
-                                                    [2 5 1 3 6 2])
+                                               ;    [2 5 1 3 6 2])
   (line-join-points [1 2 3] [4 5 6] [0 1 2])   ;=> ([1 4 0 2 5 1]
-                                                    [2 5 1 3 6 2])"
+                                               ;    [2 5 1 3 6 2])
+  ```"
   ([interleaved-points]
    (lazy-seq
     (let [head (take 2 interleaved-points)]
