@@ -30,8 +30,8 @@
            (= java.lang.Integer t)))))
 
 (defn resolve-constant-key
-  "Returns the val associated with key in mappings or key directly if it
-  is one of the vals in mappings. Otherwise throws an exception."
+  "Returns the val associated with `key` in `mappings` or `key` directly if it
+  is one of the vals in `mappings`. Otherwise throws an exception."
   [key mappings]
   (cond
     (get mappings key)            (get mappings key)
@@ -42,19 +42,31 @@
                                           (str "Expecting a keyword, got: " key ". Expected one of: " (vec (sort (keys mappings))))))))
 
 (defn- length-of-longest-key
-  "Returns the length of the longest key of map m. Assumes m's keys are strings
+  "Returns the length of the longest key of map `m`. Assumes `m`'s keys are strings
    and returns 0 if map is empty:
+
+   Examples:
+   ```
    (length-of-longest-key {\"foo\" 1 \"barr\" 2 \"bazzz\" 3}) ;=> 5
-   (length-of-longest-key {}) ;=> 0"
+   (length-of-longest-key {}) ;=> 0
+   ```"
   [m]
   (or (last (sort (map #(.length %) (keys m))))
       0))
 
 (defn- gen-padding
-  "Generates a padding string starting concatting s with len times pad:
-   (gen-padding \"\" 5 \"b\") ;=> \"bbbbb\"
-   May be called without starting string s in which case it defaults to the
-   empty string and also without pad in which case it defaults to a single space"
+  "Generates a padding string with `s` concatenated with `len` times `pad`.
+   May be called without starting string `s` in which case it defaults to the
+   empty string and also without `pad` in which case it defaults to a single
+   space.
+
+   Examples:
+   ```
+   (gen-padding \"asdf\" 5 \"b\") ;=> \"asdfbbbbb\"
+   (gen-padding 3 \"b\")          ;=> \"bbb\"
+   (gen-padding 3)                ;=> \"   \"
+   ```
+   "
   ([len] (gen-padding "" len " "))
   ([len pad] (gen-padding "" len pad))
   ([s len pad]
@@ -113,7 +125,7 @@
         (partition 2 opts))))
 
 (defn clj-unchecked-int
-  "In clojure it does unchecked-int and does nothing in cljs.
+  "In clojure it does `unchecked-int` and does nothing in cljs.
   Needed to handle colors in hex form in clojure."
   [v]
   #?(:clj (unchecked-int v) :cljs v))
