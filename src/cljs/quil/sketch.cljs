@@ -68,11 +68,11 @@
       (.-mozFullScreenElement js/document)))
 
 (defn add-fullscreen-support
-  "Adds fullscreen support for provided Processing object.
-  Fullscreen is enabled when user presses F11. We turn
-  sketch <canvas> element to fullscreen storing old size
-  in an atom. When user cancels fullscreen (F11 or Esc)
-  we resize sketch to the old size."
+  "Adds fullscreen support for the provided `p5` object.
+  Fullscreen is enabled when the user presses `F11`. We turn
+  the sketch `<canvas>` element to fullscreen storing the old size
+  in an `atom`. When the user cancels fullscreen (`F11` or `Esc`)
+  we resize the sketch back to the old size."
   [applet]
   (let [old-size (atom nil)
         adjust-canvas-size

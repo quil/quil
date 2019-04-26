@@ -5,12 +5,12 @@
      ~@body))
 
 (defn wrap-fns
-  "Wrap fns allows dynamic redefinition of function such as draw, update
-  in cljs. This is achieved by wrapping all provided functions to
-  anonymous functions such that 'my-draw' function turns into
-  (fn [& args] (apply my-draw args)). This adds a level of indirection
-  so that when quil calls draw, it invokes anonymous function which in
-  turn always calls my-draw by name and if you redefine - new version
+  "[[wrap-fns]] allows dynamic redefinition of a function such as `draw` and
+  `update` in cljs. This is achieved by wrapping all provided functions to
+  anonymous functions such that `my-draw` function turns into
+  `(fn [& args] (apply my-draw args))`. This adds a level of indirection
+  so that when quil calls `draw`, it invokes anonymous function which in
+  turn always calls `my-draw` by name and if you redefine, the new version
   will be used. Hence we need this cryptic macro."
   [opts]
   (into {}
