@@ -713,7 +713,7 @@
     :added "1.0"}
   blend
   "Blends a region of pixels from one image into another with full alpha
-  channel support. If `src` is not specified it defaults to
+  channel support. If `src-img` is not specified it defaults to
   [[current-graphics]]. If `dest-img` is not specified it defaults to
   [[current-graphics]].
 
@@ -813,28 +813,28 @@
     :subcategory "Rendering"
     :added "2.0"}
   blend-mode
-  "Blends the pixels in the display window according to the defined mode.
+  "Blends the pixels in the display window according to the defined `mode`.
   There is a choice of the following modes to blend the source pixels (A)
   with the ones of pixels already in the display window (B):
 
-  * `:blend`      - linear interpolation of colours: C = A*factor + B
+  * `:blend`      - linear interpolation of colours: `C = A*factor + B`
   * `:add`        - additive blending with white clip:
-                                                C = min(A*factor + B, 255)
+                                                `C = min(A*factor + B, 255)`
   * `:subtract`   - subtractive blending with black clip:
-                                                C = max(B - A*factor, 0)
+                                                `C = max(B - A*factor, 0)`
   * `:darkest`    - only the darkest colour succeeds:
-                                                C = min(A*factor, B)
+                                                `C = min(A*factor, B)`
   * `:lightest`   - only the lightest colour succeeds:
-                                                C = max(A*factor, B)
+                                                `C = max(A*factor, B)`
   * `:difference` - subtract colors from underlying image.
   * `:exclusion`  - similar to `:difference`, but less extreme.
-  * `:multiply`   - Multiply the colors, result will always be darker.
-  * `:screen`     - Opposite multiply, uses inverse values of the colors.
+  * `:multiply`   - multiply the colors, result will always be darker.
+  * `:screen`     - opposite of `:multiply`, uses inverse values of the colors.
   * `:replace`    - the pixels entirely replace the others and don't utilize
                     alpha (transparency) values.
   * `:overlay`    - mix of `:multiply` and `:screen`. Multiplies dark values,
                     and screens light values.
-  * `:hard-light` - :screen when greater than 50% gray, `:multiply` when lower.
+  * `:hard-light` - `:screen` when greater than 50% gray, `:multiply` when lower.
   * `:soft-light` - mix of `:darkest` and `:lightest`. Works like :overlay, but
                     not as harsh.
   * `:dodge`      - lightens light tones and increases contrast, ignores darks.
@@ -844,7 +844,7 @@
   Note: in clj `:hard-light`, `:soft-light`, `:overlay`, `:dodge`, `:burn`
   modes are not supported. In cljs `:subtract` mode is not supported.
 
-  factor is the alpha value of the pixel being drawn"
+  `factor` is the alpha value of the pixel being drawn"
   ([mode]
    (let [mode (u/resolve-constant-key mode blend-modes)]
      (.blendMode (current-graphics) mode))))
@@ -982,10 +982,10 @@
   therefore, the function call `(color 255 204 0)` will return a bright
   yellow. Args are cast to floats.
 
-  * r - red or hue value
-  * g - green or saturation value
-  * b - blue or brightness value
-  * a - alpha value"
+  * `r` - red or hue value
+  * `g` - green or saturation value
+  * `b` - blue or brightness value
+  * `a` - alpha value"
   ([gray] (.color (current-graphics) (float gray)))
   ([gray alpha] (.color (current-graphics) (float gray) (float alpha)))
   ([r g b] (.color (current-graphics) (float r) (float g) (float b)))
@@ -2063,13 +2063,13 @@
     :subcategory "Loading & Displaying"
     :added "1.0"}
   image
-  "Displays images to the screen. Processing currently works with GIF,
-  JPEG, and Targa images. The color of an image may be modified with
-  the [[tint]] function and if a GIF has transparency, it will maintain
+  "Displays images to the screen. Processing currently works with `GIF`,
+  `JPEG`, and `Targa` images. The color of an image may be modified with
+  the [[tint]] function and if a `GIF` has transparency, it will maintain
   its transparency. The `img` parameter specifies the image to display
   and the `x` and `y` parameters define the location of the image from its
   upper-left corner. The image is displayed at its original size
-  unless the width and height parameters specify a different size. The
+  unless the `width` and `height` parameters specify a different size. The
   [[image-mode]] function changes the way the parameters work. A call to
   `(image-mode :corners)` will change the `width` and `height` parameters to
    define the x and y values of the opposite corner of the image."
@@ -2077,9 +2077,9 @@
       :cljs [img x y])
    (.image (current-graphics) img (float x) (float y)))
 
-  (#?(:clj [^PImage img x y c d]
-      :cljs [img x y c d])
-   (.image (current-graphics) img (float x) (float y) (float c) (float d))))
+  (#?(:clj [^PImage img x y width height]
+      :cljs [img x y width height])
+   (.image (current-graphics) img (float x) (float y) (float width) (float height))))
 
 (defn
   ^{:requires-bindings true
@@ -2134,9 +2134,9 @@
    Available modes are:
 
   * `:corner`  - specifies the location to be the upper left corner and
-                 uses the fourth and fifth parameters of image to set the
+                 uses the fourth and fifth parameters of [[image]] to set the
                  image's width and height.
-  * `:corners` - uses the second and third parameters of image to set the
+  * `:corners` - uses the second and third parameters of [[image]] to set the
                  location of one corner of the image and uses the fourth
                   and fifth parameters to set the opposite corner.
   * `:center`  - draw images centered at the given x and y position."
@@ -2913,7 +2913,7 @@
   "It makes it possible for Processing to render using all of the pixels
   on high resolutions screens like Apple Retina displays and Windows
   High-DPI displays. Possible values 1 or 2. Must be called only from
-  :settings handler. To get density of the current screen you can use
+  `:settings` handler. To get density of the current screen you can use
   the [[display-density]] function."
   [density]
   (.pixelDensity (ap/current-applet) density))
@@ -3300,13 +3300,13 @@
   "Contains the value of the most recent key on the keyboard that was
   used (either pressed or released).
 
-  For non-ASCII keys, use the keyCode variable. The keys included in
-  the ASCII specification (BACKSPACE, TAB, ENTER, RETURN, ESC, and
-  DELETE) do not require checking to see if they key is coded, and you
-  should simply use the key variable instead of keyCode If you're
-  making cross-platform projects, note that the ENTER key is commonly
-  used on PCs and Unix and the RETURN key is used instead on
-  Macintosh. Check for both ENTER and RETURN to make sure your program
+  For non-ASCII keys, use [[key-code]]. The keys included in
+  the ASCII specification (`BACKSPACE`, `TAB`, `ENTER`, `RETURN`, `ESC`, and
+  `DELETE`) do not require checking to see if the key is coded, and you
+  should simply use [[raw-key]] instead of [[key-code]]. If you're
+  making cross-platform projects, note that the `ENTER` key is commonly
+  used on PCs and Unix and the `RETURN` key is used instead on
+  Macintosh. Check for both `ENTER` and `RETURN` to make sure your program
   will work for all platforms."
   []
   (.-key (ap/current-applet)))
