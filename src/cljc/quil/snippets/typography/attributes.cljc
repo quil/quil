@@ -88,7 +88,10 @@
      (q/text "text-style: italic" 20 100)
 
      (q/text-style :bold)
-     (q/text "text-style: bold" 20 150)))
+     (q/text "text-style: bold" 20 150)
+
+     (q/text-style :bolditalic)
+     (q/text "text-style: bolditalic" 20 200)))
 
 (defsnippet text-width
   "text-width"
