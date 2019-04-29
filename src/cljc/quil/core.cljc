@@ -1432,10 +1432,10 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   degrees
-  "Converts a radian measurement to its corresponding value in
+  "Converts a `radians` measurement to its corresponding value in
   degrees. Radians and degrees are two ways of measuring the same
-  thing. There are 360 degrees in a circle and `(* 2 Math/PI)` radians
-  in a circle. For example, `(= 90° (/ Math/PI 2) 1.5707964)`. All
+  thing. There are 360 degrees in a circle and `2*PI` radians in a
+  circle. For example, `90\u00B0 = PI/2 = 1.5707964`. All
   trigonometric methods in Processing require their parameters to be
   specified in radians."
   [radians]
@@ -3197,11 +3197,12 @@
     :subcategory "Trigonometry"
     :added "1.0"}
   radians
-  "Converts a degree measurement to its corresponding value in
+  "Converts a `degrees` measurement to its corresponding value in
   radians. Radians and degrees are two ways of measuring the same
-  thing. There are 360 degrees in a circle and 2*PI radians in a
-  circle. For example, 90° = PI/2 = 1.5707964. All trigonometric
-  methods require their parameters to be specified in radians."
+  thing. There are 360 degrees in a circle and `2*PI` radians in a
+  circle. For example, `90\u00B0 = PI/2 = 1.5707964`. All
+  trigonometric methods require their parameters to be specified in
+  radians."
   [degrees]
   #?(:clj (PApplet/radians (float degrees))
      :cljs (.radians (ap/current-applet) degrees)))
