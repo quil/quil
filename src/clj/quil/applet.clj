@@ -26,9 +26,10 @@
 (def ^:private  executor (java.util.concurrent.Executors/newSingleThreadScheduledExecutor))
 
 (defn- destroy-window
-  "Cleanup native window object once sketch was closed. Processing doesn't perform cleanups
-  because its probably assumes that when sketch is closed - JVM is closed as well which is
-  not the case for clojure. So here we're performing renderer-specific cleanups. "
+  "Clean up native window object once sketch is closed. Processing doesn't
+  perform cleanups because it probably assumes that when the sketch is closed
+  the JVM is closed as well which is not the case for clojure. So here we're
+  performing renderer-specific cleanups."
   [applet]
   (let [native (-> applet .getSurface .getNative)]
     (condp = (.getClass native)
@@ -46,9 +47,9 @@
       :nothing)))
 
 (defn applet-disposed
-  "This function is called when PApplet executes 'dispose' method.
-  It means we can dispose frame, call on-close function and perform other
-  clean ups."
+  "This function is called when `PApplet` executes `dispose` method. It means we
+  can dispose the frame, call the `on-close` function and perform other
+  cleanups."
   [applet]
   (with-applet applet
     ((:on-close (meta applet))))
@@ -56,7 +57,7 @@
   (destroy-window applet))
 
 (defn applet-state
-  "Fetch an element of state from within the applet"
+  "Fetch an element of state from within the `applet`."
   [applet k]
   (get @(:state (meta applet)) k))
 
@@ -103,17 +104,17 @@
                   :fx2d   PApplet/FX2D})
 
 (defn resolve-renderer
-  "Converts keyword to Processing renderer string constant.
-  This string can be passed to native Processing methods.
-  If renderer passed as String - do nothing and simply return it"
+  "Converts `renderer` keyword to `Processing` renderer `String` constant.
+  This `String` can be passed to native `Processing` methods.
+  If `renderer` is passed as `String` do nothing and simply return it."
   [renderer]
   (cond (keyword? renderer) (u/resolve-constant-key renderer renderer-modes)
         (string? renderer) renderer
         :default (throw (RuntimeException. ":renderer should be keyword or string"))))
 
 (defn- validate-size
-  "Checks that the size vector is exactly two elements. If not, throws
-  an exception, otherwise returns the size vector unmodified."
+  "Checks that the `size` vector is exactly two elements. If not, throws
+  an exception, otherwise returns the `size` vector unmodified."
   [size]
   (if (or (= size :fullscreen)
           (and (coll? size) (= 2 (count size))))
@@ -123,8 +124,10 @@
                  ". Was expecting :fullscreen or 2 elements vector: "
                  "[width height].")))))
 
-(defn- to-method-name [keyword]
-  "Converts keyword to java-style method symbol. :on-key-pressed => onKeyPressed"
+(defn- to-method-name
+  "Converts keyword to java-style method symbol.
+  `:on-key-pressed` => `onKeyPressed`"
+  [keyword]
   (-> keyword
       name
       (string/replace
@@ -132,8 +135,9 @@
        #(-> % string/upper-case (subs 1)))
       symbol))
 
-(defn- parent-method [method]
-  "Appends string 'Parent' to given symbol"
+(defn- parent-method
+  "Appends string 'Parent' to given symbol."
+  [method]
   (symbol (str method "Parent")))
 
 (def listeners [:key-pressed
@@ -172,8 +176,8 @@
                    sketchFullScreen sketchFullScreenParent})
 
 (defn -exitActual
-  "Overriding PApplet.exitActual because we don't want it to call
-   System.exit()."
+  "Overriding `PApplet.exitActual` because we don't want it to call
+  `System.exit()`."
   [this])
 
 (defn -sketchFullScreen [this] (:present (meta this)))
@@ -185,7 +189,7 @@
   (.state this))
 
 (defn -settings
-  "Overriding PApplet.settings() to set size."
+  "Overriding `PApplet.settings()` to set size."
   [this]
   (let [{:keys [renderer size output-file settings-fn]} (meta this)
         renderer (resolve-renderer renderer)
@@ -225,7 +229,7 @@
     (resolve-renderer initial-renderer)))
 
 (defmacro generate-listeners
-  "Generates all listeners like onKeyPress, onMouseClick and others."
+  "Generates all listeners like `onKeyPress`, `onMouseClick` and others."
   []
   (letfn [(prefix [v method]
             (symbol (str v method)))
@@ -265,7 +269,7 @@
 
 (defn applet
   "Create and start a new visualisation applet. All options used
-  here should be documented in 'defsketch' docstring."
+  here should be documented in the [[quil.sketch/defsketch]] docstring."
   [& opts]
   (let [options (apply hash-map opts)
 
@@ -327,11 +331,12 @@
       (attach-applet-listeners))))
 
 (defmacro defapplet
-  "Define and start an applet and bind it to a var with the symbol
-  app-name. If any of the options to the various callbacks are
-  symbols, it wraps them in a call to var to ensure they aren't
-  inlined and that redefinitions to the original fns are reflected in
-  the visualisation. See applet for the available options."
+  "Define and start an applet and bind it to
+  a [var](https://clojure.org/reference/vars) with the symbol `app-name`. If any
+  of the options to the various callbacks are symbols, it wraps them in a call
+  to `var` to ensure they aren't inlined and that redefinitions to the original
+  functions are reflected in the visualisation. See [[applet]] for the available
+  options."
   [app-name & opts]
   (letfn [(wrap [v]
             (if (symbol? v)
