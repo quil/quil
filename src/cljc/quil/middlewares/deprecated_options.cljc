@@ -13,8 +13,8 @@
     (disj features :no-safe-draw)))
 
 (defn deprecated-options
-  "Checks if options map contains deprected options and removes them.
-  Prints messages how to fix deprecated functions."
+  "Checks `options` map for deprecated options, removes them and
+  prints messages explaining how to fix them."
   [options]
   (let [options (update-in options [:features] check-features-vector)]
     (->> (for [[name value] options]

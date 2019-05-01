@@ -47,7 +47,7 @@
            :key-pressed (wrap-fn pause :key-pressed key-pressed #(unpause pause)))))
 
 (defn pause-on-error
-  "Pauses sketch if any of user-provided handlers throws error."
+  "Pauses the sketch if any of the user-provided handlers throws an error."
   [options]
   (let [pause (atom nil)]
     (-> (into {}

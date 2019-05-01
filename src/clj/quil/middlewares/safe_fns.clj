@@ -19,11 +19,11 @@
         (Thread/sleep 1000)))))
 
 (defn safe-fns
-  "Wraps all functions in options such that they will not throw exceptions
-  If function (for example 'draw') throws an exception - exception is
-  caught and printed to stdout and execution of the program is paused for
-  1 sec. This way sketch will not be aborted but will continue to run,
-  allowing to fix function and reload it on fly."
+  "Wraps all functions in `options` such that they will not throw exceptions.
+  If a function (for example `draw`) throws an exception, the exception is
+  caught, printed to `stdout` and execution of the program is paused for
+  1 sec. The sketch will not be aborted, it will continue to run,
+  making it possible to fix the function and reload it on the fly."
   [options]
   (into {}
         (for [[name value] options]

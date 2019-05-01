@@ -59,8 +59,8 @@
     options))
 
 (defn fun-mode
-  "Introduces function mode making all handlers (setup, draw, mouse-click, etc)
-  state-aware. Adds support for 'update' function."
+  "Introduces `function mode` making all handlers (`setup`, `draw`,
+  `mouse-click`, etc) state-aware. Adds support for `update` function."
   [options]
   (-> options
       wrap-setup
