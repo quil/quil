@@ -2,10 +2,10 @@
   (:require [quil.util :as u]))
 
 (defn bind-output
-  "Saves current *out* thread and before callling each
-  handler binds local *out* to the saved one. This way
+  "Saves current `*out*` thread and before calling each
+  handler binds local `*out*` to the saved one. This way
   all logs go to original output. When used from repl
-  in emacs - logs go to repl buffer instead of server
+  in emacs logs go to repl buffer instead of server
   buffer."
   [options]
   (let [original-out *out*]

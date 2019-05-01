@@ -7,7 +7,7 @@
        ":update or any other handler?"))
 
 (defn- assert-state-has-navigation
-  "Asserts that state map contains :navigation-2d object."
+  "Asserts that `state` map contains `:navigation-2d` object."
   [state]
   (when-not (:navigation-3d state)
     (throw #?(:clj (RuntimeException. missing-navigation-key-error)
@@ -24,7 +24,7 @@
    :up [0 1 0]})
 
 (defn- rotate-by-axis-and-angle
-  "Rotates vector v by angle with axis.
+  "Rotates vector `v` by `angle` with `axis`.
   Formula is taken from wiki:
   http://en.wikipedia.org/wiki/Rotation_matrix#Rotation_matrix_from_axis_and_angle"
   [v axis angle]
@@ -57,7 +57,7 @@
      (+ (* g x) (* h y) (* i z))]))
 
 (defn- rotate-lr
-  "Rotates nav-3d configuration left-right. angle positive - rotate right,
+  "Rotates `nav-3d` configuration left-right. `angle` positive - rotate right,
   negative - left."
   [nav-3d angle]
   (update-in nav-3d [:straight] rotate-by-axis-and-angle (:up nav-3d) angle))
@@ -70,7 +70,7 @@
    (- (* u1 v2) (* u2 v1))])
 
 (defn- v-mult
-  "Multiply vector v by scalar mult."
+  "Multiply vector `v` by scalar `mult`."
   [v mult]
   (mapv #(* % mult) v))
 
@@ -80,7 +80,7 @@
   (mapv + v1 v2))
 
 (defn- v-opposite
-  "Returns vector opposite to vector v."
+  "Returns vector opposite to vector `v`."
   [v]
   (v-mult v -1))
 
@@ -94,7 +94,7 @@
     (v-mult v (/ norm))))
 
 (defn- rotate-ud
-  "Rotates nav-3d configuration up-down."
+  "Rotates `nav-3d` configuration up-down."
   [nav-3d angle]
   (let [axis (cross-product (:straight nav-3d) (:up nav-3d))
         rotate #(rotate-by-axis-and-angle % axis angle)]
@@ -104,7 +104,7 @@
 
 (defn- rotate
   "Mouse handler function which rotates nav-3d configuration.
-  It uses mouse from event object and pixels-in-360 to calculate
+  It uses mouse from `event` object and `pixels-in-360` to calculate
   angles to rotate."
   [state event pixels-in-360]
   (assert-state-has-navigation state)
@@ -123,7 +123,7 @@
 
 (defn- move
   "Keyboard handler function which moves nav-3d configuration.
-  It uses keyboard key from event object to determing in which
+  It uses keyboard key from `event` object to determine in which
   direction to move."
   [state event step-size]
   (assert-state-has-navigation state)

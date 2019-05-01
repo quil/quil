@@ -7,7 +7,7 @@
        ":update or any other handler?"))
 
 (defn- assert-state-has-navigation
-  "Asserts that state map contains :navigation-2d object."
+  "Asserts that `state` map contains `:navigation-2d` object."
   [state]
   (when-not (:navigation-2d state)
     (throw #?(:clj (RuntimeException. missing-navigation-key-error)
@@ -15,7 +15,7 @@
 
 (defn- default-position
   "Default position configuration: zoom is neutral and central point is
-  width/2, height/2."
+  `width/2, height/2`."
   []
   {:position [(/ (q/width) 2.0)
               (/ (q/height) 2.0)]
@@ -50,7 +50,7 @@
   (update-in state [:navigation-2d :zoom] * (+ 1 (* -0.1 event))))
 
 (defn- draw
-  "Calls user draw function with necessary all transformations (position
+  "Calls user draw function with all necessary transformations (position
   and zoom) applied."
   [user-draw state]
   (assert-state-has-navigation state)
@@ -66,7 +66,7 @@
 
 (defn navigation-2d
   "Enables navigation over 2D sketch. Dragging mouse will move center of the
-  skecth and mouse wheel controls zoom."
+  sketch and mouse wheel controls zoom."
   [options]
   (let [; 2d-navigation related user settings
         user-settings (:navigation-2d options)
