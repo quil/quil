@@ -1,6 +1,7 @@
 (ns quil.snippet
   (:require [quil.core :as q]
             [quil.snippets.all-snippets :as as]
+            [clojure.java.io :as io]
             [clojure.test :as t :refer [is]]
             [clojure.string :as cstr]
             clojure.pprint))
@@ -11,6 +12,24 @@
 
 (def tests-in-set 50)
 (def current-test (atom -1))
+
+(defn assert-unchanged-snippet-output [name]
+  (when-not (contains? #{"current-frame-rate-target-frame-rate"
+                         "noise"
+                         "noise-detail"
+                         "random-2d"
+                         "random-3d"
+                         "random"
+                         "random-gaussian"
+                         "time-and-date"} name)
+    (let [n (str "snippet-snapshots/" name)
+          _ (q/save (str "resources/" n "-actual.png"))
+          e (slurp (io/resource (str n "-expected.png")))
+          a (slurp (io/resource (str n "-actual.png")))
+          c (compare e a)]
+      (when (zero? c)
+        (clojure.java.io/delete-file (io/resource (str n "-actual.png"))))
+      (t/is (zero? c)))))
 
 (defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
   (let [result (promise)
@@ -33,6 +52,7 @@
              (try
                (q/background 255)
                (body)
+               (assert-unchanged-snippet-output name)
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
