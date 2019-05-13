@@ -834,7 +834,8 @@
                     alpha (transparency) values.
   * `:overlay`    - mix of `:multiply` and `:screen`. Multiplies dark values,
                     and screens light values.
-  * `:hard-light` - `:screen` when greater than 50% gray, `:multiply` when lower.
+  * `:hard-light` - `:screen` when greater than 50% gray, `:multiply` when
+                    lower.
   * `:soft-light` - mix of `:darkest` and `:lightest`. Works like :overlay, but
                     not as harsh.
   * `:dodge`      - lightens light tones and increases contrast, ignores darks.
