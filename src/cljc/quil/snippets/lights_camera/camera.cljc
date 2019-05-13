@@ -75,23 +75,27 @@
 
 (defsnippet ortho-perspective
   ["ortho" "perspective"]
-  {:renderer :p3d
-   :setup (q/frame-rate 1)}
+  {:renderer :p3d}
 
   (q/background 240)
-  (comment "flip between ortho and perspective camera every frame")
-  (comment "enable ortho camera")
+
+  (comment "set camera to look from [400, 100, 200] at point [100, 0, 0]")
+  (q/camera 400 100 200 100 0 0 0 0 -1)
+
   (comment "in ortho all figures will look the same regardless distance")
-  (comment "in perspective (default) all figures will look smaller the farther they are")
-  (if (even? (q/frame-count))
-    (q/ortho)
-    (q/perspective))
-  (comment "set camera to look from [300, 0, 300] at point [100, 0, 0]")
-  (q/camera 300 0 300 100 0 0 0 0 -1)
-  (q/fill 0 127 127)
-  (comment "draw 3 boxes with x coordinates 0, 100 and 200")
+  (q/ortho)
+  (comment "draw 3 red boxes with x coordinates 0, 100 and 200")
+  (q/fill 200 0 0)
   (doseq [x [0 100 200]]
-    (q/with-translation [x 0 0]
+   (q/with-translation [x 50 0]
+     (q/box 50)))
+
+  (comment "in perspective (default) all figures will look smaller the farther they are")
+  (q/perspective)
+  (comment "draw 3 green boxes with x coordinates 0, 100 and 200")
+  (q/fill 0 200 0)
+  (doseq [x [0 100 200]]
+    (q/with-translation [x -50 0]
       (q/box 50))))
 
 #?(:clj
