@@ -14,7 +14,6 @@
 
 (defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
   (let [result (promise)
-        time (System/currentTimeMillis)
         snip-name (str ns "/" name)]
     (println mouse-clicked)
     (println "Test:" snip-name)
@@ -39,9 +38,7 @@
                  (.printStackTrace e)
                  (deliver result e))
                (finally
-                 (when (and (> (- (System/currentTimeMillis) time)
-                               1000)
-                            (not manual?))
+                 (when (not manual?)
                    (q/exit)))))
      :on-close #(deliver result nil))
     (t/is (nil? @result))))
