@@ -1,7 +1,5 @@
 (ns quil.snippet
-  (:require [quil.util :refer [clj-compilation?]]
-            [quil.core :as q]
-            [quil.util :refer [no-fn]]
+  (:require [quil.core :as q]
             [quil.snippets.all-snippets :as as]
             [clojure.test :as t :refer [is]]
             [clojure.string :as cstr]
