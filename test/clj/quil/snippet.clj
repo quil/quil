@@ -1,9 +1,11 @@
 (ns quil.snippet
   (:require [quil.core :as q]
             [quil.snippets.all-snippets :as as]
+            [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [clojure.test :as t :refer [is]]
-            [clojure.string :as cstr]
+            [clojure.test :as t]
+            [clojure.java.shell :as sh]
+            [clojure.string :as string]
             clojure.pprint))
 
 (def default-size [500 500])
@@ -13,6 +15,14 @@
 (def tests-in-set 50)
 (def current-test (atom -1))
 
+(defn- compare-images [expected actual difference]
+  (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
+        result        (second (re-find #"\((.*)\)" err))]
+    (edn/read-string result)))
+
+(defn- replace-suffix [file-name suffix]
+  (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
+
 (defn assert-unchanged-snippet-output [name]
   (when-not (contains? #{"current-frame-rate-target-frame-rate"
                          "noise"
@@ -21,15 +31,19 @@
                          "random-3d"
                          "random"
                          "random-gaussian"
+                         "resize-sketch"
                          "time-and-date"} name)
-    (let [n (str "snippet-snapshots/" name)
-          _ (q/save (str "resources/" n "-actual.png"))
-          e (slurp (io/resource (str n "-expected.png")))
-          a (slurp (io/resource (str n "-actual.png")))
-          c (compare e a)]
-      (when (zero? c)
-        (clojure.java.io/delete-file (io/resource (str n "-actual.png"))))
-      (t/is (zero? c)))))
+    (let [n          (str "snippet-snapshots/" name)
+          _          (q/save (str "resources/" n "-actual.png"))
+          expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
+          actual     (replace-suffix expected "actual")
+          difference (replace-suffix expected "difference")
+          result     (compare-images expected actual difference)
+          threshold  0.02]
+      (when (<= result threshold)
+        (io/delete-file (io/file actual))
+        (io/delete-file (io/file difference)))
+      (t/is (<= result threshold)))))
 
 (defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
   (let [result (promise)
@@ -63,8 +77,8 @@
      :on-close #(deliver result nil))
     (t/is (nil? @result))))
 
-(defn define-snippet-as-test [{:keys [ns name opts setup body body-str] :as snippet}]
-  (let [test-name (str (cstr/replace ns "." "_")
+(defn define-snippet-as-test [{:keys [ns name opts setup body] :as snippet}]
+  (let [test-name (str (string/replace ns "." "_")
                        "_"
                        name)]
     (intern 'quil.snippet
