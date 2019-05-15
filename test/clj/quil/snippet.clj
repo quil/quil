@@ -6,6 +6,7 @@
             [clojure.test :as t]
             [clojure.java.shell :as sh]
             [clojure.string :as string]
+            [etaoin.api :as e]
             clojure.pprint))
 
 (def default-size [500 500])
@@ -114,3 +115,28 @@
                       {}))))
   (t/is true))
 
+(t/deftest ^:manual
+  all-cljs-snippets-produce-expected-output
+  (let [driver (e/firefox)
+        threshold 0.0001]
+    (e/go driver (str "http://localhost:3000/test.html"))
+    (let [elements (e/query-all driver {:tag :option})
+          names    (doall (map #(e/get-element-text-el driver %) elements))
+          c        (count elements)]
+      (dotimes [i c]
+        (let [name       (nth names i)
+              n          (str "snippet-snapshots/cljs/" name "-expected.png")
+              expected   (.getAbsolutePath (io/file (io/resource n)))
+              actual     (replace-suffix expected "actual")
+              difference (replace-suffix expected "difference")]
+          (when-not (skip-automated-compare? name)
+            (e/go driver (str "http://localhost:3000/test.html#" i))
+            (e/refresh driver)
+            (e/screenshot-element driver {:tag :canvas} actual)
+            (let [result (compare-images expected actual difference)]
+              (when (<= result threshold)
+                (io/delete-file (io/file actual))
+                (io/delete-file (io/file difference)))
+              (t/is (<= result threshold)
+                    (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))
+    (e/quit driver)))
