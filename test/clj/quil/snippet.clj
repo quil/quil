@@ -33,7 +33,7 @@
                          "random-gaussian"
                          "resize-sketch"
                          "time-and-date"} name)
-    (let [n          (str "snippet-snapshots/" name)
+    (let [n          (str "snippet-snapshots/clj/" name)
           _          (q/save (str "resources/" n "-actual.png"))
           expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
           actual     (replace-suffix expected "actual")
