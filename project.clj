@@ -50,7 +50,8 @@
                                   [com.vladsch.flexmark/flexmark-ext-autolink "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-gfm-tables "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-anchorlink "0.34.18"]
-                                  [com.vladsch.flexmark/flexmark-ext-wikilink "0.34.18"]]
+                                  [com.vladsch.flexmark/flexmark-ext-wikilink "0.34.18"]
+                                  [etaoin "0.3.3"]]
                    :plugins [[lein-ring "0.12.5"]
                              [lein-cljfmt "0.5.7"]]
                    :source-paths ["dev"]}
