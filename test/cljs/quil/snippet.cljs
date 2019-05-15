@@ -19,6 +19,9 @@
   {:name (:name snippet)
    :ns (:ns snippet)
    :fn (fn []
+         (let [expected (d/sel1 :#expected)]
+           (d/set-attr! expected :src (str "snapshots/" (:name snippet) "-expected.png")))
+
          (let [opts (:opts snippet)]
            (q/sketch
             :size (:size opts default-size)

@@ -20,6 +20,7 @@ li.hor {
 
 .table {
     margin: 0 auto;
+    margin-top: 30px;
     display: table;
 }
 
