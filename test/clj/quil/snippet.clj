@@ -15,6 +15,18 @@
 (def tests-in-set 50)
 (def current-test (atom -1))
 
+(defn skip-automated-compare? [snippet-name]
+  (contains? #{"current-frame-rate-target-frame-rate"
+               "noise"
+               "noise-detail"
+               "random-2d"
+               "random-3d"
+               "random"
+               "random-gaussian"
+               "resize-sketch"
+               "save"
+               "time-and-date"} snippet-name))
+
 (defn- compare-images [expected actual difference]
   (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
         result        (second (re-find #"\((.*)\)" err))]
@@ -24,15 +36,7 @@
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
 
 (defn assert-unchanged-snippet-output [name]
-  (when-not (contains? #{"current-frame-rate-target-frame-rate"
-                         "noise"
-                         "noise-detail"
-                         "random-2d"
-                         "random-3d"
-                         "random"
-                         "random-gaussian"
-                         "resize-sketch"
-                         "time-and-date"} name)
+  (when-not (skip-automated-compare? name)
     (let [n          (str "snippet-snapshots/clj/" name)
           _          (q/save (str "resources/" n "-actual.png"))
           expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
