@@ -28,7 +28,15 @@
                "save"
                "time-and-date"} snippet-name))
 
-(defn- compare-images [expected actual difference]
+(defn- compare-images
+  "Compares images at file paths `expected` and `actual` and produces another
+  image at path `difference` which highlights any differences in the images.
+
+  Returns a number between `0` and `1` indicating a measure of the difference.
+  with `0` indicating the images are the same."
+  [expected actual difference]
+  ;; use imagemagick compare executable for comparison
+  ;; see https://imagemagick.org/script/compare.php
   (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
         result        (second (re-find #"\((.*)\)" err))]
     (edn/read-string result)))
