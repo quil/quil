@@ -1,7 +1,6 @@
 (ns quil.snippet
   (:require [quil.core :as q]
             [quil.snippets.all-snippets :as as]
-            [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.test :as t]
             [clojure.java.shell :as sh]
@@ -28,6 +27,12 @@
                "save"
                "time-and-date"} snippet-name))
 
+(defn- imagemagick-installed? []
+  (try
+    (sh/sh "compare" "-version")
+    true
+    (catch java.io.IOException e false)))
+
 (defn- compare-images
   "Compares images at file paths `expected` and `actual` and produces another
   image at path `difference` which highlights any differences in the images.
@@ -39,7 +44,7 @@
   ;; see https://imagemagick.org/script/compare.php
   (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
         result        (second (re-find #"\((.*)\)" err))]
-    (edn/read-string result)))
+    (Double/parseDouble result)))
 
 (defn- replace-suffix [file-name suffix]
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
@@ -79,7 +84,9 @@
              (try
                (q/background 255)
                (body)
-               (assert-unchanged-snippet-output name)
+               (if (imagemagick-installed?)
+                 (assert-unchanged-snippet-output name)
+                 (println "Imagemagick not detected. Please install it for automated image comparison to work."))
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
