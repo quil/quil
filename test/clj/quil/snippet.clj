@@ -37,14 +37,17 @@
   "Compares images at file paths `expected` and `actual` and produces another
   image at path `difference` which highlights any differences in the images.
 
-  Returns a number between `0` and `1` indicating a measure of the difference.
-  with `0` indicating the images are the same."
+  Returns a number between `0` and `1` indicating a measure of the difference,
+  with `0` indicating the images are the same, and `nil` if imagemagick not
+  installed."
   [expected actual difference]
   ;; use imagemagick compare executable for comparison
   ;; see https://imagemagick.org/script/compare.php
-  (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
-        result        (second (re-find #"\((.*)\)" err))]
-    (Double/parseDouble result)))
+  (if (imagemagick-installed?)
+    (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
+          result        (second (re-find #"\((.*)\)" err))]
+      (Double/parseDouble result))
+    (println "Imagemagick not detected. Please install it for automated image comparison to work.")))
 
 (defn- replace-suffix [file-name suffix]
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
@@ -58,10 +61,11 @@
           difference (replace-suffix expected "difference")
           result     (compare-images expected actual difference)
           threshold  0.02]
-      (when (<= result threshold)
-        (io/delete-file (io/file actual))
-        (io/delete-file (io/file difference)))
-      (t/is (<= result threshold)))))
+      (when (number? result)
+        (when (<= result threshold)
+          (io/delete-file (io/file actual))
+          (io/delete-file (io/file difference)))
+        (t/is (<= result threshold))))))
 
 (defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
   (let [result (promise)
@@ -84,9 +88,7 @@
              (try
                (q/background 255)
                (body)
-               (if (imagemagick-installed?)
                  (assert-unchanged-snippet-output name)
-                 (println "Imagemagick not detected. Please install it for automated image comparison to work."))
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
@@ -148,9 +150,10 @@
             (etaoin/refresh driver)
             (etaoin/screenshot-element driver {:tag :canvas} actual)
             (let [result (compare-images expected actual difference)]
-              (when (<= result threshold)
-                (io/delete-file (io/file actual))
-                (io/delete-file (io/file difference)))
-              (t/is (<= result threshold)
-                    (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))
+              (when (number? result)
+                (when (<= result threshold)
+                  (io/delete-file (io/file actual))
+                  (io/delete-file (io/file difference)))
+                (t/is (<= result threshold)
+                      (str "Image comparison for " name " not within acceptable threshold: " threshold))))))))
     (etaoin/quit driver)))
