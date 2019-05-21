@@ -25,7 +25,8 @@
                "random-gaussian"
                "resize-sketch"
                "save"
-               "time-and-date"} snippet-name))
+               "time-and-date"
+               "ortho-perspective"} snippet-name))
 
 (defn- imagemagick-installed? []
   (try
@@ -140,20 +141,20 @@
     (let [elements (etaoin/query-all driver {:tag :option})
           names    (doall (map #(etaoin/get-element-text-el driver %) elements))]
       (dotimes [i (count elements)]
-        (let [name       (nth names i)
-              n          (str "snippet-snapshots/cljs/" name "-expected.png")
-              expected   (.getAbsolutePath (io/file (io/resource n)))
-              actual     (replace-suffix expected "actual")
-              difference (replace-suffix expected "difference")]
+        (let [name (nth names i)]
           (when-not (skip-automated-compare? name)
-            (etaoin/go driver (str "http://localhost:3000/test.html#" i))
-            (etaoin/refresh driver)
-            (etaoin/screenshot-element driver {:tag :canvas} actual)
-            (let [result (compare-images expected actual difference)]
-              (when (number? result)
-                (when (<= result threshold)
-                  (io/delete-file (io/file actual))
-                  (io/delete-file (io/file difference)))
-                (t/is (<= result threshold)
-                      (str "Image comparison for " name " not within acceptable threshold: " threshold))))))))
+            (let [n          (str "snippet-snapshots/cljs/" name "-expected.png")
+                  expected   (.getAbsolutePath (io/file (io/resource n)))
+                  actual     (replace-suffix expected "actual")
+                  difference (replace-suffix expected "difference")]
+              (etaoin/go driver (str "http://localhost:3000/test.html#" i))
+              (etaoin/refresh driver)
+              (etaoin/screenshot-element driver {:tag :canvas} actual)
+              (let [result (compare-images expected actual difference)]
+                (when (number? result)
+                  (when (<= result threshold)
+                    (io/delete-file (io/file actual))
+                    (io/delete-file (io/file difference)))
+                  (t/is (<= result threshold)
+                        (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))))
     (etaoin/quit driver)))
