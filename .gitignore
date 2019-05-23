@@ -19,5 +19,5 @@ examples/
 pom.xml.asc
 screen-*.tif
 .ds_store
-resources/snippet-snapshots/**/*-actual.png
-resources/snippet-snapshots/**/*-difference.png
+dev-resources/snippet-snapshots/**/*-actual.png
+dev-resources/snippet-snapshots/**/*-difference.png
