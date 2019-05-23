@@ -20,8 +20,6 @@
 (def ^{:dynamic true}
   *graphics* nil)
 
-(def ^{:private true} no-fill-prop "no-fill-quil")
-
 (declare pixels)
 
 (defn
