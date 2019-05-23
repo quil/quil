@@ -3867,19 +3867,18 @@
      (let [mode (u/resolve-constant-key mode p-shape-modes)]
        (.shapeMode (current-graphics) (int mode)))))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "shininess()"
-       :category "Lights, Camera"
-       :subcategory "Material Properties"
-       :added "1.0"}
-     shininess
-     "Sets the amount of gloss in the surface of shapes. Used in
+(defn
+  ^{:requires-bindings true
+    :processing-name "shininess()"
+    :category "Lights, Camera"
+    :subcategory "Material Properties"
+    :added "1.0"}
+  shininess
+  "Sets the amount of gloss in the surface of shapes. Used in
   combination with [[ambient]], [[specular]], and [[emissive]] in setting
   the material properties of shapes."
-     [shine]
-     (.shininess (current-graphics) (float shine))))
+  [shine]
+  (.shininess (current-graphics) (float shine)))
 
 (defn
   ^{:requires-bindings false
