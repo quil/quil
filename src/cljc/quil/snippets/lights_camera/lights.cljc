@@ -47,15 +47,14 @@
      (q/directional-light 255 150 150 -1 -0.76 -0.5)
      (q/box 50)))
 
-#?(:clj
-   (defsnippet lights
-     "lights"
-     {:renderer :p3d}
+(defsnippet lights
+  "lights"
+  {:renderer :p3d}
 
-     (q/background 0)
-     (q/camera 100 100 100 0 0 0 0 0 -1)
-     (q/lights)
-     (q/box 50)))
+  (q/background 0)
+  (q/camera 100 100 100 0 0 0 0 0 -1)
+  (q/lights)
+  (q/box 50))
 
 #?(:clj
    (defsnippet no-lights
