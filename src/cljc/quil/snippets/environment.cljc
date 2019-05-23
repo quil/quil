@@ -20,7 +20,7 @@
 
   (q/background 255)
   (q/fill 0 0 255)
-  (.rect (q/current-graphics) 0 0 100 100)
+  (.rect (q/current-graphics) 1 1 100 100)
 
   (let [gr (q/create-graphics 100 100)]
     (q/with-graphics gr
