@@ -12,6 +12,7 @@
                       :cljs (q/load-shape "octahedron.obj"))]
             (q/set-state! :shp sh))}
 
+  (q/background 255)
   (let [sh (q/state :shp)]
     (q/shape sh)
     #?(:clj (q/shape sh 100 100))

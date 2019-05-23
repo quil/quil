@@ -131,6 +131,8 @@
   ["rotate-x" "rotate-y" "rotate-z"]
   {:renderer :p3d}
 
+  (q/background 255)
+
   (comment "setup camera and draw box at [0 0 0]")
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
@@ -160,6 +162,8 @@
 (defsnippet scale
   "scale"
   {:renderer :p3d}
+
+  (q/background 255)
 
   (comment "setup camera and draw box at [0 0 0]")
   (q/camera 200 200 200 0 0 0 0 0 -1)
@@ -205,6 +209,8 @@
 (defsnippet translate
   "translate"
   {:renderer :p3d}
+
+  (q/background 255)
 
   (comment "setup camera and draw box at [0 0 0]")
   (q/camera 200 200 200 0 0 0 0 0 -1)
