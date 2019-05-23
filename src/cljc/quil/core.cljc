@@ -2280,15 +2280,14 @@
   #?(:clj (PApplet/lerp (float start) (float stop) (float amt))
      :cljs (.lerp (ap/current-applet) start stop amt)))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "lights()"
-       :category "Lights, Camera"
-       :subcategory "Lights"
-       :added "1.0"}
-     lights
-     "Sets the default ambient light, directional light, falloff, and
+(defn
+  ^{:requires-bindings true
+    :processing-name "lights()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  lights
+  "Sets the default ambient light, directional light, falloff, and
   specular values. The defaults are:
 
   `(ambient-light 128 128 128)`
@@ -2300,8 +2299,8 @@
   looping program. Placing them in the setup of a looping program
   will cause them to only have an effect the first time through the
   loop."
-     []
-     (.lights (current-graphics))))
+  []
+  (.lights (current-graphics)))
 
 #?(:clj
    (defn
