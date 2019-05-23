@@ -91,7 +91,7 @@
   (GET "/" req root-page)
   (GET "/manual" req manual-page)
   (GET "/fullscreen" req fullscreen-page)
-  (route/files "/snapshots" {:root "resources/snippet-snapshots/cljs"})
+  (route/files "/snapshots" {:root "dev-resources/snippet-snapshots/cljs"})
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))
