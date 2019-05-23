@@ -56,7 +56,7 @@
 (defn assert-unchanged-snippet-output [name]
   (when-not (skip-automated-compare? name)
     (let [n          (str "snippet-snapshots/clj/" name)
-          _          (q/save (str "resources/" n "-actual.png"))
+          _          (q/save (str "dev-resources/" n "-actual.png"))
           expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
           actual     (replace-suffix expected "actual")
           difference (replace-suffix expected "difference")
