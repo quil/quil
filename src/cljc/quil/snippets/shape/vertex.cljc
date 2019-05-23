@@ -77,6 +77,7 @@
   "bezier-vertex"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera -400 250 -100 500 250 0 0 0 1)
 
   (comment "draw first shape")
@@ -97,6 +98,7 @@
   "curve-vertex"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 50 200 50 50 0 0 0 0 1)
 
   (comment "draw first shape")
@@ -124,6 +126,8 @@
 (defsnippet quadratic-vertex
   "quadratic-vertex"
   {:renderer :p3d}
+
+  (q/background 255)
 
   (comment "setup camera and draw axes")
   (q/camera 50 200 50 50 0 0 0 0 -1)
@@ -181,6 +185,8 @@
      "texture"
      {:renderer :p3d
       :setup (q/set-state! :image (q/load-image "https://placekitten.com/100/100"))}
+
+     (q/background 255)
 
      (if (zero? (.-width (q/state :image)))
        (q/text "Loading" 10 10)
@@ -249,6 +255,7 @@
   "vertex"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 100 400 200 100 0 0 0 0 -1)
   (q/line 0 0 0 0 0 150)
   (q/line 0 0 0 0 150 0)

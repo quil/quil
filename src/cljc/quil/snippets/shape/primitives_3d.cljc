@@ -9,6 +9,8 @@
   "box"
   {:renderer :p3d}
 
+  (q/background 255)
+
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/with-translation [100 0 0]
     (q/box 70))
@@ -20,6 +22,7 @@
      "cone"
      {:renderer :p3d}
 
+     (q/background 255)
      (q/rotate-x (* q/PI 1.25))
      (q/cone 80 140)))
 
@@ -28,6 +31,7 @@
      "cylinder"
      {:renderer :p3d}
 
+     (q/background 255)
      (q/rotate-x (* q/PI 1.25))
      (q/cylinder 40 140)))
 
@@ -36,12 +40,14 @@
      "ellipsoid"
      {:renderer :p3d}
 
+     (q/background 255)
      (q/ellipsoid 40 60 80)))
 
 (defsnippet sphere
   "sphere"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/sphere 150))
 
@@ -66,5 +72,6 @@
      "torus"
      {:renderer :p3d}
 
+     (q/background 255)
      (q/rotate-x (/ q/PI 4))
      (q/torus 70 20)))

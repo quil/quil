@@ -17,6 +17,7 @@
   "bezier"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/bezier 0 0 0 0 100 0 0 100 0 100 0 0))
@@ -25,6 +26,7 @@
   ["bezier-detail" "bezier"]
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 0 0 300 0 0 0 0 1 0)
   (q/no-fill)
   (q/bezier-detail 5)
@@ -58,6 +60,7 @@
   "curve"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
   (q/no-fill)
   (q/curve 0 0
@@ -73,6 +76,7 @@
   "curve-detail"
   {:renderer :p3d}
 
+  (q/background 255)
   (q/camera 0 0 300 0 0 0 0 1 0)
   (q/no-fill)
   (q/curve-detail 5)
