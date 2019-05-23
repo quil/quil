@@ -18,7 +18,7 @@
         _ (comment "create semitransparent blue using the alpha")
         semi-blue (q/color 0 0 255 alph)]
     (q/fill semi-red)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (q/fill semi-blue)
     (q/rect 70 70 100 100)))
@@ -65,7 +65,7 @@
            _ (comment "create red with same lightness")
            red (q/color 0 255 l)]
        (q/fill blue)
-       (q/rect 0 0 100 100)
+       (q/rect 1 1 100 100)
 
        (q/fill red)
        (q/rect 70 70 100 100))))
@@ -77,7 +77,7 @@
   (q/background 255)
   (let [purple (q/color 123 50 220)]
     (q/fill purple)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use only red component of purple")
     (q/fill (q/red purple) 0 0)
@@ -90,7 +90,7 @@
   (q/background 255)
   (let [purple (q/color 123 50 220)]
     (q/fill purple)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use only green component of purple")
     (q/fill 0 (q/green purple) 0)
@@ -103,7 +103,7 @@
   (q/background 255)
   (let [purple (q/color 123 50 220)]
     (q/fill purple)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use only blue component of purple")
     (q/fill 0 0 (q/blue purple))
@@ -118,7 +118,7 @@
   (q/color-mode :hsb)
   (let [dark-green (q/color 100 230 100)]
     (q/fill dark-green)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use the hue (green) but make it bright")
     (q/fill (q/hue dark-green) 255 255)
@@ -133,7 +133,7 @@
   (q/color-mode :hsb)
   (let [dark-green (q/color 100 230 100)]
     (q/fill dark-green)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use the same saturation but different color")
     (q/fill 255 (q/saturation dark-green) 255)
@@ -148,7 +148,7 @@
   (q/color-mode :hsb)
   (let [dark-green (q/color 100 230 100)]
     (q/fill dark-green)
-    (q/rect 0 0 100 100)
+    (q/rect 1 1 100 100)
 
     (comment "use the same brightness but different color")
     (q/fill 255 255 (q/brightness dark-green))
@@ -162,7 +162,7 @@
 
   (comment "black")
   (q/fill (q/color 0))
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (comment "semitransparent gray")
   (q/fill (q/color 128 128))
@@ -187,7 +187,7 @@
      (q/color-mode :hsl)
      (comment "use red color")
      (q/fill 255 255 127)
-     (q/rect 0 0 100 100)))
+     (q/rect 1 1 100 100)))
 
 (defsnippet color-mode
   "color-mode"
@@ -199,7 +199,7 @@
   (comment "use HSB and draw red")
   (q/color-mode :hsb)
   (q/fill 255 255 255)
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (comment "use HSB with different max and draw dark green")
   (q/color-mode :hsb 5 10 20)
@@ -224,7 +224,7 @@
 
   (comment "set to red")
   (q/fill 255 0 0)
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (let [_ (comment "remember current color")
         cur-fill (q/current-fill)]
@@ -245,7 +245,7 @@
 
   (comment "set to red")
   (q/stroke 255 0 0)
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (let [_ (comment "remember current color")
         cur-stroke (q/current-stroke)]
@@ -268,7 +268,7 @@
     (comment "draw colors that transition from red to blue")
     (dotimes [i 6]
       (q/fill (q/lerp-color red blue (/ i 5)))
-      (q/rect (* i 70) (* i 70) 100 100))))
+      (q/rect (inc (* i 70)) (inc (* i 70)) 100 100))))
 
 #?(:clj
    ; snippet to make sure that using hex colors doesn't throw error.

@@ -55,7 +55,7 @@
 
   (comment "grey")
   (q/fill 120)
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (comment "semitransparent light grey")
   (q/fill 80 120)
@@ -78,7 +78,7 @@
   (comment "set background to grey")
   (q/stroke 0)
   (q/fill 120)
-  (q/rect 0 0 100 100)
+  (q/rect 1 1 100 100)
 
   (comment "remove background, only border left")
   (q/no-fill)
