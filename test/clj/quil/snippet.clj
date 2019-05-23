@@ -17,16 +17,18 @@
 
 (defn skip-automated-compare? [snippet-name]
   (contains? #{"current-frame-rate-target-frame-rate"
+               "frame-rate"
+               "load-shader"
                "noise"
                "noise-detail"
+               "ortho-perspective"
                "random-2d"
                "random-3d"
                "random"
                "random-gaussian"
                "resize-sketch"
                "save"
-               "time-and-date"
-               "ortho-perspective"} snippet-name))
+               "time-and-date"} snippet-name))
 
 (defn- imagemagick-installed? []
   (try
