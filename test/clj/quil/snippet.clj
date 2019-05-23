@@ -138,7 +138,7 @@
 (t/deftest ^:manual
   all-cljs-snippets-produce-expected-output
   (let [driver (etaoin/firefox)
-        threshold 0.0001]
+        threshold 0.01]
     (etaoin/go driver "http://localhost:3000/test.html")
     (let [elements (etaoin/query-all driver {:tag :option})
           names    (doall (map #(etaoin/get-element-text-el driver %) elements))]
