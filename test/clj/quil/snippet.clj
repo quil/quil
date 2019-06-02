@@ -33,6 +33,7 @@
 (defn- imagemagick-installed? []
   (try
     (sh/sh "compare" "-version")
+    (sh/sh "convert" "-version")
     true
     (catch java.io.IOException e false)))
 
@@ -65,9 +66,12 @@
           result     (compare-images expected actual difference)
           threshold  0.02]
       (when (number? result)
-        (when (<= result threshold)
-          (io/delete-file (io/file actual))
-          (io/delete-file (io/file difference)))
+        (if (<= result threshold)
+          (do
+            (io/delete-file (io/file actual))
+            (io/delete-file (io/file difference)))
+          ; add actual and expected images to difference image for easier comparison
+          (sh/sh "convert" actual difference expected "+append" difference))
         (t/is (<= result threshold))))))
 
 (defn run-snippet-as-test [{:keys [ns name opts setup body body-str mouse-clicked]}]
