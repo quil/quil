@@ -55,7 +55,7 @@
             conj
             {:name (name '~snip-name)
              :fns ~(if (string? fns) [fns] fns)
-             :opts ~(dissoc opts :setup :mouse-clicked :skipt-image-diff?)
+             :opts ~(dissoc opts :setup :mouse-clicked :skip-image-diff?)
              :setup (fn [] ~setup)
              :setup-str ~(pr-str setup)
              :body (fn [] ~@body)
