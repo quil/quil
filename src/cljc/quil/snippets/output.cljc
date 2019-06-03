@@ -18,7 +18,8 @@
 
 (defsnippet save
   "save"
-  {:renderer :p3d}
+  {:renderer :p3d
+   :skip-image-diff? true}
 
   (q/camera 150 150 150 0 0 0 0 0 1)
   (q/box 100)

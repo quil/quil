@@ -50,6 +50,7 @@
    (defsnippet load-shader
      ["load-shader" "loaded?" "reset-shader" "shader"]
      {:renderer :p2d
+      :skip-image-diff? true
       :setup (let [path (clojure.java.io/resource "SimpleShader.glsl")
                    shd (q/load-shader (.getPath path))]
                (q/set-state! :shader shd))}
@@ -72,6 +73,7 @@
    (defsnippet load-shader
      ["load-shader" "loaded?" "shader"]
      {:renderer :p3d
+      :skip-image-diff? true
       :setup (let [shd (q/load-shader "shader.frag" "shader.vert")]
                (q/set-state! :shader shd))}
 

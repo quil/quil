@@ -275,7 +275,7 @@
    (defsnippet use-hex-colors
      ; specify no function so it doesn't get added as snippet in API.
      []
-     {}
+     {:skip-image-diff? true}
 
      (q/lerp-color 0xFF00FF00 0xFF0000FF 0.5)
      (q/hue 0xFF112233)
@@ -292,7 +292,7 @@
    (defsnippet use-hex-colors
      ; specify no function so it doesn't get added as snippet in API.
      []
-     {}
+     {:skip-image-diff? true}
 
      (q/hue "0xFF112233")
      (q/saturation "0xFF112233")

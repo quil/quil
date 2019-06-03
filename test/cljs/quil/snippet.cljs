@@ -18,6 +18,7 @@
 (defn snippet-to-test-function [snippet]
   {:name (:name snippet)
    :ns (:ns snippet)
+   :skip-image-diff? (:skip-image-diff? snippet)
    :fn (fn []
          (let [expected (d/sel1 :#expected)]
            (d/set-attr! expected :src (str "snapshots/" (:name snippet) "-expected.png")))
@@ -110,6 +111,7 @@
         (let [option (.createElement js/document "option")]
           (set! (.-innerHTML option) (:name test))
           (set! (.-testData option) test)
+          (d/set-attr! option :data-skip-image-diff (:skip-image-diff? test))
           (.appendChild optgroup option)))
       (.appendChild input optgroup)))
   (events/listen input EventType/CHANGE

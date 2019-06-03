@@ -109,8 +109,8 @@
 
 (defsnippet ortho-perspective
   ["ortho" "perspective"]
-  {:renderer :p3d}
-;;   :setup (q/frame-rate 1)}
+  {:renderer :p3d
+   :skip-image-diff? true}
 
   (q/background 240)
   (comment "flip between ortho and perspective camera every frame")
@@ -140,6 +140,7 @@
 #?(:clj
    (defsnippet print-projection
      "print-projection"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :skip-image-diff? true}
 
      (q/print-projection)))

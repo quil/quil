@@ -7,7 +7,7 @@
 
 (defsnippet current-frame-rate-target-frame-rate
   ["current-frame-rate" "target-frame-rate"]
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -93,7 +93,7 @@
 
 (defsnippet frame-rate
   "frame-rate"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -145,7 +145,7 @@
 
 (defsnippet resize-sketch
   "resize-sketch"
-  {}
+  {:skip-image-diff? true}
 
   (q/frame-rate 1)
   (comment "each frame increase size of sketch")

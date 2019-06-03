@@ -7,7 +7,7 @@
 
 (defsnippet noise
   "noise"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -17,7 +17,7 @@
 
 (defsnippet noise-detail
   "noise-detail"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -37,7 +37,7 @@
 
 (defsnippet random
   "random"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -46,7 +46,7 @@
 
 (defsnippet random-gaussian
   "random-gaussian"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -63,7 +63,7 @@
 
 (defsnippet random-2d
   "random-2d"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -77,7 +77,7 @@
 
 (defsnippet random-3d
   "random-3d"
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)

@@ -44,6 +44,9 @@
     * `opts` - Map of extra options. Supported options:
       - `:renderer` - Renderer to use for the snippet, if not default.
       - `:setup`    - Setup function to use. Default is empty.
+      - `:mouse-clicked` - Function to use as :mouse-clicked. Default is empty.
+      - `:skip-image-diff?` - If set to true then snippets won't be used
+                              in automated image diff tests.
     * `body` - The body of the `draw` function of the snippet."
   [snip-name fns opts & body]
   (let [setup (:setup opts '())
@@ -52,11 +55,12 @@
             conj
             {:name (name '~snip-name)
              :fns ~(if (string? fns) [fns] fns)
-             :opts ~(dissoc opts :setup :mouse-clicked)
+             :opts ~(dissoc opts :setup :mouse-clicked :skipt-image-diff?)
              :setup (fn [] ~setup)
              :setup-str ~(pr-str setup)
              :body (fn [] ~@body)
              :body-str ~(pr-str body)
              :mouse-clicked (fn [] ~mouse-clicked)
              :mouse-clicked-str ~(pr-str mouse-clicked)
-             :ns ~(str (ns-name *ns*))})))
+             :ns ~(str (ns-name *ns*))
+             :skip-image-diff? ~(:skip-image-diff? opts false)})))

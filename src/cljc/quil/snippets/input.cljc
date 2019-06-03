@@ -39,7 +39,7 @@
 
 (defsnippet time-and-date
   ["millis" "seconds" "minute" "hour" "day" "month" "year"]
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
