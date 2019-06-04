@@ -1,5 +1,6 @@
 (ns test-server
-  (:require [compojure.core :refer :all]
+  (:require [quil.test-util :as tu]
+            [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [hiccup.page :as h]))
@@ -91,7 +92,7 @@
   (GET "/" req root-page)
   (GET "/manual" req manual-page)
   (GET "/fullscreen" req fullscreen-page)
-  (route/files "/snapshots" {:root "dev-resources/snippet-snapshots/cljs"})
+  (route/files "/snapshots" {:root (str "dev-resources/" (tu/path-to-snippet-snapshots "cljs"))})
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))

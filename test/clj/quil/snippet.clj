@@ -1,6 +1,7 @@
 (ns quil.snippet
   (:require [quil.core :as q]
             [quil.snippets.all-snippets :as as]
+            [quil.test-util :as tu]
             [clojure.java.io :as io]
             [clojure.test :as t]
             [clojure.java.shell :as sh]
@@ -45,7 +46,7 @@
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
 
 (defn assert-unchanged-snippet-output [name]
-  (let [n          (str "snippet-snapshots/clj/" name)
+  (let [n          (str (tu/path-to-snippet-snapshots "clj") name)
         _          (q/save (str "dev-resources/" n "-actual.png"))
         expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
         actual     (replace-suffix expected "actual")
@@ -162,7 +163,7 @@
                           (remove #(:skip-image-diff? %))
                           (doall))]
         (doseq [{:keys [name index]} elements]
-          (let [n          (str "snippet-snapshots/cljs/" name "-expected.png")
+          (let [n          (str (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
                 expected   (.getAbsolutePath (io/file (io/resource n)))
                 actual     (replace-suffix expected "actual")
                 difference (replace-suffix expected "difference")]
