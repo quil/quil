@@ -58,7 +58,7 @@
 
              :cljs-testing [:dev
                             {:plugins [[lein-cljsbuild "1.1.7"]]
-                             :source-paths ["test/cljs" "test/cljc"]
+                             :source-paths ["test/cljs" "test/clj/quil/test_util.clj"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
                                             [org.clojure/clojure "1.9.0"]
