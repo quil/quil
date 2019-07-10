@@ -25,16 +25,15 @@
   (q/directional-light 255 150 150 -1 -0.76 -0.5)
   (q/box 50))
 
-#?(:clj
-   (defsnippet light-falloff
-     "light-falloff"
-     {:renderer :p3d}
+(defsnippet light-falloff
+  "light-falloff"
+  {:renderer :p3d}
 
-     (q/background 0)
-     (q/camera 100 100 100 0 0 0 0 0 -1)
-     (q/light-falloff 1 0.008 0)
-     (q/point-light 255 150 150 100 100 100)
-     (q/box 50)))
+  (q/background 0)
+  (q/camera 100 100 100 0 0 0 0 0 -1)
+  (q/light-falloff 1 0.008 0)
+  (q/point-light 255 150 150 100 100 100)
+  (q/box 50))
 
 #?(:clj
    (defsnippet light-specular

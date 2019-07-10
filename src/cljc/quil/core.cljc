@@ -2218,15 +2218,14 @@
      [c]
      (.lightness (current-graphics) c)))
 
-#?(:clj
-   (defn
-     ^{:requires-bindings true
-       :processing-name "lightFalloff()"
-       :category "Lights, Camera"
-       :subcategory "Lights"
-       :added "1.0"}
-     light-falloff
-     "Sets the falloff rates for point lights, spot lights, and ambient
+(defn
+  ^{:requires-bindings true
+    :processing-name "lightFalloff()"
+    :category "Lights, Camera"
+    :subcategory "Lights"
+    :added "1.0"}
+  light-falloff
+  "Sets the falloff rates for point lights, spot lights, and ambient
   lights. The parameters are used to determine the falloff with the
   following equation:
 
@@ -2241,8 +2240,8 @@
   another color, you would use an ambient light with location and
   falloff. You can think of it as a point light that doesn't care
   which direction a surface it is facing."
-     [constant linear quadratic]
-     (.lightFalloff (current-graphics) (float constant) (float linear) (float quadratic))))
+  [constant linear quadratic]
+  (.lightFalloff (current-graphics) (float constant) (float linear) (float quadratic)))
 
 (defn
   ^{:requires-bindings true
