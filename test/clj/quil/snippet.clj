@@ -163,12 +163,15 @@
                           (remove #(:skip-image-diff? %))
                           (doall))]
         (doseq [{:keys [name index]} elements]
+          (etaoin/go driver (str "http://localhost:3000/test.html#" index))
+          (etaoin/refresh driver)
           (let [n          (str (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
+                f          (io/file (str "dev-resources/" n))
+                _          (when-not (.exists f)
+                             (etaoin/screenshot-element driver {:tag :canvas} (.getAbsolutePath f)))
                 expected   (.getAbsolutePath (io/file (io/resource n)))
                 actual     (replace-suffix expected "actual")
                 difference (replace-suffix expected "difference")]
-            (etaoin/go driver (str "http://localhost:3000/test.html#" index))
-            (etaoin/refresh driver)
             (etaoin/screenshot-element driver {:tag :canvas} actual)
             (let [result (compare-images expected actual difference)]
               (when (number? result)
