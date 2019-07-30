@@ -5,6 +5,7 @@
 
    ;;; Require all snippets.
    quil.snippets.image
+   quil.snippets.debugging
    quil.snippets.environment
    quil.snippets.input
    quil.snippets.output
