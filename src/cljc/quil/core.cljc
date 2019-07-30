@@ -180,10 +180,13 @@
   "Retrieve sketch-specific state-atom. All changes to the
   atom will be reflected in the state.
 
+  Example:
+  ```
   (set-state! :foo 1)
   (state :foo) ;=> 1
   (swap! (state-atom) update-in [:foo] inc)
-  (state :foo) ;=> 2"
+  (state :foo) ;=> 2
+  ```"
   []
   #?(:clj (-> (ap/current-applet) meta :state)
      :cljs (. (ap/current-applet) -quil)))
@@ -202,13 +205,16 @@
     :subcategory nil
     :added "1.0"}
   state
-  "Retrieve sketch-specific state by key. Must initially call
-  set-state! to store state. If no parameter passed whole
+  "Retrieve sketch-specific state by `key`. Must initially call
+  [[set-state!]] to store state. If no parameter is passed the whole
   state map is returned.
 
+  Example:
+  ```
   (set-state! :foo 1)
   (state :foo) ;=> 1
-  (state) ;=> {:foo 1}"
+  (state) ;=> {:foo 1}
+  ```"
   ([] @(state-atom))
 
   ([key] (let [state (state)]
@@ -3361,6 +3367,33 @@
   [mode]
   (let [mode (u/resolve-constant-key mode rect-modes)]
     (.rectMode (current-graphics) mode)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name nil
+    :p5js-name nil
+    :category "Debugging"
+    :added "3.1.0"}
+  print-first-n
+  "Prints the provided arguments for the first `n` iterations."
+  [n & more]
+  (when (<= (frame-count) n)
+    (apply println more)))
+
+(defn
+  ^{:requires-bindings true
+    :processing-name nil
+    :p5js-name nil
+    :category "Debugging"
+    :added "3.1.0"}
+  print-every-n-millisec
+  "Prints the provided arguments every `n` milliseconds."
+  [n & more]
+  (let [elapsed (millis)
+        state (internal-state)]
+    (when (< n (- elapsed (get @state :last-time 0)))
+      (swap! state assoc :last-time elapsed)
+      (apply println more))))
 
 (defn
   ^{:requires-bindings true
