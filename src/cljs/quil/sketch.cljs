@@ -26,6 +26,7 @@
     ; p5js creates a <canvas> element inside provided <div> element
     ; we need to resize only the canvas as outer div will adapt automatically
     (let [inner-canvas (.querySelector el "canvas")]
+      (.resizeCanvas applet width height)
       (.setAttribute inner-canvas "width" width)
       (.setAttribute inner-canvas "height" height)
       (aset (.-style inner-canvas) "width" (str width "px"))
