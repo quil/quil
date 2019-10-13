@@ -14,6 +14,8 @@
 
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
 
+(def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
+
 (def tests-in-set 50)
 (def current-test (atom -1))
 
@@ -45,21 +47,30 @@
 (defn- replace-suffix [file-name suffix]
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
 
+(defn save-snippet-screenshot-as-expected [name]
+  (let [filename (str "dev-resources/" (tu/path-to-snippet-snapshots "clj") name "-expected.png")]
+    (println "saving screenshot to " filename)
+    (q/save filename)))
+
 (defn assert-unchanged-snippet-output [name]
-  (let [n          (str (tu/path-to-snippet-snapshots "clj") name)
-        _          (q/save (str "dev-resources/" n "-actual.png"))
-        expected   (.getAbsolutePath (io/file (io/resource (str n "-expected.png"))))
-        actual     (replace-suffix expected "actual")
-        difference (replace-suffix expected "difference")
-        result     (compare-images expected actual difference)
+  (let [actual-file (str "dev-resources/" (tu/path-to-snippet-snapshots "clj") name "-actual.png")
+        _           (q/save actual-file)
+        expected-file (replace-suffix actual-file "expected")
+        diff-file (replace-suffix actual-file "difference")
+        result     (compare-images expected-file actual-file diff-file)
         threshold  0.02]
     (when (number? result)
       (if (<= result threshold)
         (do
-          (io/delete-file (io/file actual))
-          (io/delete-file (io/file difference)))
-                                        ; add actual and expected images to difference image for easier comparison
-        (sh/sh "convert" actual difference expected "+append" difference))
+          (io/delete-file (io/file actual-file))
+          (io/delete-file (io/file diff-file)))
+        ; add actual and expected images to difference image for easier comparison
+        (sh/sh "convert"
+               actual-file
+               diff-file
+               expected-file
+               "+append"
+               diff-file))
       (t/is (<= result threshold)))))
 
 (defn run-snippet-as-test [snippet]
@@ -86,7 +97,9 @@
                (q/background 255)
                ((:body snippet))
                (when-not (:skip-image-diff? snippet)
-                 (assert-unchanged-snippet-output (:name snippet)))
+                 (if update-screenshots?
+                   (save-snippet-screenshot-as-expected (:name snippet))
+                   (assert-unchanged-snippet-output (:name snippet))))
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
