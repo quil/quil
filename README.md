@@ -16,7 +16,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil works with Clojure 1.8, 1.9 and ClojureScript 1.9.x.
+Quil works with Clojure 1.10 and ClojureScript 1.10.x.
 
 ## Installation
 
@@ -29,7 +29,7 @@ Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "3.0.0"]
+[quil "3.1.0"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:

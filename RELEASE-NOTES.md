@@ -1,3 +1,13 @@
+## 3.1.0
+__13th October 2019_
+
+* New cljs functions. By [@anthonygalea](http://github.com/anthonygalea)
+  * `:bolditalic` support in `text-style`.
+  * `lights`, `shininess`, `light-falloff` now work on cljs as well as clj.
+* Added `print-first-n` and `print-every-n-millisec` functios for debugging. By [@anthonygalea](http://github.com/anthonygalea) in [#315](https://github.com/quil/quil/issues/315).
+* Fix support of `:mouse-wheel` in cljs. See [#321](https://github.com/quil/quil/issues/321).
+* Updated dependencies on Processing to 3.5.3 and P5.js to 0.9.0.
+
 ## 3.0.0
 _1st April 2019_
 
