@@ -178,19 +178,18 @@
         (doseq [{:keys [name index]} elements]
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
-          (let [n          (str (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
-                f          (io/file (str "dev-resources/" n))
-                _          (when-not (.exists f)
-                             (etaoin/screenshot-element driver {:tag :canvas} (.getAbsolutePath f)))
-                expected   (.getAbsolutePath (io/file (io/resource n)))
-                actual     (replace-suffix expected "actual")
-                difference (replace-suffix expected "difference")]
-            (etaoin/screenshot-element driver {:tag :canvas} actual)
-            (let [result (compare-images expected actual difference)]
-              (when (number? result)
-                (when (<= result threshold)
-                  (io/delete-file (io/file actual))
-                  (io/delete-file (io/file difference)))
-                (t/is (<= result threshold)
-                      (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))
+          (let [expected-file  (str "dev-resources/" (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
+                actual-file (replace-suffix expected-file "actual")
+                diff-file (replace-suffix expected-file "difference")]
+            (if update-screenshots?
+              (etaoin/screenshot-element driver {:tag :canvas} expected-file)
+              (do
+                (etaoin/screenshot-element driver {:tag :canvas} actual-file)
+                (let [result (compare-images expected-file actual-file diff-file)]
+                  (when (number? result)
+                    (when (<= result threshold)
+                      (io/delete-file (io/file actual-file))
+                      (io/delete-file (io/file diff-file)))
+                    (t/is (<= result threshold)
+                          (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))))
       (etaoin/quit driver))))
