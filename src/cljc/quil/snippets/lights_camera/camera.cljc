@@ -87,8 +87,8 @@
   (comment "draw 3 boxes with x coordinates 0, 100 and 200")
   (q/fill 0 127 127)
   (doseq [x [0 100 200]]
-   (q/with-translation [x 0 0]
-     (q/box 50))))
+    (q/with-translation [x 0 0]
+      (q/box 50))))
 
 (defsnippet perspective
   ["perspective"]

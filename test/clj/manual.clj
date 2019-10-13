@@ -95,20 +95,20 @@
             (q/fill 0)
             {:round 0})
           (update [state]
-                  (update-in state [:round] inc))
+            (update-in state [:round] inc))
           (single-fn [name]
-                     (fn [state]
-                       (q/background 255)
-                       (q/text (str name) 50 20)
-                       (q/text (pr-str state) 50 100)
-                       state))
+            (fn [state]
+              (q/background 255)
+              (q/text (str name) 50 20)
+              (q/text (pr-str state) 50 100)
+              state))
           (double-fn [name]
-                     (fn [state event]
-                       (q/background 255)
-                       (q/text (str name) 50 20)
-                       (q/text (pr-str event) 50 55)
-                       (q/text (pr-str state) 50 100)
-                       state))]
+            (fn [state event]
+              (q/background 255)
+              (q/text (str name) 50 20)
+              (q/text (pr-str event) 50 55)
+              (q/text (pr-str state) 50 100)
+              state))]
     (let [lock (promise)]
       (q/sketch
        :title "Functional mode"

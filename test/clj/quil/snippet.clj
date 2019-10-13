@@ -152,7 +152,7 @@
 (defn- test-file-server-running? []
   (try
     (= (:status (http/get "http://localhost:3000/test.html"
-                           {:throw-exceptions false}))
+                          {:throw-exceptions false}))
        200)
     (catch java.lang.Exception e false)))
 

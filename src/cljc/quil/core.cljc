@@ -5041,16 +5041,16 @@
                  (println cid (:name c))
                  (docs/pprint-wrapped-lines names :fromcolumn 4)))
              (show-fns-by-cat-idx [cat-idx]
-                                  (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
-                                    (list-category cat-idx c)))
+               (let [c (get (docs/all-category-map fn-metas) (str cat-idx))]
+                 (list-category cat-idx c)))
              (show-fns-by-name-regex [re]
-                                     (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
-                                       (let [in-cat-name? (re-find re (:name c))
-                                             matching-fns (filter #(re-find re (str %)) (:fns c))
-                                             in-fn-names? (not (empty? matching-fns))]
-                                         (cond
-                                           in-cat-name? (list-category cid c) ;; print an entire category
-                                           in-fn-names? (list-category cid c :only matching-fns)))))]
+               (doseq [[cid c] (sort-by key (docs/all-category-map fn-metas))]
+                 (let [in-cat-name? (re-find re (:name c))
+                       matching-fns (filter #(re-find re (str %)) (:fns c))
+                       in-fn-names? (not (empty? matching-fns))]
+                   (cond
+                     in-cat-name? (list-category cid c) ;; print an entire category
+                     in-fn-names? (list-category cid c :only matching-fns)))))]
        (cond
          (string? q) (show-fns-by-name-regex (re-pattern (str "(?i)" q)))
          (isa? (type q) java.util.regex.Pattern) (show-fns-by-name-regex q)
