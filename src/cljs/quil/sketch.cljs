@@ -4,6 +4,7 @@
             [goog.dom :as dom]
             [goog.events :as events]
             [goog.style :as style]
+            [goog.object :as object]
             [goog.events.EventType :as EventType])
   (:require-macros [quil.sketch]))
 
@@ -56,12 +57,12 @@
                                        :mouseReleased :mouse-released
                                        :mouseOut :mouse-exited
                                        :mouseOver :mouse-entered
-                                       :mouseScrolled :mouse-wheel}]
+                                       :mouseWheel :mouse-wheel}]
     (when-let [handler (opts quil-name)]
       (aset prc (name processing-name)
-            (fn []
+            (fn [& args]
               (quil.sketch/with-sketch prc
-                (handler)))))))
+                (apply handler args)))))))
 
 (defn in-fullscreen? []
   (or (.-fullscreenElement js/document)
@@ -116,9 +117,10 @@
                      (apply size))
                 (when (:settings opts) ((:settings opts)))
                 (when (:setup opts) ((:setup opts))))
-        mouse-wheel (when (:mouse-wheel opts)
-                      ;; -1 need for compability with Clojure version
-                      #((:mouse-wheel opts) (* -1 (.-mouseScroll *applet*))))
+        mouse-wheel (when-let [wheel-handler (:mouse-wheel opts)]
+                      ; using (get "delta") because in advanced mode
+                      ; it will be renamed otherwise.
+                      (fn [evt] (wheel-handler (object/get evt "delta"))))
 
         opts (assoc opts
                     :setup setup
@@ -184,5 +186,6 @@
   ; if page already loaded immediately init sketch we just added
   (when (= (.-readyState js/document) "complete")
     (init-sketches)))
+
 
 (events/listenOnce js/window EventType/LOAD init-sketches)
