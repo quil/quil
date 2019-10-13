@@ -9,11 +9,11 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [quil/processing-core "3.3.7"]
-                 [quil/processing-pdf "3.3.7"]
-                 [quil/processing-dxf "3.3.7"]
-                 [quil/processing-svg "3.3.7"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [quil/processing-core "3.5.3"]
+                 [quil/processing-pdf "3.5.3"]
+                 [quil/processing-dxf "3.5.3"]
+                 [quil/processing-svg "3.5.3"]
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
                  [cljsjs/p5 "0.9.0-0"]
@@ -41,19 +41,20 @@
   :cljfmt {:file-pattern #"\.clj[sc]?$"}
 
   :profiles {:dev {:dependencies [[hiccup "1.0.5"]
-                                  [compojure "1.6.0"]
-                                  [clj-http "3.8.0"]
+                                  [compojure "1.6.1"]
+                                  [clj-http "3.10.0"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [org.clojure/tools.reader "1.2.2"]
-                                  [cheshire "5.8.1"]
-                                  [com.vladsch.flexmark/flexmark "0.34.18"]
-                                  [com.vladsch.flexmark/flexmark-ext-autolink "0.34.18"]
-                                  [com.vladsch.flexmark/flexmark-ext-gfm-tables "0.34.18"]
-                                  [com.vladsch.flexmark/flexmark-ext-anchorlink "0.34.18"]
-                                  [com.vladsch.flexmark/flexmark-ext-wikilink "0.34.18"]
+                                  [org.clojure/tools.reader "1.3.2"]
+                                  [cheshire "5.9.0"]
+                                  [com.vladsch.flexmark/flexmark "0.50.40"]
+                                  [com.vladsch.flexmark/flexmark-ext-autolink "0.50.40"]
+                                  [com.vladsch.flexmark/flexmark-ext-gfm-tables "0.50.40"]
+                                  [com.vladsch.flexmark/flexmark-ext-anchorlink "0.50.40"]
+                                  [com.vladsch.flexmark/flexmark-ext-wikilink "0.50.40"]
                                   [etaoin "0.3.5"]]
                    :plugins [[lein-ring "0.12.5"]
-                             [lein-cljfmt "0.5.7"]]
+                             [lein-cljfmt "0.6.4"]
+                             [lein-ancient "0.6.15"]]
                    :source-paths ["dev"]}
 
              :cljs-testing [:dev
@@ -61,7 +62,7 @@
                              :source-paths ["test/cljs" "test/clj/quil/test_util.clj"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
-                                            [org.clojure/clojure "1.9.0"]
+                                            [org.clojure/clojure "1.10.1"]
                                             [org.clojure/clojurescript "1.10.520"]]
 
                              :cljsbuild
