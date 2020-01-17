@@ -31,7 +31,7 @@
   the JVM is closed as well which is not the case for clojure. So here we're
   performing renderer-specific cleanups."
   [applet]
-  (let [native (-> applet .getSurface .getNative)]
+  (if-let [native (-> applet .getSurface .getNative)]
     (condp = (.getClass native)
 
       com.jogamp.newt.opengl.GLWindow
