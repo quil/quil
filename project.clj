@@ -78,7 +78,7 @@
                                         ; Compiles sample sketch. Used for development to
                                         ; see changes immediately when changing quil cljs code.
                                        {:id "development"
-                                        :source-paths ["dev/sample.cljs" "src/cljs" "src/cljc"]
+                                        :source-paths ["dev" "src/cljs" "src/cljc"]
                                         :compiler {:output-to "target/jsdev/main.js"
                                                    :output-dir "target/jsdev"
                                                    :main "sample"}}

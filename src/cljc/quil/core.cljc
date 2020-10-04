@@ -3427,10 +3427,18 @@
 
   Calling [[redraw]] within `draw` has no effect because `draw` is
   continuously called anyway."
-  ([]
-   (.redraw (ap/current-applet)))
+  #?(:clj ([]
+           (.redraw (ap/current-applet)))
+     :cljs ([]
+            (redraw 1)))
   #?(:cljs ([n]
-            (.redraw (ap/current-applet) n))))
+            (let [applet quil.sketch/*applet*]
+              ; redraw shouldn't call draw immediately as it breaks
+              ; function contract and also doesn't work with with
+              ; fun-mode well. See
+              ; https://groups.google.com/g/clj-processing/c/wbI1BSRDUBM/m/83ibi6dWBAAJ
+              (.then (js/Promise.resolve)
+                     #(.redraw applet n))))))
 
 (defn
   ^{:requires-bindings true
