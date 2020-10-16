@@ -1,4 +1,4 @@
-(defproject quil "3.1.1-SNAPSHOT"
+(defproject quil "4.0.0-SNAPSHOT-1"
   :description "(mix Processing Clojure)"
   :url "http://github.com/quil/quil"
 
@@ -10,12 +10,12 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [quil/processing-core "3.5.3"]
+                 [quil/processing-core "4.0.0-alpha-2"]
                  [quil/processing-pdf "3.5.3"]
                  [quil/processing-dxf "3.5.3"]
                  [quil/processing-svg "3.5.3"]
-                 [quil/jogl-all-fat "2.3.2"]
-                 [quil/gluegen-rt-fat "2.3.2"]
+                 [quil/jogl-all-fat "2.4.0-RC"]
+                 [quil/gluegen-rt-fat "2.4.0-RC"]
                  [cljsjs/p5 "0.9.0-0"]
                  [com.lowagie/itext "2.1.7"
                   :exclusions [bouncycastle/bctsp-jdk14]]
