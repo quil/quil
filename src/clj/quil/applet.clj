@@ -66,7 +66,6 @@
   (let [m              (meta applet)
         keep-on-top?   (:keep-on-top m)
         surface        (.getSurface applet)
-        frame          (.frame applet)
         resizable?     (:resizable m)]
     ; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
