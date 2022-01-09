@@ -1597,9 +1597,9 @@
   drawn to the screen. Used in combination with [[ambient]], [[specular]], and
   [[shininess]] in setting the material properties of shapes.
 
-  If passed one arg it is assumed to be an `int` (i.e. a color),
+  If passed one arg it is assumed to be an `float` (gray),
   multiple args are converted to `floats`."
-     ([gray] (.emissive (current-graphics) gray))
+     ([gray] (.emissive (current-graphics) (float gray)))
      ([r g b] (.emissive (current-graphics) (float r) (float g) (float b)))))
 
 (defn
@@ -1773,10 +1773,10 @@
   * `:dilate`    - increases the light areas. Doesn't work with level."
   ([mode]
    (.filter (current-graphics)
-            (u/resolve-constant-key mode filter-modes)))
+            (int (u/resolve-constant-key mode filter-modes))))
 
   ([mode level]
-   (let [mode (u/resolve-constant-key mode filter-modes)]
+   (let [mode (int (u/resolve-constant-key mode filter-modes))]
      (.filter (current-graphics) mode (float level)))))
 
 #?(:clj
@@ -2441,7 +2441,7 @@
   "Returns true if object is loaded."
   [object]
   (condp = (type object)
-    #?@(:clj  (PImage (pos? (.-width object))
+    #?@(:clj  (PImage (pos? (.-width ^PImage object))
                ; shader is loaded synchronously
                       PShader true)
         :cljs (js/p5.Shader (and (aget object "_vertSrc") (aget object "_fragSrc"))
@@ -2522,7 +2522,7 @@
         ; instead we convert extract alphas into array and use array version of mask()
         ; see https://processing.org/reference/PImage_mask_.html
       (let [pxls (pixels mask)
-            alphas (amap ^ints pxls idx ret (int (alpha (aget ^ints pxls idx))))]
+            ^ints alphas (amap ^ints pxls idx ret (int (alpha (aget ^ints pxls idx))))]
         (.mask img alphas))
       :cljs (.mask img mask))))
 
@@ -3771,7 +3771,7 @@
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
   ([^PImage img x y c]
-   (.set img (int x) (int y) c)))
+   (.set img (int x) (int y) (int c))))
 
 (defn
   ^{:requires-bindings true
@@ -4805,10 +4805,10 @@
        (finally
          (quil.core/pop-matrix)))))
 
-(defn begin-draw [graphics]
+(defn begin-draw [^PGraphics graphics]
   #?(:clj (.beginDraw graphics)))
 
-(defn end-draw [graphics]
+(defn end-draw [^PGraphics graphics]
   #?(:clj (.endDraw graphics)))
 
 (defmacro
