@@ -18,6 +18,8 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 Quil works with Clojure 1.10 and ClojureScript 1.10.x.
 
+Current released version `3.1.0` is compatible with Java 8. It doesn't work with Java 9+. For Java 9+ try using `4.0.0-SNAPSHOT` though it has major issues, like 3D renderer doesn't work: [issue](https://github.com/quil/quil/pull/337).
+
 ## Installation
 
 Create sample project using Quil lein template:
