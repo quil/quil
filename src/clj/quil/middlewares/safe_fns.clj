@@ -3,12 +3,16 @@
             [quil.util :as u]))
 
 (defn- wrap-fn [name function]
-  (fn []
-    (try
-      (function)
-      (catch Exception e
-        (println "Exception in " name " function: " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
-        (Thread/sleep 1000)))))
+  (let [save_ex (atom nil)]
+    (fn []
+      (try
+        (function)
+        (catch Exception e
+          (let [errstr (str e)]
+          (when-not (= @save_ex errstr)
+            (println "Exception in " name " function: " e "\nstacktrace: " (with-out-str (print-cause-trace e)))
+            (reset! save_ex errstr))
+          (Thread/sleep 1000)   ))))))
 
 (defn- wrap-mouse-wheel [function]
   (fn [rotation]
