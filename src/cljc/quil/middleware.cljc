@@ -124,6 +124,11 @@
 
   * `:zoom` - number indicating current zoom level. Default is `1`.
 
+  * `:mouse-buttons` - set containing zero or more of the keys `:left`,
+                       `:right`, and `center` indicating which mouse buttons
+                       are used for panning the screen. Default is
+                       `#{:left :right :center}`.
+
   Accessing position information from a sketch
 
   [[navigation-2d]] uses [[fun-mode]] under the hood so all position-related
