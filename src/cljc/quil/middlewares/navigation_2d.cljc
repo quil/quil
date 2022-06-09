@@ -19,14 +19,15 @@
   []
   {:position [(/ (q/width) 2.0)
               (/ (q/height) 2.0)]
-   :zoom 1})
+   :zoom 1
+   :mouse-buttons #{:left :right :center}})
 
 (defn- setup-2d-nav
   "Custom 'setup' function which creates initial position
   configuration and puts it to the state map."
   [user-setup user-settings]
   (let [initial-state (-> user-settings
-                          (select-keys [:position :zoom])
+                          (select-keys [:position :zoom :mouse-buttons])
                           (->> (merge (default-position))))]
     (update-in (user-setup) [:navigation-2d]
                #(merge initial-state %))))
@@ -36,12 +37,15 @@
   zoom into account as well."
   [state event]
   (assert-state-has-navigation state)
-  (let [dx (- (:p-x event) (:x event))
-        dy (- (:p-y event) (:y event))
-        zoom (-> state :navigation-2d :zoom)]
-    (-> state
-        (update-in [:navigation-2d :position 0] + (/ dx zoom))
-        (update-in [:navigation-2d :position 1] + (/ dy zoom)))))
+  (let [mouse-buttons (-> state :navigation-2d :mouse-buttons)]
+    (if (contains? mouse-buttons (:button event))
+      (let [dx (- (:p-x event) (:x event))
+            dy (- (:p-y event) (:y event))
+            zoom (-> state :navigation-2d :zoom)]
+        (-> state
+            (update-in [:navigation-2d :position 0] + (/ dx zoom))
+            (update-in [:navigation-2d :position 1] + (/ dy zoom))))
+      state)))
 
 (defn- mouse-wheel
   "Changes zoom settings based on scroll."
