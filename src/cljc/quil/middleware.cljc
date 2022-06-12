@@ -3,7 +3,8 @@
   (:require [quil.middlewares.fun-mode :as fun-mode]
             #?(:clj [quil.middlewares.pause-on-error :as pause-on-error])
             [quil.middlewares.navigation-3d :as navigation-3d]
-            [quil.middlewares.navigation-2d :as navigation-2d]))
+            [quil.middlewares.navigation-2d :as navigation-2d]
+            [quil.core :as q]))
 
 (defn ^{:requires-bindings false
         :category "Middleware"
@@ -136,7 +137,7 @@
                    you have things like UI elements that shouldn't be affected by
                    zooming or panning. Default is `true`.
 
-  Accessing position information from a sketch
+  Accessing navigation information from a sketch
 
   [[navigation-2d]] uses [[fun-mode]] under the hood so all navigation-related
   information is stored in the state map. It means that you can access it in
@@ -144,6 +145,20 @@
   information is a map which is stored under `:navigation-2d` key in the
   state map. It consists of 4 values: `:position`, `:zoom`, `:mouse-buttons`,
   and `:wrap-draw`. See \"Customization\" section above for more details.
+
+  Handling mouse input
+
+  [[navigation-2d]] adds the keys `:world-x` and `:world-y` to the `event` maps
+  of the following handlers: `:mouse-entered`, `:mouse-exited`, `:mouse-pressed`,
+  `:mouse-released`, `:mouse-clicked`, `:mouse-moved`, and `:mouse-dragged`.
+  These keys are used to store the \"world-coordinates\" of the mouse. Use these
+  instead of the usual screen-coordinates of the mouse in order to compare the
+  mouse's position to on-screen objects whose positions are affected by
+  navigation-2d. In addition, the keys `:p-world-x` and `:p-world-y` are added
+  to the `event` maps of the `:mouse-moved` and `:mouse-dragged` handlers.
+  These are used to store the world-coordinates of the mouse from the previous
+  frame. The world-coordinates of the mouse can also be accessed via the
+  function [[mouse-world-coords]].
 
   Example:
   ```
@@ -200,3 +215,17 @@
   This function requires [[navigation-2d]] to be enabled."
   [state [x y]]
   (navigation-2d/screen->world-coords state [x y]))
+
+(defn ^{:requires-bindings true
+        :processing-name nil
+        :category "Middleware"
+        :subcategory "2D Navigation"
+        :ns "quil.middleware"
+        :added "3.1.1"}
+  mouse-world-coords
+  "Returns coordinates `[x y]` that [[navigation-2d]] sends to the
+  current mouse coordinates. Use this to compare the mouse's position
+  with the position of objects that are affected by [[navigation-2d]].
+  This function requires [[navigation-2d]] to be enabled."
+  [state]
+  (navigation-2d/screen->world-coords state [(q/mouse-x) (q/mouse-y)]))

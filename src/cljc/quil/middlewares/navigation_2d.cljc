@@ -99,26 +99,70 @@
       (user-draw state))
     (user-draw state)))
 
-(defn navigation-2d
-  "Enables navigation over 2D sketch. Dragging mouse will move center of the
-  sketch and mouse wheel controls zoom."
-  [options]
+(defn- add-world-coords-fn
+  "Returns a function that wraps a mouse event handler in the options
+  map so that the event map contains the world coordinates of the
+  mouse as well as the screen coordinates"
+  [screen-x-key screen-y-key world-x-key world-y-key]
+  (fn [options handler-key]
+    (if-let [handler (options handler-key)]
+      (assoc options handler-key
+             (fn [state event]
+               (let [x (event screen-x-key)
+                     y (event screen-y-key)
+                     [w-x w-y] (screen->world-coords state [x y])]
+                 (-> event
+                     (assoc world-x-key w-x world-y-key w-y)
+                     (->> (handler state))))))
+      options)))
+
+(def ^:private add-coords-to-mouse-event
+  (add-world-coords-fn :x :y :world-x :world-y))
+
+(defn- add-coords-to-mouse-events
+  "Applies `add-coords-to-mouse-event` to given handler keys"
+  [options & handlers]
+  (reduce #(add-coords-to-mouse-event %1 %2) options handlers))
+
+(def ^:private add-pcoords-to-mouse-event
+  (add-world-coords-fn :p-x :p-y :p-world-x :p-world-y))
+
+(defn- wrap-handlers [options]
   (let [; 2d-navigation related user settings
         user-settings (:navigation-2d options)
 
         ; user-provided handlers which will be overridden
-        ; by 3d-navigation
+        ; by navigation-2d
+        setup (:setup options (fn [] {}))
         user-draw (:draw options (fn [state]))
         user-mouse-dragged (:mouse-dragged options (fn [state _] state))
-        user-mouse-wheel (:mouse-wheel options (fn [state _] state))
-        setup (:setup options (fn [] {}))]
+        user-mouse-wheel (:mouse-wheel options (fn [state _] state))]
     (assoc options
-
            :setup (partial setup-2d-nav setup user-settings)
-
            :draw (partial draw user-draw)
 
-           :mouse-dragged (fn [state event]
-                            (user-mouse-dragged (mouse-dragged state event) event))
-           :mouse-wheel (fn [state event]
-                          (user-mouse-wheel (mouse-wheel state event) event)))))
+           :mouse-dragged
+           (fn [state event]
+             (let [updated-state (mouse-dragged state event)
+                   {:keys [x y p-x p-y]} event
+                   [w-x w-y] (screen->world-coords updated-state [x y])
+                   [p-w-x p-w-y] (screen->world-coords state [p-x p-y])]
+               (-> event
+                   (assoc :world-x w-x :world-y w-y
+                          :p-world-x p-w-x :p-world-y p-w-y)
+                   (->> (user-mouse-dragged updated-state)))))
+
+           :mouse-wheel
+           (fn [state event]
+             (user-mouse-wheel (mouse-wheel state event) event)))))
+
+(defn navigation-2d
+  "Enables navigation over 2D sketch. Dragging mouse will move center of the
+  sketch and mouse wheel controls zoom."
+  [options]
+  (-> options
+      wrap-handlers
+      (add-coords-to-mouse-events :mouse-entered :mouse-exited
+                                  :mouse-pressed :mouse-released
+                                  :mouse-clicked :mouse-moved)
+      (add-pcoords-to-mouse-event :mouse-moved)))
