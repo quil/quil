@@ -13,24 +13,23 @@
     (throw #?(:clj (RuntimeException. missing-navigation-key-error)
               :cljs (js/Error. missing-navigation-key-error)))))
 
-(defn- default-position
-  "Default position configuration: zoom is neutral and central point is
-  `width/2, height/2`."
+(defn- default-settings
+  "Default configuration: zoom is neutral, central point is
+  `width/2, height/2`, mouse-buttons is #{:left :right :center},
+  and wrap-draw is true."
   []
   {:position [(/ (q/width) 2.0)
               (/ (q/height) 2.0)]
    :zoom 1
-   :mouse-buttons #{:left :right :center}})
+   :mouse-buttons #{:left :right :center}
+   :wrap-draw true})
 
 (defn- setup-2d-nav
-  "Custom 'setup' function which creates initial position
-  configuration and puts it to the state map."
+  "Custom 'setup' function which creates initial navigation-2d
+  configuration and puts it into the state map."
   [user-setup user-settings]
-  (let [initial-state (-> user-settings
-                          (select-keys [:position :zoom :mouse-buttons])
-                          (->> (merge (default-position))))]
-    (update-in (user-setup) [:navigation-2d]
-               #(merge initial-state %))))
+  (update (user-setup) :navigation-2d
+          #(merge (default-settings) user-settings %)))
 
 (defn- mouse-dragged
   "Changes center of the sketch depending on the last mouse move. Takes
@@ -53,20 +52,52 @@
   (assert-state-has-navigation state)
   (update-in state [:navigation-2d :zoom] * (+ 1 (* -0.1 event))))
 
+(defn world->screen-coords
+  "Returns the pixel coordinates that [x y] gets mapped to by the
+  navigation transformation. i.e. if the user's draw function
+  tries to draw something at [x y], it will actually get drawn at
+  (world->screen-coords state [x y]) on the screen."
+  [state [x y]]
+  (assert-state-has-navigation state)
+  (let [{zoom :zoom pos :position} (:navigation-2d state)]
+      [(+ (* zoom x) (- (/ (q/width) 2.) (* zoom (first pos))))
+       (+ (* zoom y) (- (/ (q/height) 2.) (* zoom (second pos))))]))
+
+(defn screen->world-coords
+  "Returns coordinates that get mapped to [x y] by the navigation
+  transformation. i.e. if something is being drawn at pixel coordinates
+  [x y] on the screen, then the user's draw function must have tried
+  to draw it at (screen->world-coords state [x y])."
+  [state [x y]]
+  (assert-state-has-navigation state)
+  (let [{zoom :zoom pos :position} (:navigation-2d state)]
+    [(/ (- x (- (/ (q/width) 2.) (* zoom (first pos)))) zoom)
+     (/ (- y (- (/ (q/height) 2.) (* zoom (second pos)))) zoom)]))
+
+(defn with-navigation-2d*
+  "Calls body-fn after translating and scaling as determined by
+  navigation-2d. Restores current transformation on exit."
+  [state body-fn]
+  (quil.core/push-matrix)
+  (try
+    (assert-state-has-navigation state)
+    (quil.core/translate (world->screen-coords state [0 0]))
+    (quil.core/scale (-> state :navigation-2d :zoom))
+    (body-fn)
+    (finally
+      (quil.core/pop-matrix))))
+
+(defmacro with-navigation-2d [state & body]
+  `(quil.middlewares.navigation-2d/with-navigation-2d* ~state (fn [] ~@body)))
+
 (defn- draw
   "Calls user draw function with all necessary transformations (position
   and zoom) applied."
   [user-draw state]
-  (assert-state-has-navigation state)
-  (q/push-matrix)
-  (let [nav-2d (:navigation-2d state)
-        zoom (:zoom nav-2d)
-        pos (:position nav-2d)]
-    (q/scale zoom)
-    (q/with-translation [(- (/ (q/width) 2 zoom) (first pos))
-                         (- (/ (q/height) 2 zoom) (second pos))]
-      (user-draw state)))
-  (q/pop-matrix))
+  (if (-> state :navigation-2d :wrap-draw)
+    (with-navigation-2d state
+      (user-draw state))
+    (user-draw state)))
 
 (defn navigation-2d
   "Enables navigation over 2D sketch. Dragging mouse will move center of the
