@@ -60,8 +60,8 @@
   [state [x y]]
   (assert-state-has-navigation state)
   (let [{zoom :zoom pos :position} (:navigation-2d state)]
-      [(+ (* zoom x) (- (/ (q/width) 2.) (* zoom (first pos))))
-       (+ (* zoom y) (- (/ (q/height) 2.) (* zoom (second pos))))]))
+    [(+ (* zoom x) (- (/ (q/width) 2.) (* zoom (first pos))))
+     (+ (* zoom y) (- (/ (q/height) 2.) (* zoom (second pos))))]))
 
 (defn screen->world-coords
   "Returns coordinates that get mapped to [x y] by the navigation

@@ -126,15 +126,16 @@
   * `:zoom` - number indicating current zoom level. Default is `1`.
 
   * `:mouse-buttons` - set containing zero or more of the keys `:left`,
-                       `:right`, and `:center` indicating which mouse buttons
-                       are used for panning the screen. Default is
+                       `:right`, and `:center` indicating which mouse
+                       buttons are used for panning the screen. Default is
                        `#{:left :right :center}`.
 
-  * `:wrap-draw` - boolean indicating whether [[navigation-2d]] should apply its
-                   transformation to the user's draw function. If this is set to
-                   false, then only calls wrapped in the [[with-navigation-2d]]
-                   macro will be affected by navigation. So set this to false if
-                   you have things like UI elements that shouldn't be affected by
+  * `:wrap-draw` - boolean indicating whether [[navigation-2d]] should apply
+                   its transformation to the user's draw function. If
+                   this is set to false, then only calls wrapped in the
+                   [[with-navigation-2d]] macro will be affected by
+                   navigation. So set this to false if you have things
+                   like UI elements that shouldn't be affected by
                    zooming or panning. Default is `true`.
 
   Accessing navigation information from a sketch
@@ -148,17 +149,17 @@
 
   Handling mouse input
 
-  [[navigation-2d]] adds the keys `:world-x` and `:world-y` to the `event` maps
-  of the following handlers: `:mouse-entered`, `:mouse-exited`, `:mouse-pressed`,
-  `:mouse-released`, `:mouse-clicked`, `:mouse-moved`, and `:mouse-dragged`.
-  These keys are used to store the \"world-coordinates\" of the mouse. Use these
-  instead of the usual screen-coordinates of the mouse in order to compare the
-  mouse's position to on-screen objects whose positions are affected by
-  navigation-2d. In addition, the keys `:p-world-x` and `:p-world-y` are added
-  to the `event` maps of the `:mouse-moved` and `:mouse-dragged` handlers.
-  These are used to store the world-coordinates of the mouse from the previous
-  frame. The world-coordinates of the mouse can also be accessed via the
-  function [[mouse-world-coords]].
+  [[navigation-2d]] adds the keys `:world-x` and `:world-y` to the `event`
+  maps of the following handlers: `:mouse-entered`, `:mouse-exited`,
+  `:mouse-pressed`, `:mouse-released`, `:mouse-clicked`, `:mouse-moved`,
+  and `:mouse-dragged`. These keys are used to store the \"world-coordinates\"
+  of the mouse. Use these instead of the usual screen-coordinates of the
+  mouse in order to compare the mouse's position to on-screen objects whose
+  positions are affected by navigation-2d. In addition, the keys `:p-world-x`
+  and `:p-world-y` are added to the `event` maps of the `:mouse-moved` and
+  `:mouse-dragged` handlers. These are used to store the world-coordinates
+  of the mouse from the previous frame. The world-coordinates of the mouse
+  can also be accessed via the function [[mouse-world-coords]].
 
   Example:
   ```
