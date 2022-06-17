@@ -121,7 +121,7 @@
   The map can have the following optional keys:
 
   * `:position` - vector of 2 numbers, x and y - center of the screen.
-                  Default is `width/2`, `height/2`.
+                  Default is `(q/width)/2`, `(q/height)/2`.
 
   * `:zoom` - number indicating current zoom level. Default is `1`.
 
@@ -138,14 +138,21 @@
                    like UI elements that shouldn't be affected by
                    zooming or panning. Default is `true`.
 
+  * `:width` - the width of the screen-region or image that navigation-2d
+               is to be applied to. Default is `(q/width)`.
+
+  * `:height` - the height of the screen-region or image that navigation-2d
+                is to be applied to. Default is `(q/height)`.
+
   Accessing navigation information from a sketch
 
   [[navigation-2d]] uses [[fun-mode]] under the hood so all navigation-related
   information is stored in the state map. It means that you can access it in
   draw/update/any handler and modify it if you need to. Navigation
   information is a map which is stored under `:navigation-2d` key in the
-  state map. It consists of 4 values: `:position`, `:zoom`, `:mouse-buttons`,
-  and `:wrap-draw`. See \"Customization\" section above for more details.
+  state map. It consists of 6 values: `:position`, `:zoom`, `:mouse-buttons`,
+  `:wrap-draw`, `:width`, and `:height`. See \"Customization\" section above
+  for more details.
 
   Handling mouse input
 

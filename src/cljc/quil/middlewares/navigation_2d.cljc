@@ -13,12 +13,10 @@
     (throw #?(:clj (RuntimeException. missing-navigation-key-error)
               :cljs (js/Error. missing-navigation-key-error)))))
 
-(defn- default-settings
-  "Default configuration: zoom is neutral, central point is
-  `width/2, height/2`, mouse-buttons is #{:left :right :center},
-  and wrap-draw is true."
-  []
-  {:position [(/ (q/width) 2.0)
+(defn- default-settings []
+  {:width (q/width)
+   :height (q/height)
+   :position [(/ (q/width) 2.0)
               (/ (q/height) 2.0)]
    :zoom 1
    :mouse-buttons #{:left :right :center}
@@ -59,9 +57,9 @@
   (world->screen-coords state [x y]) on the screen."
   [state [x y]]
   (assert-state-has-navigation state)
-  (let [{zoom :zoom pos :position} (:navigation-2d state)]
-    [(+ (* zoom x) (- (/ (q/width) 2.) (* zoom (first pos))))
-     (+ (* zoom y) (- (/ (q/height) 2.) (* zoom (second pos))))]))
+  (let [{:keys [width height zoom position]} (:navigation-2d state)]
+    [(+ (* zoom x) (- (/ width 2.) (* zoom (first position))))
+     (+ (* zoom y) (- (/ height 2.) (* zoom (second position))))]))
 
 (defn screen->world-coords
   "Returns coordinates that get mapped to [x y] by the navigation
@@ -70,9 +68,9 @@
   to draw it at (screen->world-coords state [x y])."
   [state [x y]]
   (assert-state-has-navigation state)
-  (let [{zoom :zoom pos :position} (:navigation-2d state)]
-    [(/ (- x (- (/ (q/width) 2.) (* zoom (first pos)))) zoom)
-     (/ (- y (- (/ (q/height) 2.) (* zoom (second pos)))) zoom)]))
+  (let [{:keys [width height zoom position]} (:navigation-2d state)]
+    [(/ (- x (- (/ width 2.) (* zoom (first position)))) zoom)
+     (/ (- y (- (/ height 2.) (* zoom (second position)))) zoom)]))
 
 (defn with-navigation-2d*
   "Calls body-fn after translating and scaling as determined by
