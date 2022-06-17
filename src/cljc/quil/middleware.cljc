@@ -107,7 +107,7 @@
 
 (defn ^{:requires-bindings false
         :category "Middleware"
-        :subcategory "2D Navigation"
+        :subcategory "Navigation 2d"
         :ns "quil.middleware"
         :added "2.2.6"}
   navigation-2d
@@ -180,7 +180,7 @@
 (defmacro ^{:requires-bindings true
             :processing-name nil
             :category "Middleware"
-            :subcategory "2D Navigation"
+            :subcategory "Navigation 2d"
             :ns "quil.middleware"
             :added "3.1.1"}
   with-navigation-2d
@@ -197,7 +197,7 @@
 (defn ^{:requires-bindings false
         :processing-name nil
         :category "Middleware"
-        :subcategory "2D Navigation"
+        :subcategory "Navigation 2d"
         :ns "quil.middleware"
         :added "3.1.1"}
   world->screen-coords
@@ -212,7 +212,7 @@
 (defn ^{:requires-bindings false
         :processing-name nil
         :category "Middleware"
-        :subcategory "2D Navigation"
+        :subcategory "Navigation 2d"
         :ns "quil.middleware"
         :added "3.1.1"}
   screen->world-coords
@@ -227,7 +227,7 @@
 (defn ^{:requires-bindings true
         :processing-name nil
         :category "Middleware"
-        :subcategory "2D Navigation"
+        :subcategory "Navigation 2d"
         :ns "quil.middleware"
         :added "3.1.1"}
   mouse-world-coords
