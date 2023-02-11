@@ -1,3 +1,12 @@
+## 4.0.0
+__11th February 2023_
+
+* updated dependencies on Processing to 4.1.2
+* updated clojure to 1.11.1
+* use official jogamp-fat 2.4.0 instead of packaging gluegen-rt and jogl-all fatjars ourselves
+* fix some reflection errors [#354](https://github.com/quil/quil/issues/354)
+* Added :mouse-buttons option to :navigation-2d [Commit](https://github.com/quil/quil/commit/b1e3340050a25fd4813ed102b4644a2708601a28)
+
 ## 3.1.0
 __13th October 2019_
 
