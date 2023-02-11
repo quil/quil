@@ -16,9 +16,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil works with Clojure 1.10 and ClojureScript 1.10.x.
-
-Current released version `3.1.0` is compatible with Java 8. It doesn't work with Java 9+. For Java 9+ try using `4.0.0-SNAPSHOT` though it has major issues, like 3D renderer doesn't work: [issue](https://github.com/quil/quil/pull/337).
+Quil works with Clojure 1.11 and ClojureScript 1.10.x.
 
 ## Installation
 
@@ -31,7 +29,7 @@ Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "3.1.0"]
+[quil "4.0.0"]
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -114,7 +112,7 @@ Also check out awesome gallery of sketches contributed by community members: htt
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently version `3.3.7` of Processing and `1.6.6` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
+Quil provides support for the standard Processing API - currently version `4.1.2` of Processing and `1.6.6` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
 
 ## Community
 
