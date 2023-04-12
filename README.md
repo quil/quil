@@ -98,7 +98,7 @@ For up-to-date documentation please check [API page](http://quil.info/api) on qu
 
 When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
 
-If you're new to Processing and graphics programming in general, the [Processing.org Learning Pages](http://processing.org/learning/) are an excellent primer and will get you started in no time.
+If you're new to Processing and graphics programming in general, the [tutorials on Processing.org](http://processing.org/tutorials/) will get you started in no time.
 
 Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
