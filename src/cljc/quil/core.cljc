@@ -1,5 +1,6 @@
 (ns ^{:doc "Wrappers and extensions around the core Processing.org API."}
  quil.core
+  (:refer-clojure :exclude [abs])
   #?(:clj
      (:import [processing.core PApplet PImage PGraphics PFont PConstants PShape]
               [processing.opengl PShader]
