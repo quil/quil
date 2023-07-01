@@ -46,4 +46,6 @@ jobs:
         run: lein version
 
       - name: Leiningen Test
-        run: lein test
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: lein test
