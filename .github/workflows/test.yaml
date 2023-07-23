@@ -32,12 +32,10 @@ jobs:
 
       - name: Cache Leiningen dependencies
         uses: actions/cache@v3
-        env:
-          cache-name: cache-maven
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/project.clj') }}
-          restore-keys: ${{ runner.os }}-${{ env.cache-name }}-
+          key: clj-${{ runner.os }}-${{ hashFiles('**/project.clj') }}
+          restore-keys: clj-${{ runner.os }}-
 
       - name: Leiningen Install
         run: lein install
