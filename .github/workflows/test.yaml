@@ -1,0 +1,52 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-leiningen:
+    name: Test Leiningen
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          # - macOS-latest
+          # - windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '8'
+
+      - name: Setup Clojure
+        uses: DeLaGuardo/setup-clojure@11.0
+        with:
+          lein: 2.9.8
+
+      - name: Cache Leiningen dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: clj-${{ runner.os }}-${{ hashFiles('**/project.clj') }}
+          restore-keys: clj-${{ runner.os }}-
+
+      - name: Leiningen Install
+        run: lein install
+
+      - name: Version
+        run: lein version
+
+      - name: Leiningen Test
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: lein test

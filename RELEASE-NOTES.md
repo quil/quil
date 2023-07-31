@@ -1,3 +1,7 @@
+## Unreleased
+
+* Basic Github Actions test harness for existing `lein test` on Linux [#381](https://github.com/quil/quil/pull/381)
+
 ## 3.1.0
 __13th October 2019_
 
