@@ -1,0 +1,21 @@
+{:description "(mix Processing Clojure)"
+ :url "http://github.com/quil/quil"
+ :paths ["src/clj" "src/cljc" "src/cljs" "classes"]
+ :resource-paths ["resources"]
+ :deps {quil/processing-core {:local/root "libraries/core.jar"}
+        quil/processing-dxf {:local/root "libraries/dxf.jar"}
+        quil/processing-pdf {:local/root "libraries/pdf.jar"}
+        quil/processing-svg {:local/root "libraries/svg.jar"}
+
+        ;; native display code
+        quil/jogl-all-fat {:local/root "libraries/jogl-all.jar"}
+        quil/gluegen-rt-fat {:local/root "libraries/gluegen-rt.jar"}
+
+        ;; part of PDF support
+        com.lowagie/itext {:local/root "libraries/itext.jar"}
+
+        ;; svg export
+        org.apache.xmlgraphics/batik-svggen {:local/root "libraries/batik.jar"}
+        org.apache.xmlgraphics/batik-dom {:local/root "libraries/batik.jar"}}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
+                   :ns-default build}}}
