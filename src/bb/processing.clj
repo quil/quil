@@ -26,3 +26,10 @@
 
     (fs/delete-tree "processing-4.3")
     (fs/delete "processing.jar")))
+
+;; clj -T:build release caused:
+;; Execution error (UnsupportedClassVersionError) at java.lang.ClassLoader/defineClass1 (ClassLoader.java:-2).
+;; processing/core/PApplet has been compiled by a more recent version of the Java Runtime (class file version 61.0), this version of the Java Runtime only recognizes class file versions up to 55.0
+;; jdk11 is too old to process class file version, so using 17 instead:
+;; $ sudo apt install openjdk-17-jdk
+;; $ sudo update-java-alternatives -s java-1.17.0-openjdk-amd64
