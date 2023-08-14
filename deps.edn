@@ -2,14 +2,20 @@
  :url "http://github.com/quil/quil"
  :paths ["src/clj" "src/cljc" "src/cljs" "classes"]
  :resource-paths ["resources"]
+ :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
  :deps {quil/processing-core {:local/root "libraries/core.jar"}
         quil/processing-dxf {:local/root "libraries/dxf.jar"}
         quil/processing-pdf {:local/root "libraries/pdf.jar"}
         quil/processing-svg {:local/root "libraries/svg.jar"}
 
         ;; native display code
-        quil/jogl-all-fat {:local/root "libraries/jogl-all.jar"}
-        quil/gluegen-rt-fat {:local/root "libraries/gluegen-rt.jar"}
+        org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
 
         ;; part of PDF support
         com.lowagie/itext {:local/root "libraries/itext.jar"}
@@ -18,4 +24,10 @@
         org.apache.xmlgraphics/batik-svggen {:local/root "libraries/batik.jar"}
         org.apache.xmlgraphics/batik-dom {:local/root "libraries/batik.jar"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
-                   :ns-default build}}}
+                   :ns-default build}
+           ;; not picking up all test namespaces, probably has to do with :pattern
+           :test {:extra-paths ["test/clj" "test/clj/quil"]
+                  :extra-deps {io.github.cognitect-labs/test-runner 
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                  :main-opts ["-m" "cognitect.test-runner"]
+                  :exec-fn cognitect.test-runner.api/test}}}

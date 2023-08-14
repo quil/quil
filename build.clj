@@ -1,7 +1,7 @@
 (ns build
   (:require [clojure.tools.build.api :as b]))
 
-;; This process seems to work to produce a rather chunky (11MB) jar.
+;; This process seems to work to produce a rather chunky (12MB) jar.
 ;; On MacOS, download Processing 4.3 and copy this directory from the
 ;; app bundle into the top-level source directory for the processing-4
 ;; branch of quil:
@@ -32,12 +32,7 @@
   (b/delete {:path "target"}))
 
 (defn release [_]
-  (b/copy-dir {:src-dirs ["src/clj" "src/cljc"
-                          "resources"
-                          ;; native libraries for various architectures
-                          "libraries/macos-x86_64" "libraries/macos-aarch64"
-                          "libraries/linux-amd64" "libraries/linux-aarch64" "libraries/linux-arm"
-                          "libraries/windows-amd64"]
+  (b/copy-dir {:src-dirs ["src/clj" "src/cljc" "src/cljs" "resources"]
                :target-dir class-dir})
   (b/compile-clj {:basis basis
                   :src-dirs ["src/clj" "src/cljc" "src/cljs"]
