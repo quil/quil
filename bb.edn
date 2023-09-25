@@ -1,0 +1,6 @@
+{:paths ["src"]
+ :tasks
+ {:requires ([bb.processing :as processing])
+  processing-install
+  {:docs "install processing jars"
+   :task (processing/install)}}}

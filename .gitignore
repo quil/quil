@@ -21,3 +21,4 @@ screen-*.tif
 .ds_store
 dev-resources/snippet-snapshots/**/*-actual.png
 dev-resources/snippet-snapshots/**/*-difference.png
+/libraries/
