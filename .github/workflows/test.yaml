@@ -50,3 +50,44 @@ jobs:
         uses: coactions/setup-xvfb@v1
         with:
           run: lein test
+
+  test-cljs:
+    name: Test ClojureScript
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache deps.edn dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: cljs-${{ runner.os }}-${{ hashFiles('**/deps.edn') }}
+          restore-keys: cljs-${{ runner.os }}-
+
+      - name: Setup Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Setup Clojure
+        uses: DeLaGuardo/setup-clojure@11.0
+        with:
+          cli: latest
+          bb: latest
+
+      - name: Test
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: clojure -Mfig:cljs-test
+      
+      
