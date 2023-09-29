@@ -4,6 +4,11 @@
    #_[quil.core :as q :include-macros true]
    ))
 
+(deftest verify-browser
+  (is (empty? (.-userAgent js/navigator)))
+  (is (empty? (.-appName js/navigator)))
+  (is (empty? (.-appVersion js/navigator))))
+
 (deftest absolute-value
   (is (= 1 (abs -1)))
   #_(q/with-sketch (q/sketch :host "abs-test")
