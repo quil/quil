@@ -85,6 +85,9 @@ jobs:
           cli: latest
           bb: latest
 
+      - name: Install Processing jars
+        run: bb processing-install
+
       - name: Test
         uses: coactions/setup-xvfb@v1
         with:
