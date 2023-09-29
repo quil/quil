@@ -30,7 +30,15 @@
                    :ns-default build}
            ;; not picking up all test namespaces, probably has to do with :pattern
            :test {:extra-paths ["test/clj" "test/clj/quil"]
-                  :extra-deps {io.github.cognitect-labs/test-runner 
+                  :extra-deps {io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
                   :main-opts ["-m" "cognitect.test-runner"]
-                  :exec-fn cognitect.test-runner.api/test}}}
+                  :exec-fn cognitect.test-runner.api/test}
+
+           :fig
+           {:extra-deps {com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+                         com.bhauman/figwheel-main {:mvn/version "0.2.18"}}}
+
+           :cljs-test
+           {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
+            :extra-paths ["target" "test"]}}}
