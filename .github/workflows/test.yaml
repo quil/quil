@@ -37,8 +37,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: clj-${{ runner.os }}-${{ hashFiles('**/project.clj') }}
-          restore-keys: clj-${{ runner.os }}-
+          key: lein-${{ runner.os }}-${{ hashFiles('**/project.clj') }}
+          restore-keys: lein-${{ runner.os }}-
 
       - name: Leiningen Install
         run: lein install
@@ -98,5 +98,53 @@ jobs:
         uses: coactions/setup-xvfb@v1
         with:
           run: clojure -Mfig:cljs-test
-      
+
+  test-clj:
+    name: Test Clojure
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache deps.edn dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: clj-${{ runner.os }}-${{ hashFiles('**/deps.edn') }}
+          restore-keys: clj-${{ runner.os }}-
+
+      # Java 17 generates class file version 61.0, which is what processing has
+      # been compiled with.
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Clojure
+        uses: DeLaGuardo/setup-clojure@11.0
+        with:
+          cli: latest
+          bb: latest
+
+      - name: Install Processing jars
+        run: bb processing-install
+
+      # AOT compile applet-listener and applet
+      - name: AOT Compile
+        run: clojure -T:build aot
+
+      - name: Test
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: clojure -X:test
+
       
