@@ -90,7 +90,7 @@ jobs:
 
       # AOT compile applet-listener and applet so CLJS compile can run
       - name: AOT Compile
-        run: clojure -Tbuild aot
+        run: clojure -T:build aot
 
       - name: Test
         uses: coactions/setup-xvfb@v1
