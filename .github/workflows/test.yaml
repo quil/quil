@@ -88,6 +88,10 @@ jobs:
       - name: Install Processing jars
         run: bb processing-install
 
+      # AOT compile applet-listener and applet so CLJS compile can run
+      - name: AOT Compile
+        run: clojure -Tbuild aot
+
       - name: Test
         uses: coactions/setup-xvfb@v1
         with:
