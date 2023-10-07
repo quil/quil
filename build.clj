@@ -34,23 +34,19 @@
   ;; aot classes
   (b/delete {:path "classes"}))
 
-(defn release [_]
+;; clj -T:build aot
+(defn aot [_]
   (b/copy-dir {:src-dirs ["src/clj" "src/cljc" "src/cljs" "resources"]
                :target-dir class-dir})
   (b/compile-clj {:basis basis
                   :src-dirs ["src/clj" "src/cljc" "src/cljs"]
                   :class-dir class-dir
-                  :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]})
+                  :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
+
+(defn release [_]
+  (aot _)
   (b/uber {:class-dir class-dir
            :uber-file jar-file
            :basis basis
            ;; don't bundle clojure into the jar
            :exclude ["^clojure[/].+"]}))
-
-;; clj -T:build aot
-(defn aot [_]
-  (b/compile-clj
-   {:basis basis
-    :src-dirs ["src/clj" "src/cljc" "src/cljs"]
-    :class-dir "classes"
-    :ns-compile ['quil.helpers.applet-listener 'quil.applet]}))
