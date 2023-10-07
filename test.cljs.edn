@@ -1,0 +1,10 @@
+^{:ring-server-options {:port 9501}
+  :open-url "http://[[server-hostname]]:[[server-port]]/test.html"
+  :log-level :all
+  :client-log-level :finest
+  ;; headless is hanging?
+  ;; :launch-js ["google-chrome" "--headless" "--repl" "--disable-gpu" :open-url]
+  ;; :launch-js ["firefox" :open-url]
+  }
+
+{:main quil.test-runner}

@@ -1,5 +1,6 @@
 ## Unreleased
 
+* New automated test harness for assertions of Processing and P5js behaviors [#384](https://github.com/quil/quil/pull/384)
 * Basic Github Actions test harness for existing `lein test` on Linux [#381](https://github.com/quil/quil/pull/381)
 * Fix for `#cljs.core/abs` compile warning [#380](https://github.com/quil/quil/pull/380)
 

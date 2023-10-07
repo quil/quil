@@ -1,0 +1,2 @@
+{:ring-server-options {:port 9500}
+ :open-file-command "emacsclient"}

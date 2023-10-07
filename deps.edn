@@ -28,9 +28,22 @@
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
                    :ns-default build}
+           ;; clj -X:test
            ;; not picking up all test namespaces, probably has to do with :pattern
-           :test {:extra-paths ["test/clj" "test/clj/quil"]
-                  :extra-deps {io.github.cognitect-labs/test-runner 
+           :test {:extra-paths ["test/clj" "test/clj/quil" "test"]
+                  :extra-deps {io.github.cognitect-labs/test-runner
                                {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
                   :main-opts ["-m" "cognitect.test-runner"]
-                  :exec-fn cognitect.test-runner.api/test}}}
+                  :exec-fn cognitect.test-runner.api/test}
+
+           :fig
+           {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}
+                         fipp/fipp {:mvn/version "0.6.26"} ;; better diff output
+                         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
+                         com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
+            :extra-paths ["resources"]}
+
+           ;; clj -Mfig:cljs-test
+           :cljs-test
+           {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
+            :extra-paths ["target" "test"]}}}

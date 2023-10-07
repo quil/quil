@@ -29,7 +29,10 @@
 (def jar-file (format "target/%s-%s.jar" (name lib) version))
 
 (defn clean [_]
-  (b/delete {:path "target"}))
+  ;; release directory
+  (b/delete {:path "target"})
+  ;; aot classes
+  (b/delete {:path "classes"}))
 
 (defn release [_]
   (b/copy-dir {:src-dirs ["src/clj" "src/cljc" "src/cljs" "resources"]
@@ -43,3 +46,11 @@
            :basis basis
            ;; don't bundle clojure into the jar
            :exclude ["^clojure[/].+"]}))
+
+;; clj -T:build aot
+(defn aot [_]
+  (b/compile-clj
+   {:basis basis
+    :src-dirs ["src/clj" "src/cljc" "src/cljs"]
+    :class-dir "classes"
+    :ns-compile ['quil.helpers.applet-listener 'quil.applet]}))
