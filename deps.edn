@@ -11,6 +11,10 @@
         ;; native display code
         org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
         org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.gluegen/gluegen-rt$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.gluegen/gluegen-rt$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.gluegen/gluegen-rt$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
+
         org.jogamp.jogl/jogl-all {:mvn/version "2.4.0-rc-20230201"}
         org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
         org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
