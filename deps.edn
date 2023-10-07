@@ -1,6 +1,8 @@
 {:description "(mix Processing Clojure)"
  :url "http://github.com/quil/quil"
- :paths ["src/clj" "src/cljc" "src/cljs" "classes"]
+ :paths ["src/clj" "src/cljc" "src/cljs"
+         ;; generated with clojure -T:build aot
+         "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
  :deps {quil/processing-core {:local/root "libraries/core.jar"}
