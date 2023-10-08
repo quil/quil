@@ -52,4 +52,12 @@
            ;; clj -Mfig:cljs-test
            :cljs-test
            {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
-            :extra-paths ["target" "test"]}}}
+            :extra-paths ["target" "test"]}
+
+           ;; (N.B. update pom.xml before you do this!)
+           ;; env CLOJARS_USERNAME=username CLOJARS_PASSWORD=clojars-token clj -X:deploy
+           :deploy {:extra-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
+                    :exec-fn deps-deploy.deps-deploy/deploy
+                    :exec-args {:installer :remote
+                                #_#_:sign-releases? true
+                                :artifact "target/quil-4.3.1276.jar"}}}}

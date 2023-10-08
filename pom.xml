@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <groupId>quil</groupId>
+  <artifactId>quil</artifactId>
+  <version>4.3-SNAPSHOT</version>
+  <name>quil</name>
+  <licenses>
+	<license>
+	  <name>Eclipse Public License 2.0</name>
+	  <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+    </license>
+  </licenses>
+  <dependencies>
+    <!-- all deps are baked into the jar -->
+  </dependencies>
+  <build>
+    <sourceDirectory>src/clj</sourceDirectory>
+  </build>
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>https://repo.clojars.org/</url>
+    </repository>
+  </repositories>
+</project>
