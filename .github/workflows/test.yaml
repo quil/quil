@@ -107,6 +107,8 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          - macOS-latest
+          - windows-latest
 
     runs-on: ${{ matrix.os }}
 
