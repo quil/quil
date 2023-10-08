@@ -121,8 +121,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: clj-${{ runner.os }}-${{ hashFiles('**/deps.edn') }}
-          restore-keys: clj-${{ runner.os }}-
+          key: clj-${{ runner.os }}-${{ matrix.java-version }}-${{ hashFiles('**/deps.edn') }}
+          restore-keys: clj-${{ runner.os }}-${{ matrix.java-version }}-
 
       # Java 17 generates class file version 61.0, which is what processing has
       # been compiled with.
@@ -130,7 +130,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: ${{matrix.java-version}}
+          java-version: ${{ matrix.java-version }}
 
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@11.0
