@@ -109,6 +109,7 @@ jobs:
           - ubuntu-latest
           - macOS-latest
           - windows-latest
+        java-version: [17,20]
 
     runs-on: ${{ matrix.os }}
 
@@ -129,7 +130,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{matrix.java-version}}
 
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@11.0
