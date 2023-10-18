@@ -124,7 +124,7 @@ https://groups.google.com/forum/?fromgroups#!forum/clj-processing
 
 There is also a small number of people that hang out in `#quil` on freenode. New artworks are show-cased on the @quilist Twitter account: http://twitter.com/quilist
 
-## Developing
+## Developing (leiningen)
 
 Modifying Quil and testing changes is pretty simple. First run `lein compile` to compile some java classes. Then depending on whether you want to test Clojure or ClojureScript:
 
@@ -140,6 +140,21 @@ Modifying Quil and testing changes is pretty simple. First run `lein compile` to
 * Alternatively, if you don't have python, open `dev/index.html` page from browser. It should work as well.
 
 In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/...`) will be automatically recompiled. You just need to refresh the page.
+
+## Developing (deps.edn)
+
+* Install [clojure-cli](https://clojure.org/guides/install_clojure) and [babashka](https://github.com/babashka/babashka#installation).
+* `bb processing-install` will download a local copy of the upstream processing4 release. It will also unpack the architecture specific jar files into the right places for the `deps.edn` `:local/root` dependencies to find.
+* `clojure -T:build aot` will do an Ahead of Time compilation of a few classes required to interface with Processing.
+
+*Important* because of the dependency on Processing jars which are not hosted in any maven repository, it is not currently possible to use quil as a `:git/sha` coordinate dependency.
+
+Run automated tests locally for clj or cljs with:
+
+* `clojure -Xtest` for clj tests
+* `clojure -Mfig:cljs-test` for cljs tests
+
+The coverage from the tests in the leiningen environment are still higher, but are being migrated over to automated tests that can run on Github Actions.
 
 ## License
 
