@@ -79,3 +79,39 @@
   (qth/with-sketch (qth/test-sketch)
     (is (= 15.0 (q/map-range 4 0 8 10 20)))
     (q/exit)))
+
+(deftest norm
+  (qth/with-sketch (qth/test-sketch)
+    (is (qth/delta= 0.2 (q/norm 2 0 10)))
+    (is (qth/delta= 1.2 (q/norm 12 0 10)))
+    (is (qth/delta= -0.2 (q/norm -2 0 10)))
+    (q/exit)))
+
+(deftest pow
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 16.0 (q/pow 2 4)))
+    (is (= 1024.0 (q/pow 2 10)))
+    (q/exit)))
+
+(deftest round
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 1 (q/round 1.4)))
+    (is (= 2 (q/round 1.5)))
+    (is (= 2 (q/round 1.6)))
+    (is (= -1 (q/round -1.4)))
+    (is (= -1 (q/round -1.5)))
+    (is (= -2 (q/round -1.6)))
+    (q/exit)))
+
+(deftest sq
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 0.0 (q/sq 0)))
+    (is (= 4.0 (q/sq -2)))
+    (is (= 25.0 (q/sq 5)))
+    (q/exit)))
+
+(deftest sqrt
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 5.0 (q/sqrt 25)))
+    (is (qth/delta= 1.4142135 (q/sqrt 2)))
+    (q/exit)))
