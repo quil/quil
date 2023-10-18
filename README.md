@@ -18,7 +18,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 Quil works with Clojure 1.10 and ClojureScript 1.10.x.
 
-Current released version `3.1.0` is compatible with Java 8. It doesn't work with Java 9+. For Java 9+ try using `4.0.0-SNAPSHOT` though it has major issues, like 3D renderer doesn't work: [issue](https://github.com/quil/quil/pull/337).
+Current released version `3.1.0` is compatible with Java 8. It doesn't work with Java 9+. There is a snapshot release `4.3-SNAPSHOT`, which supports Linux amd64,aarch64 and macOS M1/M2/x86_64 architectures using JDK17+.
 
 ## Installation
 
@@ -115,6 +115,8 @@ Also check out awesome gallery of sketches contributed by community members: htt
 ## Processing Compatibility
 
 Quil provides support for the standard Processing API - currently version `3.3.7` of Processing and `1.6.6` of Processing.js. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
+
+The pre-release `quil/quil {:mvn/version "4.3-SNAPSHOT"}` deps.edn coordinate wraps Processing `4.3` and p5js `1.7.0`. This release supports Linux amd64,aarch64 and macOS M1/M2/x86_64 architectures using JDK17+.
 
 ## Community
 
