@@ -87,6 +87,9 @@ jobs:
           cli: latest
           bb: latest
 
+      - name: System Info
+        run: bb system-info
+
       - name: Install Processing jars
         run: bb processing-install
 
@@ -139,6 +142,9 @@ jobs:
         with:
           cli: latest
           bb: latest
+
+      - name: System Info
+        run: bb system-info
 
       - name: Install Processing jars
         run: bb processing-install
