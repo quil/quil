@@ -68,3 +68,14 @@
     (is (qth/delta= 1.0 (q/log Math/E)))
     (is (= 4.0 (/ (q/log 16) (q/log 2))))
     (q/exit)))
+
+(deftest mag
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 2.0 (q/mag 0 2)))
+    (is (= 4.0 (q/mag 4 0)))
+    (q/exit)))
+
+(deftest map-range
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 15.0 (q/map-range 4 0 8 10 20)))
+    (q/exit)))
