@@ -34,6 +34,7 @@
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}}
                    :ns-default build}
+           :testing {:extra-paths ["test"]}
            ;; clj -X:test
            ;; not picking up all test namespaces, probably has to do with :pattern
            :test {:extra-paths ["test/clj" "test/clj/quil" "test"]
