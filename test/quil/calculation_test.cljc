@@ -39,3 +39,9 @@
     (is (= 4.0 (q/dist 0 -2 0 2)))
     (is (= 1.0 (q/dist 0 0 0 0 0 1)))
     (q/exit)))
+
+(deftest exp
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 1.0 (q/exp 0)))
+    (is (qth/delta= 2.718282 (q/exp 1)))
+    (q/exit)))
