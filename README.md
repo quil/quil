@@ -122,7 +122,7 @@ You can ask questions, get support on our mailing list:
 
 https://groups.google.com/forum/?fromgroups#!forum/clj-processing
 
-There is also a small number of people that hang out in `#quil` on freenode. New artworks are show-cased on the @quilist Twitter account: http://twitter.com/quilist
+There are a small number of people that hang out in `#quil` on freenode or `#quil` on the ClojureVerse slack. New artworks are show-cased on the @quilist Twitter account: http://twitter.com/quilist
 
 ## Developing (leiningen)
 
