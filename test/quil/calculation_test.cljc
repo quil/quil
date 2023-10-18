@@ -43,5 +43,28 @@
 (deftest exp
   (qth/with-sketch (qth/test-sketch)
     (is (= 1.0 (q/exp 0)))
-    (is (qth/delta= 2.718282 (q/exp 1)))
+    (is (qth/delta= Math/E (q/exp 1)))
+    (q/exit)))
+
+(deftest floor
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 1 (q/floor 1.5)))
+    (is (= 1 (q/floor 1.0)))
+    (is (= -1 (q/floor -0.5)))
+    (is (= -2 (q/floor -1.5)))
+    (q/exit)))
+
+(deftest lerp
+  (qth/with-sketch (qth/test-sketch)
+    (is (= 2.0 (q/lerp 2 4 0)))
+    (is (= 0.0 (q/lerp 2 4 -1)))
+    (is (= 10.0 (q/lerp 2 6 2)))
+    (is (= 6.0 (q/lerp 4 8 0.5)))
+    (is (= -1.0 (q/lerp -2 2 0.25)))
+    (q/exit)))
+
+(deftest log
+  (qth/with-sketch (qth/test-sketch)
+    (is (qth/delta= 1.0 (q/log Math/E)))
+    (is (= 4.0 (/ (q/log 16) (q/log 2))))
     (q/exit)))
