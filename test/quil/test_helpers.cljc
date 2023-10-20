@@ -35,3 +35,8 @@
        ~@body)
     `(binding [quil.applet/*applet* ~applet]
        ~@body)))
+
+(defn delta=
+  ([a b] (delta= a b 1e-6))
+  ([a b epsilon]
+   (< (abs (- a b)) epsilon)))

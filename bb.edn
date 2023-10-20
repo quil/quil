@@ -1,6 +1,10 @@
 {:paths ["src"]
  :tasks
- {:requires ([bb.processing :as processing])
+ {:requires ([bb.processing :as processing]
+             [bb.system-info :as sys-info])
   processing-install
   {:docs "install processing jars"
-   :task (processing/install)}}}
+   :task (processing/install)}
+  system-info
+  {:docs "report system information"
+   :task (sys-info/versions)}}}

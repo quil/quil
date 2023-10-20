@@ -21,3 +21,4 @@ screen-*.tif
 dev-resources/snippet-snapshots/**/*-actual.png
 dev-resources/snippet-snapshots/**/*-difference.png
 /libraries/
+/.cpcache/
