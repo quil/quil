@@ -128,3 +128,11 @@
   (q/background 255)
   (q/fill 0)
   (q/text (str "(q/sqrt 25) = " (q/sqrt 25)) 10 20))
+
+(defsnippet fract
+  "fract"
+  {}
+
+  (q/background 255)
+  (q/fill 0)
+  (q/text (str "(q/fract 1.2) = " (q/fract 1.2)) 10 20))
