@@ -1,5 +1,6 @@
 (ns quil.manual
   (:require [quil.core :as q :include-macros true]
+            [quil.examples :as qe]
             [quil.middlewares.fun-mode :as fm]
             [goog.events :as events]
             [goog.events.EventType :as EventType]))
@@ -50,7 +51,7 @@
 (defn start-all-sketches []
   (q/sketch :host "redraw-on-key"
             :size [500 200]
-            ; Just to try :settings instead of usual :setup
+            ;; Just to try :settings instead of usual :setup
             :settings q/no-loop
             :draw (fn []
                     (q/fill 0)
@@ -103,28 +104,28 @@
            (q/background 255)
            (let [gr (q/create-graphics 100 100)]
 
-             ; draw ellipse in gr object
+             ;; draw ellipse in gr object
              (q/with-graphics gr
                (q/background 255)
                (q/fill 127 255 180)
                (q/ellipse 50 50 70 70))
 
-             ; draw gr object on screen
+             ;; draw gr object on screen
              (q/image gr 0 0)
 
-             ; draw gr object on screen using get-pixel
+             ;; draw gr object on screen using get-pixel
              (q/image (q/get-pixel gr) 0 120)
 
-             ; set fill color to the same as ellipse and
-             ; draw rectangle
+             ;; set fill color to the same as ellipse and
+             ;; draw rectangle
              (q/fill (q/get-pixel gr 50 50))
              (q/rect 120 0 100 100)
 
-             ; draw up left quarter of ellipse on screen
+             ;; draw up left quarter of ellipse on screen
              (q/image (q/get-pixel gr 0 0 50 50) 120 120)
 
-             ; set fill to white using get-pixel of [0, 0]
-             ; point of the screen and draw white rectangle
+             ;; set fill to white using get-pixel of [0, 0]
+             ;; point of the screen and draw white rectangle
              (q/fill (q/get-pixel 0 0))
              (q/rect 240 0 100 100))
            (q/no-loop)))
@@ -184,18 +185,8 @@
            (q/fill 0 0 0)
            (q/text (str "mouse pressed: "  (q/mouse-pressed?)) 0 20)
            (q/text (str "key pressed: " (q/key-pressed?)) 0 40)))
-  (q/sketch
-   :host "resizing"
-   :size [500 500]
-   :draw (fn []
-           (q/background 240)
-           (q/text-size 30)
-           (q/fill 0)
-           (q/text-align :center :center)
-           (q/text (str "width: " (q/width)
-                        "\nheight: " (q/height))
-                   (/ (q/width) 2)
-                   (/ (q/height) 2)))))
+
+  (qe/resize "resizing"))
 
 (defn resize-sketch []
   (.setTimeout js/window

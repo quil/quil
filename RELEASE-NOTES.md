@@ -5,6 +5,7 @@
 * Fix for `#cljs.core/abs` compile warning [#380](https://github.com/quil/quil/pull/380)
 * Support for Processing 4.3, M1 hardware, JVM > 1.8
 * Implement `fract` calculation [#392](https://github.com/quil/quil/pull/392)
+* Fix canvas resize and fullscreen behavior for p5js sketches [#393](https://github.com/quil/quil/pull/393)
 
 ## 3.1.0
 __13th October 2019_
