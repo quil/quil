@@ -115,3 +115,14 @@
     (is (= 5.0 (q/sqrt 25)))
     (is (qth/delta= 1.4142135 (q/sqrt 2)))
     (q/exit)))
+
+(deftest fract
+  (qth/with-sketch (qth/test-sketch)
+    (is (qth/delta= 0.0 (q/fract -2.0)))
+    (is (qth/delta= 0.55 (q/fract -2.45)))
+    (is (qth/delta= 0.0 (q/fract 0.0)))
+    (is (qth/delta= 0.0 (q/fract 0)))
+    (is (qth/delta= 0.4 (q/fract 0.4)))
+    (is (qth/delta= 0.0 (q/fract 1.0)))
+    (is (qth/delta= 0.58 (q/fract 1.58)))
+    (q/exit)))

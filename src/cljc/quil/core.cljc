@@ -1819,6 +1819,18 @@
 
 (defn
   ^{:requires-bindings true
+    :p5js-name "fract"
+    :category "Calculation"
+    :subcategory nil
+    :added "4.3"}
+  fract
+  "Returns the fractional component of a number."
+  [n]
+  #?(:clj (- (float n) (PApplet/floor (float n)))
+     :cljs (.fract (ap/current-applet) (float n))))
+
+(defn
+  ^{:requires-bindings true
     :processing-name "frameCount"
     :p5js-name "frameCount"
     :category "Environment"
