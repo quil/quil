@@ -51,7 +51,7 @@
                                   [com.vladsch.flexmark/flexmark-ext-gfm-tables "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-anchorlink "0.34.18"]
                                   [com.vladsch.flexmark/flexmark-ext-wikilink "0.34.18"]
-                                  [etaoin "0.3.5"]]
+                                  [etaoin "1.0.40"]]
                    :plugins [[lein-ring "0.12.5"]
                              [lein-cljfmt "0.6.4"]
                              [lein-ancient "0.6.15"]]
