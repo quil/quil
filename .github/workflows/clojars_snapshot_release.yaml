@@ -1,4 +1,4 @@
-name: Snapshot Release
+name: Clojars Snapshot Release
 
 on:
   workflow_dispatch:
