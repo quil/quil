@@ -1,5 +1,9 @@
 (ns build
-  (:require [clojure.tools.build.api :as b]))
+  (:require
+   [clojure.data.xml :as xml]
+   [clojure.java.io :as jio]
+   [clojure.tools.build.api :as b]
+   [deps-deploy.deps-deploy :as dd]))
 
 ;; This process seems to work to produce a rather chunky (12MB) jar.
 ;; On MacOS, download Processing 4.3 and copy this directory from the
@@ -23,10 +27,23 @@
 ;; do!
 
 (def lib 'quil/quil)
-(def version (format "4.3.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
-(def jar-file (format "target/%s-%s.jar" (name lib) version))
+
+(defn release-version
+  "Create a version id for release
+
+  If opts includes :snapshot include git-sha and SNAPSHOT."
+  [opts]
+  (format "4.3.%s%s"
+          (b/git-count-revs nil)
+          (if (:snapshot opts)
+            (format "-%s-SNAPSHOT"
+                    (b/git-process {:git-args "rev-parse --short HEAD"}))
+            "")))
+
+(defn jar-file [opts]
+  (format "target/%s-%s.jar" (name lib) (release-version opts)))
 
 (defn clean [_]
   ;; release directory
@@ -43,10 +60,60 @@
                   :class-dir class-dir
                   :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
 
-(defn release [_]
-  (aot _)
-  (b/uber {:class-dir class-dir
-           :uber-file jar-file
-           :basis basis
-           ;; don't bundle clojure into the jar
-           :exclude ["^clojure[/].+"]}))
+(xml/alias-uri 'pom "http://maven.apache.org/POM/4.0.0")
+
+(defn- pom-template [{:keys [version src-dirs]}]
+  [::pom/project
+   {:xmlns "http://maven.apache.org/POM/4.0.0"
+    (keyword "xmlns:xsi") "http://www.w3.org/2001/XMLSchema-instance"
+    (keyword "xsi:schemaLocation")
+    "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"}
+   [::pom/modelVersion "4.0.0"]
+   [::pom/packaging "jar"]
+   [::pom/groupId "quil"]
+   [::pom/artifactId "quil"]
+   [::pom/version version]
+   [::pom/name "quil"]
+   [::pom/licenses
+    [::pom/license
+     [::pom/name "Eclipse Public License 2.0"]
+     [::pom/url "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt"]]]
+   [::pom/dependencies
+    [:-comment " all deps are baked into the jar "]]
+   [::pom/build
+    (for [src-dir src-dirs]
+      [::pom/sourceDirectory src-dir])]
+   [::pom/repositories
+    [::pom/repository
+     [::pom/id "clojars"]
+     [::pom/url "https://repo.clojars.org/"]]]])
+
+;; clj -T:build pom
+(defn pom
+  "Generate a pom.xml for the current version"
+  [opts]
+  (let [version (release-version opts)]
+    (->> {:version version
+          :src-dirs ["src/clj"]}
+         pom-template
+         xml/sexp-as-element
+         xml/indent-str
+         (spit (jio/file "." "pom.xml")))
+    (println "Generated pom.xml for version:" version)))
+
+(defn release [opts]
+  (aot opts)
+  (pom opts)
+  (let [jar-file (jar-file opts)]
+    (b/uber {:class-dir class-dir
+             :uber-file jar-file
+             :basis basis
+             ;; don't bundle clojure into the jar
+             :exclude ["^clojure[/].+"]})
+    (println "release:" jar-file
+             (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
+
+(defn deploy [opts]
+  (dd/deploy {:installer (if (:clojars opts) :remote :local)
+              :artifact (b/resolve-path (jar-file opts))
+              :pom-file "pom.xml"}))

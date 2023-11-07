@@ -7,9 +7,9 @@
   <version>4.3-SNAPSHOT</version>
   <name>quil</name>
   <licenses>
-	<license>
-	  <name>Eclipse Public License 2.0</name>
-	  <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
+    <license>
+      <name>Eclipse Public License 2.0</name>
+      <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
     </license>
   </licenses>
   <dependencies>
