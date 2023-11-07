@@ -25,9 +25,20 @@
 ;; do!
 
 (def lib 'quil/quil)
-(def version (format "4.3.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
+
+(defn release-version
+  "Create a version id for release
+
+  If opts includes :snapshot include git-sha and SNAPSHOT."
+  [opts]
+  (format "4.3.%s%s"
+          (b/git-count-revs nil)
+          (if (:snapshot opts)
+            (format "-%s-SNAPSHOT"
+                    (b/git-process {:git-args "rev-parse --short HEAD"}))
+            "")))
 
 (defn clean [_]
   ;; release directory
@@ -76,18 +87,19 @@
 (defn pom
   "Generate a pom.xml for the current version"
   [_]
-  (->> {:version version
-        :src-dirs ["src/clj"]}
-       pom-template
-       xml/sexp-as-element
-       xml/indent-str
-       (spit (jio/file "." "pom.xml")))
-  (println "Generated pom.xml for version:" version))
+  (let [version (release-version _)]
+    (->> {:version version
+          :src-dirs ["src/clj"]}
+         pom-template
+         xml/sexp-as-element
+         xml/indent-str
+         (spit (jio/file "." "pom.xml")))
+    (println "Generated pom.xml for version:" version)))
 
 (defn release [_]
   (aot _)
   (pom _)
-  (let [jar-file (format "target/%s-%s.jar" (name lib) version)]
+  (let [jar-file (format "target/%s-%s.jar" (name lib) (release-version _))]
     (b/uber {:class-dir class-dir
              :uber-file jar-file
              :basis basis
