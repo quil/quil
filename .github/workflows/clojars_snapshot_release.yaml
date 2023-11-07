@@ -37,7 +37,7 @@ jobs:
         run: clojure -T:build release :snapshot true
 
       - name: Deploy JAR
-        run: clojure -T:build deploy :snapshot true
+        run: clojure -T:build deploy :clojars true :snapshot true
         env:
           CLOJARS_USERNAME: ${{secrets.CLOJARS_USERNAME}}
           CLOJARS_PASSWORD: ${{secrets.CLOJARS_DEPLOY_TOKEN}}
