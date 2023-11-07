@@ -1,7 +1,9 @@
 (ns build
-  (:require [clojure.tools.build.api :as b]
-            [clojure.java.io :as jio]
-            [clojure.data.xml :as xml]))
+  (:require
+   [clojure.data.xml :as xml]
+   [clojure.java.io :as jio]
+   [clojure.tools.build.api :as b]
+   [deps-deploy.deps-deploy :as dd]))
 
 ;; This process seems to work to produce a rather chunky (12MB) jar.
 ;; On MacOS, download Processing 4.3 and copy this directory from the
@@ -39,6 +41,9 @@
             (format "-%s-SNAPSHOT"
                     (b/git-process {:git-args "rev-parse --short HEAD"}))
             "")))
+
+(defn jar-file [opts]
+  (format "target/%s-%s.jar" (name lib) (release-version opts)))
 
 (defn clean [_]
   ;; release directory
@@ -86,8 +91,8 @@
 ;; clj -T:build pom
 (defn pom
   "Generate a pom.xml for the current version"
-  [_]
-  (let [version (release-version _)]
+  [opts]
+  (let [version (release-version opts)]
     (->> {:version version
           :src-dirs ["src/clj"]}
          pom-template
@@ -96,10 +101,10 @@
          (spit (jio/file "." "pom.xml")))
     (println "Generated pom.xml for version:" version)))
 
-(defn release [_]
-  (aot _)
-  (pom _)
-  (let [jar-file (format "target/%s-%s.jar" (name lib) (release-version _))]
+(defn release [opts]
+  (aot opts)
+  (pom opts)
+  (let [jar-file (jar-file opts)]
     (b/uber {:class-dir class-dir
              :uber-file jar-file
              :basis basis
@@ -107,3 +112,8 @@
              :exclude ["^clojure[/].+"]})
     (println "release:" jar-file
              (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
+
+(defn deploy [opts]
+  (dd/deploy {:installer :local
+              :artifact (b/resolve-path (jar-file opts))
+              :pom-file "pom.xml"}))
