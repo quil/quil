@@ -28,7 +28,6 @@
 (def version (format "4.3.%s" (b/git-count-revs nil)))
 (def class-dir "target/classes")
 (def basis (b/create-basis {:project "deps.edn"}))
-(def jar-file (format "target/%s-%s.jar" (name lib) version))
 
 (defn clean [_]
   ;; release directory
@@ -82,13 +81,17 @@
        pom-template
        xml/sexp-as-element
        xml/indent-str
-       (spit (jio/file "." "pom.xml"))))
+       (spit (jio/file "." "pom.xml")))
+  (println "Generated pom.xml for version:" version))
 
 (defn release [_]
   (aot _)
   (pom _)
-  (b/uber {:class-dir class-dir
-           :uber-file jar-file
-           :basis basis
-           ;; don't bundle clojure into the jar
-           :exclude ["^clojure[/].+"]}))
+  (let [jar-file (format "target/%s-%s.jar" (name lib) version)]
+    (b/uber {:class-dir class-dir
+             :uber-file jar-file
+             :basis basis
+             ;; don't bundle clojure into the jar
+             :exclude ["^clojure[/].+"]})
+    (println "release:" jar-file
+             (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
