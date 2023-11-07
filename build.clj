@@ -114,6 +114,6 @@
              (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
 
 (defn deploy [opts]
-  (dd/deploy {:installer :local
+  (dd/deploy {:installer (if (:clojars opts) :remote :local)
               :artifact (b/resolve-path (jar-file opts))
               :pom-file "pom.xml"}))

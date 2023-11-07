@@ -1,13 +1,11 @@
-name: Clojars Release
+name: Snapshot Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch:
 
 jobs:
   clojars-snapshot-release:
-    name: Clojars Release
+    name: Clojars Snapshot Release
 
     runs-on: ubuntu-latest
 
@@ -36,10 +34,10 @@ jobs:
         run: bb processing-install
 
       - name: Build release jar
-        run: clojure -T:build release
+        run: clojure -T:build release :snapshot true
 
       - name: Deploy JAR
-        run: clojure -T:build deploy :clojars true
+        run: clojure -T:build deploy :snapshot true
         env:
           CLOJARS_USERNAME: ${{secrets.CLOJARS_USERNAME}}
           CLOJARS_PASSWORD: ${{secrets.CLOJARS_DEPLOY_TOKEN}}
