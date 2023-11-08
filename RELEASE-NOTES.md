@@ -6,6 +6,7 @@
 * Support for Processing 4.3, M1 hardware, JVM > 1.8
 * Implement `fract` calculation [#392](https://github.com/quil/quil/pull/392)
 * Fix canvas resize and fullscreen behavior for p5js sketches [#393](https://github.com/quil/quil/pull/393)
+* Clojar release automation using Github Actions to generate snapshot and tagged jar files [#394](https://github.com/quil/quil/pull/394)
 
 ## 3.1.0
 __13th October 2019_
