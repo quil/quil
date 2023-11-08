@@ -78,6 +78,12 @@
     [::pom/license
      [::pom/name "Eclipse Public License 2.0"]
      [::pom/url "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt"]]]
+   [::pom/scm
+    [::pom/url "https://github.com/quil/quil"]
+    [::pom/connection "scm:git:https://github.com/quil/quil.git"]
+    [::pom/developerConnection "scm:git:ssh:git@github.com/quil/quil.git"]
+    (when-not (re-find #"-SNAPSHOT$" version)
+      [::pom/tag (str "v" version)])]
    [::pom/dependencies
     [:-comment " all deps are baked into the jar "]]
    [::pom/build
