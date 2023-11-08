@@ -4,7 +4,7 @@
   <packaging>jar</packaging>
   <groupId>quil</groupId>
   <artifactId>quil</artifactId>
-  <version>4.3-SNAPSHOT</version>
+  <version>4.3.1323</version>
   <name>quil</name>
   <licenses>
     <license>
@@ -12,6 +12,12 @@
       <url>https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt</url>
     </license>
   </licenses>
+  <scm>
+    <url>https://github.com/quil/quil</url>
+    <connection>scm:git:https://github.com/quil/quil.git</connection>
+    <developerConnection>scm:git:ssh:git@github.com/quil/quil.git</developerConnection>
+    <tag>v4.3.1323</tag>
+  </scm>
   <dependencies>
     <!-- all deps are baked into the jar -->
   </dependencies>
