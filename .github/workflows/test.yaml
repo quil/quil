@@ -111,9 +111,7 @@ jobs:
         os:
           - ubuntu-latest
           - macOS-latest
-          # failing on invalid path in git checkout:
-          # 'dev-resources/snippet-snapshots/clj/normal/font-available?-s-expected.png'
-          # - windows-latest
+          - windows-latest
         java-version: [17] # ,20 to test jdk20
 
     runs-on: ${{ matrix.os }}
