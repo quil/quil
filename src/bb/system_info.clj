@@ -9,7 +9,6 @@
   (bp/shell "java" "-version")
   (println "$ bb version")
   (bp/shell "bb" "version")
-  (let [cmd (if (= (System/getenv "RUNNER_OS") "Windows")
-              "clj" "clojure")]
-    (println (str "$ " cmd " -version"))
-    (bp/shell cmd "-version")))
+  (when-not (= (System/getenv "RUNNER_OS") "Windows")
+    (println "$ clojure -version")
+    (bp/shell "clojure" "-version")))
