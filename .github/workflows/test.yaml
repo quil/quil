@@ -13,8 +13,12 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macOS-latest
-          - windows-latest
+          # Disabled because of 100s of Caused by: java.lang.ClassNotFoundException: com.apple.eawt.QuitHandler
+          # https://discourse.processing.org/t/error-hello-processing-jdk-10-osx-high-sierra-com-apple-eawt-quithandler-not-supported/1396 may be relevant.
+          # - macOS-latest
+          # Disabled because it's hanging somewhere in lein test (or at least not finishing after 6m+)
+          # possibly related to missing imagemagick on windows?
+          # - windows-latest
 
     runs-on: ${{ matrix.os }}
 
@@ -111,7 +115,8 @@ jobs:
         os:
           - ubuntu-latest
           - macOS-latest
-          - windows-latest
+          # Failing because setup-xvfb powershell can't find clojure commands
+          # - windows-latest
         java-version: [17] # ,20 to test jdk20
 
     runs-on: ${{ matrix.os }}
