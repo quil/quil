@@ -29,7 +29,7 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           lein: 2.9.8
 
@@ -82,7 +82,7 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           cli: latest
           bb: latest
@@ -136,7 +136,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           cli: latest
           bb: latest
