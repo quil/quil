@@ -13,23 +13,27 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          # Disabled because of 100s of Caused by: java.lang.ClassNotFoundException: com.apple.eawt.QuitHandler
+          # https://discourse.processing.org/t/error-hello-processing-jdk-10-osx-high-sierra-com-apple-eawt-quithandler-not-supported/1396 may be relevant.
           # - macOS-latest
+          # Disabled because it's hanging somewhere in lein test (or at least not finishing after 6m+)
+          # possibly related to missing imagemagick on windows?
           # - windows-latest
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Java 8
+      - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '8'
+          distribution: temurin
+          java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@11.0
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           lein: 2.9.8
 
@@ -64,7 +68,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
@@ -82,7 +86,7 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@11.0
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           cli: latest
           bb: latest
@@ -111,8 +115,7 @@ jobs:
         os:
           - ubuntu-latest
           - macOS-latest
-          # failing on invalid path in git checkout:
-          # 'dev-resources/snippet-snapshots/clj/normal/font-available?-s-expected.png'
+          # Failing because setup-xvfb powershell can't find clojure commands
           # - windows-latest
         java-version: [17] # ,20 to test jdk20
 
@@ -120,7 +123,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
@@ -138,7 +141,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@11.0
+        uses: DeLaGuardo/setup-clojure@12.1
         with:
           cli: latest
           bb: latest

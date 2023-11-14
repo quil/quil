@@ -40,7 +40,7 @@
      (q/text "(print :hello)" 20 150)))
 
 #?(:clj
-   (defsnippet font-available?-s
+   (defsnippet font-available-p
      "font-available?"
      {}
 
