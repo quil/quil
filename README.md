@@ -1,5 +1,8 @@
 # Quil
 
+[![Clojars Version](https://img.shields.io/clojars/v/quil)](https://clojars.org/quil)
+[![Github Test Results](https://github.com/quil/quil/actions/workflows/test.yaml/badge.svg)](https://github.com/quil/quil/actions/workflows/test.yaml)
+
 http://quil.info
 
 <img src="dev-resources/quil.png" alt="Quil Painting" title="Quil" align="right" width="250"/>
