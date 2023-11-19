@@ -4539,7 +4539,7 @@
   ([gray] (.tint (current-graphics) (float gray)))
   ([gray alpha] (.tint (current-graphics) (float gray) (float alpha)))
   ([r g b] (.tint (current-graphics) (float r) (float g) (float b)))
-  ([r g b a] (.tint (current-graphics) (float g) (float g) (float b) (float a))))
+  ([r g b a] (.tint (current-graphics) (float r) (float g) (float b) (float a))))
 
 #?(:cljs
    (defn
