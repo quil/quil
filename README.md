@@ -25,11 +25,13 @@ Current released version `4.3.1323` is compatible JDK 17+ and supports Linux amd
 
 ## Installation
 
-Create sample project using Quil lein template:
+Create sample project using a Leiningen [Quil Template](https://github.com/quil/quil-templates):
 ```bash
 lein new quil hello-quil
 ```
 Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
+
+There are also `deps-new` templates available for creating a [sketchbook](https://github.com/quil/sketchbook-template) with the Clojure CLI.
 
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
