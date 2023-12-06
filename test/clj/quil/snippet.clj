@@ -172,8 +172,8 @@
       (let [; test only snippets that don't have skip-image-diff attribute.
             elements (->> (etaoin/query-all driver {:tag :option})
                           (map-indexed (fn [ind el] {:name (etaoin/get-element-text-el driver el)
-                                                     :index ind
-                                                     :skip-image-diff? (etaoin/get-element-attr-el driver el :data-skip-image-diff)}))
+                                                    :index ind
+                                                    :skip-image-diff? (etaoin/get-element-attr-el driver el :data-skip-image-diff)}))
                           (remove #(:skip-image-diff? %))
                           (doall))]
         (doseq [{:keys [name index]} elements]
