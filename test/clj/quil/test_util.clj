@@ -25,3 +25,8 @@
   (str (path-to-snippet-snapshots platform)
        test-name
        "-actual.png"))
+
+(defn diff-image [platform test-name]
+  (str (path-to-snippet-snapshots platform)
+       test-name
+       "-difference.png"))

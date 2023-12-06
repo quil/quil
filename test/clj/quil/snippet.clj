@@ -45,9 +45,6 @@
         (println "Couldn't parse output of compare. Got following string: " err)))
     (println "Imagemagick not detected. Please install it for automated image comparison to work.")))
 
-(defn- replace-suffix [file-name suffix]
-  (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
-
 (defn save-snippet-screenshot-as-expected [name]
   (let [filename (tu/expected-image "clj" name)]
     (println "saving screenshot to " filename)
@@ -57,7 +54,7 @@
   (let [actual-file (tu/actual-image "clj" name)
         _           (q/save actual-file)
         expected-file (tu/expected-image "clj" name)
-        diff-file (replace-suffix actual-file "difference")
+        diff-file (tu/diff-image "clj" name)
         result     (compare-images expected-file actual-file diff-file)
         threshold  0.02]
     (when (number? result)
@@ -181,7 +178,7 @@
           (etaoin/refresh driver)
           (let [expected-file (tu/expected-image "cljs" name)
                 actual-file (tu/actual-image "cljs" name)
-                diff-file (replace-suffix expected-file "difference")]
+                diff-file (tu/diff-image "cljs" name)]
             (if update-screenshots?
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
               (do
