@@ -49,12 +49,12 @@
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
 
 (defn save-snippet-screenshot-as-expected [name]
-  (let [filename (str (tu/path-to-snippet-snapshots "clj") name "-expected.png")]
+  (let [filename (tu/expected-image "clj" name)]
     (println "saving screenshot to " filename)
     (q/save filename)))
 
 (defn assert-unchanged-snippet-output [name]
-  (let [actual-file (str (tu/path-to-snippet-snapshots "clj") name "-actual.png")
+  (let [actual-file (tu/actual-image "clj" name)
         _           (q/save actual-file)
         expected-file (replace-suffix actual-file "expected")
         diff-file (replace-suffix actual-file "difference")
@@ -179,7 +179,7 @@
         (doseq [{:keys [name index]} elements]
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
-          (let [expected-file  (str (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
+          (let [expected-file (tu/expected-image "cljs" name)
                 actual-file (replace-suffix expected-file "actual")
                 diff-file (replace-suffix expected-file "difference")]
             (if update-screenshots?

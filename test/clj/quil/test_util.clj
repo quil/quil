@@ -15,3 +15,13 @@
        (if (= 2 (display-density))
          "/retina/"
          "/normal/")))
+
+(defn expected-image [platform test-name]
+  (str (path-to-snippet-snapshots platform)
+       test-name
+       "-expected.png"))
+
+(defn actual-image [platform test-name]
+  (str (path-to-snippet-snapshots platform)
+       test-name
+       "-actual.png"))
