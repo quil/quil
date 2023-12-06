@@ -56,7 +56,7 @@
 (defn assert-unchanged-snippet-output [name]
   (let [actual-file (tu/actual-image "clj" name)
         _           (q/save actual-file)
-        expected-file (replace-suffix actual-file "expected")
+        expected-file (tu/expected-image "clj" name)
         diff-file (replace-suffix actual-file "difference")
         result     (compare-images expected-file actual-file diff-file)
         threshold  0.02]
@@ -180,7 +180,7 @@
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
           (let [expected-file (tu/expected-image "cljs" name)
-                actual-file (replace-suffix expected-file "actual")
+                actual-file (tu/actual-image "cljs" name)
                 diff-file (replace-suffix expected-file "difference")]
             (if update-screenshots?
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
