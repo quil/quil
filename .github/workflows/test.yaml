@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
@@ -35,7 +35,7 @@ jobs:
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@12.1
         with:
-          lein: 2.9.8
+          lein: 2.10.0
 
       - name: Cache Leiningen dependencies
         uses: actions/cache@v3
@@ -80,7 +80,7 @@ jobs:
       # Java 17 generates class file version 61.0, which is what processing has
       # been compiled with.
       - name: Setup Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
@@ -135,7 +135,7 @@ jobs:
       # Java 17 generates class file version 61.0, which is what processing has
       # been compiled with.
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
