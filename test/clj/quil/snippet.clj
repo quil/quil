@@ -147,9 +147,17 @@
                       {}))))
   (t/is true))
 
+;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
   (try
     (sh/sh "geckodriver" "--version")
+    true
+    (catch java.io.IOException e false)))
+
+;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
+(defn- chromedriver-installed? []
+  (try
+    (sh/sh "chromedriver" "--version")
     true
     (catch java.io.IOException e false)))
 
@@ -164,12 +172,15 @@
   all-cljs-snippets-produce-expected-output
   (t/is (geckodriver-installed?)
         "geckodriver is not installed. Install it and rerun the test.")
+  (t/is (chromedriver-installed?)
+        "chromedriver is not installed. Install it and rerun the test.")
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "
              "Run 'lein with-profile cljs-testing do cljsbuild once tests, ring server' and rerun this test."))
   (when (and (geckodriver-installed?)
+             (chromedriver-installed?)
              (test-file-server-running?))
-    (let [driver (etaoin/firefox)]
+    (let [driver (etaoin/chrome)]
       (etaoin/go driver "http://localhost:3000/test.html")
       (let [; test only snippets that don't have skip-image-diff attribute.
             elements (->> (etaoin/query-all driver {:tag :option})
@@ -190,3 +201,6 @@
                 (etaoin/screenshot-element driver {:tag :canvas} actual-file)
                 (assert-comparison! name expected-file actual-file diff-file))))))
       (etaoin/quit driver))))
+
+;; view image diffs with
+;; $ eog dev-resources/snippet-snapshots/cljs/normal/*difference.png
