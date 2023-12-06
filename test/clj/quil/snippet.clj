@@ -42,7 +42,9 @@
           result        (second (re-find #"\((.*)\)" err))]
       (if result
         (Double/parseDouble result)
-        (println "Couldn't parse output of compare. Got following string: " err)))
+        (do
+          (println "Couldn't parse output of compare. Got following string: " err)
+          1.0)))
     (println "Imagemagick not detected. Please install it for automated image comparison to work.")))
 
 (defn save-snippet-screenshot-as-expected [name]
