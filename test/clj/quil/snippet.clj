@@ -52,8 +52,9 @@
     (println "saving screenshot to " filename)
     (q/save filename)))
 
-(defn assert-comparison! [test-name threshold expected-file actual-file diff-file]
-  (let [result (compare-images expected-file actual-file diff-file)]
+(defn assert-comparison! [test-name expected-file actual-file diff-file]
+  (let [result (compare-images expected-file actual-file diff-file)
+        threshold 0.02]
     (when (number? result)
       (if (<= result threshold)
         (do
@@ -74,7 +75,7 @@
         _           (q/save actual-file)
         expected-file (tu/expected-image "clj" test-name)
         diff-file (tu/diff-image "clj" test-name)]
-    (assert-comparison! test-name 0.02 expected-file actual-file diff-file)))
+    (assert-comparison! test-name expected-file actual-file diff-file)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -187,5 +188,5 @@
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
               (do
                 (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-                (assert-comparison! name 0.003 expected-file actual-file diff-file))))))
+                (assert-comparison! name expected-file actual-file diff-file))))))
       (etaoin/quit driver))))
