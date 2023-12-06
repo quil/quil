@@ -1,14 +1,15 @@
 (ns quil.snippet
-  (:require [quil.core :as q]
-            [quil.snippets.all-snippets :as as]
-            [quil.test-util :as tu]
-            [clojure.java.io :as io]
-            [clojure.test :as t]
-            [clojure.java.shell :as sh]
-            [clojure.string :as string]
-            [etaoin.api :as etaoin]
-            [clj-http.client :as http]
-            clojure.pprint))
+  (:require
+   [clj-http.client :as http]
+   [clojure.java.io :as io]
+   [clojure.java.shell :as sh]
+   [clojure.pprint]
+   [clojure.string :as string]
+   [clojure.test :as t]
+   [etaoin.api :as etaoin]
+   [quil.core :as q]
+   [quil.snippets.all-snippets :as as]
+   [quil.test-util :as tu]))
 
 (def default-size [500 500])
 
