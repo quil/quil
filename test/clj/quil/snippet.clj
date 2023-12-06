@@ -52,13 +52,8 @@
     (println "saving screenshot to " filename)
     (q/save filename)))
 
-(defn assert-unchanged-snippet-output [name]
-  (let [actual-file (tu/actual-image "clj" name)
-        _           (q/save actual-file)
-        expected-file (tu/expected-image "clj" name)
-        diff-file (tu/diff-image "clj" name)
-        result     (compare-images expected-file actual-file diff-file)
-        threshold  0.02]
+(defn assert-comparison! [test-name threshold expected-file actual-file diff-file]
+  (let [result (compare-images expected-file actual-file diff-file)]
     (when (number? result)
       (if (<= result threshold)
         (do
@@ -71,7 +66,15 @@
                expected-file
                "+append"
                diff-file))
-      (t/is (<= result threshold)))))
+      (t/is (<= result threshold)
+            (str "Image differences in \"" test-name "\", see: " diff-file)))))
+
+(defn assert-unchanged-snippet-output [test-name]
+  (let [actual-file (tu/actual-image "clj" test-name)
+        _           (q/save actual-file)
+        expected-file (tu/expected-image "clj" test-name)
+        diff-file (tu/diff-image "clj" test-name)]
+    (assert-comparison! test-name 0.02 expected-file actual-file diff-file)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -165,8 +168,7 @@
              "Run 'lein with-profile cljs-testing do cljsbuild once tests, ring server' and rerun this test."))
   (when (and (geckodriver-installed?)
              (test-file-server-running?))
-    (let [driver (etaoin/firefox)
-          threshold 0.003]
+    (let [driver (etaoin/firefox)]
       (etaoin/go driver "http://localhost:3000/test.html")
       (let [; test only snippets that don't have skip-image-diff attribute.
             elements (->> (etaoin/query-all driver {:tag :option})
@@ -185,11 +187,5 @@
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
               (do
                 (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-                (let [result (compare-images expected-file actual-file diff-file)]
-                  (when (number? result)
-                    (when (<= result threshold)
-                      (io/delete-file (io/file actual-file))
-                      (io/delete-file (io/file diff-file)))
-                    (t/is (<= result threshold)
-                          (str "Image comparison for " name " not within acceptable threshold: " threshold)))))))))
+                (assert-comparison! name 0.003 expected-file actual-file diff-file))))))
       (etaoin/quit driver))))
