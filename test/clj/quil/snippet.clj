@@ -49,12 +49,12 @@
   (string/replace file-name #"(\w+)\.(\w+)$" (str suffix ".$2")))
 
 (defn save-snippet-screenshot-as-expected [name]
-  (let [filename (str "dev-resources/" (tu/path-to-snippet-snapshots "clj") name "-expected.png")]
+  (let [filename (str (tu/path-to-snippet-snapshots "clj") name "-expected.png")]
     (println "saving screenshot to " filename)
     (q/save filename)))
 
 (defn assert-unchanged-snippet-output [name]
-  (let [actual-file (str "dev-resources/" (tu/path-to-snippet-snapshots "clj") name "-actual.png")
+  (let [actual-file (str (tu/path-to-snippet-snapshots "clj") name "-actual.png")
         _           (q/save actual-file)
         expected-file (replace-suffix actual-file "expected")
         diff-file (replace-suffix actual-file "difference")
@@ -65,7 +65,7 @@
         (do
           (io/delete-file (io/file actual-file))
           (io/delete-file (io/file diff-file)))
-        ; add actual and expected images to difference image for easier comparison
+        ;; add actual and expected images to difference image for easier comparison
         (sh/sh "convert"
                actual-file
                diff-file
@@ -179,7 +179,7 @@
         (doseq [{:keys [name index]} elements]
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
-          (let [expected-file  (str "dev-resources/" (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
+          (let [expected-file  (str (tu/path-to-snippet-snapshots "cljs") name "-expected.png")
                 actual-file (replace-suffix expected-file "actual")
                 diff-file (replace-suffix expected-file "difference")]
             (if update-screenshots?

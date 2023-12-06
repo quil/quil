@@ -10,7 +10,8 @@
       1)))
 
 (defn path-to-snippet-snapshots [platform]
-  (str "snippet-snapshots/" platform
+  (str "dev-resources/snippet-snapshots/"
+       platform
        (if (= 2 (display-density))
          "/retina/"
          "/normal/")))

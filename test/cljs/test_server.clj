@@ -92,7 +92,7 @@
   (GET "/" req root-page)
   (GET "/manual" req manual-page)
   (GET "/fullscreen" req fullscreen-page)
-  (route/files "/snapshots" {:root (str "dev-resources/" (tu/path-to-snippet-snapshots "cljs"))})
+  (route/files "/snapshots" {:root (str (tu/path-to-snippet-snapshots "cljs"))})
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))
