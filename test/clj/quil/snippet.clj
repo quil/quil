@@ -61,12 +61,14 @@
           (io/delete-file (io/file actual-file))
           (io/delete-file (io/file diff-file)))
         ;; add actual and expected images to difference image for easier comparison
-        (sh/sh "convert"
-               actual-file
-               diff-file
-               expected-file
-               "+append"
-               diff-file))
+        (do (sh/sh "convert"
+                   actual-file
+                   diff-file
+                   expected-file
+                   "+append"
+                   diff-file)
+            ;; identify output to verify image sizes are equivalent
+            (print (:out (sh/sh "identify" actual-file expected-file)))))
       (t/is (<= result threshold)
             (str "Image differences in \"" test-name "\", see: " diff-file)))))
 
@@ -161,6 +163,12 @@
     true
     (catch java.io.IOException e false)))
 
+(defn- identify-installed? []
+  (try
+    (sh/sh "identify" "--version")
+    true
+    (catch java.io.IOException e false)))
+
 (defn- test-file-server-running? []
   (try
     (= (:status (http/get "http://localhost:3000/test.html"
@@ -170,6 +178,8 @@
 
 (t/deftest ^:manual
   all-cljs-snippets-produce-expected-output
+  (t/is (identify-installed?)
+        "imagemagick identify is not installed. Install it and rerun the test")
   (t/is (geckodriver-installed?)
         "geckodriver is not installed. Install it and rerun the test.")
   (t/is (chromedriver-installed?)
