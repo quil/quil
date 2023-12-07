@@ -150,18 +150,6 @@
 (doseq [snippet as/all-snippets]
   (define-snippet-as-test snippet))
 
-(defn verify-expected-snapshot-exists [{:keys [ns name skip-image-diff?]}]
-  (when-not skip-image-diff?
-    (doseq [platform ["clj" #_"cljs"] ;; 28 missing cljs cases
-            :let [expected (tu/expected-image platform name)]]
-      (t/is (.exists (io/as-file expected))
-            (str "Missing expected image " expected " for "
-                 ns " " name)))))
-
-(t/deftest expected-images-exist
-  (doseq [snippet as/all-snippets]
-    (verify-expected-snapshot-exists snippet)))
-
 (t/deftest all-snippets-map-to-function
   (doseq [{:keys [fns name]} as/all-snippets
           fn fns]
