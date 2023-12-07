@@ -20,16 +20,16 @@
 (def tests-in-set 50)
 (def current-test (atom -1))
 
-(defn- imagemagick-installed? []
+(defn installed? [& cmds]
   (try
-    (sh/sh "compare" "-version")
-    (sh/sh "convert" "-version")
-    (sh/sh "identify" "-version")
+    (apply sh/sh cmds)
     true
     (catch java.io.IOException e false)))
 
 (defn check-dependencies [f]
-  (if (imagemagick-installed?)
+  (if (and (installed? "compare" "-version")
+           (installed? "convert" "-version")
+           (installed? "identify" "-version"))
     (f)
     (do
       (println "Imagemagick not detected. Please install it for automated image comparison to work.")
@@ -159,17 +159,11 @@
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
-  (try
-    (sh/sh "geckodriver" "--version")
-    true
-    (catch java.io.IOException e false)))
+  (installed? "geckodriver" "--version"))
 
 ;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
 (defn- chromedriver-installed? []
-  (try
-    (sh/sh "chromedriver" "--version")
-    true
-    (catch java.io.IOException e false)))
+  (installed? "chromedriver" "--version"))
 
 (defn- test-file-server-running? []
   (try
