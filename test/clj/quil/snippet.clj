@@ -148,13 +148,11 @@
         (doseq [{:keys [name index]} elements]
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
-          (let [expected-file (tu/expected-image "cljs" name)
-                actual-file (tu/actual-image "cljs" name)]
+          (let [actual-file (tu/actual-image "cljs" name)]
+            (etaoin/screenshot-element driver {:tag :canvas} actual-file)
             (if update-screenshots?
-              (etaoin/screenshot-element driver {:tag :canvas} expected-file)
-              (do
-                (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-                (tu/assert-match-reference! name "cljs" actual-file))))))
+              (.renameTo (io/file actual-file) (io/file (tu/expected-image "cljs" name)))
+              (tu/assert-match-reference! name "cljs" actual-file)))))
       (etaoin/quit driver))))
 
 ;; view image diffs with
