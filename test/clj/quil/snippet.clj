@@ -42,8 +42,10 @@
     (println "saving screenshot to " filename)
     (q/save filename)))
 
-(defn assert-comparison! [test-name expected-file actual-file diff-file]
-  (let [result (tu/compare-images expected-file actual-file diff-file)
+(defn assert-match-reference! [test-name platform actual-file]
+  (let [expected-file (tu/expected-image platform test-name)
+        diff-file (tu/diff-image platform test-name)
+        result (tu/compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
         identify (:out (sh/sh "identify" actual-file expected-file))
         threshold 0.02]
@@ -64,11 +66,9 @@
                  identify)))))
 
 (defn assert-unchanged-snippet-output [test-name]
-  (let [actual-file (tu/actual-image "clj" test-name)
-        _           (q/save actual-file)
-        expected-file (tu/expected-image "clj" test-name)
-        diff-file (tu/diff-image "clj" test-name)]
-    (assert-comparison! test-name expected-file actual-file diff-file)))
+  (let [actual-file (tu/actual-image "clj" test-name)]
+    (q/save actual-file)
+    (assert-match-reference! test-name "clj" actual-file)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -172,13 +172,12 @@
           (etaoin/go driver (str "http://localhost:3000/test.html#" index))
           (etaoin/refresh driver)
           (let [expected-file (tu/expected-image "cljs" name)
-                actual-file (tu/actual-image "cljs" name)
-                diff-file (tu/diff-image "cljs" name)]
+                actual-file (tu/actual-image "cljs" name)]
             (if update-screenshots?
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
               (do
                 (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-                (assert-comparison! name expected-file actual-file diff-file))))))
+                (assert-match-reference! name "cljs" actual-file))))))
       (etaoin/quit driver))))
 
 ;; view image diffs with
