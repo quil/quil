@@ -62,6 +62,8 @@
 
 (defn assert-comparison! [test-name expected-file actual-file diff-file]
   (let [result (compare-images expected-file actual-file diff-file)
+        ;; identify output to verify image sizes are equivalent
+        identify (:out (sh/sh "identify" actual-file expected-file))
         threshold 0.02]
     (when (number? result)
       (if (<= result threshold)
@@ -77,8 +79,7 @@
                diff-file))
       (t/is (<= result threshold)
             (str "Image differences in \"" test-name "\", see: " diff-file "\n"
-                 ;; identify output to verify image sizes are equivalent
-                 (:out (sh/sh "identify" actual-file expected-file)))))))
+                 identify)))))
 
 (defn assert-unchanged-snippet-output [test-name]
   (let [actual-file (tu/actual-image "clj" test-name)
