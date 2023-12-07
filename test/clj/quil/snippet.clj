@@ -37,15 +37,12 @@
 
 (t/use-fixtures :once check-dependencies)
 
-(defn save-snippet-screenshot-as-expected [name]
-  (let [filename (tu/expected-image "clj" name)]
-    (println "saving screenshot to " filename)
-    (q/save filename)))
-
-(defn assert-unchanged-snippet-output [test-name]
-  (let [actual-file (tu/actual-image "clj" test-name)]
-    (q/save actual-file)
-    (tu/assert-match-reference! test-name "clj" actual-file)))
+(defn verify-reference-or-update [test-name platform actual-file]
+  (if update-screenshots?
+    (let [expected (tu/expected-image platform name)]
+      (println "updating reference image: " expected)
+      (.renameTo (io/file actual-file) (io/file expected)))
+    (tu/assert-match-reference! test-name platform actual-file)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -71,9 +68,9 @@
                (q/background 255)
                ((:body snippet))
                (when-not (:skip-image-diff? snippet)
-                 (if update-screenshots?
-                   (save-snippet-screenshot-as-expected (:name snippet))
-                   (assert-unchanged-snippet-output (:name snippet))))
+                 (let [actual-file (tu/actual-image "clj" (:name snippet))]
+                   (q/save actual-file)
+                   (verify-reference-or-update (:name snippet) "clj" actual-file)))
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
@@ -150,9 +147,7 @@
           (etaoin/refresh driver)
           (let [actual-file (tu/actual-image "cljs" name)]
             (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-            (if update-screenshots?
-              (.renameTo (io/file actual-file) (io/file (tu/expected-image "cljs" name)))
-              (tu/assert-match-reference! name "cljs" actual-file)))))
+            (verify-reference-or-update name "cljs" actual-file))))
       (etaoin/quit driver))))
 
 ;; view image diffs with
