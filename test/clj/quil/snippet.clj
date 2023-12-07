@@ -42,33 +42,10 @@
     (println "saving screenshot to " filename)
     (q/save filename)))
 
-(defn assert-match-reference! [test-name platform actual-file]
-  (let [expected-file (tu/expected-image platform test-name)
-        diff-file (tu/diff-image platform test-name)
-        result (tu/compare-images expected-file actual-file diff-file)
-        ;; identify output to verify image sizes are equivalent
-        identify (:out (sh/sh "identify" actual-file expected-file))
-        threshold 0.02]
-    (when (number? result)
-      (if (<= result threshold)
-        (do
-          (io/delete-file (io/file actual-file))
-          (io/delete-file (io/file diff-file)))
-        ;; add actual and expected images to difference image for easier comparison
-        (sh/sh "convert"
-               actual-file
-               diff-file
-               expected-file
-               "+append"
-               diff-file))
-      (t/is (<= result threshold)
-            (str "Image differences in \"" test-name "\", see: " diff-file "\n"
-                 identify)))))
-
 (defn assert-unchanged-snippet-output [test-name]
   (let [actual-file (tu/actual-image "clj" test-name)]
     (q/save actual-file)
-    (assert-match-reference! test-name "clj" actual-file)))
+    (tu/assert-match-reference! test-name "clj" actual-file)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -177,7 +154,7 @@
               (etaoin/screenshot-element driver {:tag :canvas} expected-file)
               (do
                 (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-                (assert-match-reference! name "cljs" actual-file))))))
+                (tu/assert-match-reference! name "cljs" actual-file))))))
       (etaoin/quit driver))))
 
 ;; view image diffs with
