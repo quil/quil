@@ -151,9 +151,9 @@
   (define-snippet-as-test snippet))
 
 (defn verify-expected-snapshot-exists [{:keys [ns name skip-image-diff?]}]
-  (doseq [platform ["clj" #_"cljs"] ;; 28 missing cljs cases
-          :let [expected (tu/expected-image platform name)]]
-    (when-not skip-image-diff?
+  (when-not skip-image-diff?
+    (doseq [platform ["clj" #_"cljs"] ;; 28 missing cljs cases
+            :let [expected (tu/expected-image platform name)]]
       (t/is (.exists (io/as-file expected))
             (str "Missing expected image " expected " for "
                  ns " " name)))))
