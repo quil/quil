@@ -37,31 +37,13 @@
 
 (t/use-fixtures :once check-dependencies)
 
-(defn- compare-images
-  "Compares images at file paths `expected` and `actual` and produces another
-  image at path `difference` which highlights any differences in the images.
-
-  Returns a number between `0` and `1` indicating a measure of the difference,
-  with `0` indicating the images are the same, and `nil` if imagemagick not
-  installed."
-  [expected actual difference]
-  ;; use imagemagick compare executable for comparison
-  ;; see https://imagemagick.org/script/compare.php
-  (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
-        result        (second (re-find #"\((.*)\)" err))]
-    (if result
-      (Double/parseDouble result)
-      (do
-        (println "Couldn't parse output of compare. Got following string: " err)
-        1.0))))
-
 (defn save-snippet-screenshot-as-expected [name]
   (let [filename (tu/expected-image "clj" name)]
     (println "saving screenshot to " filename)
     (q/save filename)))
 
 (defn assert-comparison! [test-name expected-file actual-file diff-file]
-  (let [result (compare-images expected-file actual-file diff-file)
+  (let [result (tu/compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
         identify (:out (sh/sh "identify" actual-file expected-file))
         threshold 0.02]
