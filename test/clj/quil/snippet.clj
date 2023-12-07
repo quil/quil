@@ -69,16 +69,16 @@
           (io/delete-file (io/file actual-file))
           (io/delete-file (io/file diff-file)))
         ;; add actual and expected images to difference image for easier comparison
-        (do (sh/sh "convert"
-                   actual-file
-                   diff-file
-                   expected-file
-                   "+append"
-                   diff-file)
-            ;; identify output to verify image sizes are equivalent
-            (print (:out (sh/sh "identify" actual-file expected-file)))))
+        (sh/sh "convert"
+               actual-file
+               diff-file
+               expected-file
+               "+append"
+               diff-file))
       (t/is (<= result threshold)
-            (str "Image differences in \"" test-name "\", see: " diff-file)))))
+            (str "Image differences in \"" test-name "\", see: " diff-file "\n"
+                 ;; identify output to verify image sizes are equivalent
+                 (:out (sh/sh "identify" actual-file expected-file)))))))
 
 (defn assert-unchanged-snippet-output [test-name]
   (let [actual-file (tu/actual-image "clj" test-name)
