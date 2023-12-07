@@ -17,3 +17,11 @@
   (doseq [snippet as/all-snippets]
     (verify-expected-snapshot-exists snippet)))
 
+(t/deftest all-snippets-map-to-function
+  (doseq [{:keys [fns name]} as/all-snippets
+          fn fns]
+    (when (nil? (ns-resolve 'quil.core (symbol fn)))
+      (throw (ex-info (str "Snippet '" name "' matches to non-existent function '" fn "'")
+                      {}))))
+  (t/is true))
+

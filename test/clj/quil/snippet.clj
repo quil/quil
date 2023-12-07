@@ -150,14 +150,6 @@
 (doseq [snippet as/all-snippets]
   (define-snippet-as-test snippet))
 
-(t/deftest all-snippets-map-to-function
-  (doseq [{:keys [fns name]} as/all-snippets
-          fn fns]
-    (when (nil? (ns-resolve 'quil.core (symbol fn)))
-      (throw (ex-info (str "Snippet '" name "' matches to non-existent function '" fn "'")
-                      {}))))
-  (t/is true))
-
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
   (installed? "geckodriver" "--version"))
