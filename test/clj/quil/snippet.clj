@@ -24,8 +24,18 @@
   (try
     (sh/sh "compare" "-version")
     (sh/sh "convert" "-version")
+    (sh/sh "identify" "-version")
     true
     (catch java.io.IOException e false)))
+
+(defn check-dependencies [f]
+  (if (imagemagick-installed?)
+    (f)
+    (do
+      (println "Imagemagick not detected. Please install it for automated image comparison to work.")
+      false)))
+
+(t/use-fixtures :once check-dependencies)
 
 (defn- compare-images
   "Compares images at file paths `expected` and `actual` and produces another
@@ -37,15 +47,13 @@
   [expected actual difference]
   ;; use imagemagick compare executable for comparison
   ;; see https://imagemagick.org/script/compare.php
-  (if (imagemagick-installed?)
-    (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
-          result        (second (re-find #"\((.*)\)" err))]
-      (if result
-        (Double/parseDouble result)
-        (do
-          (println "Couldn't parse output of compare. Got following string: " err)
-          1.0)))
-    (println "Imagemagick not detected. Please install it for automated image comparison to work.")))
+  (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
+        result        (second (re-find #"\((.*)\)" err))]
+    (if result
+      (Double/parseDouble result)
+      (do
+        (println "Couldn't parse output of compare. Got following string: " err)
+        1.0))))
 
 (defn save-snippet-screenshot-as-expected [name]
   (let [filename (tu/expected-image "clj" name)]
@@ -163,12 +171,6 @@
     true
     (catch java.io.IOException e false)))
 
-(defn- identify-installed? []
-  (try
-    (sh/sh "identify" "--version")
-    true
-    (catch java.io.IOException e false)))
-
 (defn- test-file-server-running? []
   (try
     (= (:status (http/get "http://localhost:3000/test.html"
@@ -178,8 +180,6 @@
 
 (t/deftest ^:manual
   all-cljs-snippets-produce-expected-output
-  (t/is (identify-installed?)
-        "imagemagick identify is not installed. Install it and rerun the test")
   (t/is (geckodriver-installed?)
         "geckodriver is not installed. Install it and rerun the test.")
   (t/is (chromedriver-installed?)
