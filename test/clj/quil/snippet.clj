@@ -49,7 +49,8 @@
         snip-name (str (:ns snippet)
                        "/"
                        (:name snippet))
-        opts (:opts snippet)]
+        opts (:opts snippet)
+        actual-file (tu/actual-image "clj" (:name snippet))]
     (println "Test:" snip-name)
     (when manual?
       (clojure.pprint/pprint (:body-str snippet)))
@@ -68,9 +69,7 @@
                (q/background 255)
                ((:body snippet))
                (when-not (:skip-image-diff? snippet)
-                 (let [actual-file (tu/actual-image "clj" (:name snippet))]
-                   (q/save actual-file)
-                   (verify-reference-or-update (:name snippet) "clj" actual-file)))
+                 (q/save actual-file))
                (catch Exception e
                  (println "Error" e)
                  (.printStackTrace e)
@@ -79,7 +78,11 @@
                  (when (not manual?)
                    (q/exit)))))
      :on-close #(deliver result nil))
-    (t/is (nil? @result))))
+    ;; block on @result promise and assert empty
+    (t/is (nil? @result))
+    ;; verify image matches reference on testing thread
+    (when-not (:skip-image-diff? snippet)
+      (verify-reference-or-update (:name snippet) "clj" actual-file))))
 
 (defn define-snippet-as-test [{:keys [ns name opts setup body] :as snippet}]
   (let [test-name (str (string/replace ns "." "_")
