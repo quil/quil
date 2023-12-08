@@ -60,7 +60,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: snippet-differences
-          path: dev-resources/snippet-snapshots/*/*/*-difference.png
+          path: |
+            dev-resources/snippet-snapshots/*/*/*-actual.png
+            dev-resources/snippet-snapshots/*/*/*-difference.png
 
   test-cljs:
     name: Test ClojureScript
