@@ -39,7 +39,7 @@
 
 (defn verify-reference-or-update [test-name platform actual-file]
   (if update-screenshots?
-    (let [expected (tu/expected-image platform name)]
+    (let [expected (tu/expected-image platform test-name)]
       (println "updating reference image: " expected)
       (.renameTo (io/file actual-file) (io/file expected)))
     (tu/assert-match-reference! test-name platform actual-file)))
