@@ -51,7 +51,7 @@
                        (:name snippet))
         opts (:opts snippet)
         actual-file (tu/actual-image "clj" (:name snippet))]
-    (println "Test:" snip-name)
+    ;; (println "Test:" snip-name)
     (when manual?
       (clojure.pprint/pprint (:body-str snippet)))
     (q/sketch
