@@ -55,6 +55,13 @@ jobs:
         with:
           run: lein test
 
+      - name: Upload Test Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: snippet-differences
+          path: dev-resources/snippet-snapshots/**difference.png
+
   test-cljs:
     name: Test ClojureScript
 
