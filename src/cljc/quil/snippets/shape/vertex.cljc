@@ -186,14 +186,12 @@
      {:renderer :p3d
       :setup (q/set-state! :image (q/load-image "https://placekitten.com/100/100"))}
 
-     (q/background 255)
-
-     (if (zero? (.-width (q/state :image)))
-       (q/text "Loading" 10 10)
+     (if (q/loaded? (q/state :image))
        (let [gr (q/state :image)]
          (q/with-translation [50 0]
            (q/texture gr)
-           (q/plane 200 200))))))
+           (q/plane 200 200)))
+       (q/text "Loading" 10 10))))
 
 #?(:clj
    (defsnippet texture-mode
