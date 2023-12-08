@@ -8,7 +8,9 @@
 #?(:clj
    (defsnippet available-fonts
      "available-fonts"
-     {}
+     ;; font list is dependent on installed fonts which varies wildly between
+     ;; individual computers and operating systems
+     {:skip-image-diff? true}
 
      (q/background 255)
      (q/fill 0)
