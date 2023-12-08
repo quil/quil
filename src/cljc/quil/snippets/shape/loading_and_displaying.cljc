@@ -8,6 +8,7 @@
 (defsnippet shape
   ["shape" "load-shape"]
   {:renderer :p3d
+   :settings (fn [] (q/smooth 4))
    :setup (let [sh #?(:clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
                       :cljs (q/load-shape "octahedron.obj"))]
             (q/set-state! :shp sh))}
