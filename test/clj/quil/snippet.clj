@@ -62,8 +62,8 @@
               ((:setup snippet))
               (q/frame-rate 5))
      :mouse-clicked (:mouse-clicked snippet)
-     :settings (fn []
-                 (:settings opts))
+     :settings (fn [] (when-let [settings (:settings opts)]
+                       (settings)))
      :draw (fn []
              (try
                (q/background 255)
