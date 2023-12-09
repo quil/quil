@@ -1,6 +1,7 @@
 (ns quil.snippet
   (:require
    [clj-http.client :as http]
+   [clojure.edn :as edn]
    [clojure.pprint]
    [clojure.string :as string]
    [clojure.test :as t]
@@ -89,7 +90,21 @@
     (= (:status (http/get "http://localhost:3000/test.html"
                           {:throw-exceptions false}))
        200)
-    (catch java.lang.Exception e false)))
+    (catch java.lang.Exception _e false)))
+
+(defn snippet-elements [driver]
+  (->> (etaoin/query-all driver {:tag :option})
+       (map-indexed
+        (fn [ind el]
+          {:name (etaoin/get-element-text-el driver el)
+           :index ind
+           :skip-image-diff?
+           (etaoin/get-element-attr-el driver el :data-skip-image-diff)
+           :accepted-diff-threshold
+           (edn/read-string (etaoin/get-element-attr-el driver el :data-accepted-diff-threshold))}))
+       ;; test only snippets that don't have skip-image-diff attribute.
+       (remove :skip-image-diff?)
+       (doall)))
 
 (t/deftest ^:manual
   all-cljs-snippets-produce-expected-output
@@ -105,19 +120,12 @@
              (test-file-server-running?))
     (let [driver (etaoin/chrome)]
       (etaoin/go driver "http://localhost:3000/test.html")
-      (let [; test only snippets that don't have skip-image-diff attribute.
-            elements (->> (etaoin/query-all driver {:tag :option})
-                          (map-indexed (fn [ind el] {:name (etaoin/get-element-text-el driver el)
-                                                    :index ind
-                                                    :skip-image-diff? (etaoin/get-element-attr-el driver el :data-skip-image-diff)}))
-                          (remove #(:skip-image-diff? %))
-                          (doall))]
-        (doseq [{:keys [name index]} elements]
-          (etaoin/go driver (str "http://localhost:3000/test.html#" index))
-          (etaoin/refresh driver)
-          (let [actual-file (tu/actual-image "cljs" name)]
-            (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-            (tu/verify-reference-or-update name "cljs" actual-file 0.03))))
+      (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements driver)]
+        (etaoin/go driver (str "http://localhost:3000/test.html#" index))
+        (etaoin/refresh driver)
+        (let [actual-file (tu/actual-image "cljs" name)]
+          (etaoin/screenshot-element driver {:tag :canvas} actual-file)
+          (tu/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
       (etaoin/quit driver))))
 
 ;; view image diffs with
