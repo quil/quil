@@ -33,7 +33,9 @@
           (comment "blend with image")
           (q/blend im 0 0 50 50 (* col 55) (+ 170 (* row 55)) 50 50 mode)
           (comment "blend image to image")
-          (q/blend im (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode))))))
+          (q/blend im (q/current-graphics) 0 0 50 50 (* col 55) (+ 340 (* row 55)) 50 50 mode)))))
+
+  (q/no-loop))
 
 (defsnippet copy
   "copy"
@@ -55,7 +57,9 @@
     (q/copy im [0 0 100 100] [120 0 100 100])
     (comment "copy top left 50x50 square of sketch ")
     (comment "to the 100x100 square at [240, 0] position")
-    (q/copy [0 0 50 50] [240 0 100 100])))
+    (q/copy [0 0 50 50] [240 0 100 100]))
+
+  (q/no-loop))
 
 (defsnippet image-filter
   "image-filter"
@@ -94,7 +98,9 @@
         (let [mode (nth (nth splitted row) col)
               clone (q/get-pixel orig)]
           (apply q/image-filter clone mode)
-          (q/image clone (* col 120) (* 120 (inc row))))))))
+          (q/image clone (* col 120) (* 120 (inc row)))))))
+
+  (q/no-loop))
 
 (defsnippet display-filter
   "display-filter"
@@ -137,7 +143,9 @@
           (q/with-graphics dest
             (q/image orig 0 0)
             (apply q/display-filter mode))
-          (q/image dest (* col 120) (* 120 (inc row))))))))
+          (q/image dest (* col 120) (* 120 (inc row)))))))
+
+  (q/no-loop))
 
 #?(:clj
    (defsnippet filter-shader
@@ -191,7 +199,9 @@
     (q/image (q/get-pixel) 400 400)
     (q/fill (q/get-pixel 50 50))
     (q/rect 120 240 100 100)
-    (q/image (q/get-pixel 0 0 50 50) 240 240)))
+    (q/image (q/get-pixel 0 0 50 50) 240 240))
+
+  (q/no-loop))
 
 (defsnippet pixels-update-pixels
   ["pixels" "update-pixels"]
@@ -228,7 +238,9 @@
       (dotimes [i half]
         #?(:clj (aset-int px (+ i half) (aget px i))
            :cljs (aset px (+ i half) (aget px i)))))
-    (q/update-pixels)))
+    (q/update-pixels))
+
+  (q/no-loop))
 
 (defsnippet set-image
   ["set-image" "set-pixel"]
@@ -243,5 +255,7 @@
     #?(:cljs (q/update-pixels im))
 
     (comment "draw image on sketch")
-    (q/set-image 10 10 im)))
+    (q/set-image 10 10 im))
+
+  (q/no-loop))
 

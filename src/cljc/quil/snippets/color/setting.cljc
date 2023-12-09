@@ -32,7 +32,11 @@
     (q/with-graphics gr
       (comment "semitransparent blue")
       (q/background 0 0 255 120))
-    (q/image gr 210 210)))
+    (q/image gr 210 210)
+
+    ;; FIXME: q/create-graphics inside of draw is creates a canvas element for
+    ;; each frame, so stop the loop after displaying
+    (q/no-loop)))
 
 ;; FIXME: flakey snippet, presumably caused by async load-image
 (defsnippet background-image
@@ -146,4 +150,6 @@
       (q/clear)
       (q/fill 0 0 255)
       (q/triangle 25 25 175 25 25 175))
-    (q/image g 100 100)))
+    (q/image g 100 100))
+
+  (q/no-loop))

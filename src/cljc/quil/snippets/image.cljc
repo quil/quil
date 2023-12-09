@@ -19,7 +19,9 @@
 
     (comment "draw image twice")
     (q/image im 0 0)
-    (q/image im 50 50)))
+    (q/image im 50 50))
+
+  (q/no-loop))
 
 (defsnippet resize-image
   "resize"
@@ -35,4 +37,6 @@
 
     (comment "resize image from 100x100 to 50x50 and draw again")
     (q/resize im 50 50)
-    (q/image im 100 100)))
+    (q/image im 100 100))
+
+  (q/no-loop))

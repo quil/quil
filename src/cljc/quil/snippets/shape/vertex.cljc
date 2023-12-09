@@ -71,7 +71,9 @@
       (q/vertex 80 280)
       (q/vertex 80 120)
       (q/end-shape))
-    (q/image gr 0 0)))
+    (q/image gr 0 0))
+
+  (q/no-loop))
 
 (defsnippet bezier-vertex
   "bezier-vertex"
@@ -301,4 +303,6 @@
     (q/vertex 200 0 0 100 0)
     (q/vertex 200 0 100 100 100)
     (q/vertex 100 0 100 0 100)
-    (q/end-shape :close)))
+    (q/end-shape :close))
+
+  (q/no-loop))
