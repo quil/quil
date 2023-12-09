@@ -3793,8 +3793,13 @@
   problem. Grouping many calls to [[point]] or [[set-pixel]] together can also
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
-  ([^PImage img x y c]
-   (.set img (int x) (int y) (int c))))
+  #?(:clj
+     ([^PImage img x y c]
+      (.set img (int x) (int y) (int c)))
+     ;; https://p5js.org/reference/#/p5/set - in p5js set can be a a pixel
+     ;; array, p5.Color or p5.Image so avoid casting c.
+     :cljs
+     ([img x y c] (.set img (int x) (int y) c))))
 
 (defn
   ^{:requires-bindings true
