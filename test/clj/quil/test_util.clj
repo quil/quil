@@ -73,3 +73,18 @@
       (t/is (<= result threshold)
             (str "Image differences in \"" test-name "\", see: " diff-file "\n"
                  identify)))))
+
+(defn installed? [& cmds]
+  (try
+    (apply sh/sh cmds)
+    true
+    (catch java.io.IOException _e false)))
+
+(defn check-dependencies [f]
+  (if (and (installed? "compare" "-version")
+           (installed? "convert" "-version")
+           (installed? "identify" "-version"))
+    (f)
+    (do
+      (println "Imagemagick not detected. Please install it for automated image comparison to work.")
+      false)))

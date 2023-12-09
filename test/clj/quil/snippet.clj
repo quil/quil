@@ -2,7 +2,6 @@
   (:require
    [clj-http.client :as http]
    [clojure.java.io :as io]
-   [clojure.java.shell :as sh]
    [clojure.pprint]
    [clojure.string :as string]
    [clojure.test :as t]
@@ -17,22 +16,7 @@
 
 (def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
 
-(defn installed? [& cmds]
-  (try
-    (apply sh/sh cmds)
-    true
-    (catch java.io.IOException e false)))
-
-(defn check-dependencies [f]
-  (if (and (installed? "compare" "-version")
-           (installed? "convert" "-version")
-           (installed? "identify" "-version"))
-    (f)
-    (do
-      (println "Imagemagick not detected. Please install it for automated image comparison to work.")
-      false)))
-
-(t/use-fixtures :once check-dependencies)
+(t/use-fixtures :once tu/check-dependencies)
 
 (defn verify-reference-or-update [test-name platform actual-file threshold]
   (if update-screenshots?
@@ -104,11 +88,11 @@
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
-  (installed? "geckodriver" "--version"))
+  (tu/installed? "geckodriver" "--version"))
 
 ;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
 (defn- chromedriver-installed? []
-  (installed? "chromedriver" "--version"))
+  (tu/installed? "chromedriver" "--version"))
 
 (defn- test-file-server-running? []
   (try
