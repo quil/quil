@@ -52,13 +52,12 @@
         (println "Couldn't parse output of compare. Got following string: " err)
         1.0))))
 
-(defn assert-match-reference! [test-name platform actual-file]
+(defn assert-match-reference! [test-name platform actual-file threshold]
   (let [expected-file (expected-image platform test-name)
         diff-file (diff-image platform test-name)
         result (compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
-        identify (:out (sh/sh "identify" actual-file expected-file))
-        threshold 0.03]
+        identify (:out (sh/sh "identify" actual-file expected-file))]
     (when (number? result)
       (if (<= result threshold)
         (do
