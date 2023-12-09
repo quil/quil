@@ -17,9 +17,6 @@
 
 (def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
 
-(def tests-in-set 50)
-(def current-test (atom -1))
-
 (defn installed? [& cmds]
   (try
     (apply sh/sh cmds)
@@ -91,12 +88,7 @@
                        name)]
     (intern 'quil.snippet
             (vary-meta (symbol test-name) assoc
-                       :test #(run-snippet-as-test snippet)
-                       :test-set (let [cur (swap! current-test inc)
-                                       set (quot cur tests-in-set)]
-                                   (when (zero? (mod cur tests-in-set))
-                                     (println "Test set" set (str " Run with: lein test :set-" set)))
-                                   set))
+                       :test #(run-snippet-as-test snippet))
             (fn []
               (q/sketch
                :title name
