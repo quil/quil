@@ -21,6 +21,8 @@
              [row font] (map-indexed vector fonts)]
        (q/text font (+ 20 (* col 100)) (+ 20 (* row 10))))))
 
+;; FIXME: reporting
+;; "Georgia" is not available, so another font will be used. Use PFont.list() to show available fonts.
 #?(:clj
    (defsnippet create-font
      "create-font"
@@ -115,6 +117,8 @@
      (q/text-char \Q 0 0)
      (q/text-char \W 0 0 10)))
 
+;; FIXME: reporting
+;; "Courier New" is not available, so another font will be used. Use PFont.list() to show available fonts.
 (defsnippet text-font
   "text-font"
   {}

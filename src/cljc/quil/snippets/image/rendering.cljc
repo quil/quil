@@ -5,6 +5,8 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
+;; FIXME: reporting a warning of:
+;; blendMode(DIFFERENCE) is not supported by this renderer
 (defsnippet blend-mode
   "blend-mode"
   {:renderer :p2d}
