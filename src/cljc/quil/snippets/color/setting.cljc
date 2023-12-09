@@ -34,6 +34,7 @@
       (q/background 0 0 255 120))
     (q/image gr 210 210)))
 
+;; FIXME: flakey snippet, presumably caused by async load-image
 (defsnippet background-image
   "background-image"
   {:setup (let [_ (comment "create url to image to used as background")
