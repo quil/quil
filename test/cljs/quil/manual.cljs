@@ -147,7 +147,8 @@
 
              (doseq [i (range 30)
                      j (range 30)]
-               (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))
+               (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j))))
+             (q/update-pixels))
            (q/no-loop)))
 
   (q/sketch
