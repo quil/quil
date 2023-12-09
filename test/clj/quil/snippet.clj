@@ -1,7 +1,6 @@
 (ns quil.snippet
   (:require
    [clj-http.client :as http]
-   [clojure.java.io :as io]
    [clojure.pprint]
    [clojure.string :as string]
    [clojure.test :as t]
@@ -14,16 +13,7 @@
 
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
 
-(def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
-
 (t/use-fixtures :once tu/check-dependencies)
-
-(defn verify-reference-or-update [test-name platform actual-file threshold]
-  (if update-screenshots?
-    (let [expected (tu/expected-image platform test-name)]
-      (println "updating reference image: " expected)
-      (.renameTo (io/file actual-file) (io/file expected)))
-    (tu/assert-match-reference! test-name platform actual-file threshold)))
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -63,8 +53,8 @@
     (t/is (nil? @result))
     ;; verify image matches reference on testing thread
     (when-not (:skip-image-diff? snippet)
-      (verify-reference-or-update (:name snippet) "clj" actual-file
-                                  (:accepted-diff-threshold snippet)))))
+      (tu/verify-reference-or-update (:name snippet) "clj" actual-file
+                                     (:accepted-diff-threshold snippet)))))
 
 (defn define-snippet-as-test [{:keys [ns name opts setup body] :as snippet}]
   (let [test-name (str (string/replace ns "." "_")
@@ -127,7 +117,7 @@
           (etaoin/refresh driver)
           (let [actual-file (tu/actual-image "cljs" name)]
             (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-            (verify-reference-or-update name "cljs" actual-file 0.03))))
+            (tu/verify-reference-or-update name "cljs" actual-file 0.03))))
       (etaoin/quit driver))))
 
 ;; view image diffs with

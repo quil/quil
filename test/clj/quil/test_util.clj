@@ -74,6 +74,16 @@
             (str "Image differences in \"" test-name "\", see: " diff-file "\n"
                  identify)))))
 
+;; Prepend UPDATE_SCREENSHOTS=true to test run to update expected image
+(def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
+
+(defn verify-reference-or-update [test-name platform actual-file threshold]
+  (if update-screenshots?
+    (let [expected (expected-image platform test-name)]
+      (println "updating reference image: " expected)
+      (.renameTo (io/file actual-file) (io/file expected)))
+    (assert-match-reference! test-name platform actual-file threshold)))
+
 (defn installed? [& cmds]
   (try
     (apply sh/sh cmds)
