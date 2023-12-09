@@ -59,7 +59,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: snippet-differences
+          name: snippet-differences-${{ github.sha }}.${{ github.run_attempt }}
           path: |
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
