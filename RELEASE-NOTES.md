@@ -1,5 +1,10 @@
 ## Unreleased
 
+* Fix: `(tint r g b a)` green is being used for red and green channels [#397](https://github.com/quil/quil/pull/397)
+* Improve snippet testing and color arguments [#399](https://github.com/quil/quil/pull/399)
+  * Partially addresses #364
+* Document both leiningen and deps-new sketchbook templates [#398](https://github.com/quil/quil/pull/398)
+
 ## 4.3.1323
 __8th November 2023__
 
