@@ -43,8 +43,7 @@
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
-    (comment "check if image is loaded by checking its size matches sketch size")
-    (when (= (.-width im) (q/width))
+    (when (q/loaded? im)
       (q/background-image im))))
 
 (defsnippet fill
