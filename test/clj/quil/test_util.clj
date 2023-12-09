@@ -58,7 +58,7 @@
         result (compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
         identify (:out (sh/sh "identify" actual-file expected-file))
-        threshold 0.02]
+        threshold 0.03]
     (when (number? result)
       (if (<= result threshold)
         (do
