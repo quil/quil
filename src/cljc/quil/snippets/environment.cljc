@@ -26,7 +26,9 @@
     (q/with-graphics gr
       (.fill (q/current-graphics) 255 255 0)
       (.ellipse (q/current-graphics) 50 50 100 100))
-    (q/image gr 70 70)))
+    (q/image gr 70 70))
+
+  (q/no-loop))
 
 (defsnippet cursor-no-cursor
   ["cursor" "no-cursor"]

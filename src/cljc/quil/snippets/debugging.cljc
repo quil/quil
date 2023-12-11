@@ -11,8 +11,8 @@
 
   (q/background 255)
 
-  (comment "will print 'foo' the first 5 iterations")
-  (q/print-first-n 5 "foo"))
+  (comment "will print 'first-5-frames' the first 5 iterations")
+  (q/print-first-n 5 "first-5-frames"))
 
 (defsnippet print-every-n-millisec
   "print-every-n-millisec"
@@ -20,5 +20,5 @@
 
   (q/background 255)
 
-  (comment "will print 'foo' every 1000 milliseconds")
-  (q/print-every-n-millisec 1000 "foo"))
+  (comment "will print 'every-1000' every 1000 milliseconds")
+  (q/print-every-n-millisec 1000 "every-1000"))

@@ -17,7 +17,9 @@
 
     (comment "draw graphics twice")
     (q/image gr 0 0)
-    (q/image gr 100 0 100 70)))
+    (q/image gr 100 0 100 70))
+
+  (q/no-loop))
 
 (defsnippet image-mode
   "image-mode"
@@ -45,11 +47,14 @@
     (q/image-mode :corners)
     (q/image gr 350 50 400 150)
     (q/point 350 50)
-    (q/point 400 150)))
+    (q/point 400 150)
+
+    (q/no-loop)))
 
 (defsnippet load-image
   "load-image"
-  {:setup (let [_ (comment "create url to load image 100x100")
+  {:delay-frame 5
+   :setup (let [_ (comment "create url to load image 100x100")
                 url #?(:clj "https://dummyimage.com/100x100/2c3e50/ffffff.png"
                        :cljs "https://placekitten.com/100/100")]
             (q/set-state! :image (q/load-image url)))}
@@ -100,7 +105,8 @@
     (q/image im2 20 140)
     (q/image mask 140 140)
     (q/mask-image im2 mask)
-    (q/image im2 260 140)))
+    (q/image im2 260 140))
+  (q/no-loop))
 
 (defsnippet no-tint
   "no-tint"
@@ -121,7 +127,8 @@
 
     (comment "remove tint")
     (q/no-tint)
-    (q/image gr 200 0)))
+    (q/image gr 200 0))
+  (q/no-loop))
 
 (defsnippet tint
   "tint"
@@ -152,5 +159,6 @@
     (q/tint 200 127 180)
     (q/image gr 0 120)
     (q/tint 200 127 180 127)
-    (q/image gr 120 120)))
+    (q/image gr 120 120))
+  (q/no-loop))
 

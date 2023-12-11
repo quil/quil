@@ -32,18 +32,22 @@
     (q/with-graphics gr
       (comment "semitransparent blue")
       (q/background 0 0 255 120))
-    (q/image gr 210 210)))
+    (q/image gr 210 210)
+
+    ;; FIXME: q/create-graphics inside of draw is creates a canvas element for
+    ;; each frame, so stop the loop after displaying
+    (q/no-loop)))
 
 (defsnippet background-image
   "background-image"
-  {:setup (let [_ (comment "create url to image to used as background")
+  {:delay-frames 5 ;; wait 5 frames to finish async load-image
+   :setup (let [_ (comment "create url to image to used as background")
                 url #?(:clj (str "https://dummyimage.com/" (q/width) "x"  (q/height) "/2c3e50/ffffff.png")
                        :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
-    (comment "check if image is loaded by checking its size matches sketch size")
-    (when (= (.-width im) (q/width))
+    (when (q/loaded? im)
       (q/background-image im))))
 
 (defsnippet fill
@@ -146,4 +150,6 @@
       (q/clear)
       (q/fill 0 0 255)
       (q/triangle 25 25 175 25 25 175))
-    (q/image g 100 100)))
+    (q/image g 100 100))
+
+  (q/no-loop))

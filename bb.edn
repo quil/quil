@@ -1,10 +1,18 @@
 {:paths ["src"]
  :tasks
- {:requires ([bb.processing :as processing]
+ {:requires ([babashka.fs :as fs]
+             [bb.processing :as processing]
              [bb.system-info :as sys-info])
   processing-install
   {:docs "install processing jars"
    :task (processing/install)}
   system-info
   {:docs "report system information"
-   :task (sys-info/versions)}}}
+   :task (sys-info/versions)}
+  clean-test-images
+  {:docs "remove *-actual.png and *-difference.png files"
+   :task
+   (when-let [files (seq (fs/glob "dev-resources" "**-{actual,difference}.png"))]
+     (printf "removing %d images\n" (count files))
+     (doseq [f files]
+       (fs/delete f)))}}}

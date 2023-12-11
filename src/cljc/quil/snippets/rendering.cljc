@@ -44,7 +44,9 @@
     (q/image gr 0 0)
     (q/image gr 250 0)
     (q/image gr 0 250)
-    (q/image gr 250 250)))
+    (q/image gr 250 250))
+
+  (q/no-loop))
 
 #?(:clj
    (defsnippet load-shader
@@ -67,7 +69,9 @@
          (q/shader shd)
          (q/image gr 0 250)
          (q/reset-shader)
-         (q/image gr 250 250)))))
+         (q/image gr 250 250)))
+
+     (q/no-loop)))
 
 #?(:cljs
    (defsnippet load-shader

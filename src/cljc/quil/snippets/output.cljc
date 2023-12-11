@@ -29,6 +29,7 @@
   (comment "on every iteration")
   (q/exit))
 
+;; FIXME: generating OpenGL error 1281 at bot beginDraw(): invalid value
 #?(:clj
    (defsnippet save-frame
      "save-frame"

@@ -32,7 +32,8 @@
 #?(:clj
    (defsnippet emissive
      "emissive"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :settings (fn [] (q/smooth 4))}
 
      (q/background 0)
      (q/camera 150 150 150 0 0 0 0 0 -1)

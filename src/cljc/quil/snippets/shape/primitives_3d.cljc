@@ -45,7 +45,9 @@
 
 (defsnippet sphere
   "sphere"
-  {:renderer :p3d}
+  {:renderer :p3d
+   :accepted-diff-threshold 0.05
+   :settings (fn [] (q/smooth 4))}
 
   (q/background 255)
   (q/camera 200 200 200 0 0 0 0 0 -1)
@@ -54,7 +56,9 @@
 #?(:clj
    (defsnippet sphere-detail
      "sphere-detail"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.06
+      :settings (fn [] (q/smooth 4))}
 
      (q/camera 200 200 200 0 0 0 0 0 -1)
      (q/sphere-detail 30) ; default

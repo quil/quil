@@ -7,7 +7,8 @@
 
 (defsnippet ambient-light
   "ambient-light"
-  {:renderer :p3d}
+  {:renderer :p3d
+   :settings (fn [] (q/smooth 4))}
 
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 1)

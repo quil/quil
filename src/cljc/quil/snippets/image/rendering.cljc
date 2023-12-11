@@ -5,6 +5,8 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
+;; FIXME: reporting a warning of:
+;; blendMode(DIFFERENCE) is not supported by this renderer
 (defsnippet blend-mode
   "blend-mode"
   {:renderer :p2d}
@@ -31,7 +33,8 @@
             (q/rect 10 60 80 20)
             (q/fill 20 240 50 50)
             (q/rect 20 10 20 80))
-          (q/image gr (* col 120) (* row 120)))))))
+          (q/image gr (* col 120) (* row 120))))))
+  (q/no-loop))
 
 (defsnippet create-graphics
   "create-graphics"
@@ -55,4 +58,6 @@
               (q/with-graphics gr
                 (q/background 127)
                 (q/ellipse 50 50 80 40)
-                (.dispose gr))))))
+                (.dispose gr)))))
+
+  (q/no-loop))

@@ -47,6 +47,8 @@
       - `:mouse-clicked` - Function to use as :mouse-clicked. Default is empty.
       - `:skip-image-diff?` - If set to true then snippets won't be used
                               in automated image diff tests.
+      - `:accepted-diff-threshold` - Adjust image difference threshold on a per
+                                     snippet basis
     * `body` - The body of the `draw` function of the snippet."
   [snip-name fns opts & body]
   (let [setup (:setup opts '())
@@ -55,7 +57,7 @@
             conj
             {:name (name '~snip-name)
              :fns ~(if (string? fns) [fns] fns)
-             :opts ~(dissoc opts :setup :mouse-clicked :skip-image-diff?)
+             :opts ~(dissoc opts :setup :mouse-clicked :skip-image-diff? :delay-frames)
              :setup (fn [] ~setup)
              :setup-str ~(pr-str setup)
              :body (fn [] ~@body)
@@ -63,4 +65,6 @@
              :mouse-clicked (fn [] ~mouse-clicked)
              :mouse-clicked-str ~(pr-str mouse-clicked)
              :ns ~(str (ns-name *ns*))
-             :skip-image-diff? ~(:skip-image-diff? opts false)})))
+             :delay-frames ~(:async-frames opts 0)
+             :skip-image-diff? ~(:skip-image-diff? opts false)
+             :accepted-diff-threshold ~(:accepted-diff-threshold opts 0.03)})))

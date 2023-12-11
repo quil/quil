@@ -32,7 +32,7 @@
 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.4" :git/sha "76b78fe"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}
                           slipset/deps-deploy {:mvn/version "RELEASE"}}
                    :ns-default build}
 
@@ -40,13 +40,13 @@
            {:extra-deps {;; for snippet tests
                          clj-http/clj-http {:mvn/version "3.12.3"}
                          cheshire/cheshire {:mvn/version "5.12.0"}
-                         etoain/etoain {:mvn/version "10.0.40"}
+                         etaoin/etaoin {:mvn/version "1.0.40"}
 
                          ;; for cljs manual tests
                          compojure/compojure {:mvn/version "1.7.0"}
-                         hiccup/hiccup {:mvn/version "1.0.5"}}}
+                         hiccup/hiccup {:mvn/version "1.0.5"}}
+            :extra-paths ["test"]}
 
-           :testing {:extra-paths ["test"]}
            ;; clj -X:test
            ;; not picking up all test namespaces, probably has to do with :pattern
            :test {:extra-paths ["test/clj" "test/clj/quil" "test"]

@@ -71,7 +71,9 @@
       (q/vertex 80 280)
       (q/vertex 80 120)
       (q/end-shape))
-    (q/image gr 0 0)))
+    (q/image gr 0 0))
+
+  (q/no-loop))
 
 (defsnippet bezier-vertex
   "bezier-vertex"
@@ -180,20 +182,19 @@
          (q/vertex -50 100 25 100)
          (q/end-shape :close))))
 
+   ;; FIXME: flakey from async image loading
    :cljs
    (defsnippet texture
      "texture"
      {:renderer :p3d
       :setup (q/set-state! :image (q/load-image "https://placekitten.com/100/100"))}
 
-     (q/background 255)
-
-     (if (zero? (.-width (q/state :image)))
-       (q/text "Loading" 10 10)
+     (if (q/loaded? (q/state :image))
        (let [gr (q/state :image)]
          (q/with-translation [50 0]
            (q/texture gr)
-           (q/plane 200 200))))))
+           (q/plane 200 200)))
+       (q/text "Loading" 10 10))))
 
 #?(:clj
    (defsnippet texture-mode
@@ -303,4 +304,6 @@
     (q/vertex 200 0 0 100 0)
     (q/vertex 200 0 100 100 100)
     (q/vertex 100 0 100 0 100)
-    (q/end-shape :close)))
+    (q/end-shape :close))
+
+  (q/no-loop))

@@ -19,6 +19,7 @@
   {:name (:name snippet)
    :ns (:ns snippet)
    :skip-image-diff? (:skip-image-diff? snippet)
+   :accepted-diff-threshold (:accepted-diff-threshold snippet)
    :fn (fn []
          (let [expected (d/sel1 :#expected)]
            (d/set-attr! expected :src (str "snapshots/" (:name snippet) "-expected.png")))
@@ -112,6 +113,7 @@
           (set! (.-innerHTML option) (:name test))
           (set! (.-testData option) test)
           (d/set-attr! option :data-skip-image-diff (:skip-image-diff? test))
+          (d/set-attr! option :data-accepted-diff-threshold (:accepted-diff-threshold test))
           (.appendChild optgroup option)))
       (.appendChild input optgroup)))
   (events/listen input EventType/CHANGE

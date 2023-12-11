@@ -492,6 +492,24 @@
      []
      (seq (PFont/list))))
 
+(defn- cast-color
+  "Help cast a single argument gray value for a color setting function.
+
+  In processing, this can be an integer or a numeric float. In p5js, this can be
+  any of an integer, color string (hex or hsb) or other value, numeric float or
+  p5.Color.
+
+  Partial fix to https://github.com/quil/quil/issues/364. Unfortunately pretty
+  expensive check for CLJS and probably does not help for avoiding reflection."
+  [gray]
+  #?(:clj
+     (if (integer? gray) gray
+         (float gray))
+     :cljs
+     (cond (integer? gray) gray
+           (number? gray) (float gray)
+           :else gray)))
+
 (defn
   ^{:requires-bindings true
     :processing-name "background()"
@@ -508,8 +526,8 @@
   It is not possible to use transparency (alpha) in background colors
   with the main drawing surface, however they will work properly with
   [[create-graphics]]. Converts args to `floats`."
-  ([gray] (.background (current-graphics) (float gray)))
-  ([gray alpha] (.background (current-graphics) (float gray) (float alpha)))
+  ([gray] (.background (current-graphics) (cast-color gray)))
+  ([gray alpha] (.background (current-graphics) (cast-color gray) (float alpha)))
   ([r g b] (.background (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.background (current-graphics) (float r) (float g) (float b) (float a))))
 
@@ -992,8 +1010,8 @@
   * `g` - green or saturation value
   * `b` - blue or brightness value
   * `a` - alpha value"
-  ([gray] (.color (current-graphics) (float gray)))
-  ([gray alpha] (.color (current-graphics) (float gray) (float alpha)))
+  ([gray] (.color (current-graphics) (cast-color gray)))
+  ([gray alpha] (.color (current-graphics) (cast-color gray) (float alpha)))
   ([r g b] (.color (current-graphics) (float r) (float g) (float b)))
   ([r g b a] (.color (current-graphics) (float r) (float g) (float b) (float a))))
 
@@ -1702,16 +1720,17 @@
   input as a `float`. If nil is passed it removes any fill color; equivalent to
   calling [[no-fill]]."
   ([gray]
-    ; provided color might be passed from (current-fill) in which case it's a vector.
-    ; In that case just call fill again applying vector to the (fill).
+   ;; provided color might be passed from (current-fill) in which case it's a vector.
+   ;; In that case just call fill again applying vector to the (fill).
    (cond (vector? gray) (apply fill gray)
          (nil? gray) (no-fill)
-         true (do
-                (.fill (current-graphics) (float gray))
-                (save-current-fill [gray]))))
+         :else
+         (do
+           (.fill (current-graphics) (cast-color gray))
+           (save-current-fill [gray]))))
 
   ([gray alpha]
-   (.fill (current-graphics) (float gray) (float alpha))
+   (.fill (current-graphics) (cast-color gray) (float alpha))
    (save-current-fill [gray alpha]))
 
   ([r g b]
@@ -3783,8 +3802,13 @@
   problem. Grouping many calls to [[point]] or [[set-pixel]] together can also
   help. (Bug 1094)"
   ([x y c] (set-pixel (current-graphics) x y c))
-  ([^PImage img x y c]
-   (.set img (int x) (int y) (int c))))
+  #?(:clj
+     ([^PImage img x y c]
+      (.set img (int x) (int y) (int c)))
+     ;; https://p5js.org/reference/#/p5/set - in p5js set can be a a pixel
+     ;; array, p5.Color or p5.Image so avoid casting c.
+     :cljs
+     ([img x y c] (.set img (int x) (int y) c))))
 
 (defn
   ^{:requires-bindings true
@@ -4118,17 +4142,18 @@
   color is either specified in terms of the RGB or HSB color depending
   on the current [[color-mode]] (the default color space is RGB, with
   each value in the range from 0 to 255).
-  If nil is passed it removes any fill color; equivalent to [[no-stroke]]."
+  If nil is passed it removes any stroke color; equivalent to [[no-stroke]]."
   ([gray]
-    ; provided color might be passed from (current-fill) in which case it's a vector.
-    ; In that case just call fill again applying vector to the (fill).
+   ;; provided color might be passed from (current-fill) in which case it's a vector.
+   ;; In that case just call fill again applying vector to the (fill).
    (cond (vector? gray) (apply stroke gray)
          (nil? gray) (no-stroke)
-         true (do
-                (.stroke (current-graphics)  (float gray))
-                (save-current-stroke [gray]))))
+         :else
+         (do
+           (.stroke (current-graphics) (cast-color gray))
+           (save-current-stroke [gray]))))
   ([gray alpha]
-   (.stroke (current-graphics) (float gray) (float alpha))
+   (.stroke (current-graphics) (cast-color gray) (float alpha))
    (save-current-stroke [gray alpha]))
   ([x y z]
    (.stroke (current-graphics) (float x) (float y) (float z))

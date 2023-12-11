@@ -52,7 +52,7 @@
   (q/sketch :host "redraw-on-key"
             :size [500 200]
             ;; Just to try :settings instead of usual :setup
-            :settings q/no-loop
+            :settings (fn [] (q/no-loop))
             :draw (fn []
                     (q/fill 0)
                     (q/background 220)
@@ -147,7 +147,8 @@
 
              (doseq [i (range 30)
                      j (range 30)]
-               (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j)))))
+               (q/set-pixel (+ 40 i) (+ 40 j) (q/color 0 (* 7 i) (* 7 j))))
+             (q/update-pixels))
            (q/no-loop)))
 
   (q/sketch

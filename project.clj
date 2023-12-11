@@ -21,18 +21,14 @@
                   :exclusions [bouncycastle/bctsp-jdk14]]
                  [org.bouncycastle/bctsp-jdk14 "1.38"]
 
-                 ; svg
+                 ;; svg
                  [org.apache.xmlgraphics/batik-svggen "1.8"]
                  [org.apache.xmlgraphics/batik-dom "1.8"]]
 
   :aot [quil.helpers.applet-listener quil.applet]
 
   :test-selectors {:default (complement :manual)
-                   :manual :manual
-                   :set-0 #(= 0 (:test-set %))
-                   :set-1 #(= 1 (:test-set %))
-                   :set-2 #(= 2 (:test-set %))
-                   :set-3 #(= 3 (:test-set %))}
+                   :manual :manual}
 
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj" "test/cljc"]
