@@ -53,7 +53,7 @@
 
 (defsnippet load-image
   "load-image"
-  {:delay-frame 2
+  {:delay-frame 5
    :setup (let [_ (comment "create url to load image 100x100")
                 url #?(:clj "https://dummyimage.com/100x100/2c3e50/ffffff.png"
                        :cljs "https://placekitten.com/100/100")]
