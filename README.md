@@ -167,7 +167,7 @@ Run automated tests locally for clj or cljs with:
 
 The coverage from the tests in the leiningen environment are still higher, but are being migrated over to automated tests that can run on Github Actions.
 
-To develop with clj using emacs and the cider repl, use `C-u M-x cider-jack-in-clj`, then select `clojure-cli` and append `:testing` to the list of `-M` aliases. This ensures that "test" is in the classpath, so that it's possible to evaluate tests at the repl.
+To develop with clj using emacs and the cider repl, use `C-u M-x cider-jack-in-clj`, then select `clojure-cli` and append `:dev` to the list of `-M` aliases. This ensures that "test" is in the classpath along with testing dependencies, so that it's possible to evaluate tests at the repl.
 
 ## License
 

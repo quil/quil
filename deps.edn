@@ -44,9 +44,9 @@
 
                          ;; for cljs manual tests
                          compojure/compojure {:mvn/version "1.7.0"}
-                         hiccup/hiccup {:mvn/version "1.0.5"}}}
+                         hiccup/hiccup {:mvn/version "1.0.5"}}
+            :extra-paths ["test"]}
 
-           :testing {:extra-paths ["test"]}
            ;; clj -X:test
            ;; not picking up all test namespaces, probably has to do with :pattern
            :test {:extra-paths ["test/clj" "test/clj/quil" "test"]
