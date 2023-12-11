@@ -36,19 +36,27 @@
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
                        (settings)))
-     :draw (fn []
-             (try
-               (q/background 255)
-               ((:body snippet))
-               (when-not (:skip-image-diff? snippet)
-                 (q/save actual-file))
-               (catch Exception e
-                 (println "Error" e)
-                 (.printStackTrace e)
-                 (deliver result e))
-               (finally
-                 (when (not manual?)
-                   (q/exit)))))
+     :draw
+     (fn []
+       (q/background 255)
+       ;; some snippets have async calls, draw n frames before saving final copy
+       (if (< (q/frame-count) (:delay-frames snippet))
+         (try
+           ((:body snippet))
+           (catch Exception e
+             (println "Error" e)
+             (.printStackTrace e)))
+         (try
+           ((:body snippet))
+           (when-not (:skip-image-diff? snippet)
+             (q/save actual-file))
+           (catch Exception e
+             (println "Error" e)
+             (.printStackTrace e)
+             (deliver result e))
+           (finally
+             (when (not manual?)
+               (q/exit))))))
      :on-close #(deliver result nil))
     ;; block on @result promise and assert empty
     (t/is (nil? @result))

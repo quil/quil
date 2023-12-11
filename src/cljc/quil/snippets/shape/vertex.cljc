@@ -182,6 +182,7 @@
          (q/vertex -50 100 25 100)
          (q/end-shape :close))))
 
+   ;; FIXME: flakey from async image loading
    :cljs
    (defsnippet texture
      "texture"

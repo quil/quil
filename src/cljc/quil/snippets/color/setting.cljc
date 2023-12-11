@@ -38,10 +38,10 @@
     ;; each frame, so stop the loop after displaying
     (q/no-loop)))
 
-;; FIXME: flakey snippet, presumably caused by async load-image
 (defsnippet background-image
   "background-image"
-  {:setup (let [_ (comment "create url to image to used as background")
+  {:delay-frames 2 ;; wait 2 frames to finish async load-image
+   :setup (let [_ (comment "create url to image to used as background")
                 url #?(:clj (str "https://dummyimage.com/" (q/width) "x"  (q/height) "/2c3e50/ffffff.png")
                        :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}
