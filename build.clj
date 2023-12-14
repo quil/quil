@@ -1,5 +1,6 @@
 (ns build
   (:require
+   [build.processing :as processing]
    [clojure.data.xml :as xml]
    [clojure.java.io :as jio]
    [clojure.tools.build.api :as b]
@@ -123,3 +124,6 @@
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
               :artifact (b/resolve-path (jar-file opts))
               :pom-file "pom.xml"}))
+
+(defn processing [_]
+  (processing/download _))
