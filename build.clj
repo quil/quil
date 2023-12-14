@@ -125,5 +125,5 @@
               :artifact (b/resolve-path (jar-file opts))
               :pom-file "pom.xml"}))
 
-(defn processing [_]
-  (processing/download _))
+(defn processing-clojars [_]
+  (processing/clojars-release _))

@@ -2,7 +2,8 @@
   (:require
    [clojure.data.xml :as xml]
    [clojure.tools.build.api :as b]
-   [clojure.java.io :as io]))
+   [clojure.java.io :as io]
+   [deps-deploy.deps-deploy :as dd]))
 
 (defn version []
   "4.2.3")
@@ -36,7 +37,13 @@
     (println "Generated " filename)
     filename))
 
-(defn download [_]
+(defn deploy [{:keys [jar-file pom-file clojars] :as opts}]
+  (dd/deploy {:installer (if clojars :remote :local)
+              :artifact jar-file
+              :pom-file pom-file})
+  opts)
+
+(defn clojars-release [_]
   (b/process {:command-args ["bb" "processing-install"]})
 
   (let [artifacts ["core" "pdf" "dxf" "svg"]]
@@ -45,6 +52,11 @@
                   jar-file (str artifact-id "-" (version) ".jar")]]
       (b/copy-file {:src (str "libraries/" artifact ".jar")
                     :target jar-file})
-      (processing-pom {:artifact-id artifact-id
-                       :version (version)})))
+      (let [pom-file (processing-pom {:artifact-id artifact-id
+                                      :version (version)})]
+        (deploy {:jar-file jar-file
+                 :pom-file pom-file
+                 :clojars false})
+        (b/delete {:path pom-file})
+        (b/delete {:path jar-file}))))
   _)
