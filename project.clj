@@ -58,7 +58,7 @@
 
              :cljs-testing [:dev
                             {:plugins [[lein-cljsbuild "1.1.7"]]
-                             :source-paths ["test/cljs" "test/clj/quil/test_util.clj"]
+                             :source-paths ["test/cljs"]
                              :ring {:handler test-server/app}
                              :dependencies [[prismatic/dommy "1.1.0"]
                                             [org.clojure/clojure "1.10.1"]
@@ -68,7 +68,7 @@
                              {:builds [
                                         ; Compiles all tests in advanced mode. Used for release testing.
                                        {:id "tests"
-                                        :source-paths ["test/cljs" "test/cljc" "src/cljc" "src/cljs"]
+                                        :source-paths ["test/cljs" "src/cljc" "src/cljs"]
                                         :compiler
                                         {:output-to "target/js/main.js"
                                          :optimizations :advanced
