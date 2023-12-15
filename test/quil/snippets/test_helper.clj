@@ -1,4 +1,4 @@
-(ns quil.test-util
+(ns quil.snippets.test-helper
   (:import java.awt.GraphicsEnvironment)
   (:require [clojure.java.shell :as sh]
             [clojure.java.io :as io]
@@ -8,8 +8,8 @@
   (try
     (.. GraphicsEnvironment (getLocalGraphicsEnvironment) (getDefaultScreenDevice) (getScaleFactor))
     (catch IllegalArgumentException e
-      ; getScaleFactor() method is present only on osx.
-      ; For other systems return 1 for now.
+      ;; getScaleFactor() method is present only on osx.
+      ;; For other systems return 1 for now.
       1)))
 
 (defn path-to-snippet-snapshots [platform]

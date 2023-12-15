@@ -1,4 +1,4 @@
-(ns quil.snippet
+(ns quil.snippets.snapshot-test
   (:require
    [clj-http.client :as http]
    [clojure.edn :as edn]
@@ -8,13 +8,13 @@
    [etaoin.api :as etaoin]
    [quil.core :as q]
    [quil.snippets.all-snippets :as as]
-   [quil.test-util :as tu]))
+   [quil.snippets.test-helper :as sth]))
 
 (def default-size [500 500])
 
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
 
-(t/use-fixtures :once tu/check-dependencies)
+(t/use-fixtures :once sth/check-dependencies)
 
 (defn run-snippet-as-test [snippet]
   (let [result (promise)
@@ -22,7 +22,7 @@
                        "/"
                        (:name snippet))
         opts (:opts snippet)
-        actual-file (tu/actual-image "clj" (:name snippet))]
+        actual-file (sth/actual-image "clj" (:name snippet))]
     ;; (println "Test:" snip-name)
     (when manual?
       (clojure.pprint/pprint (:body-str snippet)))
@@ -62,15 +62,16 @@
     (t/is (nil? @result))
     ;; verify image matches reference on testing thread
     (when-not (:skip-image-diff? snippet)
-      (tu/verify-reference-or-update (:name snippet) "clj" actual-file
-                                     (:accepted-diff-threshold snippet)))))
+      (sth/verify-reference-or-update (:name snippet) "clj" actual-file
+                                      (:accepted-diff-threshold snippet)))))
 
 (defn define-snippet-as-test [{:keys [ns name opts setup body] :as snippet}]
   (let [test-name (str (string/replace ns "." "_")
                        "_"
                        name)]
-    (intern 'quil.snippet
+    (intern 'quil.snippets.snapshot-test
             (vary-meta (symbol test-name) assoc
+                       :clj-snippets true
                        :test #(run-snippet-as-test snippet))
             (fn []
               (q/sketch
@@ -87,11 +88,11 @@
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
-  (tu/installed? "geckodriver" "--version"))
+  (sth/installed? "geckodriver" "--version"))
 
 ;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
 (defn- chromedriver-installed? []
-  (tu/installed? "chromedriver" "--version"))
+  (sth/installed? "chromedriver" "--version"))
 
 (defn- test-file-server-running? []
   (try
@@ -114,7 +115,7 @@
        (remove :skip-image-diff?)
        (doall)))
 
-(t/deftest ^:manual
+(t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
   (t/is (geckodriver-installed?)
         "geckodriver is not installed. Install it and rerun the test.")
@@ -131,9 +132,9 @@
       (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements driver)]
         (etaoin/go driver (str "http://localhost:3000/test.html#" index))
         (etaoin/refresh driver)
-        (let [actual-file (tu/actual-image "cljs" name)]
+        (let [actual-file (sth/actual-image "cljs" name)]
           (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-          (tu/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
+          (sth/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
       (etaoin/quit driver))))
 
 ;; view image diffs with
