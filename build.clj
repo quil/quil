@@ -1,7 +1,6 @@
 (ns build
   (:require
    [build.processing :as processing]
-   [clojure.data.xml :as xml]
    [clojure.java.io :as jio]
    [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
@@ -63,52 +62,22 @@
                   :class-dir class-dir
                   :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
 
-(xml/alias-uri 'pom "http://maven.apache.org/POM/4.0.0")
-
-(defn- pom-template [{:keys [version src-dirs]}]
-  [::pom/project
-   {:xmlns "http://maven.apache.org/POM/4.0.0"
-    (keyword "xmlns:xsi") "http://www.w3.org/2001/XMLSchema-instance"
-    (keyword "xsi:schemaLocation")
-    "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"}
-   [::pom/modelVersion "4.0.0"]
-   [::pom/packaging "jar"]
-   [::pom/groupId "quil"]
-   [::pom/artifactId "quil"]
-   [::pom/version version]
-   [::pom/name "quil"]
-   [::pom/licenses
-    [::pom/license
-     [::pom/name "Eclipse Public License 2.0"]
-     [::pom/url "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt"]]]
-   [::pom/scm
-    [::pom/url "https://github.com/quil/quil"]
-    [::pom/connection "scm:git:https://github.com/quil/quil.git"]
-    [::pom/developerConnection "scm:git:ssh:git@github.com/quil/quil.git"]
-    (when-not (re-find #"-SNAPSHOT$" version)
-      [::pom/tag (str "v" version)])]
-   [::pom/dependencies
-    [:-comment " all deps are baked into the jar "]]
-   [::pom/build
-    (for [src-dir src-dirs]
-      [::pom/sourceDirectory src-dir])]
-   [::pom/repositories
-    [::pom/repository
-     [::pom/id "clojars"]
-     [::pom/url "https://repo.clojars.org/"]]]])
-
 ;; clj -T:build pom
 (defn pom
   "Generate a pom.xml for the current version"
-  [opts]
+  [{:keys [snapshot] :as opts}]
   (let [version (release-version opts)]
-    (->> {:version version
-          :src-dirs ["src/clj"]}
-         pom-template
-         xml/sexp-as-element
-         xml/indent-str
-         (spit (jio/file "." "pom.xml")))
-    (println "Generated pom.xml for version:" version)))
+    (b/write-pom
+     {:class-dir class-dir
+      :src-pom "pom.xml"
+      :lib 'quil/quil
+      :version version
+      :basis @basis
+      :scm {:tag (if-not snapshot
+                   (str "v" version)
+                   "")}
+      :src-dirs ["src/clj"]}))
+  opts)
 
 (defn release [opts]
   (aot opts)
@@ -125,7 +94,7 @@
 (defn deploy [opts]
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
               :artifact (b/resolve-path (jar-file opts))
-              :pom-file "pom.xml"}))
+              :pom-file "target/classes/META-INF/maven/quil/quil/pom.xml"}))
 
 (defn processing-clojars [_]
   (processing/clojars-release _))
