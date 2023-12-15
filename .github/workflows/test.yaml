@@ -22,7 +22,10 @@ jobs:
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: |
+            ~/.m2/repository
+            ~/.cpcache
+            ~/.gitlibs
           key: cljs-${{ runner.os }}-${{ hashFiles('**/deps.edn') }}
           restore-keys: cljs-${{ runner.os }}-
 
@@ -74,7 +77,10 @@ jobs:
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: |
+            ~/.m2/repository
+            ~/.cpcache
+            ~/.gitlibs
           key: clj-${{ runner.os }}-jdk${{ matrix.java-version }}-${{ hashFiles('**/deps.edn') }}
           restore-keys: clj-${{ runner.os }}-jdk${{ matrix.java-version }}-
 
