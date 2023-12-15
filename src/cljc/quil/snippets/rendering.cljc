@@ -1,7 +1,8 @@
 (ns quil.snippets.rendering
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
@@ -53,7 +54,7 @@
      ["load-shader" "loaded?" "reset-shader" "shader"]
      {:renderer :p2d
       :skip-image-diff? true
-      :setup (let [path (clojure.java.io/resource "SimpleShader.glsl")
+      :setup (let [path (io/resource "SimpleShader.glsl")
                    shd (q/load-shader (.getPath path))]
                (q/set-state! :shader shd))}
 
