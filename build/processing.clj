@@ -39,17 +39,11 @@
     (println "Generated " filename)
     filename))
 
-(defn deploy [{:keys [jar-file pom-file clojars] :as opts}]
-  (dd/deploy {:installer (if clojars :remote :local)
-              :artifact jar-file
-              :pom-file pom-file})
-  opts)
-
 ;; Specify processing version to release both here and in the
 ;; bb.processing/install URL
 (def processing-version "4.2.3")
 
-(defn clojars-release [_]
+(defn clojars-release [opts]
   ;; TODO: inline processing-install here
   (b/process {:command-args ["bb" "processing-install"]})
 
@@ -62,9 +56,9 @@
                     :target jar-file})
       (let [pom-file (processing-pom {:artifact-id artifact-id
                                       :version version})]
-        (deploy {:jar-file jar-file
-                 :pom-file pom-file
-                 :clojars false})
+        (dd/deploy {:installer (get opts :deploy :local)
+                    :artifact jar-file
+                    :pom-file pom-file})
         (b/delete {:path pom-file})
         (b/delete {:path jar-file}))))
-  _)
+  opts)
