@@ -34,9 +34,6 @@ jobs:
       - name: System Info
         run: bb system-info
 
-      - name: Install Processing jars
-        run: bb processing-install
-
       - name: Build release jar
         run: clojure -T:build release
 
