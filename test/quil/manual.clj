@@ -1,10 +1,9 @@
-(ns ^:manual
-    quil.manual-test
+(ns quil.manual
   (:require [quil.core :as q]
             [quil.middlewares.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
 
-;; clj -X:test :nses '[quil.manual-test]'
+;; clj -X:test :nses '[quil.manual]'
 
 (defn draw-text [& txt]
   (q/fill 0)
@@ -236,7 +235,7 @@
                (q/rect base-x 300 90 90))))
     @lock))
 
-(deftest run-all
+(deftest ^:manual run-all
   (doseq [fn [resizable-and-keep-on-top
              fullscreen present-and-bgcolor
              no-loop-with-start-loop
