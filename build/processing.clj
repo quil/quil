@@ -1,12 +1,14 @@
 (ns build.processing
+  "Publishes copies of the Processing jars to Clojars.
+
+  Processing jars are not published to maven, so publishes copies as
+  quil/processing-{core,pdf,dxf,svg} jars on Clojars so that Quil can depend on
+  them as mvn coordinates instead of locals."
   (:require
    [clojure.data.xml :as xml]
-   [clojure.tools.build.api :as b]
    [clojure.java.io :as io]
+   [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
-
-(defn version []
-  "4.2.3")
 
 (xml/alias-uri 'pom "http://maven.apache.org/POM/4.0.0")
 
@@ -43,17 +45,23 @@
               :pom-file pom-file})
   opts)
 
+;; Specify processing version to release both here and in the
+;; bb.processing/install URL
+(def processing-version "4.2.3")
+
 (defn clojars-release [_]
+  ;; TODO: inline processing-install here
   (b/process {:command-args ["bb" "processing-install"]})
 
-  (let [artifacts ["core" "pdf" "dxf" "svg"]]
+  (let [version processing-version
+        artifacts ["core" "pdf" "dxf" "svg"]]
     (doseq [artifact artifacts
             :let [artifact-id (str "processing-" artifact)
-                  jar-file (str artifact-id "-" (version) ".jar")]]
+                  jar-file (str artifact-id "-" version ".jar")]]
       (b/copy-file {:src (str "libraries/" artifact ".jar")
                     :target jar-file})
       (let [pom-file (processing-pom {:artifact-id artifact-id
-                                      :version (version)})]
+                                      :version version})]
         (deploy {:jar-file jar-file
                  :pom-file pom-file
                  :clojars false})
