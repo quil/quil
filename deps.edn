@@ -5,10 +5,10 @@
          "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
- :deps {quil/processing-core {:local/root "libraries/core.jar"}
-        quil/processing-dxf {:local/root "libraries/dxf.jar"}
-        quil/processing-pdf {:local/root "libraries/pdf.jar"}
-        quil/processing-svg {:local/root "libraries/svg.jar"}
+ :deps {quil/processing-core {:mvn/version "4.2.3"}
+        quil/processing-dxf {:mvn/version "4.2.3"}
+        quil/processing-pdf {:mvn/version "4.2.3"}
+        quil/processing-svg {:mvn/version "4.2.3"}
 
         ;; native display code
         org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
