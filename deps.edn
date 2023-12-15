@@ -5,10 +5,10 @@
          "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
- :deps {quil/processing-core {:local/root "libraries/core.jar"}
-        quil/processing-dxf {:local/root "libraries/dxf.jar"}
-        quil/processing-pdf {:local/root "libraries/pdf.jar"}
-        quil/processing-svg {:local/root "libraries/svg.jar"}
+ :deps {quil/processing-core {:mvn/version "4.2.3"}
+        quil/processing-dxf {:mvn/version "4.2.3"}
+        quil/processing-pdf {:mvn/version "4.2.3"}
+        quil/processing-svg {:mvn/version "4.2.3"}
 
         ;; native display code
         org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
@@ -71,12 +71,4 @@
            ;; clj -Mfig:cljs-test
            :cljs-test
            {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
-            :extra-paths ["target" "test"]}
-
-           ;; (N.B. update pom.xml before you do this!)
-           ;; env CLOJARS_USERNAME=username CLOJARS_PASSWORD=clojars-token clj -X:deploy
-           :deploy {:extra-deps {slipset/deps-deploy {:mvn/version "RELEASE"}}
-                    :exec-fn deps-deploy.deps-deploy/deploy
-                    :exec-args {:installer :remote
-                                #_#_:sign-releases? true
-                                :artifact "target/quil-4.3.1276.jar"}}}}
+            :extra-paths ["target" "test"]}}}

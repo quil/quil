@@ -10,12 +10,15 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [quil/processing-core "3.5.3"]
-                 [quil/processing-pdf "3.5.3"]
-                 [quil/processing-dxf "3.5.3"]
-                 [quil/processing-svg "3.5.3"]
+                 [quil/processing-core "4.2.3"]
+                 [quil/processing-pdf "4.2.3"]
+                 [quil/processing-dxf "4.2.3"]
+                 [quil/processing-svg "4.2.3"]
+
+                 ;; FIXME: on clojure-cli these are updated to 2.4.0-rc-20230201
                  [quil/jogl-all-fat "2.3.2"]
                  [quil/gluegen-rt-fat "2.3.2"]
+
                  [cljsjs/p5 "1.7.0-0"]
                  [com.lowagie/itext "2.1.7"
                   :exclusions [bouncycastle/bctsp-jdk14]]
