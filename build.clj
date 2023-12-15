@@ -29,7 +29,9 @@
 
 (def lib 'quil/quil)
 (def class-dir "target/classes")
-(def basis (b/create-basis {:project "deps.edn"}))
+;; create-basis will side-effect and verify the deps, which we may not want if
+;; uploading new versions of said dependencies
+(def basis (delay (b/create-basis {:project "deps.edn"})))
 
 (defn release-version
   "Create a version id for release
@@ -56,7 +58,7 @@
 (defn aot [_]
   (b/copy-dir {:src-dirs ["src/clj" "src/cljc" "src/cljs" "resources"]
                :target-dir class-dir})
-  (b/compile-clj {:basis basis
+  (b/compile-clj {:basis @basis
                   :src-dirs ["src/clj" "src/cljc" "src/cljs"]
                   :class-dir class-dir
                   :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
@@ -114,7 +116,7 @@
   (let [jar-file (jar-file opts)]
     (b/uber {:class-dir class-dir
              :uber-file jar-file
-             :basis basis
+             :basis @basis
              ;; don't bundle clojure into the jar
              :exclude ["^clojure[/].+"]})
     (println "release:" jar-file
