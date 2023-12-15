@@ -154,7 +154,7 @@ jobs:
       - name: Test
         uses: coactions/setup-xvfb@v1
         with:
-          run: clojure -X:test :excludes "[:clj-snippets :cljs-snippets]"
+          run: clojure -X:test :excludes "[:clj-snippets :cljs-snippets :manual]"
 
       - name: Test CLJ Snippet Snapshots
         uses: coactions/setup-xvfb@v1
