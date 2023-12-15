@@ -16,14 +16,15 @@
 
 (t/use-fixtures :once sth/check-dependencies)
 
-(defn run-snippet-as-test [snippet]
+(defn run-snippet-as-test [snippet test-name]
   (let [result (promise)
         snip-name (str (:ns snippet)
                        "/"
                        (:name snippet))
         opts (:opts snippet)
         actual-file (sth/actual-image "clj" (:name snippet))]
-    ;; (println "Test:" snip-name)
+    (println (str "clojure -X:test :vars '[quil.snippets.snapshot-test/"
+                  test-name "]'"))
     (when manual?
       (clojure.pprint/pprint (:body-str snippet)))
     (q/sketch
@@ -72,7 +73,7 @@
     (intern 'quil.snippets.snapshot-test
             (vary-meta (symbol test-name) assoc
                        :clj-snippets true
-                       :test #(run-snippet-as-test snippet))
+                       :test #(run-snippet-as-test snippet test-name))
             (fn []
               (q/sketch
                :title name
