@@ -5,7 +5,10 @@
    [clojure.string :as string]
    [clojure.test :refer [deftest is]]
    [quil.helpers.docs :refer [link-to-processing-reference]]
-   [quil.snippets.all-snippets :as as]))
+   [quil.snippets.all-snippets :as as]
+   ;; load quil.core and quil.middleware so get-public-fns can iterate ns
+   quil.core
+   quil.middleware))
 
 (defn get-public-fns []
   (mapcat #(->> % the-ns ns-publics)
