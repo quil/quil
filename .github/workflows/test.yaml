@@ -2,7 +2,6 @@ name: Test
 
 on:
   push:
-  pull_request:
 
 jobs:
   test-leiningen:
@@ -103,8 +102,8 @@ jobs:
       - name: System Info
         run: bb system-info
 
-      - name: Install Processing jars
-        run: bb processing-install
+      - name: Install Processing jars to local m2
+        run: clojure -T:build processing-clojars
 
       # AOT compile applet-listener and applet so CLJS compile can run
       - name: AOT Compile
@@ -158,8 +157,8 @@ jobs:
       - name: System Info
         run: bb system-info
 
-      - name: Install Processing jars
-        run: bb processing-install
+      - name: Install Processing jars to local m2
+        run: clojure -T:build processing-clojars
 
       # AOT compile applet-listener and applet
       - name: AOT Compile

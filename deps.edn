@@ -24,11 +24,17 @@
         org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
 
         ;; part of PDF support
-        com.lowagie/itext {:local/root "libraries/itext.jar"}
+        ;; version defined by processing in https://github.com/benfry/processing4/tree/main/java/libraries/pdf
+        ;; see also https://github.com/quil/quil/issues/247
+        com.lowagie/itext {:mvn/version "2.1.7"
+                           :exclusions [bouncycastle/bctsp-jdk14]}
+        org.bouncycastle/bctsp-jdk14 {:mvn/version "1.38"}
 
         ;; svg export
-        org.apache.xmlgraphics/batik-svggen {:local/root "libraries/batik.jar"}
-        org.apache.xmlgraphics/batik-dom {:local/root "libraries/batik.jar"}
+        ;; versions from https://github.com/benfry/processing4/blob/main/java/libraries/svg/build.xml#L6
+        ;; FIXME: push this dependency to processing-svg?
+        org.apache.xmlgraphics/batik-svggen {:mvn/version "1.14"}
+        org.apache.xmlgraphics/batik-dom {:mvn/version "1.14"}
 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
