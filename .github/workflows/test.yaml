@@ -115,6 +115,8 @@ jobs:
 
       - name: Test CLJ Snippet Snapshots
         uses: coactions/setup-xvfb@v1
+        # something is hanging so force a close
+        timeout-minutes: 4
         with:
           run: clojure -X:test :includes "[:clj-snippets]"
 
