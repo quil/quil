@@ -41,7 +41,8 @@
 
 (defsnippet background-image
   "background-image"
-  {:setup (let [_ (comment "create url to image to used as background")
+  {:delay-frames 5
+   :setup (let [_ (comment "create url to image to used as background")
                 url #?(:clj (.getPath (io/resource "dummy-500x500.png"))
                        :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}

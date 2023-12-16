@@ -49,6 +49,7 @@
                               in automated image diff tests.
       - `:accepted-diff-threshold` - Adjust image difference threshold on a per
                                      snippet basis
+      - `:delay-frames` - Number of frames to run before saving a snapshot
     * `body` - The body of the `draw` function of the snippet."
   [snip-name fns opts & body]
   (let [setup (:setup opts '())
@@ -65,6 +66,6 @@
              :mouse-clicked (fn [] ~mouse-clicked)
              :mouse-clicked-str ~(pr-str mouse-clicked)
              :ns ~(str (ns-name *ns*))
-             :delay-frames ~(:async-frames opts 0)
+             :delay-frames ~(:delay-frames opts 0)
              :skip-image-diff? ~(:skip-image-diff? opts false)
              :accepted-diff-threshold ~(:accepted-diff-threshold opts 0.03)})))
