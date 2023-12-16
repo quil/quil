@@ -110,15 +110,9 @@ jobs:
       # verified from a CLJS context.
       - name: Test
         uses: coactions/setup-xvfb@v1
+        timeout-minutes: 5
         with:
-          run: clojure -X:test :excludes "[:clj-snippets :cljs-snippets]"
-
-      - name: Test CLJ Snippet Snapshots
-        uses: coactions/setup-xvfb@v1
-        # something is hanging so force a close
-        timeout-minutes: 4
-        with:
-          run: clojure -X:test :includes "[:clj-snippets]"
+          run: clojure -X:test :excludes "[:cljs-snippets]"
 
       # FIXME: Disabled for now, need to standup a webserver before executing
       # - name: Test CLJS Snippet Snapshots
