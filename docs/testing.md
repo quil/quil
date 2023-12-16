@@ -5,6 +5,11 @@ For non-snippet tests
 $ clojure -X:test :excludes '[:clj-snippets :cljs-snippets]'
 ```
 
+For manual CLJ tests
+```
+$ clojure -X:test :nses '[quil.manual]'
+```
+
 For CLJ snippets:
 ```
 $ clojure -X:test :includes '[:clj-snippets]'
