@@ -133,11 +133,11 @@
 
   (comment "reusing the same graphics to draw 3 things")
   (let [g (q/create-graphics 200 200 :p2d)]
-    (q/background 255)
     (comment "draw red square")
     (q/with-graphics g
       (q/fill 255 0 0)
       (q/rect 25 25 150 150))
+    (q/background 255)
     (q/image g 0 0)
     (comment "draw circle without clearing")
     (comment "red square is still present")
