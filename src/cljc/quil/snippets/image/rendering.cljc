@@ -11,7 +11,10 @@
   "blend-mode"
   {:renderer :p2d}
 
-  (q/background 255)
+  ;; FIXME: force a clear to white before compositing with blend images
+  (q/rect 0 0 (q/width) (q/height))
+  ;; (q/background 255)
+
   (let [modes [:replace :blend :add #?(:clj :subtract) :darkest
                :lightest :difference :exclusion :multiply :screen
                #?@(:cljs (:overlay :hard-light :soft-light
