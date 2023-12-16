@@ -10,18 +10,19 @@
         quil/processing-pdf {:mvn/version "4.2.3"}
         quil/processing-svg {:mvn/version "4.2.3"}
 
-        ;; native display code
-        org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
+        ;; native display code: a version ahead of processing 4.2.3, which is
+        ;; still using jogl/gluegen 2.4.0-rc-20230201
+        org.jogamp.gluegen/gluegen-rt {:mvn/version "2.5.0"}
+        org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.5.0"}
+        org.jogamp.gluegen/gluegen-rt$natives-linux-amd64 {:mvn/version "2.5.0"}
+        org.jogamp.gluegen/gluegen-rt$natives-linux-aarch64 {:mvn/version "2.5.0"}
+        org.jogamp.gluegen/gluegen-rt$natives-windows-amd64 {:mvn/version "2.5.0"}
 
-        org.jogamp.jogl/jogl-all {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
+        org.jogamp.jogl/jogl-all {:mvn/version "2.5.0"}
+        org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.5.0"}
+        org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.5.0"}
+        org.jogamp.jogl/jogl-all$natives-linux-aarch64 {:mvn/version "2.5.0"}
+        org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.5.0"}
 
         ;; part of PDF support
         ;; version defined by processing in https://github.com/benfry/processing4/tree/main/java/libraries/pdf
