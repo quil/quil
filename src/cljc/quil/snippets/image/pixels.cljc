@@ -8,7 +8,7 @@
 
 (defsnippet blend
   "blend"
-  {:setup (q/no-loop)}
+  {}
 
   (q/background 255 100 20 50)
 

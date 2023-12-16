@@ -48,7 +48,7 @@
   (let [lock (promise)]
     (q/sketch
      :title "no-loop with start-loop"
-     :setup #(q/no-loop)
+     :setup (fn [] (q/no-loop))
      :draw (fn []
              (q/fill 0)
              (q/background 255)
@@ -153,7 +153,7 @@
     (q/sketch
      :size [800 500]
      :on-close #(deliver lock true)
-     :setup q/no-loop
+     :setup (fn [] (q/no-loop))
      :draw (fn []
 
              (q/stroke-weight 5)
@@ -197,7 +197,7 @@
     (q/sketch
      :size [800 500]
      :on-close #(deliver lock true)
-     :setup q/no-loop
+     :setup (fn [] (q/no-loop))
      :draw (fn []
              (q/stroke-weight 5)
              (q/fill [0 10 10 90])
