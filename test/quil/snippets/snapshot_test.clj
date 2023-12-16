@@ -35,7 +35,9 @@
      :renderer (:renderer opts :java2d)
      :setup (fn []
               ((:setup snippet))
-              (q/frame-rate 5))
+              ;; only slow down frame rate during manual runs
+              (when manual?
+                (q/frame-rate 5)))
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
                        (settings)))
