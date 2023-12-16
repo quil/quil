@@ -12,7 +12,7 @@
 
   (q/background 255 100 20 50)
 
-  (let [im (q/create-image 50 50 #?(:clj :rgb))
+  (let [im (q/create-image 50 50 #?(:clj :argb))
         modes [#?(:cljs :replace) :blend :add #?(:clj :subtract) :darkest
                :lightest :difference :exclusion :multiply :screen
                :overlay :hard-light :soft-light :dodge :burn]
