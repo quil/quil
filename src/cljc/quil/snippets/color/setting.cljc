@@ -1,7 +1,8 @@
 (ns quil.snippets.color.setting
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
@@ -40,9 +41,8 @@
 
 (defsnippet background-image
   "background-image"
-  {:delay-frames 5 ;; wait 5 frames to finish async load-image
-   :setup (let [_ (comment "create url to image to used as background")
-                url #?(:clj (str "https://dummyimage.com/" (q/width) "x"  (q/height) "/2c3e50/ffffff.png")
+  {:setup (let [_ (comment "create url to image to used as background")
+                url #?(:clj (.getPath (io/resource "dummy-500x500.png"))
                        :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}
 
