@@ -64,7 +64,7 @@ jobs:
         os:
           - ubuntu-latest
           # SEGV on CGLDescribeRenderer after WARNING: GL pipe is running in software mode (Renderer ID=0x1020400)
-          # - macOS-latest
+          - macOS-latest
           # Failing because setup-xvfb powershell can't find clojure commands
           # - windows-latest
         java-version: [17] # ,20 to test jdk20
