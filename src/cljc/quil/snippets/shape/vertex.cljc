@@ -71,6 +71,7 @@
       (q/vertex 80 280)
       (q/vertex 80 120)
       (q/end-shape))
+    (q/background 255)
     (q/image gr 0 0))
 
   (q/no-loop))
