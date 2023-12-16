@@ -13,6 +13,7 @@
 (def default-size [500 500])
 
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
+(def log-test? (-> (System/getenv) (get "LOGTEST") boolean))
 
 (t/use-fixtures :once sth/check-dependencies)
 
@@ -23,8 +24,9 @@
                        (:name snippet))
         opts (:opts snippet)
         actual-file (sth/actual-image "clj" (:name snippet))]
-    (println (str "clojure -X:test :vars '[quil.snippets.snapshot-test/"
-                  test-name "]'"))
+    (when log-test?
+      (println (str "clojure -X:test :vars '[quil.snippets.snapshot-test/"
+                    test-name "]'")))
     (when manual?
       (clojure.pprint/pprint (:body-str snippet)))
     (q/sketch
