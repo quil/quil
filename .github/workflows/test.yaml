@@ -112,7 +112,7 @@ jobs:
         uses: coactions/setup-xvfb@v1
         timeout-minutes: 5
         with:
-          run: clojure -M:dev:kaocha unit clj-snippets
+          run: clojure -M:dev:kaocha --reporter doc unit clj-snippets
 
       # FIXME: Disabled for now, need to standup a webserver before executing
       # - name: Test CLJS Snippet Snapshots
