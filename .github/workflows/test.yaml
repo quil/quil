@@ -118,7 +118,7 @@ jobs:
       # - name: Test CLJS Snippet Snapshots
       #   uses: coactions/setup-xvfb@v1
       #   with:
-      #     run: clojure -X:test :includes '[:cljs-snippets]'
+      #     run: clojure -M:dev:kaocha cljs-snippets
 
       - name: Upload Test Artifacts
         if: failure()
