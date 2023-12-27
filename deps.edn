@@ -53,7 +53,7 @@
                          ;; for cljs manual tests
                          compojure/compojure {:mvn/version "1.7.0"}
                          hiccup/hiccup {:mvn/version "1.0.5"}}
-            :extra-paths ["test"]}
+            :extra-paths ["test" "dev-resources"]}
 
            ;; clj -X:test
            :test {:extra-paths ["test" "dev-resources"]
