@@ -13,6 +13,7 @@
 (def default-size [500 500])
 
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
+(def github-actions? (boolean (System/getenv "GITHUB_ACTIONS")))
 (def log-test? (-> (System/getenv) (get "LOGTEST") boolean))
 
 (t/use-fixtures :once sth/check-dependencies)
@@ -37,7 +38,10 @@
               ((:setup snippet))
               ;; only slow down frame rate during manual runs
               (when manual?
-                (q/frame-rate 5)))
+                (q/frame-rate 5))
+              ;; slow down frame rate in github actions to reduce SEGV
+              (when github-actions?
+                (q/frame-rate 10)))
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
                        (settings)))
