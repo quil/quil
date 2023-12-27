@@ -1,11 +1,23 @@
 #kaocha/v1
 {:tests
  [{:kaocha.testable/type :kaocha.type/clojure.test
-   :kaocha.testable/id   :default
+   :kaocha.testable/id   :unit
    :ns-patterns   ["-test$"]
    :source-paths  ["src"]
    :test-paths    ["test"]
-   :skip-meta [:cljs-snippets]}]
+   :skip-meta [:clj-snippets :cljs-snippets]}
+  {:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :clj-snippets
+   :ns-patterns   ["-test$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :focus-meta [:clj-snippets]}
+  {:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :cljs-snippets
+   :ns-patterns   ["-test$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :focus-meta [:cljs-snippets]}]
  :fail-fast? false
  :color? true
  :reporter [kaocha.report/dots]
