@@ -106,7 +106,7 @@ jobs:
       - name: AOT Compile
         run: clojure -T:build aot
 
-      # Ie all the tests excluding snippet tests, many of which are also
+      # Ie all the tests including snippet tests, many of which are also
       # verified from a CLJS context.
       - name: Test
         uses: coactions/setup-xvfb@v1
