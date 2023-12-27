@@ -17,7 +17,7 @@
                  ;; mouse-wheel is a special case as it takes single
                  ;; argument while all other fns don'ttake any arguments
                  :mouse-wheel (fn [_value] (throw (ex-info "Test" {})))}
-        safe-options (safe-fns options)]
+        safe-options (safe-fns options 1)]
     (doseq [[name fn] safe-options
             :when (or (var? fn) (fn? fn))]
       (with-out-str
