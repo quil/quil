@@ -82,3 +82,9 @@
            :cljs-test
            {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
             :extra-paths ["resources" "target" "test"]}
+
+           ;; clj -M:dev:fig:server -b dev -s
+           :server
+           {:extra-deps {prismatic/dommy {:mvn/version "1.1.0"}}
+            :main-opts ["-m" "figwheel.main" "-co" "dev.cljs.edn"]
+            :extra-paths ["dev-resources" "target" "test" "test/cljs"]}}}

@@ -56,6 +56,8 @@
                              [lein-ancient "0.6.15"]]
                    :source-paths ["dev"]}
 
+             ;; For a test server with compiled js/main.js
+             ;; lein with-profile cljs-testing do cljsbuild once tests, ring server
              :cljs-testing [:dev
                             {:plugins [[lein-cljsbuild "1.1.7"]]
                              :source-paths ["test/cljs"]

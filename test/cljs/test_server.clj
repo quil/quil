@@ -96,7 +96,10 @@
   (GET "/manual" req manual-page)
   (GET "/fullscreen" req fullscreen-page)
   (route/files "/snapshots" {:root (path-to-snippet-snapshots "cljs")})
-  (route/files "/js" {:root "target/js"})
+  ;; Figwheel runs with deps.edn so clojure.basis will be specified
+  (route/files "/js" {:root (if (System/getProperty "clojure.basis")
+                              "target/public/cljs-out"
+                              "target/js")})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))
 
