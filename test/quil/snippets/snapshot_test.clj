@@ -36,12 +36,10 @@
      :renderer (:renderer opts :java2d)
      :setup (fn []
               ((:setup snippet))
-              ;; only slow down frame rate during manual runs
-              (when manual?
-                (q/frame-rate 5))
-              ;; slow down frame rate in github actions to reduce SEGV
-              (when github-actions?
-                (q/frame-rate 10)))
+              ;; only slow down frame rate during manual runs or CI
+              ;; in CI the hope is this will reduce SEGV problems
+              (when (or manual? github-actions?)
+                (q/frame-rate 5)))
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
                        (settings)))
