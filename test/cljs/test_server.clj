@@ -5,16 +5,21 @@
    [compojure.route :as route]
    [hiccup.page :as h]))
 
+(defn header [title]
+  [:head
+   [:meta {:charset "utf-8"}]
+   [:title title]
+   [:script {:type "text/javascript" :src "js/main.js"}]
+   [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]])
+
 (def root-page
   (h/html5
-   [:head
-    [:meta {:charset "utf-8"}]
-    [:title "Quil tests"]
-    [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
-   [:div.centerLayer {:align "center"}
-    [:p [:a {:href "/test.html"} "Common Quil API tests"]]
-    [:p [:a {:href "/manual"} "Manual Quil API tests"]]
-    [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]))
+      (header "Quil tests")
+    [:body {:data-page "root"}
+     [:div.centerLayer {:align "center"}
+      [:p [:a {:href "/test.html"} "Common Quil API tests"]]
+      [:p [:a {:href "/manual"} "Manual Quil API tests"]]
+      [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]]))
 
 (defn gen-test-container
   ([id doc]
@@ -28,11 +33,7 @@
 
 (def manual-page
   (h/html5
-   [:head
-    [:meta {:charset "utf-8"}]
-    [:title "Manual Quil tests"]
-    [:script {:type "text/javascript" :src "js/main.js"}]
-    [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
+   (header "Manual Quil tests")
    [:body {:data-page "manual"}
     [:div.centerLayer {:align "center"}
      (gen-test-container
@@ -77,11 +78,7 @@
 
 (def fullscreen-page
   (h/html5
-   [:head
-    [:meta {:charset "utf-8"}]
-    [:title "Fullscreen Quil tests"]
-    [:script {:type "text/javascript" :src "js/main.js"}]
-    [:link {:rel "stylesheet" :type "text/css" :href "style/style.css"}]]
+   (header "Fullscreen Quil tests")
    [:body {:data-page "fullscreen"}
     [:div.centerLayer {:align "center"}
      (gen-test-container
