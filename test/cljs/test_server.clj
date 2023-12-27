@@ -1,9 +1,9 @@
 (ns test-server
-  (:require [quil.test-util :as tu]
-            [compojure.core :refer :all]
-            [compojure.handler :as handler]
-            [compojure.route :as route]
-            [hiccup.page :as h]))
+  (:require
+   [compojure.core :refer [defroutes GET]]
+   [compojure.handler :as handler]
+   [compojure.route :as route]
+   [hiccup.page :as h]))
 
 (def root-page
   (h/html5
@@ -88,11 +88,17 @@
       "fullscreen"
       "Trigger fullscreen by clicking F11. Exit from it by clicking Esc. Size should change")]]))
 
+;; FIXME: duplicated from quil.snippets.test-helper, but lein tests are in
+;; test/clj not test/quil, so not accessible in this context yet. Remove after
+;; web server runs from deps.edn.
+(defn path-to-snippet-snapshots [platform]
+  (str "dev-resources/snippet-snapshots/" platform "/normal/"))
+
 (defroutes app-routes
   (GET "/" req root-page)
   (GET "/manual" req manual-page)
   (GET "/fullscreen" req fullscreen-page)
-  (route/files "/snapshots" {:root (tu/path-to-snippet-snapshots "cljs")})
+  (route/files "/snapshots" {:root (path-to-snippet-snapshots "cljs")})
   (route/files "/js" {:root "target/js"})
   (route/files "/" {:root "test/html"})
   (route/not-found "Not Found"))

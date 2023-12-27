@@ -45,21 +45,32 @@
            :dev
            {:extra-deps {;; for snippet tests
                          clj-http/clj-http {:mvn/version "3.12.3"}
-                         cheshire/cheshire {:mvn/version "5.12.0"}
                          etaoin/etaoin {:mvn/version "1.0.40"}
+
+                         ;; for fn-metas tests
+                         cheshire/cheshire {:mvn/version "5.12.0"}
 
                          ;; for cljs manual tests
                          compojure/compojure {:mvn/version "1.7.0"}
                          hiccup/hiccup {:mvn/version "1.0.5"}}
-            :extra-paths ["test"]}
+            :extra-paths ["test" "dev-resources"]}
 
            ;; clj -X:test
-           ;; not picking up all test namespaces, probably has to do with :pattern
-           :test {:extra-paths ["test/clj" "test/clj/quil" "test"]
+           :test {:extra-paths ["test" "dev-resources"]
                   :extra-deps {io.github.cognitect-labs/test-runner
-                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+                               {:git/tag "v0.5.1" :git/sha "dfb30dd"}
+
+                               ;; for CLJS snippet tests
+                               clj-http/clj-http {:mvn/version "3.12.3"}
+                               etaoin/etaoin {:mvn/version "1.0.40"}
+                               }
                   :main-opts ["-m" "cognitect.test-runner"]
                   :exec-fn cognitect.test-runner.api/test}
+
+           ;; clj -M:dev:kaocha
+           :kaocha
+           {:main-opts ["-m" "kaocha.runner"]
+            :extra-deps {lambdaisland/kaocha {:mvn/version "1.87.1366"}}}
 
            :fig
            {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}

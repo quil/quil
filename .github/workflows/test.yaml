@@ -4,65 +4,6 @@ on:
   push:
 
 jobs:
-  test-leiningen:
-    name: Test Leiningen
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          # Disabled because of 100s of Caused by: java.lang.ClassNotFoundException: com.apple.eawt.QuitHandler
-          # https://discourse.processing.org/t/error-hello-processing-jdk-10-osx-high-sierra-com-apple-eawt-quithandler-not-supported/1396 may be relevant.
-          # - macOS-latest
-          # Disabled because it's hanging somewhere in lein test (or at least not finishing after 6m+)
-          # possibly related to missing imagemagick on windows?
-          # - windows-latest
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.1
-        with:
-          lein: 2.10.0
-
-      - name: Cache Leiningen dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: lein-${{ runner.os }}-${{ hashFiles('**/project.clj') }}
-          restore-keys: lein-${{ runner.os }}-
-
-      - name: Leiningen Install
-        run: lein install
-
-      - name: Version
-        run: lein version
-
-      - name: Leiningen Test
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: lein test
-
-      - name: Upload Test Artifacts
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: snippet-differences-${{ github.sha }}.${{ github.run_attempt }}
-          path: |
-            dev-resources/snippet-snapshots/*/*/*-actual.png
-            dev-resources/snippet-snapshots/*/*/*-difference.png
-
   test-cljs:
     name: Test ClojureScript
 
@@ -81,7 +22,10 @@ jobs:
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: |
+            ~/.m2/repository
+            ~/.cpcache
+            ~/.gitlibs
           key: cljs-${{ runner.os }}-${{ hashFiles('**/deps.edn') }}
           restore-keys: cljs-${{ runner.os }}-
 
@@ -119,6 +63,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+          # SEGV on CGLDescribeRenderer after WARNING: GL pipe is running in software mode (Renderer ID=0x1020400)
           - macOS-latest
           # Failing because setup-xvfb powershell can't find clojure commands
           # - windows-latest
@@ -133,7 +78,10 @@ jobs:
       - name: Cache deps.edn dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: |
+            ~/.m2/repository
+            ~/.cpcache
+            ~/.gitlibs
           key: clj-${{ runner.os }}-jdk${{ matrix.java-version }}-${{ hashFiles('**/deps.edn') }}
           restore-keys: clj-${{ runner.os }}-jdk${{ matrix.java-version }}-
 
@@ -158,7 +106,25 @@ jobs:
       - name: AOT Compile
         run: clojure -T:build aot
 
+      # Ie all the tests including snippet tests, many of which are also
+      # verified from a CLJS context.
       - name: Test
         uses: coactions/setup-xvfb@v1
+        timeout-minutes: 5
         with:
-          run: clojure -X:test
+          run: clojure -M:dev:kaocha --reporter doc unit clj-snippets
+
+      # FIXME: Disabled for now, need to standup a webserver before executing
+      # - name: Test CLJS Snippet Snapshots
+      #   uses: coactions/setup-xvfb@v1
+      #   with:
+      #     run: clojure -M:dev:kaocha cljs-snippets
+
+      - name: Upload Test Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snippet-differences-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
+          path: |
+            dev-resources/snippet-snapshots/*/*/*-actual.png
+            dev-resources/snippet-snapshots/*/*/*-difference.png

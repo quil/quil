@@ -1,8 +1,9 @@
 ## Unreleased
 
+* Convert tests to run from deps.edn and increase test stability [#403](https://github.com/quil/quil/pull/403)
 * Fix: `(tint r g b a)` green is being used for red and green channels [#397](https://github.com/quil/quil/pull/397) by [@plexus](https://github.com/plexus)
 * Improve snippet testing and color arguments [#399](https://github.com/quil/quil/pull/399)
-  * Partially addresses #364
+  * Partially addresses [#364](https://github.com/quil/quil/issues/364)
 * Document both leiningen and deps-new sketchbook templates [#398](https://github.com/quil/quil/pull/398)
 
 ## 4.3.1323

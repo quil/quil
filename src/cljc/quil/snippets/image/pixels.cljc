@@ -1,17 +1,18 @@
 (ns quil.snippets.image.pixels
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
 (defsnippet blend
   "blend"
-  {:setup (q/no-loop)}
+  {}
 
   (q/background 255 100 20 50)
 
-  (let [im (q/create-image 50 50 #?(:clj :rgb))
+  (let [im (q/create-image 50 50 #?(:clj :argb))
         modes [#?(:cljs :replace) :blend :add #?(:clj :subtract) :darkest
                :lightest :difference :exclusion :multiply :screen
                :overlay :hard-light :soft-light :dodge :burn]
@@ -154,7 +155,7 @@
 
      (q/background 255)
      (let [orig (q/create-graphics 100 100)
-           shd (q/load-shader (.getPath (clojure.java.io/resource "SimpleShader.glsl")))]
+           shd (q/load-shader (.getPath (io/resource "SimpleShader.glsl")))]
        (q/with-graphics orig
          (q/color-mode :rgb 1.0)
          (q/background 1)
@@ -207,7 +208,6 @@
   ["pixels" "update-pixels"]
   {:renderer :p2d}
 
-  (q/background 255)
   (let [size 50
         gr (q/create-graphics size size :p2d)]
 
@@ -217,6 +217,7 @@
       (q/fill 255 0 0)
       (q/ellipse (/ size 2) (/ size 2) (* size (/ 2 3)) (* size (/ 2 3))))
 
+    (q/background 255)
     (comment "draw original graphics")
     (q/image gr 0 0)
     (comment "get pixels of the graphics and copy")
@@ -238,9 +239,8 @@
       (dotimes [i half]
         #?(:clj (aset-int px (+ i half) (aget px i))
            :cljs (aset px (+ i half) (aget px i)))))
-    (q/update-pixels))
-
-  (q/no-loop))
+    (q/update-pixels)
+    (q/no-loop)))
 
 (defsnippet set-image
   ["set-image" "set-pixel"]

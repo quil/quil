@@ -1,7 +1,8 @@
 (ns quil.snippets.typography.loading-and-displaying
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
@@ -60,7 +61,7 @@
 (defsnippet load-font
   "load-font"
   {:setup (let [_ (comment "create url to load font")
-                url #?(:clj (.getPath (clojure.java.io/resource "ComicSansMS-48.vlw"))
+                url #?(:clj (.getPath (io/resource "ComicSansMS-48.vlw"))
                        :cljs "https://www.fontsquirrel.com/fonts/download/roboto")]
             (q/set-state! :font (q/load-font url)))}
 

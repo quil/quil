@@ -1,14 +1,14 @@
-(ns fn-metas
-  (:require quil.core
-            quil.middleware
-            [quil.helpers.docs :refer [link-to-processing-reference
-                                       link-to-p5js-reference]]
-            [quil.snippets.all-snippets :as as]
-            [clojure.set :as set]
-            [clojure.string :as string]
-            [clojure.test :refer [deftest is]]
-            [clj-http.client :as http]
-            [cheshire.core :as json]))
+(ns quil.snippets.fn-metas-test
+  (:require
+   [cheshire.core :as json]
+   [clj-http.client :as http]
+   [clojure.string :as string]
+   [clojure.test :refer [deftest is]]
+   [quil.helpers.docs :refer [link-to-processing-reference]]
+   [quil.snippets.all-snippets :as as]
+   ;; load quil.core and quil.middleware so get-public-fns can iterate ns
+   quil.core
+   quil.middleware))
 
 (defn get-public-fns []
   (mapcat #(->> % the-ns ns-publics)
@@ -40,6 +40,8 @@
                                              {:link link
                                               :valid? (valid-link? link)})))]
     (is valid? (str "Link " link " is not valid"))))
+
+;; FIXME: test link-to-p5js-reference
 
 (defn p5js-method-or-property? [item]
   (->> (get item "itemtype")

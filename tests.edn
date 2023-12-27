@@ -1,0 +1,32 @@
+#kaocha/v1
+{:tests
+ [{:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :unit
+   :ns-patterns   ["-test$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :skip-meta [:clj-snippets :cljs-snippets]}
+  {:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :clj-snippets
+   :ns-patterns   ["-test$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :focus-meta [:clj-snippets]}
+  {:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :cljs-snippets
+   :ns-patterns   ["-test$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :focus-meta [:cljs-snippets]}]
+ :fail-fast? false
+ :color? true
+ :reporter [kaocha.report/dots]
+ :plugins [:kaocha.plugin/randomize
+           :kaocha.plugin/filter
+           :kaocha.plugin/capture-output
+           :kaocha.plugin/print-invocations
+           :kaocha.plugin/profiling]
+ :kaocha.plugin.randomize/seed       950716166
+ :kaocha.plugin.randomize/randomize? true
+ :kaocha.plugin.profiling/count      5
+ :kaocha.plugin.profiling/profiling? true}

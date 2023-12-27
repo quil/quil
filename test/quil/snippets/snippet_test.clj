@@ -1,17 +1,17 @@
-(ns quil.snippet-test
+(ns quil.snippets.snippet-test
   (:require
    [clojure.java.io :as io]
    [clojure.test :as t]
    [quil.snippets.all-snippets :as as]
-   [quil.test-util :as tu]))
+   [quil.snippets.test-helper :as sth]))
 
 ;; run only this namespace:
-;; clj -X:test :nses '[quil.snippet-test]'
+;; clj -X:test :nses '[quil.snippets.snippet-test]'
 
 (defn verify-expected-snapshot-exists [{:keys [ns name skip-image-diff?]}]
   (when-not skip-image-diff?
     (doseq [platform ["clj" #_"cljs"] ;; 28 missing cljs cases
-            :let [expected (tu/expected-image platform name)]]
+            :let [expected (sth/expected-image platform name)]]
       (t/is (.exists (io/as-file expected))
             (str "Missing expected image " expected " for "
                  ns " " name)))))

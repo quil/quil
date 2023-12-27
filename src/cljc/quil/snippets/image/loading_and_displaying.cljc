@@ -1,7 +1,8 @@
 (ns quil.snippets.image.loading-and-displaying
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
@@ -51,11 +52,12 @@
 
     (q/no-loop)))
 
+;; FIXME: clj is using file and not url because of async problems. A url would
+;; be preferable but for snapshot testing a file is more reliable.
 (defsnippet load-image
   "load-image"
-  {:delay-frame 5
-   :setup (let [_ (comment "create url to load image 100x100")
-                url #?(:clj "https://dummyimage.com/100x100/2c3e50/ffffff.png"
+  {:setup (let [_ (comment "create an 100x100 image from file")
+                url #?(:clj (.getPath (io/resource "dummy-100x100.png"))
                        :cljs "https://placekitten.com/100/100")]
             (q/set-state! :image (q/load-image url)))}
 

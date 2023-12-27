@@ -54,8 +54,8 @@
 
 (defsnippet redraw
   "redraw"
-  {:setup (q/no-loop)
-   :mouse-clicked (q/redraw)}
+  {:setup (fn [] (q/no-loop))
+   :mouse-clicked (fn [] (q/redraw))}
 
   (q/background 255)
   (q/fill 0)

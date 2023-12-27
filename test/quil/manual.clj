@@ -1,8 +1,9 @@
-(ns ^:manual
- manual
+(ns quil.manual
   (:require [quil.core :as q]
             [quil.middlewares.fun-mode :as fm]
             [clojure.test :refer [deftest]]))
+
+;; clj -X:test :nses '[quil.manual]'
 
 (defn draw-text [& txt]
   (q/fill 0)
@@ -47,7 +48,7 @@
   (let [lock (promise)]
     (q/sketch
      :title "no-loop with start-loop"
-     :setup #(q/no-loop)
+     :setup (fn [] (q/no-loop))
      :draw (fn []
              (q/fill 0)
              (q/background 255)
@@ -152,7 +153,7 @@
     (q/sketch
      :size [800 500]
      :on-close #(deliver lock true)
-     :setup q/no-loop
+     :setup (fn [] (q/no-loop))
      :draw (fn []
 
              (q/stroke-weight 5)
@@ -196,7 +197,7 @@
     (q/sketch
      :size [800 500]
      :on-close #(deliver lock true)
-     :setup q/no-loop
+     :setup (fn [] (q/no-loop))
      :draw (fn []
              (q/stroke-weight 5)
              (q/fill [0 10 10 90])
@@ -234,15 +235,15 @@
                (q/rect base-x 300 90 90))))
     @lock))
 
-(deftest run-all
+(deftest ^:manual run-all
   (doseq [fn [resizable-and-keep-on-top
-              fullscreen present-and-bgcolor
-              no-loop-with-start-loop
-              redraw-on-key
-              fun-mode
-              resize-sketch
-              with-stroke
-              with-fill
-              on-close-and-exit-on-close]]
+             fullscreen present-and-bgcolor
+             no-loop-with-start-loop
+             redraw-on-key
+             fun-mode
+             resize-sketch
+             with-stroke
+             with-fill
+             on-close-and-exit-on-close]]
     (fn)))
 

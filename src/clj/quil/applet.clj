@@ -284,7 +284,7 @@
 
         options     (if (:no-safe-fns features)
                       options
-                      (safe-fns options))
+                      (safe-fns options 1000))
 
         options     (if (:no-bind-output features)
                       options

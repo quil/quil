@@ -1,7 +1,8 @@
 (ns quil.snippets.color.setting
   (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
-            quil.snippets.all-snippets-internal)
+            quil.snippets.all-snippets-internal
+            #?(:clj [clojure.java.io :as io]))
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
@@ -40,9 +41,9 @@
 
 (defsnippet background-image
   "background-image"
-  {:delay-frames 5 ;; wait 5 frames to finish async load-image
+  {:delay-frames 10
    :setup (let [_ (comment "create url to image to used as background")
-                url #?(:clj (str "https://dummyimage.com/" (q/width) "x"  (q/height) "/2c3e50/ffffff.png")
+                url #?(:clj (.getPath (io/resource "dummy-500x500.png"))
                        :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
             (q/set-state! :image (q/load-image url)))}
 
@@ -133,11 +134,11 @@
 
   (comment "reusing the same graphics to draw 3 things")
   (let [g (q/create-graphics 200 200 :p2d)]
-    (q/background 255)
     (comment "draw red square")
     (q/with-graphics g
       (q/fill 255 0 0)
       (q/rect 25 25 150 150))
+    (q/background 255)
     (q/image g 0 0)
     (comment "draw circle without clearing")
     (comment "red square is still present")
