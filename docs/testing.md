@@ -16,6 +16,12 @@ See `tests.edn` for the different suites. Multiple test suites can be run like s
 $ clojure -M:dev:kaocha unit clj-snippets
 ```
 
+For CLJS snippets:
+```
+$ clj -M:dev:fig:server -b dev -s
+$ clojure -M:dev:kaocha cljs-snippets
+```
+
 ## Using Test-Runner
 
 **Warning:** Often hangs after completing all tests, so CI uses kaocha. However there is more documentation on how to focus on running an individual test with this test-runner, and for running the manual tests, so keeping it for now. 
