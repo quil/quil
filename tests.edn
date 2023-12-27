@@ -27,6 +27,6 @@
            :kaocha.plugin/print-invocations
            :kaocha.plugin/profiling]
  :kaocha.plugin.randomize/seed       950716166
- :kaocha.plugin.randomize/randomize? true
+ :kaocha.plugin.randomize/randomize? false
  :kaocha.plugin.profiling/count      5
  :kaocha.plugin.profiling/profiling? true}
