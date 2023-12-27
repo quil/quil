@@ -12,6 +12,7 @@
  :plugins [:kaocha.plugin/randomize
            :kaocha.plugin/filter
            :kaocha.plugin/capture-output
+           :kaocha.plugin/print-invocations
            :kaocha.plugin/profiling]
  :kaocha.plugin.randomize/seed       950716166
  :kaocha.plugin.randomize/randomize? true
