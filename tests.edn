@@ -6,8 +6,8 @@
    :source-paths  ["src"]
    :test-paths    ["test"]
    :skip-meta [:cljs-snippets]}]
- :fail-fast?                  false
- :color?                      true
+ :fail-fast? false
+ :color? true
  :reporter [kaocha.report/dots]
  :plugins [:kaocha.plugin/randomize
            :kaocha.plugin/filter
