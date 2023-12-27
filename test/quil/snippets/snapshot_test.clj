@@ -39,7 +39,7 @@
               ;; only slow down frame rate during manual runs or CI
               ;; in CI the hope is this will reduce SEGV problems
               (when (or manual? github-actions?)
-                (q/frame-rate 5)))
+                (q/frame-rate 4)))
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
                        (settings)))
