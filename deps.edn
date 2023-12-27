@@ -76,10 +76,9 @@
            {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}
                          fipp/fipp {:mvn/version "0.6.26"} ;; better diff output
                          com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-                         com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
-            :extra-paths ["resources"]}
+                         com.bhauman/figwheel-main {:mvn/version "0.2.18"}}}
 
            ;; clj -Mfig:cljs-test
            :cljs-test
            {:main-opts ["-m" "figwheel.main" "-co" "test.cljs.edn" "-m" "quil.test-runner"]
-            :extra-paths ["target" "test"]}}}
+            :extra-paths ["resources" "target" "test"]}

@@ -1,5 +1,9 @@
 (ns quil.test-runner
+  "Runs tests mounted as `dev-tests.js` from `resources/public/test-harness.html`"
   (:require
+   ;; ensure p5js is loaded first to prevent occasional load error
+   cljsjs.p5
+
    #_[clojure.test :as t :refer [deftest is] :include-macros true]
    [figwheel.main.testing :refer-macros [run-tests-async]]
 

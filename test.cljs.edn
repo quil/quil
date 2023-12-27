@@ -1,5 +1,5 @@
 ^{:ring-server-options {:port 9501}
-  :open-url "http://[[server-hostname]]:[[server-port]]/test.html"
+  :open-url "http://[[server-hostname]]:[[server-port]]/test-harness.html"
   :log-level :all
   :client-log-level :finest
   ;; headless is hanging?
