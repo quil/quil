@@ -10,7 +10,7 @@
    [quil.snippets.all-snippets :as as]
    [quil.snippets.test-helper :as sth]))
 
-(t/use-fixtures :once sth/check-dependencies)
+(t/use-fixtures :once sth/imagemagick-installed)
 
 (defn run-snippet-as-test [snippet test-name]
   (let [result (promise)

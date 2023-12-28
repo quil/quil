@@ -95,7 +95,7 @@
     true
     (catch java.io.IOException _e false)))
 
-(defn check-dependencies [f]
+(defn imagemagick-installed [f]
   (if (and (installed? "compare" "-version")
            (installed? "convert" "-version")
            (installed? "identify" "-version"))
