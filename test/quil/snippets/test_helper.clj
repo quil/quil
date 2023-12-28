@@ -74,6 +74,11 @@
             (str "Image differences in \"" test-name "\", see: " diff-file "\n"
                  identify)))))
 
+(def default-size [500 500])
+(def manual? (-> (System/getenv) (get "MANUAL") boolean))
+(def github-actions? (boolean (System/getenv "GITHUB_ACTIONS")))
+(def log-test? (-> (System/getenv) (get "LOGTEST") boolean))
+
 ;; Prepend UPDATE_SCREENSHOTS=true to test run to update expected image
 (def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
 

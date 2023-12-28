@@ -10,12 +10,6 @@
    [quil.snippets.all-snippets :as as]
    [quil.snippets.test-helper :as sth]))
 
-(def default-size [500 500])
-
-(def manual? (-> (System/getenv) (get "MANUAL") boolean))
-(def github-actions? (boolean (System/getenv "GITHUB_ACTIONS")))
-(def log-test? (-> (System/getenv) (get "LOGTEST") boolean))
-
 (t/use-fixtures :once sth/check-dependencies)
 
 (defn run-snippet-as-test [snippet test-name]
@@ -25,20 +19,20 @@
                        (:name snippet))
         opts (:opts snippet)
         actual-file (sth/actual-image "clj" (:name snippet))]
-    (when log-test?
+    (when sth/log-test?
       (println (str "clojure -X:test :vars '[quil.snippets.snapshot-test/"
                     test-name "]'")))
-    (when manual?
+    (when sth/manual?
       (clojure.pprint/pprint (:body-str snippet)))
     (q/sketch
      :title snip-name
-     :size (:size opts default-size)
+     :size (:size opts sth/default-size)
      :renderer (:renderer opts :java2d)
      :setup (fn []
               ((:setup snippet))
               ;; only slow down frame rate during manual runs or CI
               ;; in CI the hope is this will reduce SEGV problems
-              (when (or manual? github-actions?)
+              (when (or sth/manual? sth/github-actions?)
                 (q/frame-rate 4)))
      :mouse-clicked (:mouse-clicked snippet)
      :settings (fn [] (when-let [settings (:settings opts)]
@@ -62,7 +56,7 @@
              (.printStackTrace e)
              (deliver result e))
            (finally
-             (when (not manual?)
+             (when (not sth/manual?)
                (q/exit))))))
      :on-close #(deliver result nil))
     ;; block on @result promise and assert empty
@@ -83,7 +77,7 @@
             (fn []
               (q/sketch
                :title name
-               :size default-size
+               :size sth/default-size
                :setup (fn []
                         (q/frame-rate 5)
                         (setup))
