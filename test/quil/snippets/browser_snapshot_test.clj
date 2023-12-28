@@ -6,8 +6,6 @@
    [etaoin.api :as etaoin]
    [quil.snippets.test-helper :as sth]))
 
-(t/use-fixtures :once sth/imagemagick-installed)
-
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
   (sth/installed? "geckodriver" "--version"))
@@ -22,6 +20,21 @@
                           {:throw-exceptions false}))
        200)
     (catch java.lang.Exception _e false)))
+
+(defn preconditions [f]
+  (t/is (geckodriver-installed?)
+        "geckodriver is not installed. Install it and rerun the test.")
+  (t/is (chromedriver-installed?)
+        "chromedriver is not installed. Install it and rerun the test.")
+  (t/is (test-file-server-running?)
+        (str "Seems like file server with test page is not running. "
+             "Run 'clj -M:dev:fig:server -b dev -s' and rerun this test."))
+  (f))
+
+(t/use-fixtures :once
+  (t/compose-fixtures
+   sth/imagemagick-installed
+   preconditions))
 
 (defn snippet-elements [driver]
   (->> (etaoin/query-all driver {:tag :option})
@@ -39,13 +52,6 @@
 
 (t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
-  (t/is (geckodriver-installed?)
-        "geckodriver is not installed. Install it and rerun the test.")
-  (t/is (chromedriver-installed?)
-        "chromedriver is not installed. Install it and rerun the test.")
-  (t/is (test-file-server-running?)
-        (str "Seems like file server with test page is not running. "
-             "Run 'lein with-profile cljs-testing do cljsbuild once tests, ring server' and rerun this test."))
   (when (and (geckodriver-installed?)
              (chromedriver-installed?)
              (test-file-server-running?))
