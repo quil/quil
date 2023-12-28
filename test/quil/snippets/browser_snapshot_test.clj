@@ -51,18 +51,15 @@
 
 (t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
-  (when (and (geckodriver-installed?)
-             (chromedriver-installed?)
-             (test-file-server-running?))
-    (let [driver (etaoin/chrome)]
-      (etaoin/go driver "http://localhost:3000/test.html")
-      (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements driver)]
-        (etaoin/go driver (str "http://localhost:3000/test.html#" index))
-        (etaoin/refresh driver)
-        (let [actual-file (sth/actual-image "cljs" name)]
-          (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-          (sth/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
-      (etaoin/quit driver))))
+  (let [driver (etaoin/chrome)]
+    (etaoin/go driver "http://localhost:3000/test.html")
+    (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements driver)]
+      (etaoin/go driver (str "http://localhost:3000/test.html#" index))
+      (etaoin/refresh driver)
+      (let [actual-file (sth/actual-image "cljs" name)]
+        (etaoin/screenshot-element driver {:tag :canvas} actual-file)
+        (sth/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
+    (etaoin/quit driver)))
 
 ;; view image diffs with
 ;; $ eog dev-resources/snippet-snapshots/cljs/normal/*difference.png
