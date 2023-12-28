@@ -31,8 +31,18 @@
              "Run 'clj -M:dev:fig:server -b dev -s' and rerun this test."))
   (f))
 
+(def driver (atom nil))
+(defn etaoin-setup [f]
+  (let [browser (etaoin/chrome)]
+    (reset! driver browser)
+    (try (f)
+         (finally
+           (etaoin/quit browser)
+           (reset! driver nil)))))
+
 (t/use-fixtures :once
   (t/join-fixtures [sth/imagemagick-installed
+                    etaoin-setup
                     preconditions]))
 
 (defn snippet-elements [driver]
@@ -51,15 +61,13 @@
 
 (t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
-  (let [driver (etaoin/chrome)]
-    (etaoin/go driver "http://localhost:3000/test.html")
-    (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements driver)]
-      (etaoin/go driver (str "http://localhost:3000/test.html#" index))
-      (etaoin/refresh driver)
-      (let [actual-file (sth/actual-image "cljs" name)]
-        (etaoin/screenshot-element driver {:tag :canvas} actual-file)
-        (sth/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold)))
-    (etaoin/quit driver)))
+  (etaoin/go @driver "http://localhost:3000/test.html")
+  (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements @driver)]
+    (etaoin/go @driver (str "http://localhost:3000/test.html#" index))
+    (etaoin/refresh @driver)
+    (let [actual-file (sth/actual-image "cljs" name)]
+      (etaoin/screenshot-element @driver {:tag :canvas} actual-file)
+      (sth/verify-reference-or-update name "cljs" actual-file accepted-diff-threshold))))
 
 ;; view image diffs with
 ;; $ eog dev-resources/snippet-snapshots/cljs/normal/*difference.png
