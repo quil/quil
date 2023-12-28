@@ -26,6 +26,9 @@
         "geckodriver is not installed. Install it and rerun the test.")
   (t/is (chromedriver-installed?)
         "chromedriver is not installed. Install it and rerun the test.")
+  (f))
+
+(defn server-setup [f]
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "
              "Run 'clj -M:dev:fig:server -b dev -s' and rerun this test."))
@@ -42,8 +45,9 @@
 
 (t/use-fixtures :once
   (t/join-fixtures [sth/imagemagick-installed
-                    etaoin-setup
-                    preconditions]))
+                    preconditions
+                    server-setup
+                    etaoin-setup]))
 
 (defn snippet-elements [driver]
   (->> (etaoin/query-all driver {:tag :option})
