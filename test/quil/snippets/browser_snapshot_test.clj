@@ -32,9 +32,8 @@
   (f))
 
 (t/use-fixtures :once
-  (t/compose-fixtures
-   sth/imagemagick-installed
-   preconditions))
+  (t/join-fixtures [sth/imagemagick-installed
+                    preconditions]))
 
 (defn snippet-elements [driver]
   (->> (etaoin/query-all driver {:tag :option})
