@@ -16,10 +16,14 @@ See `tests.edn` for the different suites. Multiple test suites can be run like s
 $ clojure -M:dev:kaocha unit clj-snippets
 ```
 
-For CLJS snippets:
+For CLJS Manual tests:
 ```
 $ clj -M:dev:fig:server -b dev -s
-$ clojure -M:dev:kaocha cljs-snippets
+```
+
+For CLJS snippets:
+```
+$ clojure -M:dev:fig:kaocha cljs-snippets
 ```
 
 ## Using Test-Runner
@@ -67,7 +71,7 @@ These flags will work on both Kaocha and test-runner suites.
 The last type of test runner is for executing unit tests in CLJC files in a browser context. 
 
 ```
-clj -Mfig:cljs-test
+$ clj -Mfig:cljs-test
 ```
 
 These tests are run using the Figwheel test runner. The included tests are all

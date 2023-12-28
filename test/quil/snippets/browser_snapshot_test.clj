@@ -4,6 +4,7 @@
    [clojure.edn :as edn]
    [clojure.test :as t]
    [etaoin.api :as etaoin]
+   [figwheel.main.api :as fig]
    [quil.snippets.test-helper :as sth]))
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
@@ -29,13 +30,18 @@
   (f))
 
 (defn server-setup [f]
-  (t/is (test-file-server-running?)
-        (str "Seems like file server with test page is not running. "
-             "Run 'clj -M:dev:fig:server -b dev -s' and rerun this test."))
-  (f))
+  ;; if server exists, re-use existing
+  (if (test-file-server-running?)
+    (f)
+    (do (fig/start {:mode :serve} "snippets")
+        (try (f)
+             (finally
+               (fig/stop "snippets"))))))
 
 (def driver (atom nil))
 (defn etaoin-setup [f]
+  (t/is (test-file-server-running?)
+        (str "Seems like file server with test page is not running. "))
   (let [browser (etaoin/chrome)]
     (reset! driver browser)
     (try (f)
