@@ -4,7 +4,6 @@
    [clojure.edn :as edn]
    [clojure.test :as t]
    [etaoin.api :as etaoin]
-   [figwheel.main.api :as fig]
    [quil.snippets.test-helper :as sth]))
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
@@ -33,10 +32,11 @@
   ;; if server exists, re-use existing
   (if (test-file-server-running?)
     (f)
-    (do (fig/start {:mode :serve} "snippets")
+    ;; late bind to figwheel so test can load without the :fig alias
+    (do ((requiring-resolve 'figwheel.main.api/start) {:mode :serve} "snippets")
         (try (f)
              (finally
-               (fig/stop "snippets"))))))
+               ((requiring-resolve 'figwheel.main.api/stop) "snippets"))))))
 
 (def driver (atom nil))
 (defn etaoin-setup [f]
