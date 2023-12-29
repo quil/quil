@@ -1,7 +1,7 @@
 (ns build
   (:require
    [build.processing :as processing]
-   [clojure.java.io :as jio]
+   [clojure.java.io :as io]
    [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
 
@@ -89,7 +89,7 @@
              ;; don't bundle clojure into the jar
              :exclude ["^clojure[/].+"]})
     (println "release:" jar-file
-             (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
+             (format "(%.1f kb)" (/ (.length (io/file jar-file)) 1024.0)))))
 
 (defn deploy [opts]
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
