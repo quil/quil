@@ -69,7 +69,7 @@
   (let [version (release-version opts)]
     (b/write-pom
      {:class-dir class-dir
-      :src-pom "pom.xml"
+      :src-pom "build/template-pom.xml"
       :lib 'quil/quil
       :version version
       :basis @basis
