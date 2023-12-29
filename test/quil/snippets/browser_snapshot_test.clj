@@ -77,16 +77,18 @@
 (t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
   (etaoin/go @driver "http://localhost:3000/test.html")
-  (doseq [{:keys [name index accepted-diff-threshold]} (snippet-elements @driver)]
-    (etaoin/go @driver (str "http://localhost:3000/test.html#" index))
-    (etaoin/refresh @driver)
-    (let [actual-file (sth/actual-image "cljs" name)]
-      (etaoin/screenshot-element @driver {:tag :canvas} actual-file)
-      (sth/verify-reference-or-update
-       name "cljs" actual-file accepted-diff-threshold)
-      ;; disable for now, as lots of chatty logging, but useful to inspect
-      ;; (t/is (empty? (etaoin/get-logs @driver)))
-      )))
+  (let [elements (snippet-elements @driver)]
+    (t/is (seq elements) "unable to find tests on test.html harness")
+    (doseq [{:keys [name index accepted-diff-threshold]} elements]
+      (etaoin/go @driver (str "http://localhost:3000/test.html#" index))
+      (etaoin/refresh @driver)
+      (let [actual-file (sth/actual-image "cljs" name)]
+        (etaoin/screenshot-element @driver {:tag :canvas} actual-file)
+        (sth/verify-reference-or-update
+         name "cljs" actual-file accepted-diff-threshold)
+        ;; disable for now, as lots of chatty logging, but useful to inspect
+        ;; (t/is (empty? (etaoin/get-logs @driver)))
+        ))))
 
 ;; view image diffs with
 ;; $ eog dev-resources/snippet-snapshots/cljs/normal/*difference.png
