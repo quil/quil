@@ -69,6 +69,11 @@
        (remove :skip-image-diff?)
        (doall)))
 
+;; TODO: generate snippet test set without starting server instead of combining
+;; all tests into one. Currently the tests are ordered by
+;; test/cljs/quil/snippet/init-test-selection hence why `snippet-elements` above
+;; crawls the site for each test. However, if tests are generated ahead of time,
+;; kaocha focus-test and friends could run individual examples.
 (t/deftest ^:cljs-snippets
   all-cljs-snippets-produce-expected-output
   (etaoin/go @driver "http://localhost:3000/test.html")
