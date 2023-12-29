@@ -188,7 +188,7 @@
    (defsnippet texture
      "texture"
      {:renderer :p3d
-      :setup (q/set-state! :image (q/load-image "https://placekitten.com/100/100"))}
+      :setup (q/set-state! :image (q/load-image "/kitten-100x100.png"))}
 
      (if (q/loaded? (q/state :image))
        (let [gr (q/state :image)]
