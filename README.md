@@ -163,6 +163,7 @@ In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/
 Run automated tests locally for clj or cljs with:
 
 * `clojure -Mdev:kaocha unit clj-snippets` for clj tests
+* `clojure -Mdev:fig:kaocha cljs-snippets` for cljs snippet tests (requires chromedriver)
 * `clojure -Mfig:cljs-test` for cljs tests
 
 The coverage from the tests in the leiningen environment are still higher, but are being migrated over to automated tests that can run on Github Actions.
