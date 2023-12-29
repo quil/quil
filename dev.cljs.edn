@@ -1,0 +1,12 @@
+^{:ring-handler test-server/app
+  :ring-server-options {:port 3000}
+  :open-url "http://[[server-hostname]]:[[server-port]]/"
+  ;; :log-level :all
+  ;; :client-log-level :finest
+  ;; headless is hanging?
+  ;; :launch-js ["google-chrome" "--headless" "--repl" "--disable-gpu" :open-url]
+  ;; :launch-js ["firefox" :open-url]
+  }
+
+{:main quil.root-mount
+ :output-to "target/public/cljs-out/main.js"}

@@ -58,7 +58,7 @@
   "load-image"
   {:setup (let [_ (comment "create an 100x100 image from file")
                 url #?(:clj (.getPath (io/resource "dummy-100x100.png"))
-                       :cljs "https://placekitten.com/100/100")]
+                       :cljs "/kitten-100x100.png")]
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]

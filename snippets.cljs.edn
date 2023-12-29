@@ -1,0 +1,7 @@
+;; config for running snippet tests from browser-snapshot-test
+^{:ring-handler test-server/app
+  :ring-server-options {:port 3000}
+  :open-url false}
+{:main quil.root-mount
+ :optimizations :advanced
+ :output-to "target/public/cljs-out/main.js"}

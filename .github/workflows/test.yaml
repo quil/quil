@@ -55,6 +55,20 @@ jobs:
         with:
           run: clojure -Mfig:cljs-test
 
+      - name: Test CLJS Snippet Snapshots
+        uses: coactions/setup-xvfb@v1
+        with:
+          run: clojure -M:dev:fig:kaocha cljs-snippets
+
+      - name: Upload Test Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snippet-differences-cljs-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
+          path: |
+            dev-resources/snippet-snapshots/*/*/*-actual.png
+            dev-resources/snippet-snapshots/*/*/*-difference.png
+
   test-clj:
     name: Test Clojure
 
@@ -114,17 +128,11 @@ jobs:
         with:
           run: clojure -M:dev:kaocha --reporter doc unit clj-snippets
 
-      # FIXME: Disabled for now, need to standup a webserver before executing
-      # - name: Test CLJS Snippet Snapshots
-      #   uses: coactions/setup-xvfb@v1
-      #   with:
-      #     run: clojure -M:dev:kaocha cljs-snippets
-
       - name: Upload Test Artifacts
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: snippet-differences-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
+          name: snippet-differences-clj-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
           path: |
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png

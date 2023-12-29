@@ -39,12 +39,15 @@
     ;; each frame, so stop the loop after displaying
     (q/no-loop)))
 
+;; FIXME: use a remote url for the image when emitting a snippet, otherwise use
+;; the local copy for tests. This will ensure the snippet can be copy pasted and
+;; still work regardless of local server conditions.
 (defsnippet background-image
   "background-image"
   {:delay-frames 10
    :setup (let [_ (comment "create url to image to used as background")
                 url #?(:clj (.getPath (io/resource "dummy-500x500.png"))
-                       :cljs (str "https://placekitten.com/" (q/width) "/" (q/height)))]
+                       :cljs "/dummy-500x500.png")]
             (q/set-state! :image (q/load-image url)))}
 
   (let [im (q/state :image)]
