@@ -62,6 +62,28 @@
                   :class-dir class-dir
                   :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
 
+(defn strip-jogl-deps
+  "Remove JOGL deps from the `basis` to exclude as `pom.xml` dependencies.
+
+  The JOGL dependencies are included inside of the uberjar when it's created in
+  the release step. However, any dependency listed will be viewed as an external
+  dependency to fetch from a maven repo. The `:mvn/repos` jogl repo does provide
+  the JOGL sources, but any sketch or downstream library will also need to
+  include the JOGL repository, as repositories cannot propagate transitively.
+
+  By excluding these dependencies from the pom file, no attempt will be made to
+  resolve them from an external repository, and it will fallback to the copy
+  baked into the uberjar."
+  [basis]
+  (-> basis
+      (update :libs
+              (fn [libs]
+                (->> libs
+                     keys
+                     (filter (fn [lib] (re-find #"org\.jogamp" (namespace lib))))
+                     (apply dissoc libs))))
+      (update :mvn/repos dissoc "jogl")))
+
 ;; clj -T:build pom
 (defn pom
   "Generate a pom.xml for the current version"
@@ -72,7 +94,7 @@
       :src-pom "build/template-pom.xml"
       :lib 'quil/quil
       :version version
-      :basis @basis
+      :basis (strip-jogl-deps @basis)
       :scm {:tag (if-not snapshot
                    (str "v" version)
                    "")}
