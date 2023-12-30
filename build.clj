@@ -60,8 +60,8 @@
   (b/compile-clj {:basis @basis
                   :src-dirs ["src/clj" "src/cljc" "src/cljs"]
                   :class-dir class-dir
-                  :ns-compile ['quil.applet 'quil.core 'quil.sketch
-                               'quil.helpers.applet-listener]}))
+                  :ns-compile ['quil.helpers.applet-listener
+                               'quil.applet 'quil.core 'quil.sketch]}))
 
 (defn strip-jogl-deps
   "Remove JOGL deps from the `basis` to exclude as `pom.xml` dependencies.
