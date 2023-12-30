@@ -1,5 +1,6 @@
 ## Unreleased
 
+* Exclude JOGL deps from POM for uberjar release [#406](https://github.com/quil/quil/pull/406)
 * Automate CLJS snippet test server to run on CI [#405](https://github.com/quil/quil/pull/405)
 * Convert tests to run from deps.edn and increase test stability [#403](https://github.com/quil/quil/pull/403)
 * Fix: `(tint r g b a)` green is being used for red and green channels [#397](https://github.com/quil/quil/pull/397) by [@plexus](https://github.com/plexus)
