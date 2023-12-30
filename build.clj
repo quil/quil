@@ -1,7 +1,7 @@
 (ns build
   (:require
    [build.processing :as processing]
-   [clojure.java.io :as jio]
+   [clojure.java.io :as io]
    [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
 
@@ -60,7 +60,30 @@
   (b/compile-clj {:basis @basis
                   :src-dirs ["src/clj" "src/cljc" "src/cljs"]
                   :class-dir class-dir
-                  :ns-compile ['quil.helpers.applet-listener 'quil.applet 'quil.sketch]}))
+                  :ns-compile ['quil.helpers.applet-listener
+                               'quil.applet 'quil.core 'quil.sketch]}))
+
+(defn strip-jogl-deps
+  "Remove JOGL deps from the `basis` to exclude as `pom.xml` dependencies.
+
+  The JOGL dependencies are included inside of the uberjar when it's created in
+  the release step. However, any dependency listed will be viewed as an external
+  dependency to fetch from a maven repo. The `:mvn/repos` jogl repo does provide
+  the JOGL sources, but any sketch or downstream library will also need to
+  include the JOGL repository, as repositories cannot propagate transitively.
+
+  By excluding these dependencies from the pom file, no attempt will be made to
+  resolve them from an external repository, and it will fallback to the copy
+  baked into the uberjar."
+  [basis]
+  (-> basis
+      (update :libs
+              (fn [libs]
+                (->> libs
+                     keys
+                     (filter (fn [lib] (re-find #"org\.jogamp" (namespace lib))))
+                     (apply dissoc libs))))
+      (update :mvn/repos dissoc "jogl")))
 
 ;; clj -T:build pom
 (defn pom
@@ -69,10 +92,10 @@
   (let [version (release-version opts)]
     (b/write-pom
      {:class-dir class-dir
-      :src-pom "pom.xml"
+      :src-pom "build/template-pom.xml"
       :lib 'quil/quil
       :version version
-      :basis @basis
+      :basis (strip-jogl-deps @basis)
       :scm {:tag (if-not snapshot
                    (str "v" version)
                    "")}
@@ -89,7 +112,7 @@
              ;; don't bundle clojure into the jar
              :exclude ["^clojure[/].+"]})
     (println "release:" jar-file
-             (format "(%.1f kb)" (/ (.length (jio/file jar-file)) 1024.0)))))
+             (format "(%.1f kb)" (/ (.length (io/file jar-file)) 1024.0)))))
 
 (defn deploy [opts]
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
