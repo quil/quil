@@ -64,6 +64,29 @@ Quil has tests that run each snippets, takes a screenshot and compares with expe
 
 Ensure that `imagemagick`, `geckodriver`, and `chromedriver` are installed before running tests. Imagemagick is required for both clj and cljs while `geckodriver` or `chromedriver` is only needed for cljs. Currently CLJS tests are using `chromedriver` to account for a screenshot size issue with `geckodriver`.
 
+If the diff exceeds threshold the image comparison will print to console names of failed tests. An example snapshot difference failure would look like:
+
+```
+$ clj -M:dev:kaocha clj-snippets --focus :quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics
+[(.F)]
+Randomized with --seed 950716166
+
+FAIL in quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics (test_helper.clj:73)
+Image differences in "with-graphics", see: dev-resources/snippet-snapshots/clj/normal/with-graphics-difference.png
+dev-resources/snippet-snapshots/clj/normal/with-graphics-actual.png PNG 500x500 500x500+0+0 8-bit sRGB 6004B 0.000u 0:00.000
+dev-resources/snippet-snapshots/clj/normal/with-graphics-expected.png PNG 500x500 500x500+0+0 8-bit sRGB 4865B 0.000u 0:00.000
+
+expected: (<= result threshold)
+  actual: (not (<= 0.0452919 0.03))
+1 tests, 2 assertions, 1 failures.
+
+bin/kaocha --focus 'quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics'
+```
+
+The last line shows how to re-run just that test (possibly with the `MANUAL=true` environment variable to interact with the sketch while it's running). The "Image differences" line reports the diff image to inspect to see why it failed. The next two lines are output from identify which helps verify the sizes are equivalent. Finally we see can the see the threshold for comparison that was exceeded.
+
+This can be adjusted on a per snippet basis using the `:accepted-diff-threshold` key. Snippets can also skip the snapshot test entirely by setting `:skip-image-diff?` to true. Image diffs can be unreliable so feel free to either increase the threshold or skip the test entirely if it's not deterministic, or hard to keep it deterministic across different machines or architectures. Finally, the `UPDATE_SCREENSHOTS=true` variable can be used to update the expected image for an existing or new snippet.
+
 To see all differences from failed snippets try:
 
 ```
