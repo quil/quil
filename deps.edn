@@ -89,7 +89,7 @@
            :server
            {:main-opts ["-m" "figwheel.main" "-co" "dev.cljs.edn"]}
 
-           ;; clj -Mclj-kondo --lint src
+           ;; clj -Mclj-kondo --lint src test
            :clj-kondo
            {:extra-deps {clj-kondo/clj-kondo {:mvn/version "2023.12.15"}}
             :main-opts ["-m" "clj-kondo.main"]}}}

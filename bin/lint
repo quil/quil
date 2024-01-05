@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Runs clj-kondo linting check
+# Usage: bin/lint
+
+clj -Mclj-kondo --lint src test
