@@ -1,11 +1,8 @@
 (ns quil.snippets.snapshot-test
   (:require
-   [clj-http.client :as http]
-   [clojure.edn :as edn]
    [clojure.pprint]
    [clojure.string :as string]
    [clojure.test :as t]
-   [etaoin.api :as etaoin]
    [quil.core :as q]
    [quil.snippets.all-snippets :as as]
    [quil.snippets.test-helper :as sth]))
