@@ -1,5 +1,5 @@
 (ns ^{:doc "Functions for filtering/displaying docs in REPL and generating wiki pages."}
-    quil.helpers.docs
+ quil.helpers.docs
   (:require [clojure.string :as cstr]))
 
 (defn link-to-processing-reference
