@@ -67,7 +67,7 @@
         keep-on-top?   (:keep-on-top m)
         surface        (.getSurface applet)
         resizable?     (:resizable m)]
-    ; TODO: check if resizable and alwaysOnTop work correctly.
+    ;; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
      (fn []
        (.setTitle surface title)
@@ -75,9 +75,10 @@
        (.setAlwaysOnTop surface keep-on-top?)))
     applet))
 
+;; FIXME: why is renderer ignored here?
 (defn- applet-run
   "Launches the applet to the specified target."
-  [applet title renderer]
+  [applet title _renderer]
   (PApplet/runSketch
    (into-array String
                (vec (filter string?
@@ -177,7 +178,7 @@
 (defn -exitActual
   "Overriding `PApplet.exitActual` because we don't want it to call
   `System.exit()`."
-  [this])
+  [_this])
 
 (defn -sketchFullScreen [this] (:present (meta this)))
 
@@ -293,7 +294,8 @@
         options           (merge (dissoc options :features)
                                  features)
 
-        display           (or (:display options) :default)
+        ;; FIXME: display appears unused?
+        ;; display           (or (:display options) :default)
         size              (validate-size (:size options))
 
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))

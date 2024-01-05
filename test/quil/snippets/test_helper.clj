@@ -7,7 +7,7 @@
 (defn- display-density []
   (try
     (.. GraphicsEnvironment (getLocalGraphicsEnvironment) (getDefaultScreenDevice) (getScaleFactor))
-    (catch IllegalArgumentException e
+    (catch IllegalArgumentException _e
       ;; getScaleFactor() method is present only on osx.
       ;; For other systems return 1 for now.
       1)))

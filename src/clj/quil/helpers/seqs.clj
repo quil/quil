@@ -113,7 +113,7 @@
   [s]
   (let [state (atom (seq s))]
     (fn []
-      (let [[old new] (swap-returning-prev! state rest)]
+      (let [[old _new] (swap-returning-prev! state rest)]
         (first old)))))
 
 (defn tally
