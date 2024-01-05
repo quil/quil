@@ -110,7 +110,7 @@
   [renderer]
   (cond (keyword? renderer) (u/resolve-constant-key renderer renderer-modes)
         (string? renderer) renderer
-        :default (throw (RuntimeException. ":renderer should be keyword or string"))))
+        :else (throw (RuntimeException. ":renderer should be keyword or string"))))
 
 (defn- validate-size
   "Checks that the `size` vector is exactly two elements. If not, throws
