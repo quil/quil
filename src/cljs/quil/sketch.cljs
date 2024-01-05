@@ -96,7 +96,8 @@
 
         sketch-size     (:size opts)
         renderer        (:renderer opts)
-        features        (set (:features opts))
+        ;; features is unused in cljs
+        ;; features        (set (:features opts))
 
         setup (fn []
                 (->> (if renderer [renderer] [])
@@ -105,8 +106,8 @@
                 (when (:settings opts) ((:settings opts)))
                 (when (:setup opts) ((:setup opts))))
         mouse-wheel (when-let [wheel-handler (:mouse-wheel opts)]
-                      ; using (get "delta") because in advanced mode
-                      ; it will be renamed otherwise.
+                      ;; using (get "delta") because in advanced mode
+                      ;; it will be renamed otherwise.
                       (fn [evt] (wheel-handler (object/get evt "delta"))))
 
         opts (assoc opts
