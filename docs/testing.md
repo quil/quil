@@ -31,37 +31,16 @@ For CLJS snippets:
 $ clojure -M:dev:fig:kaocha cljs-snippets
 ```
 
-## Using Test-Runner
+## CLJS Browser Unit Tests
 
-**Warning:** Often hangs after completing all tests, so CI uses kaocha. However there is more documentation on how to focus on running an individual test with this test-runner, and for running the manual tests, so keeping it for now. 
-
-For non-snippet tests
-```
-$ clojure -X:test :excludes '[:clj-snippets :cljs-snippets]'
-```
-
-For manual CLJ tests
-```
-$ clojure -X:test :nses '[quil.manual]'
-```
-
-For CLJ snippets:
+The last type of test runner is for executing unit tests in CLJC files in a browser context. 
 
 ```
-$ clojure -X:test :includes '[:clj-snippets]'
+$ clj -Mfig:cljs-test
 ```
 
-For CLJS snippets:
-```
-# Optionally start a web server to run the snippets with:
-$ lein with-profile cljs-testing do cljsbuild once tests, ring server
-# OR
-$ clj -M:dev:fig:server -b dev -s
-# If the server is not started externally, cljs-snippets has a fixture which provides a server automatically.
-
-# Run the test suite
-$ clojure -X:test :includes '[:cljs-snippets]'
-```
+These tests are run using the Figwheel test runner. The included tests are all
+referenced in the require list for the `test/quil/test_runner.cljs`.
 
 ## Automated Image Testing aka Snippet Tests
 
@@ -120,13 +99,34 @@ See also https://github.com/quil/quil/wiki/Dev-notes#automated-image-tests
 
 These flags will work on both Kaocha and test-runner suites.
 
-## CLJS Browser Unit Tests
+## Addendum: Using Test-Runner
 
-The last type of test runner is for executing unit tests in CLJC files in a browser context. 
+**Warning:** Often hangs after completing all tests, so CI uses kaocha. However there is more documentation on how to focus on running an individual test with this test-runner, and for running the manual tests, so keeping it for now. 
+
+For non-snippet tests
+```
+$ clojure -X:test :excludes '[:clj-snippets :cljs-snippets]'
+```
+
+For manual CLJ tests
+```
+$ clojure -X:test :nses '[quil.manual]'
+```
+
+For CLJ snippets:
 
 ```
-$ clj -Mfig:cljs-test
+$ clojure -X:test :includes '[:clj-snippets]'
 ```
 
-These tests are run using the Figwheel test runner. The included tests are all
-referenced in the require list for the `test/quil/test_runner.cljs`.
+For CLJS snippets:
+```
+# Optionally start a web server to run the snippets with:
+$ lein with-profile cljs-testing do cljsbuild once tests, ring server
+# OR
+$ clj -M:dev:fig:server -b dev -s
+# If the server is not started externally, cljs-snippets has a fixture which provides a server automatically.
+
+# Run the test suite
+$ clojure -X:test :includes '[:cljs-snippets]'
+```
