@@ -48,7 +48,13 @@ $ clojure -X:test :includes '[:clj-snippets]'
 
 For CLJS snippets:
 ```
+# Optionally start a web server to run the snippets with:
 $ lein with-profile cljs-testing do cljsbuild once tests, ring server
+# OR
+$ clj -M:dev:fig:server -b dev -s
+# If the server is not started externally, cljs-snippets has a fixture which provides a server automatically.
+
+# Run the test suite
 $ clojure -X:test :includes '[:cljs-snippets]'
 ```
 
