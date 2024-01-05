@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# Runs clj-kondo linting check
+# Runs clj-kondo linting & clj formatting check
 # Usage: bin/lint
 
-clojure -Mclj-kondo --lint src test &&
-    clojure -Mformat check
+set -exuo pipefail
+
+clojure -M:clj-kondo --lint src test
+clojure -M:format check
