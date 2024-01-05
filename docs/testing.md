@@ -76,11 +76,17 @@ where `$IMAGEVIEWER` is your image viewer. For example on ubuntu it can be eog.
 
 Snippet test environment variables that are useful:
 
-`LOGTEST=true` will print the command to invoke the current snippet test before running the test.
+`LOGTEST=true` will print the test-runner command to invoke the current snippet test before running the snippet.
 
 `MANUAL=true` will keep a sketch open after saving the output, only executing the test case after exiting out of the sketch with escape or closing it.
 
-`UPDATE_SCREENSHOTS=true` will copy the current snippet output to the reference image.
+`UPDATE_SCREENSHOTS=true` will update the reference image to the current snippet output for every snippet executed in the suite.
+
+As example:
+```
+UPDATE_SCREENSHOTS=true clj -M:dev:kaocha clj-snippets --focus :quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics
+```
+Would update `with-graphics-expected.png` with the current output from that snippet. For the CLJS tests it's a little trickier as they are all running in one single deftest for now. Recommend filtering the list of [`(snippet-elements)`](https://github.com/quil/quil/blob/master/test/quil/snippets/browser_snapshot_test.clj) to the subset to update.
 
 See also https://github.com/quil/quil/wiki/Dev-notes#automated-image-tests
 
