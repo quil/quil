@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Run quil test suites using Kaocha test runner
+#
+# Usage: bin/kaocha unit|manual|clj-snippets|cljs-snippets
+#
+# to focus on one test:
+# bin/kaocha clj-snippets --focus :quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics
+# (only works for clj, as all clojurescript tests are in one deftest for now)
+clojure -M:dev:fig:kaocha $*

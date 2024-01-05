@@ -7,6 +7,12 @@
    :test-paths    ["test"]
    :skip-meta [:clj-snippets :cljs-snippets]}
   {:kaocha.testable/type :kaocha.type/clojure.test
+   :kaocha.testable/id   :manual
+   :ns-patterns   ["manual$"]
+   :source-paths  ["src"]
+   :test-paths    ["test"]
+   :focus-meta [:manual]}
+  {:kaocha.testable/type :kaocha.type/clojure.test
    :kaocha.testable/id   :clj-snippets
    :ns-patterns   ["-test$"]
    :source-paths  ["src"]
