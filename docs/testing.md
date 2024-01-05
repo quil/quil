@@ -7,13 +7,18 @@ There are a couple different testing approaches for quil. There are a few combin
 ## Using Kaocha
 
 ```
-$ clojure -M:dev:kaocha [unit|clj-snippets|cljs-snippets]
+$ clojure -M:dev:kaocha [unit|manual|clj-snippets|cljs-snippets]
 ```
 
 See `tests.edn` for the different suites. Multiple test suites can be run like so:
 
 ```
 $ clojure -M:dev:kaocha unit clj-snippets
+```
+
+For CLJ Manual tests:
+```
+$ clojure -M:dev:kaocha --no-capture-output manual
 ```
 
 For CLJS Manual tests:
