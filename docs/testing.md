@@ -94,8 +94,6 @@ UPDATE_SCREENSHOTS=true clj -M:dev:kaocha clj-snippets --focus :quil.snippets.sn
 ```
 Would update `with-graphics-expected.png` with the current output from that snippet. For the CLJS tests it's a little trickier as they are all running in one single deftest for now. Recommend filtering the list of [`(snippet-elements)`](https://github.com/quil/quil/blob/master/test/quil/snippets/browser_snapshot_test.clj) to the subset to update.
 
-See also https://github.com/quil/quil/wiki/Dev-notes#automated-image-tests
-
 These flags will work on both Kaocha and test-runner suites.
 
 ## Addendum: Using Test-Runner
@@ -129,3 +127,5 @@ $ clj -M:dev:fig:server -b dev -s
 # Run the test suite
 $ clojure -X:test :includes '[:cljs-snippets]'
 ```
+
+See also https://github.com/quil/quil/wiki/Dev-notes#automated-image-tests
