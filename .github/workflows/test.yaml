@@ -50,6 +50,10 @@ jobs:
       - name: AOT Compile
         run: clojure -T:build aot
 
+      # Only needs to run in one matrix step
+      - name: Linting & Formatting
+        run: bin/lint
+
       - name: Test
         uses: coactions/setup-xvfb@v1
         with:
@@ -119,9 +123,6 @@ jobs:
       # AOT compile applet-listener and applet
       - name: AOT Compile
         run: clojure -T:build aot
-
-      - name: Linting & Formatting
-        run: bin/lint
 
       # Ie all the tests including snippet tests, many of which are also
       # verified from a CLJS context.
