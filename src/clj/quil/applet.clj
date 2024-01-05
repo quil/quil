@@ -31,14 +31,14 @@
   the JVM is closed as well which is not the case for clojure. So here we're
   performing renderer-specific cleanups."
   [applet]
-  (if-let [native (-> applet .getSurface .getNative)]
+  (when-let [native (-> applet .getSurface .getNative)]
     (condp = (.getClass native)
 
       com.jogamp.newt.opengl.GLWindow
-      ; Cannot destroy GLWindow right away because there is some callbacks going on
-      ; and NPE is thrown when they execute if window is destroyed. It doesn't seem
-      ; to affect anything, but annoying to have NPE in logs. Delaying destroying
-      ; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
+      ;; Cannot destroy GLWindow right away because there is some callbacks going on
+      ;; and NPE is thrown when they execute if window is destroyed. It doesn't seem
+      ;; to affect anything, but annoying to have NPE in logs. Delaying destroying
+      ;; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
       (.schedule executor #(.destroy native) 1 java.util.concurrent.TimeUnit/SECONDS)
 
       processing.awt.PSurfaceAWT$SmoothCanvas
