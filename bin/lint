@@ -3,5 +3,5 @@
 # Runs clj-kondo linting check
 # Usage: bin/lint
 
-clj -Mclj-kondo --lint src test &&
-    clj -Mformat check
+clojure -Mclj-kondo --lint src test &&
+    clojure -Mformat check
