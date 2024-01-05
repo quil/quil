@@ -1,9 +1,7 @@
 (ns quil.sketch
   (:require [quil.util :as u :include-macros true]
             [quil.middlewares.deprecated-options :as do]
-            [goog.dom :as dom]
             [goog.events :as events]
-            [goog.style :as style]
             [goog.object :as object]
             [goog.events.EventType :as EventType])
   (:require-macros [quil.sketch]))

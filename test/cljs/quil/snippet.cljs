@@ -1,6 +1,5 @@
 (ns quil.snippet
   (:require [quil.core :as q :include-macros true]
-            [dommy.utils :as utils]
             [dommy.core :as d :include-macros true]
             [goog.events :as events]
             [goog.events.EventType :as EventType]
