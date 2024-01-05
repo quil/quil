@@ -58,7 +58,21 @@ $ clj -M:dev:fig:server -b dev -s
 $ clojure -X:test :includes '[:cljs-snippets]'
 ```
 
-## Snippet Testing
+## Automated Image Testing aka Snippet Tests
+
+Quil has tests that run each snippets, takes a screenshot and compares with expected output image. The expected output is stored in the repo under the `dev-resources/snippet-snapshots` directory. It supports both clj and cljs. During test run a screenshot of the sketch is taken and compared with reference image. If difference exceeds threshold then snippet considered failed and `snippet-name-difference.png` is stored in the folder where screenshots are kept.
+
+Ensure that `imagemagick`, `geckodriver`, and `chromedriver` are installed before running tests. Imagemagick is required for both clj and cljs while `geckodriver` or `chromedriver` is only needed for cljs. Currently CLJS tests are using `chromedriver` to account for a screenshot size issue with `geckodriver`.
+
+To see all differences from failed snippets try:
+
+```
+$IMAGEVIEWER path/to/screenshots/folder/*difference*
+```
+
+where `$IMAGEVIEWER` is your image viewer. For example on ubuntu it can be eog.
+
+## Test Environment Variables
 
 Snippet test environment variables that are useful:
 
