@@ -33,14 +33,13 @@ $ clojure -M:dev:fig:kaocha cljs-snippets
 
 ## CLJS Browser Unit Tests
 
-The last type of test runner is for executing unit tests in CLJC files in a browser context. 
+The last type of test runner is for executing unit tests in CLJC files in a browser context.
 
 ```
 $ clj -Mfig:cljs-test
 ```
 
-These tests are run using the Figwheel test runner. The included tests are all
-referenced in the require list for the `test/quil/test_runner.cljs`.
+These tests are run using the Figwheel test runner. The included tests are all referenced in the require list for the `test/quil/test_runner.cljs`. These tests make specific assertions about the output value, as they do in the CLJ unit tests, and do not rely on image snapshot comparisons.
 
 ## Automated Image Testing aka Snippet Tests
 
