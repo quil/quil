@@ -67,8 +67,7 @@
                                             [org.clojure/clojurescript "1.10.520"]]
 
                              :cljsbuild
-                             {:builds [
-                                        ; Compiles all tests in advanced mode. Used for release testing.
+                             {:builds [; Compiles all tests in advanced mode. Used for release testing.
                                        {:id "tests"
                                         :source-paths ["test/cljs" "src/cljc" "src/cljs"]
                                         :compiler

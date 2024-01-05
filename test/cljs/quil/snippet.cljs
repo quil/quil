@@ -65,8 +65,8 @@
   (reset! total 0))
 
 (defn remove-canvases []
-   (doseq [c (d/sel [:canvas])]
-     (d/remove! c)))
+  (doseq [c (d/sel [:canvas])]
+    (d/remove! c)))
 
 (defn run-single-test []
   (if (< @test-indx (count test-functions))

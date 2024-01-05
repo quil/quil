@@ -14,12 +14,12 @@
 
 (def root-page
   (h/html5
-      (header "Quil tests")
-    [:body {:data-page "root"}
-     [:div.centerLayer {:align "center"}
-      [:p [:a {:href "/test.html"} "Common Quil API tests"]]
-      [:p [:a {:href "/manual"} "Manual Quil API tests"]]
-      [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]]))
+   (header "Quil tests")
+   [:body {:data-page "root"}
+    [:div.centerLayer {:align "center"}
+     [:p [:a {:href "/test.html"} "Common Quil API tests"]]
+     [:p [:a {:href "/manual"} "Manual Quil API tests"]]
+     [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]]))
 
 (defn gen-test-container
   ([id doc]
