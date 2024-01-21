@@ -14,6 +14,7 @@
 __8th November 2023__
 
 * New automated test harness for assertions of Processing and P5js behaviors [#384](https://github.com/quil/quil/pull/384), [#388](https://github.com/quil/quil/pull/388), [#390](https://github.com/quil/quil/pull/390)
+* P5js 1.7 [#383](https://github.com/quil/quil/pull/383)
 * Basic Github Actions test harness for existing `lein test` on Linux [#381](https://github.com/quil/quil/pull/381)
 * Fix for `#cljs.core/abs` compile warning [#380](https://github.com/quil/quil/pull/380)
 * Support for Processing 4.3, M1 hardware, JVM > 1.8
