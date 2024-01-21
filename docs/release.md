@@ -6,9 +6,10 @@ See also [release-process](https://github.com/quil/quil/wiki/Dev-notes#release-p
 
 ### Check for `cljfmt` and `clj-kondo` warnings
 
-Run `lein do check, cljfmt check` and verify that there are no reflection warnings and that everything is formatted.
+Run `bin/lint` and verify that there are no reflection warnings and that everything is formatted.
 
-TODO: automate and include clj-kondo, and switch to `deps.edn` aliases
+This is automated with github actions, however, for now the `clj-kondo` linting
+is only enabled on tests as it has too many failures in `src`.
 
 ### Run automated tests locally
 
