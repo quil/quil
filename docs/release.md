@@ -13,7 +13,7 @@ is only enabled on tests as it has too many failures in `src`.
 
 ### Run automated tests locally
 
-These are run in CI with github actions, but have frequent SEGV flakes, so it's useful to verify locally. See [testing](docs/testing.md) documentation. The minimum to run here is:
+These are run in CI with github actions, but have frequent SEGV flakes, so it's useful to verify locally. See [testing](testing.md) documentation. The minimum to run here is:
 
 ```
 # clj unit and snapshot tests
