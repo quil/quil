@@ -87,7 +87,7 @@ As they use bindings that verify that JOGL is bundled correctly.
    * https://github.com/quil/quil-examples
    * https://github.com/quil/quil/wiki/Runnable-jar
 
-11. Update quil.info website (optional)
+11. (optional) Update quil.info website. Use [generate docs](https://github.com/quil/quil/wiki/Snippets#generate-documention) steps, but requires permission to update the quil-site page.
 12. Announce the Quil release on [Clojureverse](https://clojureverse.org/), [r/clojure](https://www.reddit.com/r/Clojure/), and the Clojurians slack (both in #announcements and in #quil). Previously this also included clj-processing and clojure google groups.
 
 ### Announcement Template
