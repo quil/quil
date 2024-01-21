@@ -31,14 +31,14 @@
   the JVM is closed as well which is not the case for clojure. So here we're
   performing renderer-specific cleanups."
   [applet]
-  (if-let [native (-> applet .getSurface .getNative)]
+  (when-let [native (-> applet .getSurface .getNative)]
     (condp = (.getClass native)
 
       com.jogamp.newt.opengl.GLWindow
-      ; Cannot destroy GLWindow right away because there is some callbacks going on
-      ; and NPE is thrown when they execute if window is destroyed. It doesn't seem
-      ; to affect anything, but annoying to have NPE in logs. Delaying destroying
-      ; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
+      ;; Cannot destroy GLWindow right away because there is some callbacks going on
+      ;; and NPE is thrown when they execute if window is destroyed. It doesn't seem
+      ;; to affect anything, but annoying to have NPE in logs. Delaying destroying
+      ;; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
       (.schedule executor #(.destroy native) 1 java.util.concurrent.TimeUnit/SECONDS)
 
       processing.awt.PSurfaceAWT$SmoothCanvas
@@ -67,7 +67,7 @@
         keep-on-top?   (:keep-on-top m)
         surface        (.getSurface applet)
         resizable?     (:resizable m)]
-    ; TODO: check if resizable and alwaysOnTop work correctly.
+    ;; TODO: check if resizable and alwaysOnTop work correctly.
     (javax.swing.SwingUtilities/invokeLater
      (fn []
        (.setTitle surface title)
@@ -75,9 +75,10 @@
        (.setAlwaysOnTop surface keep-on-top?)))
     applet))
 
+;; FIXME: why is renderer ignored here?
 (defn- applet-run
   "Launches the applet to the specified target."
-  [applet title renderer]
+  [applet title _renderer]
   (PApplet/runSketch
    (into-array String
                (vec (filter string?
@@ -109,7 +110,7 @@
   [renderer]
   (cond (keyword? renderer) (u/resolve-constant-key renderer renderer-modes)
         (string? renderer) renderer
-        :default (throw (RuntimeException. ":renderer should be keyword or string"))))
+        :else (throw (RuntimeException. ":renderer should be keyword or string"))))
 
 (defn- validate-size
   "Checks that the `size` vector is exactly two elements. If not, throws
@@ -177,7 +178,7 @@
 (defn -exitActual
   "Overriding `PApplet.exitActual` because we don't want it to call
   `System.exit()`."
-  [this])
+  [_this])
 
 (defn -sketchFullScreen [this] (:present (meta this)))
 
@@ -293,7 +294,8 @@
         options           (merge (dissoc options :features)
                                  features)
 
-        display           (or (:display options) :default)
+        ;; FIXME: display appears unused?
+        ;; display           (or (:display options) :default)
         size              (validate-size (:size options))
 
         title             (or (:title options) (str "Quil " (swap! untitled-applet-id* inc)))

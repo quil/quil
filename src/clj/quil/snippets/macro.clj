@@ -1,5 +1,4 @@
-(ns quil.snippets.macro
-  (:require [quil.util :as u]))
+(ns quil.snippets.macro)
 
 (defmacro defsnippet
   "Defines a snippet. A snippet is a small example showing how to use a specific

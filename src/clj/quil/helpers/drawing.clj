@@ -18,7 +18,7 @@
   ([interleaved-points]
    (lazy-seq
     (let [head (take 2 interleaved-points)]
-      (if (= 2 (count head))
+      (when (= 2 (count head))
         (cons (apply concat head) (line-join-points (drop 1 interleaved-points)))))))
   ([xs ys]
    (lazy-seq

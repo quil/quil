@@ -1,7 +1,6 @@
 (ns ^{:doc "Functions for filtering/displaying docs in REPL and generating wiki pages."}
  quil.helpers.docs
-  (:require [clojure.string :as cstr]
-            [clojure.java.io :as io]))
+  (:require [clojure.string :as cstr]))
 
 (defn link-to-processing-reference
   "Returns a link to the Processing page of the function.

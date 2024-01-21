@@ -50,6 +50,10 @@ jobs:
       - name: AOT Compile
         run: clojure -T:build aot
 
+      # Only needs to run in one matrix step
+      - name: Linting & Formatting
+        run: bin/lint
+
       - name: Test
         uses: coactions/setup-xvfb@v1
         with:

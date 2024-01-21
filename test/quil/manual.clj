@@ -236,14 +236,14 @@
     @lock))
 
 (deftest ^:manual run-all
-  (doseq [fn [resizable-and-keep-on-top
-             fullscreen present-and-bgcolor
-             no-loop-with-start-loop
-             redraw-on-key
-             fun-mode
-             resize-sketch
-             with-stroke
-             with-fill
-             on-close-and-exit-on-close]]
-    (fn)))
+  (doseq [tfn [resizable-and-keep-on-top
+               fullscreen
+               present-and-bgcolor
+               no-loop-with-start-loop
+               redraw-on-key
+               fun-mode
+               resize-sketch with-stroke
+               with-fill
+               on-close-and-exit-on-close]]
+    (tfn)))
 

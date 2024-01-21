@@ -14,12 +14,12 @@
 
 (def root-page
   (h/html5
-      (header "Quil tests")
-    [:body {:data-page "root"}
-     [:div.centerLayer {:align "center"}
-      [:p [:a {:href "/test.html"} "Common Quil API tests"]]
-      [:p [:a {:href "/manual"} "Manual Quil API tests"]]
-      [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]]))
+   (header "Quil tests")
+   [:body {:data-page "root"}
+    [:div.centerLayer {:align "center"}
+     [:p [:a {:href "/test.html"} "Common Quil API tests"]]
+     [:p [:a {:href "/manual"} "Manual Quil API tests"]]
+     [:p [:a {:href "/fullscreen"} "Fullscreen Manual test"]]]]))
 
 (defn gen-test-container
   ([id doc]
@@ -92,9 +92,9 @@
   (str "dev-resources/snippet-snapshots/" platform "/normal/"))
 
 (defroutes app-routes
-  (GET "/" req root-page)
-  (GET "/manual" req manual-page)
-  (GET "/fullscreen" req fullscreen-page)
+  (GET "/" _req root-page)
+  (GET "/manual" _req manual-page)
+  (GET "/fullscreen" _req fullscreen-page)
   (route/files "/snapshots" {:root (path-to-snippet-snapshots "cljs")})
   ;; Figwheel runs with deps.edn so clojure.basis will be specified
   (route/files "/js" {:root (if (System/getProperty "clojure.basis")

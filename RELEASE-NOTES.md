@@ -1,5 +1,6 @@
 ## Unreleased
 
+* Automatic format check and clj-kondo linting for tests [#408](https://github.com/quil/quil/pull/408)
 * Improve testing documentation [#407](https://github.com/quil/quil/pull/407)
 * Exclude JOGL deps from POM for uberjar release [#406](https://github.com/quil/quil/pull/406)
 * Automate CLJS snippet test server to run on CI [#405](https://github.com/quil/quil/pull/405)
@@ -13,6 +14,7 @@
 __8th November 2023__
 
 * New automated test harness for assertions of Processing and P5js behaviors [#384](https://github.com/quil/quil/pull/384), [#388](https://github.com/quil/quil/pull/388), [#390](https://github.com/quil/quil/pull/390)
+* P5js 1.7 [#383](https://github.com/quil/quil/pull/383)
 * Basic Github Actions test harness for existing `lein test` on Linux [#381](https://github.com/quil/quil/pull/381)
 * Fix for `#cljs.core/abs` compile warning [#380](https://github.com/quil/quil/pull/380)
 * Support for Processing 4.3, M1 hardware, JVM > 1.8

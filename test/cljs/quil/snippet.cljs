@@ -1,6 +1,5 @@
 (ns quil.snippet
   (:require [quil.core :as q :include-macros true]
-            [dommy.utils :as utils]
             [dommy.core :as d :include-macros true]
             [goog.events :as events]
             [goog.events.EventType :as EventType]
@@ -65,8 +64,8 @@
   (reset! total 0))
 
 (defn remove-canvases []
-   (doseq [c (d/sel [:canvas])]
-     (d/remove! c)))
+  (doseq [c (d/sel [:canvas])]
+    (d/remove! c)))
 
 (defn run-single-test []
   (if (< @test-indx (count test-functions))

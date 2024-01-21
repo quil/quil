@@ -32,8 +32,8 @@
               (when (or sth/manual? sth/github-actions?)
                 (q/frame-rate 4)))
      :mouse-clicked (:mouse-clicked snippet)
-     :settings (fn [] (when-let [settings (:settings opts)]
-                       (settings)))
+     :settings
+     (fn [] (when-let [settings (:settings opts)] (settings)))
      :draw
      (fn []
        (q/background 255)

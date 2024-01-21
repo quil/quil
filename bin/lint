@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Runs clj-kondo linting & clj formatting check
+# Usage: bin/lint
+
+set -exuo pipefail
+
+# for now *only* lint test, there are too many warnings in src/{clj,cljs,cljc}
+clojure -M:clj-kondo --lint test
+clojure -M:format check
