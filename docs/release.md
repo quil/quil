@@ -88,4 +88,23 @@ As they use bindings that verify that JOGL is bundled correctly.
    * https://github.com/quil/quil/wiki/Runnable-jar
 
 11. Update quil.info website (optional)
-12. Announce the Quil release on [Clojureverse](https://clojureverse.org/), [r/clojure](https://www.reddit.com/r/Clojure/), and the Clojurians slack (both in #announcements and in #quil).
+12. Announce the Quil release on [Clojureverse](https://clojureverse.org/), [r/clojure](https://www.reddit.com/r/Clojure/), and the Clojurians slack (both in #announcements and in #quil). Previously this also included clj-processing and clojure google groups.
+
+### Announcement Template
+
+```
+Subject:
+[ANN] Quil $VERSION Release
+Body:
+Happy to announce Quil v4.3.123 release.
+Quil is a Clojure/ClojureScript library for creating interactive drawings and animations.
+
+The release available on clojars: https://clojars.org/quil. List of changes:
+
+Change 1
+Change 2
+Documentation on http://quil.info has been updated as well.
+
+Happy hacking!
+$YOUR_NAME
+```
