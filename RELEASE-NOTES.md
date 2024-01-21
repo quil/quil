@@ -1,5 +1,6 @@
 ## Unreleased
 
+* Automatic format check and clj-kondo linting for tests [#408](https://github.com/quil/quil/pull/408)
 * Improve testing documentation [#407](https://github.com/quil/quil/pull/407)
 * Exclude JOGL deps from POM for uberjar release [#406](https://github.com/quil/quil/pull/406)
 * Automate CLJS snippet test server to run on CI [#405](https://github.com/quil/quil/pull/405)
