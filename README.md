@@ -36,13 +36,13 @@ There are also `deps-new` templates available for creating a [sketchbook](https:
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "4.3.1560"]
+[quil "4.3.1563"]
 ```
 
 or for Clojure CLI `deps.edn`
 
 ```clojure
-quil/quil {:mvn/version "4.3.1560"}
+quil/quil {:mvn/version "4.3.1563"}
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
