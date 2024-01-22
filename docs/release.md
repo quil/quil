@@ -67,9 +67,9 @@ Then run a few example sketches, particularly ones like:
 
 ```
 # uses opengl renderer
-clojure -M -m quil-sketches.gen-art.26-sphere
+$ clojure -M -m quil-sketches.gen-art.26-sphere
 # uses p3d renderer
-clojure -M -m quil-sketches.gen-art.28-cloud-cube
+$ clojure -M -m quil-sketches.gen-art.28-cloud-cube
 ```
 
 As they use bindings that verify that JOGL is bundled correctly.
