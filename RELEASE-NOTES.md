@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 4.3.1560
+__21st January 2024__
+
+* Document [release](docs/release.md) process [#409](https://github.com/quil/quil/pull/409)
 * Automatic format check and clj-kondo linting for tests [#408](https://github.com/quil/quil/pull/408)
 * Improve testing documentation [#407](https://github.com/quil/quil/pull/407)
 * Exclude JOGL deps from POM for uberjar release [#406](https://github.com/quil/quil/pull/406)

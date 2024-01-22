@@ -21,7 +21,7 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 Quil works with Clojure 1.10 and ClojureScript 1.10.x.
 
-Current released version `4.3.1323` is compatible JDK 17+ and supports Linux amd64,aarch64 and macOS M1/M2/x86_64 architectures.
+Current released version `4.3.1560` is compatible JDK 17+ and supports Linux amd64,aarch64 and macOS M1/M2/x86_64 architectures.
 
 ## Installation
 
@@ -36,13 +36,13 @@ There are also `deps-new` templates available for creating a [sketchbook](https:
 If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
 
 ```clojure
-[quil "4.3.1323"]
+[quil "4.3.1560"]
 ```
 
 or for Clojure CLI `deps.edn`
 
 ```clojure
-quil/quil {:mvn/version "4.3.1323"}
+quil/quil {:mvn/version "4.3.1560"}
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
