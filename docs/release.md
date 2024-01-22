@@ -92,10 +92,10 @@ Version: 4.3.1234
 The build number is also accessible from the github UI showing the latest commit, or using `git rev-list master --count` locally.
 
 6. Update Quil version in the `README.md`, for `deps.edn` and Leiningen coordinates, and any other references. Update version in `project.clj`. Update `RELEASE-NOTES.md` to show the version/date and start a new unreleased section.
-7. Push, review and merge the release PR
-8. [tag the release](https://github.com/quil/quil/releases/new) by creating a release matching the version tag created above, ie `v4.3.1234` targeted at `master`. Select the previous release and use generate release notes and adjust that text for the release. Leave `set as the latest release` checked.
-9. Click `Publish release`. The [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) is configured to upload a JAR to Clojars whenever a tag is created starting with `v`. This will upload a jar to Clojars versioned as the release version ie `v4.3.1234`.
-10. Monitor the [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) to ensure it completes correctly.
+7. Push, review, and wait for tests to pass and then [tag the release](https://github.com/quil/quil/releases/new) by creating a release matching the version tag created above, ie `v4.3.1234` targeted at the head of the PR branch. Select the previous release and use generate release notes and adjust that text for the release. Leave `set as the latest release` checked.
+8. Click `Publish release`. The [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) is configured to upload a JAR to Clojars whenever a tag is created starting with `v`. This will upload a jar to Clojars versioned as the release version ie `v4.3.1234`.
+9. Monitor the [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) to ensure it completes correctly.
+10. Merge the release PR
 11. Update the lein and deps-new templates to reference the new Clojars release
     * https://github.com/quil/quil-templates (requires separate release for clj template)
     * https://github.com/quil/sketchbook-template
