@@ -42,6 +42,7 @@
                    (format "-%s-SNAPSHOT"
                            (b/git-process {:git-args "rev-parse --short HEAD"}))
                    "")
+        ;; Major/minor prefix should match upstream processing release
         version (format "4.3.%s%s" revs snapshot)]
     (when (:print opts)
       (println "Version:" version))

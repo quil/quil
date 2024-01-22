@@ -87,6 +87,8 @@ $ clojure -T:build release-version :print true
 Version: 4.3.1234
 ```
 
+If the release includes a changed upstream version for processing, adjust the major/minor component of the `release-version` command in `build.clj` to reflect the upstream version.
+
 6. Update Quil version in the `README.md`, for `deps.edn` and Leiningen coordinates, and any other references. Update version in `project.clj`.
 7. Push, review, and merge the release PR, making sure the version matches the build count of the merged PR.
 8. [tag a release](https://github.com/quil/quil/releases/new) by creating a new tag matching the version above, ie `v4.3.1234`. Select the previous release and use generate release notes and adjust that text for the release. Leave `set as the latest release` checked.
