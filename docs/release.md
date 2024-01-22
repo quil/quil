@@ -40,7 +40,7 @@ $ clojure -M:dev:kaocha --no-capture-output manual
 It may make sense to re-run the "automated" tests here with multiple browsers, at the very least Chrome, Firefox, as well as the manual tests covering user input, and canvas resize.
 
 ```
-$ clj -M:dev:fig:server -b dev -s
+$ clojure -M:dev:fig:server -b dev -s
 ```
 
 ### Verify a snapshot JAR works with quil-examples
@@ -50,9 +50,9 @@ The release process creates an uberjar with JOGL and other dependencies bundled 
 The following command will be build a local snapshot of the current revision and install that snapshot to the matching location in the maven `.m2` repository. This can also be accomplished with a snapshot deploy to clojars using the `.github/workflows/clojars_snapshot_release.yaml` process.
 
 ```
-$ clj -T:build release :snapshot true
+$ clojure -T:build release :snapshot true
 release: target/quil-4.3.1508-28b0120-SNAPSHOT.jar (16776.1 kb)
-$ clj -T:build deploy :clojars false :snapshot true
+$ clojure -T:build deploy :clojars false :snapshot true
 Installing quil/quil-4.3.1508-28b0120-SNAPSHOT to your local `.m2`
 done.
 ```
@@ -67,9 +67,9 @@ Then run a few example sketches, particularly ones like:
 
 ```
 # uses opengl renderer
-clj -M -m quil-sketches.gen-art.26-sphere
+clojure -M -m quil-sketches.gen-art.26-sphere
 # uses p3d renderer
-clj -M -m quil-sketches.gen-art.28-cloud-cube
+clojure -M -m quil-sketches.gen-art.28-cloud-cube
 ```
 
 As they use bindings that verify that JOGL is bundled correctly.
