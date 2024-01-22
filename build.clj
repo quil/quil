@@ -37,12 +37,15 @@
 
   If opts includes :snapshot include git-sha and SNAPSHOT."
   [opts]
-  (format "4.3.%s%s"
-          (b/git-count-revs nil)
-          (if (:snapshot opts)
-            (format "-%s-SNAPSHOT"
-                    (b/git-process {:git-args "rev-parse --short HEAD"}))
-            "")))
+  (let [revs (b/git-count-revs nil)
+        snapshot (if (:snapshot opts)
+                   (format "-%s-SNAPSHOT"
+                           (b/git-process {:git-args "rev-parse --short HEAD"}))
+                   "")
+        version (format "4.3.%s%s" revs snapshot)]
+    (when (:print opts)
+      (println "Version:" version))
+    version))
 
 (defn jar-file [opts]
   (format "target/%s-%s.jar" (name lib) (release-version opts)))
