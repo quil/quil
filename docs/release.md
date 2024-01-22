@@ -80,18 +80,20 @@ As they use bindings that verify that JOGL is bundled correctly.
 2. Run all the manual verification steps above
 3. Update `RELEASE-NOTES.md`, to reflect all the changes which went into the current release (including this PR!)
 4. (optional) Consider doing a [snapshot release](https://github.com/quil/quil/actions/workflows/clojars_snapshot_release.yaml), selecting "Run workflow" from branch "master". This will push a snapshot jar to Clojars that can be tested with other projects.
-5. Calculate the build version, which incorporates the number of commits to the `master` branch. Either read it from the github UI showing the latest commit, or use `git rev-list master --count` locally. Remember that since there are locally committed changes this number will likely be higher once the commits are pushed to github or the PR is merged, so adjust accordingly. The release should be in form of `v4.3.1234` where `4.3` tracks the upstream processing release version, and `1234` is the build number just calculated. This can also be calculated using: 
+5. Calculate the build version, which incorporates the number of commits to the `master` branch. Remember that this number will be one build higher once the this version commit has been created, so adjust accordingly. The release should be in form of `v4.3.1234` where `4.3` tracks the upstream processing release version, and `1234` is the build number just calculated. If the release includes a changed upstream version for processing, adjust the major/minor component of the `release-version` command in `build.clj` to reflect the upstream version.
+
+The release version for a current commit can be calculated using:
 
 ```
 $ clojure -T:build release-version :print true
 Version: 4.3.1234
 ```
 
-If the release includes a changed upstream version for processing, adjust the major/minor component of the `release-version` command in `build.clj` to reflect the upstream version.
+The build number is also accessible from the github UI showing the latest commit, or using `git rev-list master --count` locally.
 
-6. Update Quil version in the `README.md`, for `deps.edn` and Leiningen coordinates, and any other references. Update version in `project.clj`.
-7. Push, review, and merge the release PR, making sure the version matches the build count of the merged PR.
-8. [tag a release](https://github.com/quil/quil/releases/new) by creating a new tag matching the version above, ie `v4.3.1234`. Select the previous release and use generate release notes and adjust that text for the release. Leave `set as the latest release` checked.
+6. Update Quil version in the `README.md`, for `deps.edn` and Leiningen coordinates, and any other references. Update version in `project.clj`. Update `RELEASE-NOTES.md` to show the version/date and start a new unreleased section.
+7. Push, review and merge the release PR
+8. [tag the release](https://github.com/quil/quil/releases/new) by creating a release matching the version tag created above, ie `v4.3.1234` targeted at `master`. Select the previous release and use generate release notes and adjust that text for the release. Leave `set as the latest release` checked.
 9. Click `Publish release`. The [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) is configured to upload a JAR to Clojars whenever a tag is created starting with `v`. This will upload a jar to Clojars versioned as the release version ie `v4.3.1234`.
 10. Monitor the [release action](https://github.com/quil/quil/actions/workflows/clojars_release.yaml) to ensure it completes correctly.
 11. Update the lein and deps-new templates to reference the new Clojars release
