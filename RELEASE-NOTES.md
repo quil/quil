@@ -1,6 +1,6 @@
 ## Unreleased
 
-## 4.3.1560
+## 4.3.1563
 __21st January 2024__
 
 * Document [release](docs/release.md) process [#409](https://github.com/quil/quil/pull/409)
