@@ -9,9 +9,9 @@
    :angle 0})
 
 (defn update-state [state]
-  (let [{:keys [color angle]} state]
-    {:color (mod (+ color 0.7) 255)
-     :angle (mod (+ angle 0.1) q/TWO-PI)}))
+  (-> state
+      (update :color #(mod (+ % 0.7) 255))
+      (update :angle #(mod (+ % 0.1) q/TWO-PI))))
 
 (defn draw-state [state]
   (q/background 240)
