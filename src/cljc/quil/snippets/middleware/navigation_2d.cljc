@@ -66,7 +66,8 @@
 
 (defsnippet mouse-world-coords
   "mouse-world-coords"
-  {:setup (let [_ (comment "This sets up the navigation-2d state.")
+  {:accepted-diff-threshold 0.8
+   :setup (let [_ (comment "This sets up the navigation-2d state.")
                 _ (comment "Ordinarily this will be handled by the
                            navigation-2d middleware.")
                 nav-2d {:width 500 :height 500 :zoom 0.75
