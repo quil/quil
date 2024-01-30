@@ -48,7 +48,8 @@
   "Changes zoom settings based on scroll."
   [state event]
   (assert-state-has-navigation state)
-  (update-in state [:navigation-2d :zoom] * (+ 1 (* -0.1 event))))
+  (update-in state [:navigation-2d :zoom] *
+             (+ 1 (* -0.1 #?(:clj event :cljs (Math/sign event))))))
 
 (defn world->screen-coords
   "Returns the pixel coordinates that [x y] gets mapped to by the
@@ -93,8 +94,8 @@
   and zoom) applied."
   [user-draw state]
   (if (-> state :navigation-2d :wrap-draw)
-    (with-navigation-2d state
-      (user-draw state))
+    (with-navigation-2d* state
+      #(user-draw state))
     (user-draw state)))
 
 (defn- add-world-coords-fn
