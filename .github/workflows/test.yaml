@@ -73,6 +73,9 @@ jobs:
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
 
+      - name: Check Advanced Compilation with Release
+        run: clojure -T:build build.cljs-advanced-test/advanced-compile
+
   test-clj:
     name: Test Clojure
 
