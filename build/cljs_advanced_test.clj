@@ -22,15 +22,17 @@
   (qb/clean _)
   (qb/release _)
   (qb/deploy (dissoc _ :clojars))
-  (make-deps (assoc _ :mvn-version (qb/release-version _)))
-  (println (slurp "/tmp/cljs-advanced/deps.edn"))
-  (let [args ["clojure"
-              "-M" "-m" "cljs.main"
-              "--optimizations" "advanced"
-              "-c" "sample"]
-        {:keys [exit]}
-        (b/process
-         {:dir "/tmp/cljs-advanced"
-          :command-args args})]
-    (when-not (zero? exit)
-      (throw (ex-info "Compile failed" {})))))
+  (let [mvn-version (qb/release-version _)]
+    (make-deps (assoc _ :mvn-version mvn-version))
+    (println (slurp "/tmp/cljs-advanced/deps.edn"))
+
+    (let [args ["clojure"
+                "-M" "-m" "cljs.main"
+                "--optimizations" "advanced"
+                "-c" "sample"]
+          {:keys [exit]}
+          (b/process
+           {:dir "/tmp/cljs-advanced"
+            :command-args args})]
+      (when-not (zero? exit)
+        (throw (ex-info "Compile failed" {}))))))
