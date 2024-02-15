@@ -1,6 +1,5 @@
 (ns build
   (:require
-   [build.processing :as processing]
    [clojure.java.io :as io]
    [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
@@ -122,6 +121,3 @@
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
               :artifact (b/resolve-path (jar-file opts))
               :pom-file "target/classes/META-INF/maven/quil/quil/pom.xml"}))
-
-(defn processing-clojars [_]
-  (processing/clojars-release _))

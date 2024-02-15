@@ -43,6 +43,7 @@
 ;; bb.processing/install URL
 (def processing-version "4.2.3")
 
+;; clojure -T:build build.processing/clojars-release
 (defn clojars-release [opts]
   ;; TODO: inline processing-install here
   (b/process {:command-args ["bb" "processing-install"]})

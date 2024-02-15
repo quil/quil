@@ -73,7 +73,7 @@
             :extra-deps {lambdaisland/kaocha {:mvn/version "1.87.1366"}}}
 
            :fig
-           {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}
+           {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}
                          fipp/fipp {:mvn/version "0.6.26"} ;; better diff output
                          prismatic/dommy {:mvn/version "1.1.0"}
                          com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
