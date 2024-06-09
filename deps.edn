@@ -70,7 +70,7 @@
            ;; clj -M:dev:kaocha
            :kaocha
            {:main-opts ["-m" "kaocha.runner"]
-            :extra-deps {lambdaisland/kaocha {:mvn/version "1.87.1366"}}}
+            :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}}
 
            :fig
            {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.132"}
