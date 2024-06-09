@@ -18,9 +18,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Cache deps.edn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -38,7 +40,7 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.2
+        uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: latest
           bb: latest
@@ -73,6 +75,9 @@ jobs:
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
 
+      - name: Check Advanced Compilation with Release
+        run: clojure -T:build build.cljs-advanced-test/advanced-compile
+
   test-clj:
     name: Test Clojure
 
@@ -94,7 +99,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache deps.edn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -112,7 +117,7 @@ jobs:
           java-version: ${{ matrix.java-version }}
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.2
+        uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: latest
           bb: latest

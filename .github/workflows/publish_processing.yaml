@@ -24,13 +24,13 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.2
+        uses: DeLaGuardo/setup-clojure@12.5
         with:
           cli: latest
           bb: latest
 
       - name: Deploy Processing to Clojars
-        run: clojure -T:build processing-clojars :deploy :remote
+        run: clojure -T:build build.processing/clojars-release :deploy :remote
         env:
           CLOJARS_USERNAME: ${{secrets.CLOJARS_USERNAME}}
           CLOJARS_PASSWORD: ${{secrets.CLOJARS_DEPLOY_TOKEN}}
