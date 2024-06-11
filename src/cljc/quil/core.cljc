@@ -608,7 +608,10 @@
   ([] (.beginShape (current-graphics)))
   ([mode]
    (let [mode (u/resolve-constant-key mode shape-modes)]
-     (.beginShape (current-graphics) (int mode)))))
+     ;; In CLJS, the constants for points, lines, triangles, etc are integers
+     ;; but quads and quad-strip are strings. See
+     ;; https://github.com/processing/p5.js/blob/v1.9.4/src/core/constants.js#L686-L738.
+     (.beginShape (current-graphics) mode))))
 
 (defn
   ^{:requires-bindings true
