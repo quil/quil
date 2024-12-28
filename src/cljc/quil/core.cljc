@@ -4901,7 +4901,7 @@
                         Use [[begin-raw]] method instead. In Clojurescript only
                         `:p2d` and `:p3d` renderers are supported.
                         More info on Clojure renderers:
-                        https://processing.org/reference/environment/#Renderers
+                        https://processing.org/environment/#Renderers
   * `:output-file`    - Specifies an output file path. Only used in `:pdf` and
                         `:svg` modes. Not supported in Clojurescript. When
                         writing to a file, call [[exit]] at the end of the
