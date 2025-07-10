@@ -47,6 +47,8 @@
   (->> (get item "itemtype")
        (contains? #{"method" "property"})))
 
+;; FIXME: slow test because of http fetch/json parse
+;; can we cache this safely somehow?
 (defn p5js-method-names []
   (let [items (-> (http/get "https://p5js.org/reference/data.json")
                   :body
