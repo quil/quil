@@ -44,7 +44,9 @@
         (str "Seems like file server with test page is not running. "))
   (let [browser (etaoin/chrome {:size [1280 1024]
                                 :headless true
-                                :log-level :all})]
+                                :args ["--enable-unsafe-swiftshader"]
+                                :log-level :severe ;; :all, :warning
+                                })]
     (reset! driver browser)
     (try (f)
          (finally
@@ -89,7 +91,8 @@
         (sth/verify-reference-or-update
          name "cljs" actual-file accepted-diff-threshold)
         ;; disable for now, as lots of chatty logging, but useful to inspect
-        ;; (t/is (empty? (etaoin/get-logs @driver)))
+        #_(t/is (empty? (etaoin/get-logs @driver))
+                (str "logs from " name " - " index))
         ))))
 
 ;; view image diffs with

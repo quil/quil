@@ -103,6 +103,9 @@
 
   (q/no-loop))
 
+;; FIXME: Throwing error:
+;; http://localhost:3000/js/main.js 13:611915 Uncaught TypeError: t is not a function
+;; Best guess is one of the filter modes is not a function?
 (defsnippet display-filter
   "display-filter"
   ;; FIXME: increasing threshold in CLJS as it's not currently working. Will
