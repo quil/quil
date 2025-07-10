@@ -91,8 +91,8 @@
         (sth/verify-reference-or-update
          name "cljs" actual-file accepted-diff-threshold)
         ;; disable for now, as lots of chatty logging, but useful to inspect
-        #_(t/is (empty? (etaoin/get-logs @driver))
-                (str "logs from " name " - " index))
+        ;; (t/is (empty? (etaoin/get-logs @driver))
+        ;;       (str "logs from " name " - " index))
         ))))
 
 ;; view image diffs with
