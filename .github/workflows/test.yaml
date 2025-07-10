@@ -56,10 +56,10 @@ jobs:
 
       - name: Test
         timeout-minutes: 3
-        run: xvfb-run --server-args="-screen 0 1600x1200x24" clojure -Mfig:cljs-test
+        run: clojure -Mfig:cljs-test
 
       - name: Test CLJS Snippet Snapshots
-        run: xvfb-run --server-args="-screen 0 1600x1200x24" clojure -M:dev:fig:kaocha cljs-snippets
+        run: clojure -M:dev:fig:kaocha cljs-snippets
 
       - name: Upload Test Artifacts
         if: failure()

@@ -42,7 +42,9 @@
 (defn etaoin-setup [f]
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "))
-  (let [browser (etaoin/chrome {:size [1280 1024]})]
+  (let [browser (etaoin/chrome {:size [1280 1024]
+                                :headless true
+                                :log-level :all})]
     (reset! driver browser)
     (try (f)
          (finally

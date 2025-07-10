@@ -3,7 +3,7 @@
   :log-level :all
   :client-log-level :finest
   ;; headless is hanging?
-  ;; :launch-js ["google-chrome" "--headless" "--repl" "--disable-gpu" :open-url]
+  :launch-js ["google-chrome" "--headless" "--disable-dev-shm" "--disable-gpu" "--remote-debugging-port=9222" "--disable-gpu" "--repl" :open-url]
   ;; :launch-js ["firefox" :open-url]
   }
 
