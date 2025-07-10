@@ -48,7 +48,7 @@
        (contains? #{"method" "property"})))
 
 (defn p5js-method-names []
-  (let [items (-> (http/get "https://p5js.org/reference/data.min.json")
+  (let [items (-> (http/get "https://p5js.org/reference/data.json")
                   :body
                   (json/parse-string)
                   (get "classitems"))
