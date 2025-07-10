@@ -6,6 +6,24 @@
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
  :deps {org.processing/core {:mvn/version "4.4.4"}
+        ;; FIXME: switch to org.processing/{dxf,pdf,svg} when released. For now
+        ;; we can fallback to the previous quil releases as these are compatable
+        ;; with 4.4.4. itext, bctsp and batik dependencies should also go away
+        ;; once processing releases maven hosted svg and pdf libraries.
+        quil/processing-dxf {:mvn/version "4.2.3"}
+        quil/processing-pdf {:mvn/version "4.2.3"}
+        quil/processing-svg {:mvn/version "4.2.3"}
+        ;; part of PDF support
+        ;; version defined by processing in https://github.com/benfry/processing4/tree/main/java/libraries/pdf
+        ;; see also https://github.com/quil/quil/issues/247
+        com.lowagie/itext {:mvn/version "2.1.7"
+                           :exclusions [bouncycastle/bctsp-jdk14]}
+        org.bouncycastle/bctsp-jdk14 {:mvn/version "1.38"}
+        ;; svg export
+        ;; versions from https://github.com/benfry/processing4/blob/main/java/libraries/svg/build.xml#L6
+        org.apache.xmlgraphics/batik-svggen {:mvn/version "1.14"}
+        org.apache.xmlgraphics/batik-dom {:mvn/version "1.14"}
+
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.9" :git/sha "e405aac"}
