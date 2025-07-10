@@ -55,15 +55,11 @@ jobs:
         run: bin/lint
 
       - name: Test
-        uses: coactions/setup-xvfb@v1
         timeout-minutes: 3
-        with:
-          run: clojure -Mfig:cljs-test
+        run: xvfb-run --server-args="-screen 0 1600x1200x24" clojure -Mfig:cljs-test
 
       - name: Test CLJS Snippet Snapshots
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: clojure -M:dev:fig:kaocha cljs-snippets
+        run: xvfb-run --server-args="-screen 0 1600x1200x24" clojure -M:dev:fig:kaocha cljs-snippets
 
       - name: Upload Test Artifacts
         if: failure()
