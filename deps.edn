@@ -5,37 +5,7 @@
          "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
- :deps {quil/processing-core {:mvn/version "4.2.3"}
-        quil/processing-dxf {:mvn/version "4.2.3"}
-        quil/processing-pdf {:mvn/version "4.2.3"}
-        quil/processing-svg {:mvn/version "4.2.3"}
-
-        ;; native display code
-        org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
-
-        org.jogamp.jogl/jogl-all {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
-
-        ;; part of PDF support
-        ;; version defined by processing in https://github.com/benfry/processing4/tree/main/java/libraries/pdf
-        ;; see also https://github.com/quil/quil/issues/247
-        com.lowagie/itext {:mvn/version "2.1.7"
-                           :exclusions [bouncycastle/bctsp-jdk14]}
-        org.bouncycastle/bctsp-jdk14 {:mvn/version "1.38"}
-
-        ;; svg export
-        ;; versions from https://github.com/benfry/processing4/blob/main/java/libraries/svg/build.xml#L6
-        ;; FIXME: push this dependency to processing-svg?
-        org.apache.xmlgraphics/batik-svggen {:mvn/version "1.14"}
-        org.apache.xmlgraphics/batik-dom {:mvn/version "1.14"}
-
+ :deps {org.processing/core {:mvn/version "4.4.4"}
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}
