@@ -20,6 +20,9 @@
                          ;; for fn-metas tests
                          cheshire/cheshire {:mvn/version "6.0.0"}
 
+                         ;; logging implementation so that we see logs
+                         org.slf4j/slf4j-simple {:mvn/version "2.0.12"}
+
                          ;; for cljs manual tests
                          compojure/compojure {:mvn/version "1.7.0"}
                          hiccup/hiccup {:mvn/version "1.0.5"}}
