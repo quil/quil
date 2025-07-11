@@ -1,5 +1,6 @@
 (ns bb.system-info
   (:require
+   [babashka.fs :as fs]
    [babashka.process :as bp]))
 
 (defn versions []
@@ -13,7 +14,11 @@
     (println "$ clojure -version")
     (bp/shell "clojure" "-version"))
 
-  ;; imagemagick utilities for image compare
-  (doseq [pname ["compare" "convert" "identify"]]
-    (println "$" pname "-version")
-    (bp/shell (str pname " -version"))))
+  (if (fs/which "magick")
+    (do (println "$ magick -version")
+        (bp/shell "magick" "-version"))
+
+    ;; imagemagick utilities for image compare
+    (doseq [pname ["compare" "convert" "identify"]]
+      (println "$" pname "-version")
+      (bp/shell (str pname " -version")))))

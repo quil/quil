@@ -34,6 +34,21 @@
        test-name
        "-difference.png"))
 
+(defn installed? [& cmds]
+  (try
+    (apply sh/sh cmds)
+    true
+    (catch java.io.IOException _e false)))
+
+;; imagemagick7 prepends identify, convert, compare with the magick command
+(def magick7-installed?
+  (some? (installed? "magick" "-version")))
+
+(defn magick [& args]
+  (if magick7-installed?
+    (apply sh/sh (cons "magick" args))
+    (apply sh/sh args)))
+
 (defn compare-images
   "Compares images at file paths `expected` and `actual` and produces another
   image at path `difference` which highlights any differences in the images.
@@ -44,7 +59,7 @@
   [expected actual difference]
   ;; use imagemagick compare executable for comparison
   ;; see https://imagemagick.org/script/compare.php
-  (let [{:keys [err]} (sh/sh "compare" "-metric" "mae" expected actual difference)
+  (let [{:keys [err]} (magick "compare" "-metric" "mae" expected actual difference)
         result        (second (re-find #"\((.*)\)" err))]
     (if result
       (Double/parseDouble result)
@@ -57,19 +72,19 @@
         diff-file (diff-image platform test-name)
         result (compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
-        identify (:out (sh/sh "identify" actual-file expected-file))]
+        identify (:out (magick "identify" actual-file expected-file))]
     (when (number? result)
       (if (<= result threshold)
         (do
           (io/delete-file (io/file actual-file))
           (io/delete-file (io/file diff-file)))
         ;; add actual and expected images to difference image for easier comparison
-        (sh/sh "convert"
-               actual-file
-               diff-file
-               expected-file
-               "+append"
-               diff-file))
+        (magick "convert"
+                actual-file
+                diff-file
+                expected-file
+                "+append"
+                diff-file))
       (t/is (<= result threshold)
             (str "Image differences in \"" test-name "\", see: " diff-file "\n"
                  identify)))))
@@ -89,15 +104,10 @@
       (.renameTo (io/file actual-file) (io/file expected)))
     (assert-match-reference! test-name platform actual-file threshold)))
 
-(defn installed? [& cmds]
-  (try
-    (apply sh/sh cmds)
-    true
-    (catch java.io.IOException _e false)))
-
 (defn imagemagick-installed [f]
-  (if (and (installed? "compare" "-version")
-           (installed? "convert" "-version")
-           (installed? "identify" "-version"))
+  (if (or (installed? "magick" "-version")
+          (and (installed? "compare" "-version")
+               (installed? "convert" "-version")
+               (installed? "identify" "-version")))
     (f)
     (throw (ex-info "Imagemagick not detected. Please install it for automated image comparison to work." {}))))
