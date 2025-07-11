@@ -82,6 +82,7 @@
   all-cljs-snippets-produce-expected-output
   (etaoin/go @driver "http://localhost:3000/test.html")
   (let [elements (snippet-elements @driver)]
+    (println (format "Generating %d browser snippet tests" (count elements)))
     (t/is (seq elements) "unable to find tests on test.html harness")
     (doseq [{:keys [name index accepted-diff-threshold]} elements]
       (etaoin/go @driver (str "http://localhost:3000/test.html#" index))
