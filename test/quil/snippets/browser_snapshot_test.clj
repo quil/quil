@@ -8,11 +8,11 @@
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
-  (sth/installed? "geckodriver" "--version"))
+  (sth/installed? "geckodriver"))
 
 ;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
 (defn- chromedriver-installed? []
-  (sth/installed? "chromedriver" "--version"))
+  (sth/installed? "chromedriver"))
 
 (defn- test-file-server-running? []
   (try
