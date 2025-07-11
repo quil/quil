@@ -34,15 +34,13 @@
        test-name
        "-difference.png"))
 
-(defn installed? [& cmds]
+(defn installed? [cmd]
   (try
-    (apply sh/sh cmds)
-    true
+    (= 0 (:exit (sh/sh "which" cmd)))
     (catch java.io.IOException _e false)))
 
 ;; imagemagick7 prepends identify, convert, compare with the magick command
-(def magick7-installed?
-  (some? (installed? "magick" "-version")))
+(def magick7-installed? (installed? "magick"))
 
 (defn magick [& args]
   (if magick7-installed?
@@ -105,9 +103,9 @@
     (assert-match-reference! test-name platform actual-file threshold)))
 
 (defn imagemagick-installed [f]
-  (if (or (installed? "magick" "-version")
-          (and (installed? "compare" "-version")
-               (installed? "convert" "-version")
-               (installed? "identify" "-version")))
+  (if (or (installed? "magick")
+          (and (installed? "compare")
+               (installed? "convert")
+               (installed? "identify")))
     (f)
     (throw (ex-info "Imagemagick not detected. Please install it for automated image comparison to work." {}))))
