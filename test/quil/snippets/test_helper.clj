@@ -100,6 +100,4 @@
            (installed? "convert" "-version")
            (installed? "identify" "-version"))
     (f)
-    (do
-      (println "Imagemagick not detected. Please install it for automated image comparison to work.")
-      false)))
+    (throw (ex-info "Imagemagick not detected. Please install it for automated image comparison to work." {}))))
