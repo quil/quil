@@ -117,8 +117,7 @@ jobs:
           cli: latest
           bb: latest
 
-      - name: Setup ImageMagick
-        uses: mfinelli/setup-imagemagick@v6
+      - uses: mfinelli/setup-imagemagick@v6
 
       - name: System Info
         run: bb system-info
