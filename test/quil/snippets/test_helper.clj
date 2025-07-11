@@ -4,6 +4,8 @@
             [clojure.java.io :as io]
             [clojure.test :as t]))
 
+;; Requires X11 or some other graphics environment
+;; hency why cljs-test needs an xvfb-run wrapper
 (defn- display-density []
   (try
     (.. GraphicsEnvironment (getLocalGraphicsEnvironment) (getDefaultScreenDevice) (getScaleFactor))
