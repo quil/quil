@@ -124,10 +124,9 @@ jobs:
       # Ie all the tests including snippet tests, many of which are also
       # verified from a CLJS context.
       - name: Test
-        uses: coactions/setup-xvfb@v1
         timeout-minutes: 5
-        with:
-          run: clojure -M:dev:kaocha --reporter doc unit clj-snippets
+        run: |
+          ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:kaocha --reporter doc unit clj-snippets
 
       - name: Upload Test Artifacts
         if: failure()
