@@ -42,8 +42,8 @@
                          org.slf4j/slf4j-simple {:mvn/version "2.0.17"}
 
                          ;; for cljs manual tests
-                         compojure/compojure {:mvn/version "1.7.0"}
-                         hiccup/hiccup {:mvn/version "1.0.5"}}
+                         compojure/compojure {:mvn/version "1.7.1"}
+                         hiccup/hiccup {:mvn/version "2.0.0"}}
             :extra-paths ["test" "dev-resources"]}
 
            ;; clj -X:test
