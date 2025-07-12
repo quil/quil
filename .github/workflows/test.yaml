@@ -143,6 +143,7 @@ jobs:
           path: |
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
+          if-no-files-found: ignore
 
       - name: Upload core dump
         if: failure()
