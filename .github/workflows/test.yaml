@@ -143,3 +143,13 @@ jobs:
           path: |
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
+
+      - name: Upload core dump
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-core-dump-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
+          path: |
+            /home/runner/work/quil/quil/core.*
+            /home/runner/work/quil/quil/hs_err_pid*.log
+          if-no-files-found: ignore
