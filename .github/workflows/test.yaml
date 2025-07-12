@@ -61,7 +61,8 @@ jobs:
         timeout-minutes: 3
         run: clojure -Mfig:cljs-test
 
-      # xvfb-run needed so that pixel density be determine which reference images to use
+      # xvfb-run needed so that pixel density be queried and specify reference
+      # snapshots to compare against.
       - name: Test CLJS Snippet Snapshots
         run: ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:fig:kaocha cljs-snippets
 
