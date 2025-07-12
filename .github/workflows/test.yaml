@@ -124,11 +124,11 @@ jobs:
       - name: System Info
         run: bb system-info
 
-      - name: GLXInfo
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt install mesa-utils
-          xvfb-run glxinfo -B
+      # - name: GLXInfo
+      #   if: matrix.os == 'ubuntu-latest'
+      #   run: |
+      #     sudo apt install mesa-utils
+      #     xvfb-run glxinfo -B
 
       # AOT compile applet-listener and applet
       - name: AOT Compile
