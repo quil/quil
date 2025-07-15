@@ -48,7 +48,7 @@
   (b/process {:command-args ["bb" "processing-install"]})
 
   (let [version processing-version
-        artifacts ["core" "pdf" "dxf" "svg"]]
+        artifacts ["pdf" "dxf" "svg"]]
     (doseq [artifact artifacts
             :let [artifact-id (str "processing-" artifact)
                   jar-file (str artifact-id "-" version ".jar")]]
