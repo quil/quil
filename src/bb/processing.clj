@@ -7,25 +7,27 @@
 
 ;; linux only for now
 (defn install []
-  (let [url "https://github.com/processing/processing4/releases/download/processing-1293-4.3/processing-4.3-linux-x64.tgz"]
+  (let [url "https://github.com/processing/processing4/releases/download/processing-1304-4.4.4/processing-4.4.4-linux-x64-portable.zip"]
     (println "Downloading processing4 ...")
     (io/copy (:body (http/get url {:as :stream}))
-             (io/file "processing.jar"))
+             (io/file "processing.zip"))
 
     (println "unpacking ...")
-    (bp/shell "tar" "-zxf" "processing.jar")
+    (bp/shell "unzip" "processing.zip")
 
     (fs/create-dirs "libraries")
-    ;; core.jar, jogl-all.jar, gluegen-rt.jar
-    (fs/copy-tree "processing-4.3/core/library" "libraries" {:replace-existing true})
-    (fs/copy "processing-4.3/modes/java/libraries/dxf/library/dxf.jar" "libraries" {:replace-existing true})
+    ;; dxf.jar
+    (fs/copy "Processing/lib/app/resources/modes/java/libraries/dxf/library/dxf.jar"
+             "libraries" {:replace-existing true})
     ;; pdf.jar, itext.jar
-    (fs/copy-tree "processing-4.3/modes/java/libraries/pdf/library/" "libraries" {:replace-existing true})
+    (fs/copy-tree "Processing/lib/app/resources/modes/java/libraries/pdf/library"
+                  "libraries" {:replace-existing true})
     ;; svg.jar, batik.jar
-    (fs/copy-tree "processing-4.3/modes/java/libraries/svg/library/" "libraries" {:replace-existing true})
+    (fs/copy-tree "Processing/lib/app/resources/modes/java/libraries/svg/library/"
+                  "libraries" {:replace-existing true})
 
-    (fs/delete-tree "processing-4.3")
-    (fs/delete "processing.jar")))
+    (fs/delete-tree "Processing")
+    (fs/delete "processing.zip")))
 
 ;; clj -T:build release caused:
 ;; Execution error (UnsupportedClassVersionError) at java.lang.ClassLoader/defineClass1 (ClassLoader.java:-2).

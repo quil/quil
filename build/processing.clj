@@ -41,14 +41,14 @@
 
 ;; Specify processing version to release both here and in the
 ;; bb.processing/install URL
-(def processing-version "4.2.3")
+(def processing-version "4.4.4")
 
 (defn clojars-release [opts]
   ;; TODO: inline processing-install here
   (b/process {:command-args ["bb" "processing-install"]})
 
   (let [version processing-version
-        artifacts ["core" "pdf" "dxf" "svg"]]
+        artifacts ["pdf" "dxf" "svg"]]
     (doseq [artifact artifacts
             :let [artifact-id (str "processing-" artifact)
                   jar-file (str artifact-id "-" version ".jar")]]

@@ -81,6 +81,8 @@
                :renderer (:renderer opts :java2d)
                :draw body)))))
 
+(println (format "Generating %d snippets" (count as/all-snippets)))
+
 (doseq [snippet as/all-snippets]
   (define-snippet-as-test snippet))
 

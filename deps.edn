@@ -5,54 +5,45 @@
          "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
- :deps {quil/processing-core {:mvn/version "4.2.3"}
+ :deps {org.processing/core {:mvn/version "4.4.4"}
+        ;; FIXME: switch to org.processing/{dxf,pdf,svg} when released. For now
+        ;; we can fallback to the previous quil releases as these are compatable
+        ;; with 4.4.4. itext, bctsp and batik dependencies should also go away
+        ;; once processing releases maven hosted svg and pdf libraries.
         quil/processing-dxf {:mvn/version "4.2.3"}
         quil/processing-pdf {:mvn/version "4.2.3"}
         quil/processing-svg {:mvn/version "4.2.3"}
-
-        ;; native display code
-        org.jogamp.gluegen/gluegen-rt {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.gluegen/gluegen-rt$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
-
-        org.jogamp.jogl/jogl-all {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-macosx-universal {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-amd64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-linux-aarch64 {:mvn/version "2.4.0-rc-20230201"}
-        org.jogamp.jogl/jogl-all$natives-windows-amd64 {:mvn/version "2.4.0-rc-20230201"}
-
         ;; part of PDF support
         ;; version defined by processing in https://github.com/benfry/processing4/tree/main/java/libraries/pdf
         ;; see also https://github.com/quil/quil/issues/247
         com.lowagie/itext {:mvn/version "2.1.7"
                            :exclusions [bouncycastle/bctsp-jdk14]}
         org.bouncycastle/bctsp-jdk14 {:mvn/version "1.38"}
-
         ;; svg export
         ;; versions from https://github.com/benfry/processing4/blob/main/java/libraries/svg/build.xml#L6
-        ;; FIXME: push this dependency to processing-svg?
         org.apache.xmlgraphics/batik-svggen {:mvn/version "1.14"}
         org.apache.xmlgraphics/batik-dom {:mvn/version "1.14"}
 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.9" :git/sha "e405aac"}
                           slipset/deps-deploy {:mvn/version "RELEASE"}}
                    :ns-default build}
 
            :dev
            {:extra-deps {;; for snippet tests
-                         clj-http/clj-http {:mvn/version "3.12.3"}
-                         etaoin/etaoin {:mvn/version "1.0.40"}
+                         clj-http/clj-http {:mvn/version "3.13.1"}
+                         etaoin/etaoin {:mvn/version "1.1.43"}
 
                          ;; for fn-metas tests
-                         cheshire/cheshire {:mvn/version "5.12.0"}
+                         cheshire/cheshire {:mvn/version "6.0.0"}
+
+                         ;; logging implementation so that we see logs
+                         org.slf4j/slf4j-simple {:mvn/version "2.0.17"}
 
                          ;; for cljs manual tests
-                         compojure/compojure {:mvn/version "1.7.0"}
-                         hiccup/hiccup {:mvn/version "1.0.5"}}
+                         compojure/compojure {:mvn/version "1.7.1"}
+                         hiccup/hiccup {:mvn/version "2.0.0"}}
             :extra-paths ["test" "dev-resources"]}
 
            ;; clj -X:test
@@ -61,8 +52,8 @@
                                {:git/tag "v0.5.1" :git/sha "dfb30dd"}
 
                                ;; for CLJS snippet tests
-                               clj-http/clj-http {:mvn/version "3.12.3"}
-                               etaoin/etaoin {:mvn/version "1.0.40"}
+                               clj-http/clj-http {:mvn/version "3.13.1"}
+                               etaoin/etaoin {:mvn/version "1.1.43"}
                                }
                   :main-opts ["-m" "cognitect.test-runner"]
                   :exec-fn cognitect.test-runner.api/test}
@@ -70,14 +61,14 @@
            ;; clj -M:dev:kaocha
            :kaocha
            {:main-opts ["-m" "kaocha.runner"]
-            :extra-deps {lambdaisland/kaocha {:mvn/version "1.87.1366"}}}
+            :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}}
 
            :fig
            {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}
-                         fipp/fipp {:mvn/version "0.6.26"} ;; better diff output
+                         fipp/fipp {:mvn/version "0.6.27"} ;; better diff output
                          prismatic/dommy {:mvn/version "1.1.0"}
-                         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.4"}
-                         com.bhauman/figwheel-main {:mvn/version "0.2.18"}}
+                         com.bhauman/rebel-readline-cljs {:mvn/version "0.1.5"}
+                         com.bhauman/figwheel-main {:mvn/version "0.2.20"}}
             :extra-paths ["target" "test/cljs"]}
 
            ;; clj -Mfig:cljs-test
@@ -91,7 +82,7 @@
 
            ;; clj -M:clj-kondo --lint src test
            :clj-kondo
-           {:deps {clj-kondo/clj-kondo {:mvn/version "2023.12.15"}}
+           {:deps {clj-kondo/clj-kondo {:mvn/version "2025.06.05"}}
             :main-opts ["-m" "clj-kondo.main"]}
 
            ;; clj -M:format check

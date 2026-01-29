@@ -8,11 +8,11 @@
 
 ;; geckodriver is producing 625x625 images for actuals vs 500x500 for reference
 (defn- geckodriver-installed? []
-  (sth/installed? "geckodriver" "--version"))
+  (sth/installed? "geckodriver"))
 
 ;; download driver from https://googlechromelabs.github.io/chrome-for-testing/
 (defn- chromedriver-installed? []
-  (sth/installed? "chromedriver" "--version"))
+  (sth/installed? "chromedriver"))
 
 (defn- test-file-server-running? []
   (try
@@ -42,7 +42,11 @@
 (defn etaoin-setup [f]
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "))
-  (let [browser (etaoin/chrome {:size [1280 1024]})]
+  (let [browser (etaoin/chrome {:size [1280 1024]
+                                :headless true
+                                :args ["--enable-unsafe-swiftshader"]
+                                :log-level :severe ;; :all, :warning
+                                })]
     (reset! driver browser)
     (try (f)
          (finally
@@ -78,6 +82,7 @@
   all-cljs-snippets-produce-expected-output
   (etaoin/go @driver "http://localhost:3000/test.html")
   (let [elements (snippet-elements @driver)]
+    (println (format "Generating %d browser snippet tests" (count elements)))
     (t/is (seq elements) "unable to find tests on test.html harness")
     (doseq [{:keys [name index accepted-diff-threshold]} elements]
       (etaoin/go @driver (str "http://localhost:3000/test.html#" index))
@@ -87,7 +92,8 @@
         (sth/verify-reference-or-update
          name "cljs" actual-file accepted-diff-threshold)
         ;; disable for now, as lots of chatty logging, but useful to inspect
-        ;; (t/is (empty? (etaoin/get-logs @driver)))
+        ;; (t/is (empty? (etaoin/get-logs @driver))
+        ;;       (str "logs from " name " - " index))
         ))))
 
 ;; view image diffs with

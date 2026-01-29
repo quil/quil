@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache deps.edn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -38,10 +38,13 @@ jobs:
           java-version: 17
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.2
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: latest
           bb: latest
+
+      - name: Setup ImageMagick
+        uses: mfinelli/setup-imagemagick@v6
 
       - name: System Info
         run: bb system-info
@@ -55,14 +58,13 @@ jobs:
         run: bin/lint
 
       - name: Test
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: clojure -Mfig:cljs-test
+        timeout-minutes: 3
+        run: clojure -Mfig:cljs-test
 
+      # xvfb-run needed so that pixel density be queried and specify reference
+      # snapshots to compare against.
       - name: Test CLJS Snippet Snapshots
-        uses: coactions/setup-xvfb@v1
-        with:
-          run: clojure -M:dev:fig:kaocha cljs-snippets
+        run: ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:fig:kaocha cljs-snippets
 
       - name: Upload Test Artifacts
         if: failure()
@@ -94,7 +96,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache deps.edn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2/repository
@@ -112,13 +114,21 @@ jobs:
           java-version: ${{ matrix.java-version }}
 
       - name: Setup Clojure
-        uses: DeLaGuardo/setup-clojure@12.2
+        uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: latest
           bb: latest
 
+      - uses: mfinelli/setup-imagemagick@v6
+
       - name: System Info
         run: bb system-info
+
+      # - name: GLXInfo
+      #   if: matrix.os == 'ubuntu-latest'
+      #   run: |
+      #     sudo apt install mesa-utils
+      #     xvfb-run glxinfo -B
 
       # AOT compile applet-listener and applet
       - name: AOT Compile
@@ -127,10 +137,9 @@ jobs:
       # Ie all the tests including snippet tests, many of which are also
       # verified from a CLJS context.
       - name: Test
-        uses: coactions/setup-xvfb@v1
         timeout-minutes: 5
-        with:
-          run: clojure -M:dev:kaocha --reporter doc unit clj-snippets
+        run: |
+          ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:kaocha --no-capture-output --reporter doc unit clj-snippets
 
       - name: Upload Test Artifacts
         if: failure()
@@ -140,3 +149,14 @@ jobs:
           path: |
             dev-resources/snippet-snapshots/*/*/*-actual.png
             dev-resources/snippet-snapshots/*/*/*-difference.png
+          if-no-files-found: ignore
+
+      - name: Upload core dump
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-core-dump-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
+          path: |
+            /home/runner/work/quil/quil/core.*
+            /home/runner/work/quil/quil/hs_err_pid*.log
+          if-no-files-found: ignore
