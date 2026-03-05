@@ -11,9 +11,11 @@
   {:renderer :p3d
    :settings (fn [] (q/smooth 4))
    :setup
-   (let [sh #?(:clj (q/load-shape "Heckert_GNU_white.svg") ;; loading from dev-resources/Heckert_GNU_white.svg
-               ;; or (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
-               :cljs (q/load-shape "octahedron.obj"))]
+   (let [shape-url
+         #?(:clj "Heckert_GNU_white.svg" ;; loading from dev-resources/Heckert_GNU_white.svg
+            ;; or "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+            :cljs "octahedron.obj")
+         sh (q/load-shape shape-url)]
      (q/set-state! :shp sh))}
 
   (q/background 255)
@@ -27,9 +29,9 @@
      "shape-mode"
      {:renderer :p2d}
 
-     (let [sh (q/load-shape "Heckert_GNU_white.svg") ;; loading from dev-resources/Heckert_GNU_white.svg
-           ;; or (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
-           ]
+     (let [shape-url "Heckert_GNU_white.svg" ;; loading from dev-resources/Heckert_GNU_white.svg
+           ;; or "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg"
+           sh (q/load-shape shape-url)]
        (q/stroke-weight 5)
        (q/stroke 255 0 0)
 
