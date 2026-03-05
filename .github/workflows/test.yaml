@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload Test Artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: snippet-differences-cljs-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
           path: |
@@ -148,7 +148,7 @@ jobs:
 
       - name: Upload Test Artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: snippet-differences-clj-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
           path: |
@@ -158,7 +158,7 @@ jobs:
 
       - name: Upload core dump
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: java-core-dump-${{ runner.os }}-${{ github.sha }}.${{ github.run_attempt }}
           path: |
