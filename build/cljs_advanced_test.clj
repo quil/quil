@@ -4,16 +4,16 @@
    [clojure.tools.build.api :as b]
    [build :as qb]))
 
-(defn deps [mvn-version]
+(defn deps [mvn-version clojurescript-version]
   (str
    "{:deps {\n"
-   "  org.clojure/clojurescript {:mvn/version \"1.11.132\"}\n"
+   "  org.clojure/clojurescript {:mvn/version \"" clojurescript-version "\"}\n"
    "  quil/quil {:mvn/version \"" mvn-version "\"}}}\n"))
 
-(defn make-deps [{:keys [mvn-version]}]
+(defn make-deps [{:keys [mvn-version clojurescript-version]}]
   (b/delete {:path "/tmp/cljs-advanced"})
   (b/write-file {:path "/tmp/cljs-advanced/deps.edn"
-                 :string (deps mvn-version)})
+                 :string (deps mvn-version clojurescript-version)})
   (b/copy-file {:src "dev/sample.cljs"
                 :target "/tmp/cljs-advanced/src/sample.cljs"}))
 
@@ -22,8 +22,15 @@
   (qb/clean _)
   (qb/release _)
   (qb/deploy (dissoc _ :clojars))
-  (let [mvn-version (qb/release-version _)]
-    (make-deps (assoc _ :mvn-version mvn-version))
+  (let [mvn-version (qb/release-version _)
+        cljs-basis (b/create-basis {:project "deps.edn" :aliases [:fig]})
+        clojurescript-version (get-in  cljs-basis [:libs 'org.clojure/clojurescript :mvn/version])]
+    (when (nil? clojurescript-version)
+      (throw (ex-info "Unable to compute clojurescript version from deps.edn basis" cljs-basis)))
+
+    (make-deps (assoc _
+                      :mvn-version mvn-version
+                      :clojurescript-version clojurescript-version))
     (println (slurp "/tmp/cljs-advanced/deps.edn"))
 
     (let [args ["clojure"
