@@ -19,11 +19,11 @@ jobs:
 
       # Java 17 generates class file version 61.0, which is what processing has
       # been compiled with.
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@13.5.2

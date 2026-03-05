@@ -33,11 +33,11 @@ jobs:
 
       # Java 17 generates class file version 61.0, which is what processing has
       # been compiled with.
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '21'
 
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@13.5.2
@@ -92,7 +92,7 @@ jobs:
           - macOS-latest
           # Failing because setup-xvfb powershell can't find clojure commands
           # - windows-latest
-        java-version: [17] # ,20 to test jdk20
+        java-version: [21]
 
     runs-on: ${{ matrix.os }}
 
@@ -115,8 +115,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
-          distribution: temurin
-          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+          java-version: '${{ matrix.java-version }}'
 
       - name: Setup Clojure
         uses: DeLaGuardo/setup-clojure@13.5.2
