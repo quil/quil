@@ -1,5 +1,6 @@
 (ns quil.snippets.shape.loading-and-displaying
-  (:require #?(:clj [quil.snippets.macro :refer [defsnippet]])
+  (:require #?(:clj [clojure.java.io :as io])
+            #?(:clj [quil.snippets.macro :refer [defsnippet]])
             [quil.core :as q :include-macros true]
             quil.snippets.all-snippets-internal)
   #?(:cljs
@@ -9,9 +10,11 @@
   ["shape" "load-shape"]
   {:renderer :p3d
    :settings (fn [] (q/smooth 4))
-   :setup (let [sh #?(:clj (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
-                      :cljs (q/load-shape "octahedron.obj"))]
-            (q/set-state! :shp sh))}
+   :setup
+   (let [sh #?(:clj (q/load-shape "Heckert_GNU_white.svg") ;; loading from dev-resources/Heckert_GNU_white.svg
+               ;; or (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+               :cljs (q/load-shape "octahedron.obj"))]
+     (q/set-state! :shp sh))}
 
   (q/background 255)
   (let [sh (q/state :shp)]
@@ -24,7 +27,9 @@
      "shape-mode"
      {:renderer :p2d}
 
-     (let [sh (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")]
+     (let [sh (q/load-shape "Heckert_GNU_white.svg") ;; loading from dev-resources/Heckert_GNU_white.svg
+           ;; or (q/load-shape "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg")
+           ]
        (q/stroke-weight 5)
        (q/stroke 255 0 0)
 
