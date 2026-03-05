@@ -76,20 +76,9 @@
   (aot opts)
   (pom opts)
   (let [jar-file (jar-file opts)]
-    (b/uber {:class-dir class-dir
-             :uber-file jar-file
-             :basis basis
-             :exclude
-             [;; don't bundle clojure into the jar
-              "^clojure[/].+"
-              ;; exclude p5js to avoid JSC_DUPLICATE_EXTERN_INPUT during CLJS
-              ;; advanced optimized compilation. Without this, the far-jar copy
-              ;; of cljsjs/p5 and the mvn coordinate conflict and both provide
-              ;; the an extern file.
-              ;;
-              ;; TODO: add an advanced compilation cljs example depending on a
-              ;; jar to verify
-              "cljsjs/p5.*"]})
+    (b/jar {:class-dir class-dir
+            :jar-file jar-file
+            :basis basis})
     (println "release:" jar-file
              (format "(%.1f kb)" (/ (.length (io/file jar-file)) 1024.0)))))
 
