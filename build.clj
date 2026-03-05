@@ -54,14 +54,22 @@
   (let [version (release-version opts)]
     (b/write-pom
      {:class-dir class-dir
-      :src-pom "build/template-pom.xml"
       :lib 'quil/quil
       :version version
       :basis basis
-      :scm {:tag (if-not snapshot
-                   (str "v" version)
-                   "")}
-      :src-dirs ["src/clj"]}))
+      :src-dirs ["src/clj"]
+      :pom-data
+      [[:licenses
+        [:license
+         [:name "Eclipse Public License 2.0"]
+         [:url "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt"]]]
+       [:scm
+        [:url "https://github.com/quil/quil"]
+        [:connection "scm:git:https://github.com/quil/quil.git"]
+        [:developerConnection "scm:git:ssh:git@github.com/quil/quil.git"]
+        [:tag (if-not snapshot
+                (str "v" version)
+                "")]]]}))
   opts)
 
 (defn release [opts]
