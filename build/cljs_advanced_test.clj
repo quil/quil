@@ -5,10 +5,9 @@
    [build :as qb]))
 
 (defn deps [mvn-version clojurescript-version]
-  (str
-   "{:deps {\n"
-   "  org.clojure/clojurescript {:mvn/version \"" clojurescript-version "\"}\n"
-   "  quil/quil {:mvn/version \"" mvn-version "\"}}}\n"))
+  (pr-str
+   {:deps {'org.clojure/clojurescript {:mvn/version clojurescript-version}
+           'quil/quil {:mvn/version mvn-version}}}))
 
 (defn make-deps [{:keys [mvn-version clojurescript-version]}]
   (b/delete {:path "/tmp/cljs-advanced"})
