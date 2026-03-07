@@ -5,18 +5,21 @@
          "target/classes"]
  :resource-paths ["resources"]
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
- :deps {org.jogamp.jogl/jogl-all {:mvn/version "2.6.0"}
+ :deps {org.jogamp.jogl/jogl-all {:mvn/version "2.6.0"}    ; needed for JVM GPU 3D
+        org.bouncycastle/bctsp-jdk14 {:mvn/version "1.38"} ; needed by PDF library
+
         org.processing/core {:mvn/version "4.5.3"}
         org.processing.core/dxf {:mvn/version "4.5.3"}
         org.processing.core/io {:mvn/version "4.5.3"}
         org.processing.core/net {:mvn/version "4.5.3"}
-        org.processing.core/pdf {:mvn/version "4.5.3"}
+        org.processing.core/pdf {:mvn/version "4.5.3"
+                                 :exclusions [bouncycastle/bctsp-jdk14]}
         org.processing.core/serial {:mvn/version "4.5.3"}
         org.processing.core/svg {:mvn/version "4.5.3"}
- 
+        
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.9" :git/sha "e405aac"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.12" :git/sha "e405aac"}
                           slipset/deps-deploy {:mvn/version "RELEASE"}}
                    :ns-default build}
 
@@ -26,13 +29,13 @@
                          etaoin/etaoin {:mvn/version "1.1.43"}
 
                          ;; for fn-metas tests
-                         cheshire/cheshire {:mvn/version "6.0.0"}
+                         cheshire/cheshire {:mvn/version "6.1.0"}
 
                          ;; logging implementation so that we see logs
                          org.slf4j/slf4j-simple {:mvn/version "2.0.17"}
 
                          ;; for cljs manual tests
-                         compojure/compojure {:mvn/version "1.7.1"}
+                         compojure/compojure {:mvn/version "1.7.2"}
                          hiccup/hiccup {:mvn/version "2.0.0"}}
             :extra-paths ["test" "dev-resources"]}
 
@@ -54,8 +57,8 @@
             :extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}}
 
            :fig
-           {:extra-deps {org.clojure/clojurescript {:mvn/version "1.11.60"}
-                         fipp/fipp {:mvn/version "0.6.27"} ;; better diff output
+           {:extra-deps {org.clojure/clojurescript {:mvn/version "1.12.134"}
+                         fipp/fipp {:mvn/version "0.6.29"} ;; better diff output
                          prismatic/dommy {:mvn/version "1.1.0"}
                          com.bhauman/rebel-readline-cljs {:mvn/version "0.1.5"}
                          com.bhauman/figwheel-main {:mvn/version "0.2.20"}}
@@ -72,10 +75,13 @@
 
            ;; clj -M:clj-kondo --lint src test
            :clj-kondo
-           {:deps {clj-kondo/clj-kondo {:mvn/version "2025.06.05"}}
+           {:deps {clj-kondo/clj-kondo {:mvn/version "2026.01.19"}}
             :main-opts ["-m" "clj-kondo.main"]}
 
            ;; clj -M:format check
            :format
            {:deps {cljfmt/cljfmt {:mvn/version "0.9.2"}}
-            :main-opts ["-m" "cljfmt.main"]}}}
+            :main-opts ["-m" "cljfmt.main"]}
+
+           :outdated {:deps {com.github.liquidz/antq {:mvn/version "2.11.1276"}}
+                      :main-opts ["-m" "antq.core"]}}}
