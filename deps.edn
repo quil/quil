@@ -7,12 +7,13 @@
  :mvn/repos {"jogl" {:url "https://jogamp.org/deployment/maven/"}}
  :deps {org.jogamp.jogl/jogl-all {:mvn/version "2.6.0"}
         org.processing/core {:mvn/version "4.5.3"}
-        org.processing.core/io {:mvn/version "4.5.3"}
-        org.processing.core/svg {:mvn/version "4.5.3"}
         org.processing.core/dxf {:mvn/version "4.5.3"}
+        org.processing.core/io {:mvn/version "4.5.3"}
         org.processing.core/net {:mvn/version "4.5.3"}
+        org.processing.core/pdf {:mvn/version "4.5.3"}
         org.processing.core/serial {:mvn/version "4.5.3"}
-        
+        org.processing.core/svg {:mvn/version "4.5.3"}
+ 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
  :aliases {:build {:deps {io.github.clojure/tools.build {:git/tag "v0.10.9" :git/sha "e405aac"}
