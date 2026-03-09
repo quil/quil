@@ -1,0 +1,44 @@
+(ns build.cljs-advanced-test
+  "Verify that CLJS advanced compilatio works with quil release JAR"
+  (:require
+   [clojure.tools.build.api :as b]
+   [build :as qb]))
+
+(defn deps [mvn-version clojurescript-version]
+  (pr-str
+   {:deps {'org.clojure/clojurescript {:mvn/version clojurescript-version}
+           'quil/quil {:mvn/version mvn-version}}}))
+
+(defn make-deps [{:keys [mvn-version clojurescript-version]}]
+  (b/delete {:path "/tmp/cljs-advanced"})
+  (b/write-file {:path "/tmp/cljs-advanced/deps.edn"
+                 :string (deps mvn-version clojurescript-version)})
+  (b/copy-file {:src "dev/sample.cljs"
+                :target "/tmp/cljs-advanced/src/sample.cljs"}))
+
+;; clojure -T:build build.cljs-advanced-test/advanced-compile
+(defn advanced-compile [_]
+  (qb/clean _)
+  (qb/release _)
+  (qb/deploy (dissoc _ :clojars))
+  (let [mvn-version (qb/release-version _)
+        cljs-basis (b/create-basis {:project "deps.edn" :aliases [:fig]})
+        clojurescript-version (get-in  cljs-basis [:libs 'org.clojure/clojurescript :mvn/version])]
+    (when (nil? clojurescript-version)
+      (throw (ex-info "Unable to compute clojurescript version from deps.edn basis" cljs-basis)))
+
+    (make-deps (assoc _
+                      :mvn-version mvn-version
+                      :clojurescript-version clojurescript-version))
+    (println (slurp "/tmp/cljs-advanced/deps.edn"))
+
+    (let [args ["clojure"
+                "-M" "-m" "cljs.main"
+                "--optimizations" "advanced"
+                "-c" "sample"]
+          {:keys [exit]}
+          (b/process
+           {:dir "/tmp/cljs-advanced"
+            :command-args args})]
+      (when-not (zero? exit)
+        (throw (ex-info "Compile failed" {}))))))

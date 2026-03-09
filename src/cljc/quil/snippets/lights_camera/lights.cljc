@@ -89,6 +89,9 @@
 ;; j  processing.opengl.PGraphicsOpenGL.beginDraw()V+139
 ;; j  processing.core.PApplet.handleDraw()V+52
 ;; j  quil.Applet.handleDraw()V+37
+;;
+;; This is pretty consistently causing a SEGV on github ci, but some other
+;; snippet also causes a SEGV, so just disabling this is not sufficient.
 (defsnippet point-light
   "point-light"
   {:renderer :p3d

@@ -155,7 +155,6 @@ In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/
 ## Developing (deps.edn)
 
 * Install [clojure-cli](https://clojure.org/guides/install_clojure) and [babashka](https://github.com/babashka/babashka#installation).
-* `bb processing-install` will download a local copy of the upstream processing4 release. It will also unpack the architecture specific jar files into the right places for the `deps.edn` `:local/root` dependencies to find.
 * `clojure -T:build aot` will do an Ahead of Time compilation of a few classes required to interface with Processing.
 
 *Important* because of the dependency on Processing jars which are not hosted in any maven repository, it is not currently possible to use quil as a `:git/sha` coordinate dependency.

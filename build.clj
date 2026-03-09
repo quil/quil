@@ -1,6 +1,5 @@
 (ns build
   (:require
-   [build.processing :as processing]
    [clojure.java.io :as io]
    [clojure.tools.build.api :as b]
    [deps-deploy.deps-deploy :as dd]))
@@ -55,25 +54,31 @@
   (let [version (release-version opts)]
     (b/write-pom
      {:class-dir class-dir
-      :src-pom "build/template-pom.xml"
       :lib 'quil/quil
       :version version
       :basis basis
-      :scm {:tag (if-not snapshot
-                   (str "v" version)
-                   "")}
-      :src-dirs ["src/clj"]}))
+      :src-dirs ["src/clj"]
+      :pom-data
+      [[:licenses
+        [:license
+         [:name "Eclipse Public License 2.0"]
+         [:url "https://www.eclipse.org/org/documents/epl-2.0/EPL-2.0.txt"]]]
+       [:scm
+        [:url "https://github.com/quil/quil"]
+        [:connection "scm:git:https://github.com/quil/quil.git"]
+        [:developerConnection "scm:git:ssh:git@github.com/quil/quil.git"]
+        [:tag (if-not snapshot
+                (str "v" version)
+                "")]]]}))
   opts)
 
 (defn release [opts]
   (aot opts)
   (pom opts)
   (let [jar-file (jar-file opts)]
-    (b/uber {:class-dir class-dir
-             :uber-file jar-file
-             :basis basis
-             ;; don't bundle clojure into the jar
-             :exclude ["^clojure[/].+"]})
+    (b/jar {:class-dir class-dir
+            :jar-file jar-file
+            :basis basis})
     (println "release:" jar-file
              (format "(%.1f kb)" (/ (.length (io/file jar-file)) 1024.0)))))
 
@@ -81,6 +86,3 @@
   (dd/deploy {:installer (if (:clojars opts) :remote :local)
               :artifact (b/resolve-path (jar-file opts))
               :pom-file "target/classes/META-INF/maven/quil/quil/pom.xml"}))
-
-(defn processing-clojars [_]
-  (processing/clojars-release _))
