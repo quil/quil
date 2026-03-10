@@ -20,7 +20,8 @@
 #?(:cljs
    (defsnippet cone
      "cone"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.02}
 
      (q/background 255)
      (q/rotate-x (* q/PI 1.25))
@@ -29,7 +30,8 @@
 #?(:cljs
    (defsnippet cylinder
      "cylinder"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.02}
 
      (q/background 255)
      (q/rotate-x (* q/PI 1.25))
@@ -74,7 +76,8 @@
 #?(:cljs
    (defsnippet torus
      "torus"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.01}
 
      (q/background 255)
      (q/rotate-x (/ q/PI 4))

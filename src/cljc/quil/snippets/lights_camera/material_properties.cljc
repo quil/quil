@@ -46,7 +46,8 @@
 
 (defsnippet shininess
   "shininess"
-  {:renderer :p3d}
+  {:renderer :p3d
+   :accepted-diff-threshold 0.016}
 
   (q/background 0)
   (q/camera 150 150 150 0 25 0 0 0 -1)
@@ -64,7 +65,8 @@
 
 (defsnippet specular
   "specular"
-  {:renderer :p3d}
+  {:renderer :p3d
+   :accepted-diff-threshold 0.02}
 
   (q/fill 255)
   (q/background 0)

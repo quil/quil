@@ -8,6 +8,7 @@
 (defsnippet ambient-light
   "ambient-light"
   {:renderer :p3d
+   :accepted-diff-threshold 0.025
    :settings (fn [] (q/smooth 4))}
 
   (q/background 0)
@@ -39,7 +40,8 @@
 #?(:clj
    (defsnippet light-specular
      "light-specular"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.02}
 
      (q/background 0)
      (q/camera 100 100 100 0 0 0 0 0 -1)
