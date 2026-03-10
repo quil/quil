@@ -6,8 +6,7 @@
             [quil.snippets.all-snippets :as as]))
 
 (def default-size [500 500])
-(def default-host {:p2d "quil-test-2d"
-                   :p3d "quil-test-3d"})
+(def default-host "quil-test")
 
 (def test-indx (atom 0))
 
@@ -27,8 +26,7 @@
            (q/sketch
             :size (:size opts default-size)
             :renderer (:renderer opts :p2d)
-            :host (or (:host opts)
-                      (get default-host (:renderer opts :p2d)))
+            :host (or (:host opts) default-host)
             :setup (:setup snippet)
             :mouse-clicked (:mouse-clicked snippet)
 
