@@ -67,4 +67,4 @@
              :ns ~(str (ns-name *ns*))
              :delay-frames ~(:delay-frames opts 0)
              :skip-image-diff? ~(:skip-image-diff? opts false)
-             :accepted-diff-threshold ~(:accepted-diff-threshold opts 0.03)})))
+             :accepted-diff-threshold ~(:accepted-diff-threshold opts 0.005)})))

@@ -7,7 +7,7 @@
 
 (defsnippet text-align
   "text-align"
-  {}
+  {:accepted-diff-threshold 0.012}
 
   (q/fill 0)
   (let [h-align [:left :center :right]
@@ -67,7 +67,7 @@
 
 (defsnippet text-size
   "text-size"
-  {}
+  {:accepted-diff-threshold 0.015}
 
   (q/fill 0)
   (doseq [ind (range 6)
@@ -78,7 +78,7 @@
 #?(:cljs
    (defsnippet text-style
      "text-style"
-     {}
+     {:accepted-diff-threshold 0.015}
      (q/fill 0)
 
      (q/text-style :normal)

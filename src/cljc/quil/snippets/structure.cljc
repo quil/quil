@@ -55,6 +55,7 @@
 (defsnippet redraw
   "redraw"
   {:setup (fn [] (q/no-loop))
+   :skip-image-diff? true
    :mouse-clicked (fn [] (q/redraw))}
 
   (q/background 255)

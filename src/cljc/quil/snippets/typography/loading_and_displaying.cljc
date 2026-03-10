@@ -122,7 +122,7 @@
 ;; "Courier New" is not available, so another font will be used. Use PFont.list() to show available fonts.
 (defsnippet text-font
   "text-font"
-  {}
+  {:accepted-diff-threshold 0.01}
 
   (q/background 255)
   (q/fill 0)
@@ -136,7 +136,8 @@
 #?(:clj
    (defsnippet text-num
      "text-num"
-     {:renderer :p3d}
+     {:renderer :p3d
+      :accepted-diff-threshold 0.01}
 
      (q/background 255)
      (q/fill 0)
