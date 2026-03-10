@@ -67,27 +67,32 @@
         (println "Couldn't parse output of compare. Got following string: " err)
         1.0))))
 
+(defn cleanup [files]
+  (doseq [f files]
+    (io/delete-file (io/file f))))
+
 (defn assert-match-reference! [test-name platform actual-file threshold]
   (let [expected-file (expected-image platform test-name)
         diff-file (diff-image platform test-name)
         result (compare-images expected-file actual-file diff-file)
         ;; identify output to verify image sizes are equivalent
         identify (:out (magick "identify" actual-file expected-file))]
-    (when (number? result)
-      (if (<= result threshold)
-        (do
-          (io/delete-file (io/file actual-file))
-          (io/delete-file (io/file diff-file)))
-        ;; add actual and expected images to difference image for easier comparison
-        (magick "convert"
-                actual-file
-                diff-file
-                expected-file
-                "+append"
-                diff-file))
-      (t/is (<= result threshold)
-            (str "Image differences in \"" test-name "\", see: " diff-file "\n"
-                 identify)))))
+    (if (number? result)
+      (do
+        (if (<= result threshold)
+          (cleanup [actual-file diff-file])
+          ;; add actual and expected images to difference image for easier comparison
+          (magick "convert"
+                  actual-file
+                  diff-file
+                  expected-file
+                  "+append"
+                  diff-file))
+        (t/is (<= result threshold)
+              (str "Image differences in \"" test-name "\", see: " diff-file "\n"
+                   identify)))
+      (throw (ex-info "image match threshold result is not a number"
+                      {:test-name test-name :threshold threshold :result result})))))
 
 (def default-size [500 500])
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
