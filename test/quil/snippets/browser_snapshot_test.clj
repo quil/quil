@@ -43,7 +43,6 @@
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "))
   (let [browser (etaoin/chrome {:size [1280 1024]
-                                :headless true
                                 :args ["--enable-unsafe-swiftshader"]
                                 :log-level :severe ;; :all, :warning
                                 })]
