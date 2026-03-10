@@ -43,7 +43,9 @@
   (t/is (test-file-server-running?)
         (str "Seems like file server with test page is not running. "))
   (let [browser (etaoin/chrome {:size [1280 1024]
-                                :args ["--enable-unsafe-swiftshader"]
+                                :args ["--enable-unsafe-swiftshader"
+                                       ;; ensure scaling is 1:1 and not retina size
+                                       "--force-device-scale-factor=1"]
                                 :log-level :severe ;; :all, :warning
                                 })]
     (reset! driver browser)
