@@ -27,5 +27,6 @@
 (t/deftest all-snippets-map-to-function
   (doseq [{:keys [fns name]} as/all-snippets
           fn fns]
-    (t/is (some? (ns-resolve 'quil.core (symbol fn)))
+    (t/is (some? (or (ns-resolve 'quil.core (symbol fn))
+                     (ns-resolve 'quil.middleware (symbol fn))))
           (str "Snippet '" name "' matches to non-existent function '" fn "'"))))
