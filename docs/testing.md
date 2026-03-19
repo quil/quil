@@ -4,30 +4,42 @@ There are a couple different testing approaches for quil. There are a few combin
 
 **Caution:** In CI there are still some non-deterministic failures where Java encounters a SEGV while executing the snippet tests. The test suite is otherwise reasonably stable though some of the image tests are occasionally flaky from asynchronously loading an image from a remote source.
 
+## Prerequisites
+
+Before running the full suite locally:
+
+* Run `clojure -T:build aot`
+* Install ImageMagick for image comparison
+* Install `chromedriver` for CLJS browser snapshot tests
+* On Linux CI-style runs, use `xvfb-run` for browser and graphics tests
+
+Kaocha is the primary test runner for local work and CI. Prefer it over
+`clj -X:test` unless you specifically want the test-runner entrypoint.
+
 ## Using Kaocha
 
-```
+```bash
 $ clojure -M:dev:kaocha [unit|manual|clj-snippets|cljs-snippets]
 ```
 
 See `tests.edn` for the different suites. Multiple test suites can be run like so:
 
-```
+```bash
 $ clojure -M:dev:kaocha unit clj-snippets
 ```
 
 For CLJ Manual tests:
-```
+```bash
 $ clojure -M:dev:kaocha --no-capture-output manual
 ```
 
 For CLJS Manual tests:
-```
+```bash
 $ clj -M:dev:fig:server -b dev -s
 ```
 
 For CLJS snippets:
-```
+```bash
 $ clojure -M:dev:fig:kaocha cljs-snippets
 ```
 
@@ -35,8 +47,8 @@ $ clojure -M:dev:fig:kaocha cljs-snippets
 
 The last type of test runner is for executing unit tests in CLJC files in a browser context.
 
-```
-$ clj -Mfig:cljs-test
+```bash
+$ clj -M:fig:cljs-test
 ```
 
 These tests are run using the Figwheel test runner. The included tests are all referenced in the require list for the `test/quil/test_runner.cljs`. These tests make specific assertions about the output value, as they do in the CLJ unit tests, and do not rely on image snapshot comparisons.
@@ -45,11 +57,14 @@ These tests are run using the Figwheel test runner. The included tests are all r
 
 Quil has tests that run each snippets, takes a screenshot and compares with expected output image. The expected output is stored in the repo under the `dev-resources/snippet-snapshots` directory. It supports both clj and cljs. During test run a screenshot of the sketch is taken and compared with reference image. If difference exceeds threshold then snippet considered failed and `snippet-name-difference.png` is stored in the folder where screenshots are kept.
 
-Ensure that `imagemagick`, `geckodriver`, and `chromedriver` are installed before running tests. Imagemagick is required for both clj and cljs while `geckodriver` or `chromedriver` is only needed for cljs. Currently CLJS tests are using `chromedriver` to account for a screenshot size issue with `geckodriver`.
+Ensure that `imagemagick` and `chromedriver` are installed before running
+tests. ImageMagick is required for both CLJ and CLJS snapshot comparison. The
+CLJS browser snapshot tests currently use `chromedriver`. `geckodriver` is
+still checked by the test fixture today, but is not the browser used in CI.
 
 If the diff exceeds threshold the image comparison will print to console names of failed tests. An example snapshot difference failure would look like:
 
-```
+```bash
 $ clj -M:dev:kaocha clj-snippets --focus :quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics
 [(.F)]
 Randomized with --seed 950716166
@@ -72,7 +87,7 @@ This can be adjusted on a per snippet basis using the `:accepted-diff-threshold`
 
 To see all differences from failed snippets try:
 
-```
+```bash
 $IMAGEVIEWER path/to/screenshots/folder/*difference*
 ```
 
@@ -89,7 +104,7 @@ Snippet test environment variables that are useful:
 `UPDATE_SCREENSHOTS=true` will update the reference image to the current snippet output for every snippet executed in the suite.
 
 As example:
-```
+```bash
 UPDATE_SCREENSHOTS=true clj -M:dev:kaocha clj-snippets --focus :quil.snippets.snapshot-test/quil_snippets_rendering_with-graphics
 ```
 Would update `with-graphics-expected.png` with the current output from that snippet. For the CLJS tests it's a little trickier as they are all running in one single deftest for now. Recommend filtering the list of [`(snippet-elements)`](https://github.com/quil/quil/blob/master/test/quil/snippets/browser_snapshot_test.clj) to the subset to update.
@@ -98,34 +113,31 @@ These flags will work on both Kaocha and test-runner suites.
 
 ## Addendum: Using Test-Runner
 
-**Warning:** Often hangs after completing all tests, so CI uses kaocha. However there is more documentation on how to focus on running an individual test with this test-runner, and for running the manual tests, so keeping it for now. 
+**Warning:** This path is secondary. It is more fragile than the Kaocha
+workflow and is not the main path used in CI.
 
 For non-snippet tests
-```
+```bash
 $ clojure -X:test :excludes '[:clj-snippets :cljs-snippets]'
 ```
 
 For manual CLJ tests
-```
+```bash
 $ clojure -X:test :nses '[quil.manual]'
 ```
 
 For CLJ snippets:
 
-```
+```bash
 $ clojure -X:test :includes '[:clj-snippets]'
 ```
 
-For CLJS snippets:
-```
-# Optionally start a web server to run the snippets with:
-$ lein with-profile cljs-testing do cljsbuild once tests, ring server
-# OR
-$ clj -M:dev:fig:server -b dev -s
-# If the server is not started externally, cljs-snippets has a fixture which provides a server automatically.
+`clj -X:test` is currently not the recommended path for CLJS snippet tests.
+Those tests rely on additional browser and Figwheel setup, and the supported
+workflow is:
 
-# Run the test suite
-$ clojure -X:test :includes '[:cljs-snippets]'
+```bash
+$ clojure -M:dev:fig:kaocha cljs-snippets
 ```
 
 See also https://github.com/quil/quil/wiki/Dev-notes#automated-image-tests

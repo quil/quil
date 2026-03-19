@@ -19,30 +19,39 @@ In one swift, skilled motion, Quil throws them both high into the air. In a dust
 
 ## Requirements
 
-Quil works with Clojure 1.10 and ClojureScript 1.10.x.
+Current development and CI workflows assume:
 
-Current released version `4.3.1560` is compatible JDK 17+ and supports Linux amd64,aarch64 and macOS M1/M2/x86_64 architectures.
+* JDK 17+
+* Clojure CLI
+* Babashka for helper tasks
+
+This branch tracks Processing `4.5.3` on the JVM and p5.js `1.7.0` for
+ClojureScript.
 
 ## Installation
 
-Create sample project using a Leiningen [Quil Template](https://github.com/quil/quil-templates):
+Create a sample project using one of the external templates:
+
+* Leiningen template: [quil-templates](https://github.com/quil/quil-templates)
+* Clojure CLI sketchbook template: [sketchbook-template](https://github.com/quil/sketchbook-template)
+
+For Leiningen:
 ```bash
 lein new quil hello-quil
 ```
 Then go to `hello-quil/src/hello-quil/core.clj` file and run it!
 
-There are also `deps-new` templates available for creating a [sketchbook](https://github.com/quil/sketchbook-template) with the Clojure CLI.
-
-If you like adding libraries manually - you simply need to add Quil as a dependency to `project.clj`:
+If you are adding Quil manually, use the current version published on Clojars in
+either `project.clj` or `deps.edn`:
 
 ```clojure
-[quil "4.3.1563"]
+[quil "VERSION"]
 ```
 
 or for Clojure CLI `deps.edn`
 
 ```clojure
-quil/quil {:mvn/version "4.3.1563"}
+quil/quil {:mvn/version "VERSION"}
 ```
 
 Then to pull in all of Quil's silky goodness, just add the following to your `ns` declaration:
@@ -105,11 +114,12 @@ Quil supports ClojureScript! Check [wiki article](https://github.com/quil/quil/w
 
 ## Documentation
 
-For up-to-date documentation please check [API page](http://quil.info/api) on quil.info.
+For up-to-date documentation please check the [API page](https://quil.info/api)
+on quil.info.
 
-When getting started with Quil, it's always useful to have the [Cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It may be a little bit out-dated but still contains most functions.
+When getting started with Quil, it's always useful to have the [cheatsheet](https://github.com/quil/quil/raw/master/docs/cheatsheet/cheat-sheet.pdf) handy. It is historical and may lag behind the current API, but still covers most common functions.
 
-If you're new to Processing and graphics programming in general, the [tutorials on Processing.org](http://processing.org/tutorials/) will get you started in no time.
+If you're new to Processing and graphics programming in general, the [tutorials on Processing.org](https://processing.org/tutorials/) are a good place to start.
 
 Check Quil [wiki](https://github.com/quil/quil/wiki) for more documentation.
 
@@ -121,54 +131,63 @@ Quil comes chock-packed full of examples covering most of the available API. Man
 
 Head over to the [Gen Art Examples Page](https://github.com/quil/quil-examples/tree/master/src/quil_sketches/gen_art/README.md). Instructions of how to run examples you can find in README in [Quil examples](https://github.com/quil/quil-examples) repo.
 
-Also check out awesome gallery of sketches contributed by community members: http://quil.info/examples
+Also check out the gallery of sketches contributed by community members:
+https://quil.info/examples
 
 ## Processing Compatibility
 
-Quil provides support for the standard Processing API - currently Processing `4.3` and p5js `1.7.0`. The majority of Processing methods have an equivalent Quil fn. Typically, `camelCased` methods have been converted to `hyphenated-versions`.
+Quil provides support for the standard Processing API, currently Processing
+`4.5.3` and p5.js `1.7.0`. The majority of Processing methods have an
+equivalent Quil fn. Typically, `camelCased` methods have been converted to
+`hyphenated-versions`.
 
 ## Community
 
-You can ask questions, get support on our mailing list:
+Use GitHub issues for bugs and regressions, and ClojureVerse for user-facing
+questions and discussion.
 
-https://groups.google.com/forum/?fromgroups#!forum/clj-processing
+## Developing
 
-There are a small number of people that hang out in `#quil` on freenode or `#quil` on the ClojureVerse slack. New artworks are show-cased on the @quilist Twitter account: http://twitter.com/quilist
+The repo is maintained with `deps.edn` rather than `project.clj`.
 
-## Developing (leiningen)
+### Setup
 
-Modifying Quil and testing changes is pretty simple. First run `lein compile` to compile some java classes. Then depending on whether you want to test Clojure or ClojureScript:
+* Install [Clojure CLI](https://clojure.org/guides/install_clojure) and [babashka](https://github.com/babashka/babashka#installation).
+* Run `clojure -T:build aot` once before CLJS compilation or test runs. This Ahead of Time compiles a few classes needed to interface with Processing.
+* For snapshot tests, install ImageMagick. For CLJS browser snapshot tests, also install `chromedriver`.
 
-### Clojure
+### Local development
 
-* If use emacs+cider, open `dev/sample.clj` and evaluate.
-* Alternatively run `lein run -m sample` which runs the sketch from `dev/sample.clj`.
+For Clojure, start a REPL with the development aliases on the classpath:
 
-### ClojureScript
+```bash
+clojure -M:dev
+```
 
-* Run `lein with-profile cljs-testing cljsbuild auto development` which compiles Quil to JS and also compiles a sample sketch in `dev/sample.cljs`.
-* Run `python -m SimpleHTTPServer` (Python 2) or `python -m http.server` (Python 3) to start local static server. Open [http://localhost:8000/dev/index.html](http://localhost:8000/dev/index.html).
-* Alternatively, if you don't have python, open `dev/index.html` page from browser. It should work as well.
+Then load or evaluate [`dev/sample.clj`](/Users/jack/src/quil/dev/sample.clj).
 
-In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/...`) will be automatically recompiled. You just need to refresh the page.
+For ClojureScript, start the Figwheel development server:
 
-## Developing (deps.edn)
+```bash
+clojure -M:dev:fig:server -b dev -s
+```
 
-* Install [clojure-cli](https://clojure.org/guides/install_clojure) and [babashka](https://github.com/babashka/babashka#installation).
-* `bb processing-install` will download a local copy of the upstream processing4 release. It will also unpack the architecture specific jar files into the right places for the `deps.edn` `:local/root` dependencies to find.
-* `clojure -T:build aot` will do an Ahead of Time compilation of a few classes required to interface with Processing.
+This serves the sample app on `http://localhost:3000/`.
 
-*Important* because of the dependency on Processing jars which are not hosted in any maven repository, it is not currently possible to use quil as a `:git/sha` coordinate dependency.
+### Tests
 
-Run automated tests locally for clj or cljs with:
+The main commands used locally and in CI are:
 
-* `clojure -Mdev:kaocha unit clj-snippets` for clj tests
-* `clojure -Mdev:fig:kaocha cljs-snippets` for cljs snippet tests (requires chromedriver)
-* `clojure -Mfig:cljs-test` for cljs tests
+```bash
+bin/lint
+clojure -M:dev:kaocha unit
+clojure -M:dev:kaocha clj-snippets
+clojure -M:dev:fig:kaocha cljs-snippets
+clojure -M:fig:cljs-test
+```
 
-The coverage from the tests in the leiningen environment are still higher, but are being migrated over to automated tests that can run on Github Actions.
-
-To develop with clj using emacs and the cider repl, use `C-u M-x cider-jack-in-clj`, then select `clojure-cli` and append `:dev` to the list of `-M` aliases. This ensures that "test" is in the classpath along with testing dependencies, so that it's possible to evaluate tests at the repl.
+See [docs/testing.md](docs/testing.md) for the full testing workflow,
+dependencies, and caveats around browser and snapshot tests.
 
 ## License
 
