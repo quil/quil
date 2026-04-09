@@ -34,7 +34,8 @@
 
 (defsnippet bezier-point
   "bezier-point"
-  {}
+  {;; prefer unit test in quil.shape.curve-test over image-diff
+   :skip-image-diff? true}
 
   (comment "see https://p5js.org/reference/#/p5/bezierPoint for better example")
   (q/fill 0)
@@ -46,7 +47,8 @@
 
 (defsnippet bezier-tangent
   "bezier-tangent"
-  {}
+  {;; prefer unit test in quil.shape.curve-test over image-diff
+   :skip-image-diff? true}
 
   (comment "see https://p5js.org/reference/#/p5/bezierTangent for better example")
   (q/fill 0)
@@ -86,7 +88,8 @@
 
 (defsnippet curve-point
   "curve-point"
-  {}
+  {;; prefer unit test in quil.shape.curve-test over image-diff
+   :skip-image-diff? true}
 
   (comment "see https://p5js.org/reference/#/p5/curvePoint for better example")
   (q/fill 0)
@@ -98,7 +101,8 @@
 
 (defsnippet curve-tangent
   "curve-tangent"
-  {}
+  {;; prefer unit test in quil.shape.curve-test over image-diff
+   :skip-image-diff? true}
 
   (comment "see https://p5js.org/reference/#/p5/curveTangent for better example")
   (q/fill 0)
