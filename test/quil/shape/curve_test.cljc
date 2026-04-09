@@ -1,4 +1,4 @@
-(ns quil.point-test
+(ns quil.shape.curve-test
   (:require
    [clojure.test :as t :refer [deftest is] :include-macros true]
    [quil.test-helpers :as qth :include-macros true]
