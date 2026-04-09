@@ -9,6 +9,7 @@
 
    ;; require namespaces to tests
    quil.calculation-test
+   quil.data.conversion-test
    quil.shape.curve-test))
 
 ;; print out browser version information
