@@ -8,7 +8,8 @@
    [figwheel.main.testing :refer-macros [run-tests-async]]
 
    ;; require namespaces to tests
-   quil.calculation-test))
+   quil.calculation-test
+   quil.point-test))
 
 ;; print out browser version information
 (deftest verify-browser
