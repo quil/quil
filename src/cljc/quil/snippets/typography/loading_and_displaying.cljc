@@ -123,15 +123,13 @@
      (q/text-char \Q 0 0)
      (q/text-char \W 0 0 10)))
 
-;; FIXME: reporting
-;; "Courier New" is not available, so another font will be used. Use PFont.list() to show available fonts.
 (defsnippet text-font
   "text-font"
-  {:accepted-diff-threshold 0.01}
+  {}
 
   (q/background 255)
   (q/fill 0)
-  (let [font #?(:clj (q/create-font "Courier New" 20)
+  (let [font #?(:clj (q/create-font "Courier" 20)
                 :cljs "Courier New")]
     (q/text-font font 20)
     (q/text "(print :hello)" 20 30)
