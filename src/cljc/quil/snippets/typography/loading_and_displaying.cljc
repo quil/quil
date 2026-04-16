@@ -22,8 +22,10 @@
              [row font] (map-indexed vector fonts)]
        (q/text font (+ 20 (* col 100)) (+ 20 (* row 10))))))
 
-;; FIXME: reporting
-;; "Georgia" is not available, so another font will be used. Use PFont.list() to show available fonts.
+;; Monospaced.plain, SansSerif.plain, and Serif.plain are font aliases provided
+;; by Java, so they should be available on Ubuntu, OSX, and hopefully Windows.
+;;
+;; FIXME: reference snapshots were not updated for high dpi tests aka retina
 #?(:clj
    (defsnippet create-font
      "create-font"
@@ -32,18 +34,19 @@
      (q/background 255)
      (q/fill 0)
 
-     (comment "create font by name and size")
-     (q/text-font (q/create-font "Courier New" 30))
-     (q/text "(print :hello)" 20 50)
+     (comment "create Mono font by name and size")
+     (q/text-font (q/create-font "Monospaced.plain" 30))
+     (q/text "(print :hello-mono)" 20 50)
 
-     (comment "create font by name and size and using smooth")
-     (q/text-font (q/create-font "Georgia" 30 true))
-     (q/text "(print :hello)" 20 100)
+     (comment "create Sans Serif font by name and size and using smooth")
+     (q/text-font (q/create-font "SansSerif.plain" 30 true))
+     (q/text "(print :hello-sans-serif)" 20 100)
 
-     (comment "create font with all parameters")
-     (q/text-font (q/create-font "Georgia" 30 false (char-array "what is it for?")))
-     (q/text "(print :hello)" 20 150)))
+     (comment "create Serif font with all parameters")
+     (q/text-font (q/create-font "Serif.plain" 30 false (char-array "what is it for?")))
+     (q/text "(print :hello-serif)" 20 150)))
 
+;; FIXME: reference snapshots were not updated for high dpi tests aka retina
 #?(:clj
    (defsnippet font-available-p
      "font-available?"
@@ -51,12 +54,14 @@
 
      (q/background 255)
      (q/fill 0)
-     (q/text (str "'Courier New' available: " (q/font-available? "Courier New"))
+     (q/text (str "'Monospaced' available: " (q/font-available? "Monospaced.plain"))
              20 20)
-     (q/text (str "'Ubuntu' available: " (q/font-available? "Ubuntu"))
+     (q/text (str "'SansSerif' available: " (q/font-available? "SansSerif.plain"))
              20 40)
+     (q/text (str "'Serif' available: " (q/font-available? "Serif.plain"))
+             20 60)
      (q/text (str "'My Custom Font' available: " (q/font-available? "My Custom Font"))
-             20 60)))
+             20 80)))
 
 (defsnippet load-font
   "load-font"
