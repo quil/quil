@@ -39,7 +39,14 @@
       ;; and NPE is thrown when they execute if window is destroyed. It doesn't seem
       ;; to affect anything, but annoying to have NPE in logs. Delaying destroying
       ;; window for 1 sec. Ugly hack, but couldn't think of better way. Suggestions welcome.
-      (.schedule executor #(.destroy native) 1 java.util.concurrent.TimeUnit/SECONDS)
+      ;;
+      ;; Linux is throwing SEGVs in tests trying to operate on surfaces that
+      ;; have already been disposed by the delayed executor's destroy.
+      ;; Unfortunately this is heavily threaded through Java processing code, so
+      ;; for now, in tests, allow GLWindow's to persist until System/exit closes
+      ;; them at the end of tests.
+      (when-not (System/getenv "GLWINDOW_SEGV_HACK")
+        (.schedule executor #(.destroy native) 1 java.util.concurrent.TimeUnit/SECONDS))
 
       processing.awt.PSurfaceAWT$SmoothCanvas
       (-> native .getFrame .dispose)
