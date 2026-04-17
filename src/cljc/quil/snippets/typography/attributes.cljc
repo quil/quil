@@ -7,9 +7,10 @@
 
 (defsnippet text-align
   "text-align"
-  {:accepted-diff-threshold 0.012}
+  {}
 
   (q/fill 0)
+  (q/text-font (q/create-font "SansSerif.plain" 14))
   (let [h-align [:left :center :right]
         v-align [:top :bottom :center :baseline]]
 
@@ -67,9 +68,10 @@
 
 (defsnippet text-size
   "text-size"
-  {:accepted-diff-threshold 0.015}
+  {}
 
   (q/fill 0)
+  (q/text-font (q/create-font "SansSerif.plain" 14))
   (doseq [ind (range 6)
           :let [size (+ 10 (* ind 5))]]
     (q/text-size size)
