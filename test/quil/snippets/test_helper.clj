@@ -71,6 +71,15 @@
   (doseq [f files]
     (io/delete-file (io/file f))))
 
+;; Prepend UPDATE_SCREENSHOTS=true to test run to update reference snapshots
+(def update-screenshots? (System/getenv "UPDATE_SCREENSHOTS"))
+
+(defn maybe-update-reference [test-name platform actual]
+  (when update-screenshots?
+    (let [expected (expected-image platform test-name)]
+      (println "updating reference image: " expected)
+      (.renameTo (io/file actual) (io/file expected)))))
+
 (defn assert-match-reference! [test-name platform actual-file threshold]
   (let [expected-file (expected-image platform test-name)
         diff-file (diff-image platform test-name)
@@ -82,32 +91,27 @@
         (if (<= result threshold)
           (cleanup [actual-file diff-file])
           ;; add actual and expected images to difference image for easier comparison
-          (magick "convert"
-                  actual-file
-                  diff-file
-                  expected-file
-                  "+append"
-                  diff-file))
+          (do (magick "convert"
+                      actual-file
+                      diff-file
+                      expected-file
+                      "+append"
+                      diff-file)
+              (maybe-update-reference test-name platform actual-file)))
         (t/is (<= result threshold)
               (str "Image differences in \"" test-name "\", see: " diff-file "\n"
                    identify)))
-      (throw (ex-info "image match threshold result is not a number"
-                      {:test-name test-name :threshold threshold :result result})))))
+      (do (maybe-update-reference test-name platform actual-file)
+          (throw (ex-info "image match threshold result is not a number"
+                          {:test-name test-name :threshold threshold :result result}))))))
 
 (def default-size [500 500])
 (def manual? (-> (System/getenv) (get "MANUAL") boolean))
 (def github-actions? (boolean (System/getenv "GITHUB_ACTIONS")))
 (def log-test? (-> (System/getenv) (get "LOGTEST") boolean))
 
-;; Prepend UPDATE_SCREENSHOTS=true to test run to update expected image
-(def update-screenshots? (-> (System/getenv) (get "UPDATE_SCREENSHOTS") boolean))
-
 (defn verify-reference-or-update [test-name platform actual-file threshold]
-  (if update-screenshots?
-    (let [expected (expected-image platform test-name)]
-      (println "updating reference image: " expected)
-      (.renameTo (io/file actual-file) (io/file expected)))
-    (assert-match-reference! test-name platform actual-file threshold)))
+  (assert-match-reference! test-name platform actual-file threshold))
 
 (defn imagemagick-installed [f]
   (if (or (installed? "magick")
