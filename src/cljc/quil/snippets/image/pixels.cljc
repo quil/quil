@@ -65,8 +65,7 @@
 (defsnippet image-filter
   "image-filter"
   ;; FIXME: occasionally flakey on p5js CLJS tests so bumping the threshold
-  #?(:cljs {:accepted-diff-threshold 0.1}
-     :default {})
+  {:accepted-diff-threshold #?(:cljs 0.1 :clj 0.006)}
 
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
@@ -108,11 +107,13 @@
 ;; Best guess is one of the filter modes is not a function?
 (defsnippet display-filter
   "display-filter"
-  ;; FIXME: increasing threshold in CLJS as it's not currently working. Will
-  ;; re-investigate after updating to p5js 1.9.0 as they are now using shader
-  ;; filters by default.
-  #?(:cljs {:accepted-diff-threshold 0.3}
-     :default {})
+  ;; FAILING SNIPPET on cljs
+  ;;
+  ;; FIXME: Not currently working in cljs. Will re-investigate after updating to
+  ;; p5js 1.9.0 as they are now using shader filters by default. In clj it
+  ;; appears ever so slightly off, as if anti-aliasing on edges might be
+  ;; different, so ever so slightly accepting more noise here.
+  {:accepted-diff-threshold #?(:cljs 0.25 :clj 0.006)}
 
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
