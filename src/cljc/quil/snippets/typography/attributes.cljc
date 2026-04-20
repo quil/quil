@@ -48,7 +48,7 @@
   "text-leading"
   {}
 
-  #?(:clj (q/text-font (q/create-font "DejaVu Sans Condensed" 12 true)))
+  #?(:clj (q/text-font (q/create-font "DejaVu Sans" 12 true)))
   (q/fill 0)
   (doseq [ind (range 4)
           :let [leading (* ind 10)]]

@@ -47,7 +47,8 @@
      (q/text "(print :hello-Roboto)" 20 150)
 
      (comment "create Serif font with all parameters")
-     (q/text-font (q/create-font "Tinos Regular" 30 false (char-array "what is it for?")))
+     ;; macOS doesn't match Tinos Regular so using Tinos, which Ubuntu accepts as alias
+     (q/text-font (q/create-font "Tinos" 30 false (char-array "what is it for?")))
      (q/text "(print :hello-Tinos)" 20 200)))
 
 ;; FIXME: reference snapshots were not updated for high dpi tests aka retina
