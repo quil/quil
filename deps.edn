@@ -18,7 +18,7 @@
 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.12"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.13"}
                           slipset/deps-deploy {:mvn/version "RELEASE"}}
                    :ns-default build}
 
