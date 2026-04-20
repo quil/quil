@@ -143,6 +143,8 @@ jobs:
       # verified from a CLJS context.
       - name: Test
         timeout-minutes: 5
+        env:
+          GLWINDOW_SEGV_HACK: 1
         run: |
           ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:kaocha --no-capture-output --reporter doc unit clj-snippets
 
