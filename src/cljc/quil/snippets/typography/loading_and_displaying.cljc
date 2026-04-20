@@ -35,33 +35,41 @@
      (q/fill 0)
 
      (comment "create Mono font by name and size")
-     (q/text-font (q/create-font "Monospaced.plain" 30))
-     (q/text "(print :hello-mono)" 20 50)
+     (q/text-font (q/create-font "Inconsolata" 30))
+     (q/text "(print :hello-Inconsolata)" 20 50)
 
      (comment "create Sans Serif font by name and size and using smooth")
-     (q/text-font (q/create-font "SansSerif.plain" 30 true))
-     (q/text "(print :hello-sans-serif)" 20 100)
+     (q/text-font (q/create-font "DejaVu Sans" 30 true))
+     (q/text "(print :hello-DejaVu-Sans)" 20 100)
+
+     (comment "create Sans Serif font by name and size and smoothing disabled")
+     (q/text-font (q/create-font "Roboto" 30 false))
+     (q/text "(print :hello-Roboto)" 20 150)
 
      (comment "create Serif font with all parameters")
-     (q/text-font (q/create-font "Serif.plain" 30 false (char-array "what is it for?")))
-     (q/text "(print :hello-serif)" 20 150)))
+     (q/text-font (q/create-font "Tinos Regular" 30 false (char-array "what is it for?")))
+     (q/text "(print :hello-Tinos)" 20 200)))
 
 ;; FIXME: reference snapshots were not updated for high dpi tests aka retina
+;; TODO: prefer unit test over snapshot here
 #?(:clj
    (defsnippet font-available-p
      "font-available?"
      {}
 
+     (q/text-font (q/create-font "Roboto" 16))
      (q/background 255)
      (q/fill 0)
-     (q/text (str "'Monospaced' available: " (q/font-available? "Monospaced.plain"))
+     (q/text (str "'Inconsolata' available: " (q/font-available? "Inconsolata"))
              20 20)
-     (q/text (str "'SansSerif' available: " (q/font-available? "SansSerif.plain"))
+     (q/text (str "'Roboto' available: " (q/font-available? "Roboto"))
              20 40)
-     (q/text (str "'Serif' available: " (q/font-available? "Serif.plain"))
+     (q/text (str "'DejaVu Sans' available: " (q/font-available? "DejaVu Sans"))
              20 60)
+     (q/text (str "'Tinos Regular' available: " (q/font-available? "Tinos Regular"))
+             20 80)
      (q/text (str "'My Custom Font' available: " (q/font-available? "My Custom Font"))
-             20 80)))
+             20 100)))
 
 (defsnippet load-font
   "load-font"
@@ -95,6 +103,7 @@
      "text"
      {:renderer :p3d}
 
+     (q/text-font (q/create-font "Roboto" 12))
      (q/background 255)
      (q/fill 0)
      (q/camera 50 50 50 0 0 0 0 0 -1)
@@ -117,6 +126,7 @@
      "text-char"
      {:renderer :p3d}
 
+     (q/text-font (q/create-font "Roboto" 12))
      (q/background 255)
      (q/fill 0)
      (q/camera 50 50 50 0 0 0 0 0 -1)
@@ -129,7 +139,7 @@
 
   (q/background 255)
   (q/fill 0)
-  (let [font #?(:clj (q/create-font "Courier" 20)
+  (let [font #?(:clj (q/create-font "Inconsolata" 20)
                 :cljs "Courier New")]
     (q/text-font font 20)
     (q/text "(print :hello)" 20 30)
@@ -139,9 +149,9 @@
 #?(:clj
    (defsnippet text-num
      "text-num"
-     {:renderer :p3d
-      :accepted-diff-threshold 0.01}
+     {:renderer :p3d}
 
+     (q/text-font (q/create-font "DejaVu Sans" 12))
      (q/background 255)
      (q/fill 0)
      (q/camera 70 70 70 0 0 0 0 0 -1)

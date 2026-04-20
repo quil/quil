@@ -9,8 +9,8 @@
   "text-align"
   {}
 
+  #?(:clj (q/text-font (q/create-font "DejaVu Sans" 13 true)))
   (q/fill 0)
-  (q/text-font (q/create-font "SansSerif.plain" 14))
   (let [h-align [:left :center :right]
         v-align [:top :bottom :center :baseline]]
 
@@ -48,6 +48,7 @@
   "text-leading"
   {}
 
+  #?(:clj (q/text-font (q/create-font "DejaVu Sans Condensed" 12 true)))
   (q/fill 0)
   (doseq [ind (range 4)
           :let [leading (* ind 10)]]
@@ -59,6 +60,7 @@
      "text-mode"
      {:renderer :p2d}
 
+     (q/text-font (q/create-font "Roboto" 36 true))
      (q/fill 0)
      (q/text-mode :model)
      (q/text "text-mode: model" 20 50)
@@ -70,8 +72,8 @@
   "text-size"
   {}
 
+  #?(:clj (q/text-font (q/create-font "Roboto" 14)))
   (q/fill 0)
-  (q/text-font (q/create-font "SansSerif.plain" 14))
   (doseq [ind (range 6)
           :let [size (+ 10 (* ind 5))]]
     (q/text-size size)
@@ -80,7 +82,7 @@
 #?(:cljs
    (defsnippet text-style
      "text-style"
-     {:accepted-diff-threshold 0.015}
+     {}
      (q/fill 0)
 
      (q/text-style :normal)
@@ -99,6 +101,7 @@
   "text-width"
   {}
 
+  #?(:clj (q/text-font (q/create-font "Inconsolata" 14)))
   (q/fill 0)
   (let [txt "Hello, world!"
         width (q/text-width txt)]
