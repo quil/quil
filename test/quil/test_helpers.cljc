@@ -44,6 +44,9 @@
   "Same as `with-sketch` but with an implicit exit at end of binding."
   [applet & body]
   (if (boolean (:ns &env))
+    ;; BEWARE DRAGONS!
+    ;; https://groups.google.com/g/clojurescript/c/iBY5HaQda4A/m/w1lAQi9_AwsJ
+    ;; if &env has a ns, evaluate macros in cljs context
     `(binding [quil.sketch/*applet* ~applet]
        ~@body
        (q/exit))
