@@ -48,6 +48,10 @@ jobs:
       - name: Setup ImageMagick
         uses: mfinelli/setup-imagemagick@v7
 
+      - name: Install Ubuntu Fonts
+        if: runner.os == 'Linux'
+        run: sudo apt install fonts-dejavu fonts-inconsolata fonts-roboto fonts-croscore
+
       - name: System Info
         run: bb system-info
 
@@ -125,6 +129,14 @@ jobs:
           bb: latest
 
       - uses: mfinelli/setup-imagemagick@v7
+
+      - name: Install Ubuntu Fonts
+        if: runner.os == 'Linux'
+        run: sudo apt install fonts-dejavu fonts-inconsolata fonts-roboto fonts-croscore
+
+      - name: Install macOS Fonts
+        if: runner.os == 'macOS'
+        run: brew install --cask font-dejavu font-inconsolata font-roboto font-tinos
 
       - name: System Info
         run: bb system-info
