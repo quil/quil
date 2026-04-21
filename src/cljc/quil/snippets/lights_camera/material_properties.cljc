@@ -33,6 +33,8 @@
    (defsnippet emissive
      "emissive"
      {:renderer :p3d
+      ;; higher threshold to account for anti-aliasing of lines?
+      :accepted-diff-threshold 0.03
       :settings (fn [] (q/smooth 4))}
 
      (q/background 0)

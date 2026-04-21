@@ -9,6 +9,8 @@
 (defsnippet shape
   ["shape" "load-shape"]
   {:renderer :p3d
+   ;; higher threshold to account for anti-aliasing of lines?
+   :accepted-diff-threshold 0.025
    :settings (fn [] (q/smooth 4))
    :setup
    (let [shape-url
@@ -27,7 +29,9 @@
 #?(:clj
    (defsnippet shape-mode
      "shape-mode"
-     {:renderer :p2d}
+     {:renderer :p2d
+      ;; higher threshold to account for anti-aliasing of lines?
+      :accepted-diff-threshold 0.015}
 
      (let [shape-url "Heckert_GNU_white.svg" ;; loading from dev-resources/Heckert_GNU_white.svg
            ;; or "https://upload.wikimedia.org/wikipedia/en/2/22/Heckert_GNU_white.svg"

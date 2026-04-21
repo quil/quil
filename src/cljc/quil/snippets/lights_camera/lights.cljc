@@ -61,7 +61,9 @@
 #?(:clj
    (defsnippet no-lights
      "no-lights"
-     {:renderer :p3d}
+     {:renderer :p3d
+      ;; higher threshold to account for anti-aliasing of lines?
+      :accepted-diff-threshold 0.01}
 
      (q/background 0)
      (q/camera 100 100 100 0 0 0 0 0 -1)
