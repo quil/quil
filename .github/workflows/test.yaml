@@ -70,7 +70,7 @@ jobs:
       # xvfb-run needed so that pixel density be queried and specify reference
       # snapshots to compare against.
       - name: Test CLJS Snippet Snapshots
-        run: ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:fig:kaocha cljs-snippets
+        run: ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:fig:kaocha --no-capture-output --reporter documentation cljs-snippets
 
       - name: Upload Test Artifacts
         if: failure()
@@ -158,7 +158,7 @@ jobs:
         env:
           GLWINDOW_SEGV_HACK: 1
         run: |
-          ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:kaocha --no-capture-output --reporter doc unit clj-snippets
+          ${{ matrix.os == 'ubuntu-latest' && 'xvfb-run' || '' }} clojure -M:dev:kaocha --no-capture-output --reporter documentation unit clj-snippets
 
       - name: Upload Test Artifacts
         if: failure()
