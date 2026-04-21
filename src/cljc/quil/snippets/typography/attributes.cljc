@@ -58,7 +58,9 @@
 #?(:clj
    (defsnippet text-mode
      "text-mode"
-     {:renderer :p2d}
+     {:renderer :p2d
+      ;; slight differences in macOS and Linux font rendering
+      :accepted-diff-threshold 0.01}
 
      (q/text-font (q/create-font "Roboto" 36 true))
      (q/fill 0)

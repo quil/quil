@@ -29,7 +29,8 @@
 #?(:clj
    (defsnippet create-font
      "create-font"
-     {}
+     {;; slight differences in macOS and Linux font rendering
+      :accepted-diff-threshold 0.01}
 
      (q/background 255)
      (q/fill 0)
@@ -102,7 +103,9 @@
 #?(:clj
    (defsnippet text-3d
      "text"
-     {:renderer :p3d}
+     {:renderer :p3d
+      ;; slight differences in macOS and Linux font rendering
+      :accepted-diff-threshold 0.01}
 
      (q/text-font (q/create-font "Roboto" 12))
      (q/background 255)
