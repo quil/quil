@@ -10,7 +10,8 @@
    ;; require namespaces to tests
    quil.calculation-test
    quil.data.conversion-test
-   quil.shape.curve-test))
+   quil.shape.curve-test
+   quil.typography.font-test))
 
 ;; print out browser version information
 (deftest verify-browser
