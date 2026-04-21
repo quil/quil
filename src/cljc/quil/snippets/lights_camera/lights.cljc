@@ -75,31 +75,9 @@
      (q/translate 0 50 0)
      (q/sphere 20)))
 
-;; HACK: delay-frames to try and account for SEGV failure in dispose on ubuntu-latest but not osx or cljs
-;; C  0x00007f84e4000090
-;; C  [libgallium-24.2.8-1ubuntu1~24.04.1.so+0x2dd78e]
-;; C  [libjogl_desktop.so+0x62279]  Java_jogamp_opengl_gl4_GL4bcImpl_dispatch_1glDeleteBuffers1__ILjava_lang_Object_2IZJ+0xa2
-;; j  jogamp.opengl.gl4.GL4bcImpl.dispatch_glDeleteBuffers1(ILjava/lang/Object;IZJ)V+0
-;; j  jogamp.opengl.gl4.GL4bcImpl.glDeleteBuffers(ILjava/nio/IntBuffer;)V+90
-;; j  processing.opengl.PJOGL.deleteBuffers(ILjava/nio/IntBuffer;)V+6
-;; j  processing.opengl.PGraphicsOpenGL$GLResourceVertexBuffer.disposeNative()V+34
-;; J 7927 c1 processing.opengl.PGraphicsOpenGL.drainRefQueueBounded()V (36 bytes) @ 0x00007f8569ef9f1c [0x00007f8569ef99a0+0x000000000000057c]
-;; J 7838 c1 processing.opengl.PGraphicsOpenGL$Disposable.<init>(Ljava/lang/Object;)V (22 bytes) @ 0x00007f8569ecef6c [0x00007f8569eced80+0x00000000000001ec]
-;; j  processing.opengl.PGraphicsOpenGL$GLResourceFrameBuffer.<init>(Lprocessing/opengl/FrameBuffer;)V+2
-;; j  processing.opengl.FrameBuffer.allocate()V+21
-;; j  processing.opengl.FrameBuffer.<init>(Lprocessing/opengl/PGraphicsOpenGL;IIIIIIZZ)V+209
-;; j  processing.opengl.FrameBuffer.<init>(Lprocessing/opengl/PGraphicsOpenGL;IIZ)V+11
-;; j  processing.opengl.PGraphicsOpenGL.beginOnscreenDraw()V+33
-;; j  processing.opengl.PGraphicsOpenGL.beginDraw()V+139
-;; j  processing.core.PApplet.handleDraw()V+52
-;; j  quil.Applet.handleDraw()V+37
-;;
-;; This is pretty consistently causing a SEGV on github ci, but some other
-;; snippet also causes a SEGV, so just disabling this is not sufficient.
 (defsnippet point-light
   "point-light"
-  {:renderer :p3d
-   :delay-frames 10}
+  {:renderer :p3d}
 
   (q/background 0)
   (q/camera 100 100 100 0 0 0 0 0 -1)
