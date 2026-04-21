@@ -1667,8 +1667,8 @@
   ([] (.endShape (current-graphics)))
   ([mode]
    (when-not (= :close mode)
-     #?(:clj (throw (Exception. (str "Unknown mode value: " mode ". Expected :close")))
-        :cljs nil))
+     (throw (ex-info "Unknown end-shape mode, expected :close"
+                     {:mode mode})))
    (.endShape (current-graphics)
               #?(:clj PApplet/CLOSE
                  :cljs (aget js/p5.prototype "CLOSE")))))
