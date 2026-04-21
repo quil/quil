@@ -212,13 +212,15 @@
   ["pixels" "update-pixels"]
   {:renderer :p2d}
 
-  (let [size 50
+  (let [size (/ (q/width) 5)
+        ;; pixels returns an array of color objects in processing, but an array of rgba values in p5js
+        pixel-density (* #?(:clj 1 :cljs 4) (q/display-density) (q/display-density))
         gr (q/create-graphics size size :p2d)]
 
     (comment "draw red circle on the graphics")
     (q/with-graphics gr
       (q/background 255)
-      (q/fill 255 0 0)
+      (q/fill 231 29 54)
       (q/ellipse (/ size 2) (/ size 2) (* size (/ 2 3)) (* size (/ 2 3))))
 
     (q/background 255)
@@ -227,18 +229,17 @@
     (comment "get pixels of the graphics and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels gr)
-          half #?(:clj (/ (* size size) 2)
-                  :cljs (* 4 (* (q/display-density) size) (/ (* (q/display-density) size) 2)))]
+          half (/ (* size size pixel-density) 2)]
       (dotimes [i half]
         (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels gr)
-    (q/image gr (+ size 20) 0)
+    (comment "redraw the two half circles next to the original")
+    (q/image gr (+ size (* 0.5 size)) 0)
 
     (comment "get pixels of the sketch itself and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels)
-          half #?(:clj (/ (* (q/width) (q/height)) 10)
-                  :cljs (/ (* 4 (* (q/display-density) (q/width)) (* (q/display-density) (q/height))) 10))]
+          half (/ (* (q/width) (q/height) pixel-density) 2)]
       (dotimes [i half]
         (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels)
