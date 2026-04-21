@@ -230,8 +230,7 @@
           half #?(:clj (/ (* size size) 2)
                   :cljs (* 4 (* (q/display-density) size) (/ (* (q/display-density) size) 2)))]
       (dotimes [i half]
-        #?(:clj (aset-int px (+ i half) (aget px i))
-           :cljs (aset px (+ i half) (aget px i)))))
+        (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels gr)
     (q/image gr (+ size 20) 0)
 
@@ -241,8 +240,7 @@
           half #?(:clj (/ (* (q/width) (q/height)) 10)
                   :cljs (/ (* 4 (* (q/display-density) (q/width)) (* (q/display-density) (q/height))) 10))]
       (dotimes [i half]
-        #?(:clj (aset-int px (+ i half) (aget px i))
-           :cljs (aset px (+ i half) (aget px i)))))
+        (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels)
     (q/no-loop)))
 
