@@ -133,7 +133,9 @@
 
 (defsnippet clear
   "clear"
-  {:renderer :p2d}
+  {:renderer :p2d
+   ;; macOS and Linux are both rendering but with aliasing or stroke-weight differences
+   :accepted-diff-threshold 0.01}
 
   (comment "reusing the same graphics to draw 3 things")
   (let [g (q/create-graphics 200 200 :p2d)]
