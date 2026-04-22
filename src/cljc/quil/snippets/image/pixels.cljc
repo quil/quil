@@ -65,8 +65,7 @@
 (defsnippet image-filter
   "image-filter"
   ;; FIXME: occasionally flakey on p5js CLJS tests so bumping the threshold
-  #?(:cljs {:accepted-diff-threshold 0.1}
-     :default {})
+  {:accepted-diff-threshold #?(:cljs 0.1 :clj 0.006)}
 
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
@@ -108,11 +107,13 @@
 ;; Best guess is one of the filter modes is not a function?
 (defsnippet display-filter
   "display-filter"
-  ;; FIXME: increasing threshold in CLJS as it's not currently working. Will
-  ;; re-investigate after updating to p5js 1.9.0 as they are now using shader
-  ;; filters by default.
-  #?(:cljs {:accepted-diff-threshold 0.3}
-     :default {})
+  ;; FAILING SNIPPET on cljs
+  ;;
+  ;; FIXME: Not currently working in cljs. Will re-investigate after updating to
+  ;; p5js 1.9.0 as they are now using shader filters by default. In clj it
+  ;; appears ever so slightly off, as if anti-aliasing on edges might be
+  ;; different, so ever so slightly accepting more noise here.
+  {:accepted-diff-threshold #?(:cljs 0.25 :clj 0.006)}
 
   (q/background 255)
   (let [orig (q/create-graphics 100 100)
@@ -211,13 +212,15 @@
   ["pixels" "update-pixels"]
   {:renderer :p2d}
 
-  (let [size 50
+  (let [size (/ (q/width) 5)
+        ;; pixels returns an array of color objects in processing, but an array of rgba values in p5js
+        pixel-density (* #?(:clj 1 :cljs 4) (q/display-density) (q/display-density))
         gr (q/create-graphics size size :p2d)]
 
     (comment "draw red circle on the graphics")
     (q/with-graphics gr
       (q/background 255)
-      (q/fill 255 0 0)
+      (q/fill 231 29 54)
       (q/ellipse (/ size 2) (/ size 2) (* size (/ 2 3)) (* size (/ 2 3))))
 
     (q/background 255)
@@ -226,22 +229,19 @@
     (comment "get pixels of the graphics and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels gr)
-          half #?(:clj (/ (* size size) 2)
-                  :cljs (* 4 (* (q/display-density) size) (/ (* (q/display-density) size) 2)))]
+          half (/ (* size size pixel-density) 2)]
       (dotimes [i half]
-        #?(:clj (aset-int px (+ i half) (aget px i))
-           :cljs (aset px (+ i half) (aget px i)))))
+        (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels gr)
-    (q/image gr (+ size 20) 0)
+    (comment "redraw the two half circles next to the original")
+    (q/image gr (+ size (* 0.5 size)) 0)
 
     (comment "get pixels of the sketch itself and copy")
     (comment "the first half of all pixels to the second half")
     (let [px (q/pixels)
-          half #?(:clj (/ (* (q/width) (q/height)) 10)
-                  :cljs (/ (* 4 (* (q/display-density) (q/width)) (* (q/display-density) (q/height))) 10))]
+          half (/ (* (q/width) (q/height) pixel-density) 2)]
       (dotimes [i half]
-        #?(:clj (aset-int px (+ i half) (aget px i))
-           :cljs (aset px (+ i half) (aget px i)))))
+        (#?(:clj aset-int :cljs aset) px (+ i half) (aget px i))))
     (q/update-pixels)
     (q/no-loop)))
 

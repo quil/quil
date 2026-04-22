@@ -18,7 +18,7 @@
 
         ;; clojurescript p5js
         cljsjs/p5 {:mvn/version "1.7.0-0"}}
- :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.12"}
+ :aliases {:build {:deps {io.github.clojure/tools.build {:mvn/version "0.10.13"}
                           slipset/deps-deploy {:mvn/version "RELEASE"}}
                    :ns-default build}
 
@@ -74,7 +74,7 @@
 
            ;; clj -M:clj-kondo --lint src test
            :clj-kondo
-           {:deps {clj-kondo/clj-kondo {:mvn/version "2026.01.19"}}
+           {:deps {clj-kondo/clj-kondo {:mvn/version "2026.04.15"}}
             :main-opts ["-m" "clj-kondo.main"]}
 
            ;; clj -M:format check

@@ -5,9 +5,13 @@
   #?(:cljs
      (:use-macros [quil.snippets.macro :only [defsnippet]])))
 
+;; These snippets are skipping image diff as the data snippet is generating an
+;; image based on data from an external source (keyboard, mouse, clock),
+;; ensuring the output image will not be stable.
+
 (defsnippet keyboard
   ["key-as-keyword" "key-code" "key-coded?" "key-pressed?" "raw-key" "key-modifiers"]
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -23,7 +27,7 @@
 
 (defsnippet mouse
   ["mouse-button" "mouse-pressed?" "mouse-x" "mouse-y" "pmouse-x" "pmouse-y"]
-  {}
+  {:skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)

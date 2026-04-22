@@ -10,7 +10,8 @@
 
 (defsnippet binary
   "binary"
-  {}
+  {;; handled by quil.data.conversion-test
+   :skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -20,7 +21,8 @@
 
 (defsnippet hex
   "hex"
-  {}
+  {;; handled by quil.data.conversion-test
+   :skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -30,7 +32,8 @@
 
 (defsnippet unbinary
   "unbinary"
-  {}
+  {;; handled by quil.data.conversion-test
+   :skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)
@@ -38,7 +41,8 @@
 
 (defsnippet unhex
   "unhex"
-  {}
+  {;; handled by quil.data.conversion-test
+   :skip-image-diff? true}
 
   (q/background 255)
   (q/fill 0)

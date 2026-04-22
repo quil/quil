@@ -26,7 +26,11 @@
 
 ;; FIXME possibly unify this with quil.core/with-sketch
 ;; and possibly deprecate quil.applet/with-applet?
-(defmacro with-sketch [applet & body]
+(defmacro with-sketch
+  "Run `body` with with a global `applet` context bound.
+
+  Most quil functions call `q/current-applet`, so set a global context."
+  [applet & body]
   ;; BEWARE DRAGONS!
   ;; https://groups.google.com/g/clojurescript/c/iBY5HaQda4A/m/w1lAQi9_AwsJ
   ;; if &env has a ns, evaluate macros in cljs context
@@ -35,6 +39,20 @@
        ~@body)
     `(binding [quil.applet/*applet* ~applet]
        ~@body)))
+
+(defmacro with-test-sketch
+  "Same as `with-sketch` but with an implicit exit at end of binding."
+  [applet & body]
+  (if (boolean (:ns &env))
+    ;; BEWARE DRAGONS!
+    ;; https://groups.google.com/g/clojurescript/c/iBY5HaQda4A/m/w1lAQi9_AwsJ
+    ;; if &env has a ns, evaluate macros in cljs context
+    `(binding [quil.sketch/*applet* ~applet]
+       ~@body
+       (q/exit))
+    `(binding [quil.applet/*applet* ~applet]
+       ~@body
+       (q/exit))))
 
 (defn delta=
   ([a b] (delta= a b 1e-6))

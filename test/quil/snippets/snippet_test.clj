@@ -6,7 +6,7 @@
    [quil.snippets.test-helper :as sth]))
 
 ;; run only this namespace:
-;; clj -X:test :nses '[quil.snippets.snippet-test]'
+;; bin/kaocha --focus 'quil.snippets.snippet-test'
 
 (defn verify-expected-snapshot-exists [{:keys [ns name skip-image-diff?]}]
   (when-not skip-image-diff?
