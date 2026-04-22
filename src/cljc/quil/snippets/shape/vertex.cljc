@@ -25,24 +25,31 @@
   (q/end-contour)
   (q/end-shape :close))
 
+;; p5js & processing renders quads and quad-strip differently
+;; as well as the behavior for triangle-strip close
 (defsnippet begin-shape-end-shape
   ["begin-shape" "end-shape"]
-  {:renderer :p2d}
+  {:renderer :p2d
+   ;; allow for aliasing differences between renderers
+   :accepted-diff-threshold 0.01}
 
-  (q/stroke 255 0 0)
-  (comment "try all kinds of begin modes")
-  (doseq [[ind begin-mode close-mode]
-          [[0 nil nil]
-           [1 nil :close]
-           [2 :points]
-           [3 :lines]
-           [4 :triangles]
-           [5 :triangle-fan]
-           [6 :triangle-strip]
-           [7 :quads]
-           [8 :quad-strip]]
-          :let [base-x (* 150 (mod ind 3))
-                base-y (* 150 (quot ind 3))]]
+  (q/fill 225 225 255)
+  (comment "try all kinds of begin modes with or without closing the shape")
+  (doseq [[idx [begin-mode close-mode]]
+          (map-indexed vector
+                       (for [mode
+                             [nil
+                              :points
+                              :lines
+                              :triangles
+                              :triangle-fan
+                              :triangle-strip
+                              :quads
+                              :quad-strip]
+                             close [false true]]
+                         [mode close]))
+          :let [base-x (* 125 (mod idx 4))
+                base-y (* 125 (quot idx 4))]]
     (if begin-mode
       (q/begin-shape begin-mode)
       (q/begin-shape))
@@ -53,7 +60,7 @@
     (q/vertex (+ base-x 20) (+ base-y 70))
     (q/vertex (+ base-x 20) (+ base-y 30))
     (if close-mode
-      (q/end-shape close-mode)
+      (q/end-shape :close)
       (q/end-shape))))
 
 (defsnippet begin-shape-end-shape-in-graphics
