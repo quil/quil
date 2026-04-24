@@ -157,8 +157,6 @@ In ClojureScript all changes to cljs files (e.g. `dev/sample.cljs` or `src/cljs/
 * Install [clojure-cli](https://clojure.org/guides/install_clojure) and [babashka](https://github.com/babashka/babashka#installation).
 * `clojure -T:build aot` will do an Ahead of Time compilation of a few classes required to interface with Processing.
 
-*Important* because of the dependency on Processing jars which are not hosted in any maven repository, it is not currently possible to use quil as a `:git/sha` coordinate dependency.
-
 Run automated tests locally for clj or cljs with:
 
 * `clojure -Mdev:kaocha unit clj-snippets` for clj tests
@@ -168,6 +166,9 @@ Run automated tests locally for clj or cljs with:
 The coverage from the tests in the leiningen environment are still higher, but are being migrated over to automated tests that can run on Github Actions.
 
 To develop with clj using emacs and the cider repl, use `C-u M-x cider-jack-in-clj`, then select `clojure-cli` and append `:dev` to the list of `-M` aliases. This ensures that "test" is in the classpath along with testing dependencies, so that it's possible to evaluate tests at the repl.
+
+
+See [development](docs/development.md) and [testing](docs/testing.md) for additional documentation on local development.
 
 ## License
 
