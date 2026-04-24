@@ -1,5 +1,15 @@
 ## Unreleased
 
+* Add deps.edn prep lib support [#429](https://github.com/quil/quil/pull/429)
+* Allow mixed type constants for q/begin-shape [#416](https://github.com/quil/quil/pull/416)
+* Ratchet accepted difference threshold for visual tests + improve tests [#428](https://github.com/quil/quil/pull/428)
+* Disable GLWindow destroy in executor during test [#427](https://github.com/quil/quil/pull/427)
+* Fix CLJS Advanced Compilation & Use JAR for releases [#412](https://github.com/quil/quil/pull/412)
+* Upgrade to Processing 4.5.2 [#425](https://github.com/quil/quil/pull/425)
+* Fix SVG render tests fetching GNU Hackert logo [#424](https://github.com/quil/quil/pull/424)
+* Processing 4.4 and test improvements [#421](https://github.com/quil/quil/pull/421)
+* Fix broken link in defsketch docstring [#418](https://github.com/quil/quil/pull/418)
+
 ## 4.3.1563
 __21st January 2024__
 
