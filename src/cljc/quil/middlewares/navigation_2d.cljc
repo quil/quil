@@ -1,18 +1,6 @@
 (ns quil.middlewares.navigation-2d
   (:require [quil.core :as q :include-macros true]))
 
-(def ^:private ^String missing-navigation-key-error
-  (str "state map is missing :navigation-2d key. "
-       "Did you accidentally removed it from the state in "
-       ":update or any other handler?"))
-
-(defn- assert-state-has-navigation
-  "Asserts that `state` map contains `:navigation-2d` object."
-  [state]
-  (when-not (:navigation-2d state)
-    (throw #?(:clj (RuntimeException. missing-navigation-key-error)
-              :cljs (js/Error. missing-navigation-key-error)))))
-
 (defn- default-position
   "Default position configuration: zoom is neutral and central point is
   `width/2, height/2`."
@@ -29,44 +17,42 @@
   (let [initial-state (-> user-settings
                           (select-keys [:position :zoom :mouse-buttons])
                           (->> (merge (default-position))))]
-    (update-in (user-setup) [:navigation-2d]
-               #(merge initial-state %))))
+    (assoc initial-state :user-state (user-setup))))
 
 (defn- mouse-dragged
   "Changes center of the sketch depending on the last mouse move. Takes
   zoom into account as well."
   [state event]
-  (assert-state-has-navigation state)
-  (let [mouse-buttons (-> state :navigation-2d :mouse-buttons)]
+  (let [mouse-buttons (state :mouse-buttons)]
     (if (contains? mouse-buttons (:button event))
       (let [dx (- (:p-x event) (:x event))
             dy (- (:p-y event) (:y event))
-            zoom (-> state :navigation-2d :zoom)]
+            zoom (state :zoom)]
         (-> state
-            (update-in [:navigation-2d :position 0] + (/ dx zoom))
-            (update-in [:navigation-2d :position 1] + (/ dy zoom))))
+            (update-in [:position 0] + (/ dx zoom))
+            (update-in [:position 1] + (/ dy zoom))))
       state)))
 
 (defn- mouse-wheel
   "Changes zoom settings based on scroll."
   [state event]
-  (assert-state-has-navigation state)
-  (update-in state [:navigation-2d :zoom] * (+ 1 (* -0.1 event))))
+  (update state :zoom * (+ 1 (* -0.1 event))))
 
 (defn- draw
   "Calls user draw function with all necessary transformations (position
   and zoom) applied."
   [user-draw state]
-  (assert-state-has-navigation state)
   (q/push-matrix)
-  (let [nav-2d (:navigation-2d state)
-        zoom (:zoom nav-2d)
-        pos (:position nav-2d)]
+  (let [zoom (:zoom state)
+        pos (:position state)]
     (q/scale zoom)
     (q/with-translation [(- (/ (q/width) 2 zoom) (first pos))
                          (- (/ (q/height) 2 zoom) (second pos))]
-      (user-draw state)))
+      (user-draw (:user-state state))))
   (q/pop-matrix))
+
+(defn- update-2d-nav [user-update state]
+  (update state :user-state user-update))
 
 (defn navigation-2d
   "Enables navigation over 2D sketch. Dragging mouse will move center of the
@@ -80,10 +66,13 @@
         user-draw (:draw options (fn [state]))
         user-mouse-dragged (:mouse-dragged options (fn [state _] state))
         user-mouse-wheel (:mouse-wheel options (fn [state _] state))
-        setup (:setup options (fn [] {}))]
+        setup (:setup options (fn [] {}))
+        user-update (:update options (fn [state] state))]
     (assoc options
 
            :setup (partial setup-2d-nav setup user-settings)
+
+           :update (partial update-2d-nav user-update)
 
            :draw (partial draw user-draw)
 
