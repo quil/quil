@@ -35,7 +35,8 @@
    quil.snippets.transform.utility-macros
    quil.snippets.typography.attributes
    quil.snippets.typography.loading-and-displaying
-   quil.snippets.typography.metrics))
+   quil.snippets.typography.metrics
+   quil.snippets.middleware.navigation-2d))
 
 (def all-snippets @asi/all-snippets)
 
